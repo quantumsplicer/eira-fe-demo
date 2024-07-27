@@ -10,13 +10,14 @@ import InputPaymentDetails from "../flows/payTutionFees/pages/InputPaymentDetail
 import PaymentReviewPage from "../flows/payTutionFees/pages/PaymentReviewPage";
 import PGLoading from "../flows/payTutionFees/pages/PGLoading";
 import PaymentSuccessfulPage from "../flows/payTutionFees/pages/PaymentSuccessfulPage";
+import SlotBookingPage from "../flows/payTutionFees/pages/SlotBookingPage";
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/pay/verify" element={<InputPhone />} />
       <Route path="/pay/payment-details" element={<InputPaymentDetails />} />
-      <Route path="/pay/create-session" element={<InputPaymentDetails />} />
+      <Route path="/pay/create-session" element={<SlotBookingPage />} />
       <Route path="/pay/review" element={<PaymentReviewPage />} />
       <Route path="/pay/payment-gateway-payment-flow" element={<PGLoading />} />
       <Route

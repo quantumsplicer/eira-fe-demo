@@ -8,9 +8,9 @@ import {
   Container,
   Stack,
 } from "@mui/material";
-import EiraBack1 from "../../../assets/images/png/eira-back-1.png";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { useNavigate } from "react-router-dom";
+import { EiraBack1 } from "../../../components/EiraBack1";
 
 const InputPaymentDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const InputPaymentDetails: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    navigate("/pay/review")
+    navigate("/pay/create-session");
   };
 
   return (
@@ -40,7 +40,7 @@ const InputPaymentDetails: React.FC = () => {
       }}
     >
       <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
-        <img src={EiraBack1} style={{ width: "100%", height: "100%" }} />
+        <EiraBack1 />
       </Box>
       <Stack sx={{ width: "50%" }} alignItems={"center"}>
         <img

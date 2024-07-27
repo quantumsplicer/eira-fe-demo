@@ -9,8 +9,8 @@ import {
   Stack,
 } from "@mui/material";
 import OTPDialog from "../dialogs/OTPDialog";
-import EiraBack1 from "../../../assets/images/png/eira-back-1.png";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
+import { EiraBack1 } from "../../../components/EiraBack1";
 
 const InputPhone = () => {
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
@@ -32,7 +32,7 @@ const InputPhone = () => {
       }}
     >
       <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
-        <img src={EiraBack1} style={{ width: "100%", height: "100%" }} />
+        <EiraBack1 />
       </Box>
       <Stack sx={{ width: "50%" }} alignItems={"center"}>
         <img

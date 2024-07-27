@@ -1,9 +1,9 @@
 // src/components/PaymentSuccessfulPage.tsx
-import React from 'react';
-import { Box, Typography, Stack } from '@mui/material';
-import EiraBack1 from '../../../assets/images/png/eira-back-1.png';
-import EiraLogo from '../../../assets/images/png/eira-logo.png';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import React from "react";
+import { Box, Typography, Stack } from "@mui/material";
+import { EiraBack1 } from "../../../components/EiraBack1";
+import EiraLogo from "../../../assets/images/png/eira-logo.png";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 const PaymentSuccessfulPage = () => {
   return (
@@ -12,11 +12,10 @@ const PaymentSuccessfulPage = () => {
       sx={{
         justifyContent: "center",
         alignItems: "center",
-        width: "100vw"
       }}
     >
       <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
-        <img src={EiraBack1} style={{ width: "100%", height: "100%" }} />
+        <EiraBack1/>
       </Box>
       <Stack sx={{ width: "50%" }} alignItems={"center"}>
         <img
@@ -46,27 +45,59 @@ const PaymentSuccessfulPage = () => {
           >
             Your payment is successful
           </Typography>
-          <Stack direction="row" justifyContent="space-between" sx={{ width: "100%", mb: 2 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            sx={{ width: "100%", mb: 2 }}
+          >
             <Typography variant="body1">Making payment to:</Typography>
-            <Typography variant="body1" fontWeight="bold">Suneel Satpal</Typography>
+            <Typography variant="body1" fontWeight="bold">
+              Suneel Satpal
+            </Typography>
           </Stack>
-          <Stack direction="row" justifyContent="space-between" sx={{ width: "100%", mb: 2 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            sx={{ width: "100%", mb: 2 }}
+          >
             <Typography variant="body1">Phone:</Typography>
-            <Typography variant="body1" fontWeight="bold">+91 9389250148</Typography>
+            <Typography variant="body1" fontWeight="bold">
+              +91 9389250148
+            </Typography>
           </Stack>
-          <Stack direction="row" justifyContent="space-between" sx={{ width: "100%", mb: 2 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            sx={{ width: "100%", mb: 2 }}
+          >
             <Typography variant="body1">Amount:</Typography>
-            <Typography variant="body1" fontWeight="bold">₹ 5,000</Typography>
+            <Typography variant="body1" fontWeight="bold">
+              ₹ 5,000
+            </Typography>
           </Stack>
-          <Stack direction="row" justifyContent="space-between" sx={{ width: "100%", mb: 2 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            sx={{ width: "100%", mb: 2 }}
+          >
             <Typography variant="body1">Tuition date & time:</Typography>
-            <Typography variant="body1" fontWeight="bold">5:00 pm - 6:00 pm</Typography>
+            <Typography variant="body1" fontWeight="bold">
+              5:00 pm - 6:00 pm
+            </Typography>
           </Stack>
-          <Stack direction="row" justifyContent="space-between" sx={{ width: "100%", mb: 2 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            sx={{ width: "100%", mb: 2 }}
+          >
             <Typography variant="body1">Date:</Typography>
-            <Typography variant="body1" fontWeight="bold">24th July, 2024</Typography>
+            <Typography variant="body1" fontWeight="bold">
+              24th July, 2024
+            </Typography>
           </Stack>
-          <CheckCircleOutlineIcon sx={{ color: 'green', fontSize: 60, mt: 4 }} />
+          <CheckCircleOutlineIcon
+            sx={{ color: "green", fontSize: 60, mt: 4 }}
+          />
           <Stack
             direction="row"
             spacing={1}

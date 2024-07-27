@@ -1,9 +1,9 @@
 // src/components/PaymentReviewPage.tsx
-import React from "react";
-import { Box, Typography, Button, Stack } from "@mui/material";
-import EiraBack1 from "../../../assets/images/png/eira-back-1.png";
-import EiraLogo from "../../../assets/images/png/eira-logo.png";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+
+import EiraLogo from "../../../assets/images/png/eira-logo.png";
+import { EiraBack1 } from "../../../components/EiraBack1";
 
 const PaymentReviewPage = () => {
   const navigate = useNavigate();
@@ -16,11 +16,10 @@ const PaymentReviewPage = () => {
       sx={{
         justifyContent: "center",
         alignItems: "center",
-        width: "100vw"
       }}
     >
       <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
-        <img src={EiraBack1} style={{ width: "100%", height: "100%" }} />
+        <EiraBack1 />
       </Box>
       <Stack sx={{ width: "50%" }} alignItems={"center"}>
         <img
@@ -36,7 +35,7 @@ const PaymentReviewPage = () => {
         <Stack
           justifyContent={"center"}
           alignItems={"center"}
-          sx={{ width: "80%", px: 18}}
+          sx={{ width: "80%", px: 18 }}
         >
           <Typography
             variant="h5"
