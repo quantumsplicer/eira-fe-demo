@@ -153,7 +153,12 @@ const InputPhone = () => {
           </Stack>
         </Stack>
       </Stack>
-      <OTPDialog open={otpDialogOpen} onClose={handleCloseOtpDialog} />
+      <OTPDialog
+        open={otpDialogOpen}
+        onClose={handleCloseOtpDialog}
+        navigateTo="/pay/payment-details"
+        phoneNumber="phoneNumber"
+      />
     </Stack>
   );
 };
