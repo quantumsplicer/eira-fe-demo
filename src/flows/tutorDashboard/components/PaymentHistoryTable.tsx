@@ -1,13 +1,16 @@
 import React, { useMemo, useState } from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import {
+  createMRTColumnHelper,
   MaterialReactTable,
   type MRT_ColumnDef,
   useMaterialReactTable,
 } from "material-react-table";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import { darken, lighten, useTheme } from "@mui/material";
-import CreatePaymentLinkDialog from "../dialogs/CreatePaymentLinkDialog";
+import StatusTag from "./StatusTag";
+import PaymentLinkDialog from "../dialogs/PaymentLinkDialog";
+import ConfirmationDialog from "../dialogs/ConfirmationDialog";
 const lightTheme = createTheme({ palette: { mode: "light" } });
 interface Person {
   transactionId: string;
@@ -121,104 +124,59 @@ const data: Person[] = [
     status: "Settled",
   },
 ];
-const PaymentHistoryTable: React.FC = () => {
-  const [createPaymentLinkDialog, setCreatePaymentLinkDialog] = useState(false);
-  const [openConfirmation, setOpenConfirmation] = useState(false);
 
-  const handleClosePaymentLinkDialog = () => {
-    setCreatePaymentLinkDialog(false);
+const PaymentHistoryTable: React.FC = () => {
+  const [activeDialog, setActiveDialog] = useState<string>("None");
+  const heading = "Link Successfully Created";
+  const subHeading =
+    "your payment link is created and sent to the student on their whatsapp and SMS";
+  const openDialog = () => {
+    setActiveDialog("PaymentLinkDialog");
   };
-  const handleOpenPaymentLinkDialog = () => {
-    setCreatePaymentLinkDialog(true);
-  };
-  const handleOpenConfirmation = () => {
-    setOpenConfirmation(true);
-  };
-  const handleCloseConfirmation = () => {
-    setOpenConfirmation(false);
-  };
+
   const theme = useTheme();
   const baseBackgroundColor =
     theme.palette.mode === "dark"
       ? "rgba(100, 100, 100 , 1)"
       : "rgba(250, 250, 250, 1)";
-  const columns = useMemo<MRT_ColumnDef<Person>[]>(
-    () => [
-      {
-        accessorKey: "transactionId", //simple recommended way to define a column
-        header: "Transaction ID",
-        // muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-      },
-      {
-        accessorKey: "studentPhoneNumber", //simple recommended way to define a column
-        header: "Student's Phone Number",
-        //muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-      },
-      {
-        accessorKey: "linkCreationDate", //simple recommended way to define a column
-        header: "Link Creation Date",
-        // muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-      },
-      {
-        accessorKey: "timeOfPaymentReceived", //simple recommended way to define a column
-        header: "Date of Payment Received",
-        // muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-      },
-      {
-        accessorKey: "timeOfSettlement", //simple recommended way to define a column
-        header: "Date and Time of Settlement",
-        // muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-      },
-      {
-        accessorKey: "amount", //simple recommended way to define a column
-        header: "Amount",
-        // muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-      },
-      {
-        accessorKey: "paymentMode", //simple recommended way to define a column
-        header: "Payment Mode",
-        // muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-      },
-      {
-        accessorKey: "status", //simple recommended way to define a column
-        header: "Status",
-        // muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-        Cell: ({ cell }) => (
-          <Box
-            component="span"
-            sx={(theme) => ({
-              backgroundColor:
-                cell.getValue<string>() === "Failed"
-                  ? "#FBE7E8"
-                  : cell.getValue<string>() === "Pending"
-                  ? "#FEF2E5"
-                  : "#EBF9F1",
-              borderRadius: "1rem",
-              color:
-                cell.getValue<string>() === "Failed"
-                  ? "#A30D11"
-                  : cell.getValue<string>() === "Pending"
-                  ? "#CD6200"
-                  : "#3BB900",
-              p: "0.5rem",
-              width: "fullwidht",
-            })}
-          >
-            {cell.getValue<string>()}
-          </Box>
-        ),
-      },
-    ],
-    []
-  );
+
+  const columnHelper = createMRTColumnHelper<Person>();
+  const columns = [
+    columnHelper.accessor("transactionId", {
+      header: "Transaction ID",
+      enableHiding: false,
+    }),
+    columnHelper.accessor("studentPhoneNumber", {
+      header: "Student's Phone Number",
+      enableHiding: false,
+    }),
+    columnHelper.accessor("linkCreationDate", {
+      header: "Link Creation Date",
+      enableHiding: false,
+    }),
+    columnHelper.accessor("timeOfPaymentReceived", {
+      header: "Date of Payment Received",
+      enableHiding: false,
+    }),
+    columnHelper.accessor("timeOfSettlement", {
+      header: "Date and Time of Settlement",
+      enableHiding: false,
+    }),
+    columnHelper.accessor("amount", {
+      header: "Amount",
+      enableHiding: false,
+    }),
+    columnHelper.accessor("paymentMode", {
+      header: "Payment Mode",
+      enableHiding: false,
+    }),
+    columnHelper.accessor("status", {
+      header: "Status",
+      enableHiding: false,
+      Cell: ({ cell }) => <StatusTag cellValue={cell.getValue<string>()} />,
+    }),
+  ];
+
   const table = useMaterialReactTable({
     columns,
     data, //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
@@ -279,7 +237,7 @@ const PaymentHistoryTable: React.FC = () => {
     }),
   });
   return (
-    <React.Fragment>
+    <>
       <ThemeProvider theme={lightTheme}>
         <Box
           height="fullheight"
@@ -304,7 +262,7 @@ const PaymentHistoryTable: React.FC = () => {
                 </Typography>
                 <Button
                   variant="contained"
-                  onClick={handleOpenPaymentLinkDialog}
+                  onClick={openDialog}
                   sx={{
                     backgroundColor: "#507FFD",
                     borderRadius: 3,
@@ -323,14 +281,24 @@ const PaymentHistoryTable: React.FC = () => {
           </Stack>
         </Box>
       </ThemeProvider>
-      <CreatePaymentLinkDialog
+      {/* <CreatePaymentLinkDialog
         openForm={createPaymentLinkDialog}
         closeForm={handleClosePaymentLinkDialog}
         openConfirmation={openConfirmation}
         closeConfirmation={handleCloseConfirmation}
         openConfirmationPage={handleOpenConfirmation}
+      /> */}
+      <PaymentLinkDialog
+        activeDialog={activeDialog}
+        setActiveDialog={setActiveDialog}
       />
-    </React.Fragment>
+      <ConfirmationDialog
+        activeDialog={activeDialog}
+        setActiveDialog={setActiveDialog}
+        heading={heading}
+        subHeading={subHeading}
+      />
+    </>
   );
 };
 

@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import { Divider, Stack, Typography } from "@mui/material";
 
 const amount = 20000;
+
 const UnsettledAmountCard: React.FC = () => {
   return (
     <Box

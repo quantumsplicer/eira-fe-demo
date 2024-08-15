@@ -1,13 +1,16 @@
 import React, { useMemo, useState } from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import {
+  createMRTColumnHelper,
   MaterialReactTable,
   type MRT_ColumnDef,
   useMaterialReactTable,
 } from "material-react-table";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import { darken, lighten, useTheme } from "@mui/material";
-import CreateSessionLinkDialog from "../dialogs/CreateSessionLinkDialog";
+import StatusTag from "./StatusTag";
+import SessionLinkDialog from "../dialogs/SessionLinkDialog";
+import ConfirmationDialog from "../dialogs/ConfirmationDialog";
 
 const lightTheme = createTheme({ palette: { mode: "light" } });
 interface Session {
@@ -15,7 +18,6 @@ interface Session {
   studentPhoneNumber: string;
   timeOfSession: string;
   repeat: string;
-  amount: number;
   status: string;
 }
 const data: Session[] = [
@@ -24,7 +26,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Cancelled",
   },
   {
@@ -32,7 +33,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Scheduled",
   },
   {
@@ -40,7 +40,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -48,7 +47,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Cancelled",
   },
   {
@@ -56,7 +54,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Scheduled",
   },
   {
@@ -64,7 +61,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -72,7 +68,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -80,7 +75,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -88,7 +82,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -96,7 +89,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -104,7 +96,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -112,7 +103,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -120,7 +110,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -128,7 +117,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -136,7 +124,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -144,7 +131,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -152,7 +138,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -160,7 +145,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -168,7 +152,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -176,7 +159,6 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
   {
@@ -184,96 +166,48 @@ const data: Session[] = [
     studentPhoneNumber: "+919997945005",
     timeOfSession: "today",
     repeat: "today",
-    amount: 4000,
     status: "Completed",
   },
 ];
-const SessionHistoryTable: React.FC = () => {
-  const [createSessionLinkDialog, setCreateSessionLinkDialog] = useState(false);
-  const [openConfirmation, setOpenConfirmation] = useState(false);
 
-  const handleCloseSessionLinkDialog = () => {
-    setCreateSessionLinkDialog(false);
+const SessionHistoryTable: React.FC = () => {
+  const [activeDialog, setActiveDialog] = useState<string>("None");
+  const heading = "Session Successfully created";
+  const subHeading =
+    "link for your session has been successfully sent to your attendees via email";
+  const openDialog = () => {
+    setActiveDialog("SessionLinkDialog");
   };
-  const handleOpenSessionLinkDialog = () => {
-    setCreateSessionLinkDialog(true);
-  };
-  const handleOpenConfirmation = () => {
-    setOpenConfirmation(true);
-  };
-  const handleCloseConfirmation = () => {
-    setOpenConfirmation(false);
-  };
+  const columnHelper = createMRTColumnHelper<Session>();
   const theme = useTheme();
   const baseBackgroundColor =
     theme.palette.mode === "dark"
       ? "rgba(100, 100, 100 , 1)"
       : "rgba(250, 250, 250, 1)";
-  const columns = useMemo<MRT_ColumnDef<Session>[]>(
-    () => [
-      {
-        accessorKey: "title", //simple recommended way to define a column
-        header: "Title",
-        // muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-      },
-      {
-        accessorKey: "studentPhoneNumber", //simple recommended way to define a column
-        header: "Student's Phone Number",
-        //muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-      },
-      {
-        accessorKey: "timeOfSession", //simple recommended way to define a column
-        header: "Time of Session",
-        // muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-      },
-      {
-        accessorKey: "repeat", //simple recommended way to define a column
-        header: "Repeat",
-        // muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-      },
-      {
-        accessorKey: "amount", //simple recommended way to define a column
-        header: "Amount",
-        // muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-      },
-      {
-        accessorKey: "status", //simple recommended way to define a column
-        header: "Status",
-        // muiTableHeadCellProps: { style: { color: 'green' } }, //custom props
-        enableHiding: false, //disable a feature for this column
-        Cell: ({ cell }) => (
-          <Box
-            component="span"
-            sx={(theme) => ({
-              backgroundColor:
-                cell.getValue<string>() === "Cancelled"
-                  ? "#FBE7E8"
-                  : cell.getValue<string>() === "Scheduled"
-                  ? "#FEF2E5"
-                  : "#EBF9F1",
-              borderRadius: "1rem",
-              color:
-                cell.getValue<string>() === "Cancelled"
-                  ? "#A30D11"
-                  : cell.getValue<string>() === "Scheduled"
-                  ? "#CD6200"
-                  : "#3BB900",
-              p: "0.5rem",
-              width: "fullwidth",
-            })}
-          >
-            {cell.getValue<string>()}
-          </Box>
-        ),
-      },
-    ],
-    []
-  );
+
+  const columns = [
+    columnHelper.accessor("title", {
+      header: "Title",
+      enableHiding: false,
+    }),
+    columnHelper.accessor("studentPhoneNumber", {
+      header: "Student's Phone Number",
+      enableHiding: false,
+    }),
+    columnHelper.accessor("timeOfSession", {
+      header: "Time of Session",
+      enableHiding: false,
+    }),
+    columnHelper.accessor("repeat", {
+      header: "Repeat",
+      enableHiding: false,
+    }),
+    columnHelper.accessor("status", {
+      header: "Status",
+      enableHiding: false,
+      Cell: ({ cell }) => <StatusTag cellValue={cell.getValue<string>()} />,
+    }),
+  ];
   const table = useMaterialReactTable({
     columns,
     data, //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
@@ -319,7 +253,7 @@ const SessionHistoryTable: React.FC = () => {
     }),
   });
   return (
-    <React.Fragment>
+    <>
       <ThemeProvider theme={lightTheme}>
         <Box
           height="fullheight"
@@ -344,7 +278,7 @@ const SessionHistoryTable: React.FC = () => {
                 </Typography>
                 <Button
                   variant="contained"
-                  onClick={handleOpenSessionLinkDialog}
+                  onClick={openDialog}
                   sx={{
                     backgroundColor: "#507FFD",
                     borderRadius: 3,
@@ -363,14 +297,17 @@ const SessionHistoryTable: React.FC = () => {
           </Stack>
         </Box>
       </ThemeProvider>
-      <CreateSessionLinkDialog
-        openForm={createSessionLinkDialog}
-        closeForm={handleCloseSessionLinkDialog}
-        openConfirmation={openConfirmation}
-        closeConfirmation={handleCloseConfirmation}
-        openConfirmationPage={handleOpenConfirmation}
+      <SessionLinkDialog
+        activeDialog={activeDialog}
+        setActiveDialog={setActiveDialog}
       />
-    </React.Fragment>
+      <ConfirmationDialog
+        activeDialog={activeDialog}
+        setActiveDialog={setActiveDialog}
+        heading={heading}
+        subHeading={subHeading}
+      />
+    </>
   );
 };
 

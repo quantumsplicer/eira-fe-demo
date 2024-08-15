@@ -10,17 +10,16 @@ import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+
 import PaymentHistory from "./PaymentHistory";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import HomeIcon from "@mui/icons-material/HomeOutlined";
 import SessionHistoryIcon from "@mui/icons-material/RestoreOutlined";
 import MarketingIcon from "@mui/icons-material/CampaignOutlined";
 import InvoiceIcon from "@mui/icons-material/ReceiptOutlined";
-import { Stack } from "@mui/material";
 import { useState } from "react";
-import { MouseEvent } from "react";
 import SessionHistory from "./SessionHistory";
+
 const drawerWidth = 220;
 
 const TutorDashboard: React.FC = () => {

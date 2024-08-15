@@ -7,7 +7,7 @@ import Link from "@mui/material/Link";
 import IconButton from "@mui/material/IconButton";
 import ContentCopyIcon from "@mui/icons-material/ContentCopyOutlined";
 const amount = 20000;
-const UnsettledAmountCard: React.FC = () => {
+const PaymentLinkCard: React.FC = () => {
   return (
     <Box
       sx={{
@@ -50,4 +50,4 @@ const UnsettledAmountCard: React.FC = () => {
     </Box>
   );
 };
-export default UnsettledAmountCard;
+export default PaymentLinkCard;
