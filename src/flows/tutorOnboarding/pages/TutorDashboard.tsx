@@ -3,8 +3,7 @@ import {
     Typography
 } from "@mui/material";
 import { useLocation } from 'react-router-dom';
-import SuccessfulOnboardingDialog from "../dialogs/SuccessfulOnboardingDialog";
-import SuccessDialog from "../dialogs/SuccessDialog";
+import DialogMessage from "../../../dialogs/DialogMessage";
 
 const TutorDashboard: React.FC = () => {
 
@@ -21,7 +20,7 @@ const TutorDashboard: React.FC = () => {
         }
     }, [previousUrl])
 
-    const CustomDialogButton: React.FC = () => {
+    const ScheduleClassButton: React.FC = () => {
         return (
             <>
                 <Typography
@@ -40,14 +39,15 @@ const TutorDashboard: React.FC = () => {
 
     return (
         <div>
-            <SuccessDialog
+            <DialogMessage
                 open={showDialog}
                 onClose={() => setShowDialog(false)}
-                successMessage="You are ready to accept payments on Eira!"
+                type="success"
+                headingMessage="Congratulations!!"
+                subHeadingMessage="You are ready to accept payments on Eira!"
                 preventDialogClose={false}
-                CustomDialogButton={CustomDialogButton}
+                CustomDialogButton={ScheduleClassButton}
             />
-            {/* <SuccessfulOnboardingDialog open={showDialog} onClose={() => setShowDialog(false)} /> */}
         </div>
     )
 }

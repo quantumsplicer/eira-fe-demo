@@ -1,58 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { 
     Stack,
     Box,
     Typography,
-    TextField,
     Button
 } from "@mui/material"
 import { EiraBack2 } from "../../../components/EiraBack2"
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
-import OTPDialog from "../../payTutionFees/dialogs/OTPDialog";
+import OTPDialog from "../../../dialogs/OTPDialog";
+import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
 
 const TutorSignIn : React.FC = () => {
     const [phoneNumber, setPhoneNumber] = useState<string>('')
-    const [isPhoneNumberInvalid, setIsPhoneNumberInvalid] = useState<boolean>(false)
-    const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState<boolean>(true)
-    const [isOtpDialogOpen, setIsOtpDialogOpen] = useState<boolean>(false);
+    // const [isPhoneNumberInvalid, setIsPhoneNumberInvalid] = useState<boolean>(false)
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-    const verifyPhoneNumber = () => {
+    const isPhoneNumberValid = () : boolean => {
         const regex = /^[6-9]\d{9}$/;
-        if(regex.test(phoneNumber)) {
-            setIsPhoneNumberInvalid(false);
-            setIsOtpDialogOpen(true);
-        } else {
-            setIsPhoneNumberInvalid(true);
-        }
+        return regex.test(phoneNumber);
     }
 
-    const handlePhoneNumberInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const invalidRegex = /[^0-9]/
-        const inputValue = e.target.value;
-        if(inputValue === '' || !invalidRegex.test(inputValue)) {
-            let inputPhoneNumber : string = inputValue.slice(0,10);
-            setPhoneNumber(inputPhoneNumber);
+    const handleSubmit = () => {
+        if(isPhoneNumberValid()) {
+            setIsDialogOpen(true)
         }
     }
-
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === "Enter") {
-            verifyPhoneNumber();
-        }
-    }
-
-    const handleOtpDialogClose = () => {
-        setIsOtpDialogOpen(false);
-    }
-
-    useEffect(() => {
-        if(phoneNumber.length === 10) {
-            setIsLoginButtonDisabled(false);
-        } else {
-            setIsLoginButtonDisabled(true);
-        }
-    }, [phoneNumber])
 
     return (
         <Stack
@@ -87,37 +60,16 @@ const TutorSignIn : React.FC = () => {
                     >
                         Enter your phone
                     </Typography>
-                    <TextField
-                        value={phoneNumber}
-                        onChange={e => handlePhoneNumberInput(e)}
-                        onKeyDown={event => handleKeyDown(event)}
-                        error={isPhoneNumberInvalid}
-                        helperText={isPhoneNumberInvalid && "Enter valid phone number"}
-                        fullWidth
-                        label="Phone number"
-                        variant="outlined"
-                        sx={{
-                            mb: 2,
-                            "&:MuiInputBase-input": {
-                                fontSize: 12,
-                            },
-                        }}
-                        InputProps={{
-                            startAdornment: (
-                                <Stack direction={"row"} spacing={1} sx={{ mr: 1 }}>
-                                    <img
-                                        src="https://flagcdn.com/w320/in.png"
-                                        alt="India Flag"
-                                        style={{ width: 24, height: 18, marginRight: 8 }}
-                                    />
-                                    <Typography fontSize={14}>+91</Typography>
-                                </Stack>
-                            ),
-                        }}
+                    <PhoneNumberInputField
+                        autoFocus={true}
+                        label={"Phone number"}
+                        phone={phoneNumber}
+                        setPhoneNumber={setPhoneNumber}
+                        onSubmit={handleSubmit}
                     />
                     <Button
-                        disabled={isLoginButtonDisabled}
-                        onClick={verifyPhoneNumber}
+                        disabled={phoneNumber.length !== 10 || !isPhoneNumberValid()}
+                        onClick={handleSubmit}
                         fullWidth
                         variant="contained"
                         color="primary"
@@ -160,8 +112,8 @@ const TutorSignIn : React.FC = () => {
                 </Stack>
             </Stack>
             <OTPDialog
-                open={isOtpDialogOpen}
-                onClose={handleOtpDialogClose}
+                open={isDialogOpen}
+                onClose={() => setIsDialogOpen(false)}
                 navigateTo="/tutor/signup"
                 phoneNumber={phoneNumber}
             />

@@ -2,9 +2,7 @@
 import React, { useState, useRef, createRef, useEffect } from "react";
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
-  DialogActions,
   TextField,
   Button,
   Box,
@@ -76,7 +74,7 @@ const OTPDialog = ({ open, onClose, navigateTo, phoneNumber }: OTPDialogProps) =
     }
   };
 
-  const verifyOtp = () : boolean => {
+  const verifyOtp = (): boolean => {
     return true;
   }
 
@@ -90,6 +88,12 @@ const OTPDialog = ({ open, onClose, navigateTo, phoneNumber }: OTPDialogProps) =
     navigate(navigateTo)
     onClose()
   };
+
+  const resendOtp = () => {
+    setOtp('');
+    setIsOtpInvalid(false);
+    setActiveIndex(0);
+  }
 
   useEffect(() => {
     otpInputsRef.current = Array.from({ length: OPT_LENGTH }).map(() => createRef<HTMLInputElement>());
@@ -120,9 +124,9 @@ const OTPDialog = ({ open, onClose, navigateTo, phoneNumber }: OTPDialogProps) =
       onClose={onClose}
       sx={{
         "& .MuiDialog-paper": {
-          width: 400,
+          width: 450,
           maxWidth: "50vw",
-          height: 300,
+          height: 350,
         },
         p: 1,
       }}
@@ -143,7 +147,7 @@ const OTPDialog = ({ open, onClose, navigateTo, phoneNumber }: OTPDialogProps) =
             sx={{
               position: "absolute",
               right: 8,
-              top: 8,
+              top: 0,
               color: (theme) => theme.palette.grey[500],
             }}
           >
@@ -181,8 +185,22 @@ const OTPDialog = ({ open, onClose, navigateTo, phoneNumber }: OTPDialogProps) =
           </Box>
           {
             isOtpInvalid &&
-            <Typography color="#d32f2f">
-              Wrong OTP
+            <Typography color="#d32f2f" fontSize={14}>
+              Incorrect OTP. Please retry.
+            </Typography>
+          }
+          {
+            isOtpInvalid &&
+            <Typography
+              onClick={resendOtp}
+              fontSize={14}
+              sx={{
+                borderBottom: "1px solid #6285FF",
+                cursor: "pointer",
+                color: "#6285FF"
+              }}
+            >
+              Resend OTP
             </Typography>
           }
           <Button

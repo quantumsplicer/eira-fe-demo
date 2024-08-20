@@ -1,40 +1,24 @@
 import React, { useState } from "react";
-
 import {
-    Stack,
     Box,
     Typography,
-    Button
-} from "@mui/material"
-import { EiraBack2 } from "../../../components/EiraBack2"
+    Stack,
+} from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { useNavigate } from "react-router-dom";
-import DialogMessage from "../../../dialogs/DialogMessage";
+import { EiraBack1 } from "../../../components/EiraBack1";
+import TutorOnboardingInfo from "../../../components/TutorOnboardingInfo";
 import PersonalDetails from "../../../components/PersonalDetails";
 import BankAccountDetails from "../../../components/BankAccountDetails";
 
-const TutorSignUp: React.FC = () => {
+const InputTutorDetails: React.FC = () => {
 
-    const navigate = useNavigate();
-    const [signUpStep, setSignUpStep] = useState<number>(1);
+    const [step, setStep] = useState<string>('personal');
     // const [pan, setPan] = useState<string>('');
+    const [isPanUnverified, setIsPanUnverified] = useState<boolean>(false);
     const [isPanVerifying, setIsPanVerifying] = useState<boolean>(false);
     const [isAccountVerifying, setIsAccountVerifying] = useState<boolean>(false);
-    const [showAccountVerificationStatus, setShowAccountVerificationStatus] = useState<boolean>(false);
-    const [isAccountVerified, setIsAccountVerified] = useState<boolean>(false);
-    const [isPanUnverified, setIsPanUnverified] = useState<boolean>(false);
-
-    const verifyAccount = () => {
-        setShowAccountVerificationStatus(false);
-        setIsAccountVerifying(true);
-        setTimeout(() => {
-            setIsAccountVerifying(false);
-            setShowAccountVerificationStatus(true);
-            setIsAccountVerified(true);
-            // setSignUpStep(3);
-            // navigate('/tutor/aadhar-verification');
-        }, 5000);
-    }
+    const navigate = useNavigate();
 
     const verifyPan = () => {
 
@@ -43,46 +27,30 @@ const TutorSignUp: React.FC = () => {
         setTimeout(() => {
             setIsPanVerifying(false);
             setIsPanUnverified(false)
-            setSignUpStep(2);
+            setStep("account");
             // navigate("/pay/payment-details");
         }, 5000);
     }
 
-    const VerifyAadhaarButton: React.FC = () => {
-        return (
-            <>
-                <Button
-                    onClick={() => navigate('/tutor/aadhar-verification')}
-                    variant="contained"
-                    color="primary"
-                    sx={{ padding: 1.5, borderRadius: 2, width: "75%" }}
-                >
-                    Verify Aadhaar
-                </Button>
-            </>
-        )
-    }
-
-    const TryAgainButton: React.FC = () => {
-        return (
-            <>
-                <Button
-                    onClick={() => setShowAccountVerificationStatus(false)}
-                    variant="contained"
-                    color="primary"
-                    sx={{ padding: 1.5, borderRadius: 2, width: "75%" }}
-                >
-                    Try Again
-                </Button>
-            </>
-        )
+    const verifyAccount = () => {
+        setIsAccountVerifying(true);
+        setTimeout(() => {
+            setIsAccountVerifying(false);
+            navigate('/pay/create-session');
+        }, 5000);
     }
 
     return (
         <Stack
-            direction={"row"}
-            sx={{ justifyContent: "center", alignItems: "center" }}
+            direction="row"
+            sx={{
+                justifyContent: "center",
+                alignItems: "center",
+            }}
         >
+            <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
+                <EiraBack1 />
+            </Box>
             <Stack sx={{ width: "50%" }} alignItems={"center"}>
                 <img
                     src={EiraLogo}
@@ -94,25 +62,28 @@ const TutorSignUp: React.FC = () => {
                         top: 20,
                     }}
                 />
+                <TutorOnboardingInfo
+                    infoMessage="Onboard them with us now to make the payment"
+                />
                 <Stack
                     justifyContent={"center"}
                     alignItems={"center"}
-                    sx={{ width: "80%", px: 18 }}
+                    sx={{ width: "85%", px: 18 }}
                 >
                     <Typography
                         variant="h5"
-                        sx={{ fontSize: 20, fontWeight: "bold" }}
+                        sx={{ fontSize: 20, fontWeight: "bold", mb: 2 }}
                     >
-                        Sign Up
+                        Tutor {step} details
                     </Typography>
                     <Typography
                         variant="subtitle1"
-                        sx={{ fontSize: 14, mb: 4, textAlign: "center" }}
+                        sx={{ fontSize: 16, mb: 4, textAlign: "center" }}
                     >
-                        Step {signUpStep} of 3
+                        Provide Tutor's {step} details for their onboarding
                     </Typography>
                     {
-                        signUpStep === 1 &&
+                        step === "personal" &&
                             <PersonalDetails
                                 isPanUnverified={isPanUnverified}
                                 isVerifying={isPanVerifying}
@@ -120,7 +91,7 @@ const TutorSignUp: React.FC = () => {
                             />
                     }
                     {
-                        signUpStep === 2 &&
+                        step === "account" &&
                             <BankAccountDetails
                                 isAccountVerifying={isAccountVerifying}
                                 onSubmit={verifyAccount}
@@ -160,29 +131,8 @@ const TutorSignUp: React.FC = () => {
                     </Stack>
                 </Stack>
             </Stack>
-            <DialogMessage
-                open={showAccountVerificationStatus && isAccountVerified}
-                onClose={() => setShowAccountVerificationStatus(false)}
-                type="success"
-                headingMessage="Congratulations!!"
-                subHeadingMessage={"Account successfully verified"}
-                preventDialogClose={true}
-                CustomDialogButton={VerifyAadhaarButton}
-            />
-            <DialogMessage
-                open={showAccountVerificationStatus && !isAccountVerified}
-                onClose={() => setShowAccountVerificationStatus(false)}
-                type="error"
-                headingMessage="Verification failed!"
-                subHeadingMessage="Error message"
-                preventDialogClose={false}
-                CustomDialogButton={TryAgainButton}
-            />
-            <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
-                <EiraBack2 />
-            </Box>
         </Stack>
-    )
+    );
 }
 
-export default TutorSignUp;
+export default InputTutorDetails;

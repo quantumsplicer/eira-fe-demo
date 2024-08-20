@@ -9,16 +9,19 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 interface SuccessDialogProps {
     open: boolean;
     onClose: () => void;
-    successMessage: string;
+    type: string;
+    headingMessage: string;
+    subHeadingMessage: string;
     preventDialogClose: boolean;
     CustomDialogButton: React.FC;
 }
 
-const SuccessDialog = ({ open, onClose, successMessage, preventDialogClose, CustomDialogButton }: SuccessDialogProps) => {
+const DialogMessage = ({ open, onClose, type, headingMessage, subHeadingMessage, preventDialogClose, CustomDialogButton }: SuccessDialogProps) => {
 
     const handleDialogClose = (event: React.MouseEvent<HTMLDivElement> ,reason: string) => {
         if (preventDialogClose && reason === 'backdropClick') {
@@ -51,7 +54,7 @@ const SuccessDialog = ({ open, onClose, successMessage, preventDialogClose, Cust
                         fontSize={22}
                         fontWeight="bold"
                     >
-                        Congratulations!!
+                        {headingMessage}
                     </Typography>
                     {
                         !preventDialogClose && 
@@ -69,10 +72,17 @@ const SuccessDialog = ({ open, onClose, successMessage, preventDialogClose, Cust
                         </IconButton>
                     }
                     <Typography>
-                        {successMessage}
+                        {subHeadingMessage}
                     </Typography>
                     <Box>
-                        <CheckCircleOutlineIcon sx={{ fontSize: 90, marginTop: "30px", color: "#19B904" }} />
+                        {
+                            type === "success" ?
+                                <CheckCircleOutlineIcon
+                                    sx={{ mt: 5, fontSize: 90, color: "green" }} /> :
+                                <CancelOutlinedIcon
+                                    sx={{ mt: 5, fontSize: 90, color: "red"}} />
+                        }
+                        
                     </Box>
                     <CustomDialogButton />
                 </Stack>
@@ -81,4 +91,4 @@ const SuccessDialog = ({ open, onClose, successMessage, preventDialogClose, Cust
     );
 }
 
-export default SuccessDialog;
+export default DialogMessage;

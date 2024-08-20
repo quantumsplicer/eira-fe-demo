@@ -15,12 +15,16 @@ import TutorSignIn from "../flows/tutorOnboarding/pages/TutorSignIn";
 import TutorSignUp from "../flows/tutorOnboarding/pages/TutorSignUp";
 import AadharVerification from "../flows/tutorOnboarding/pages/AadharVerification";
 import TutorDashboard from "../flows/tutorOnboarding/pages/TutorDashboard";
+import InputPersonalDetails from "../flows/payTutionFees/pages/InputPersonalDetails";
+import InputTutorDetails from "../flows/payTutionFees/pages/InputTutorDetails";
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/pay/verify" element={<InputPhone />} />
+      <Route path="/pay/personal-details" element={<InputPersonalDetails />} />
       <Route path="/pay/payment-details" element={<InputPaymentDetails />} />
+      <Route path="/pay/tutor-details" element={<InputTutorDetails />} />
       <Route path="/pay/create-session" element={<SlotBookingPage />} />
       <Route path="/pay/review" element={<PaymentReviewPage />} />
       <Route path="/pay/payment-gateway-payment-flow" element={<PGLoading />} />

@@ -5,10 +5,9 @@ import {
   Typography,
   TextField,
   Button,
-  Container,
   Stack,
 } from "@mui/material";
-import OTPDialog from "../dialogs/OTPDialog";
+import OTPDialog from "../../../dialogs/OTPDialog";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { EiraBack1 } from "../../../components/EiraBack1";
 
