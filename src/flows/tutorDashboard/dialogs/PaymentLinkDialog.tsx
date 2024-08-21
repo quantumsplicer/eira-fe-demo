@@ -19,6 +19,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import TickMark from "../../../assets/images/png/tick-mark.png";
 import Link from "@mui/material/Link";
+import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
 
 interface PaymentLinkDialogProps {
   activeDialog: string;
@@ -40,14 +41,22 @@ const PaymentLinkDialog = ({
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [amount, setAmount] = useState<string>();
+  const [checked, setChecked] = useState<boolean>();
 
+  const isPhoneNumberValid = (): boolean => {
+    const regex = /^[6-9]\d{9}$/;
+    return regex.test(phoneNumber);
+  };
   const handleStudentNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setStudentName(event.target.value);
   };
-  const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneNumber(event.target.value);
+  // const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setPhoneNumber(event.target.value);
+  // };
+  const handleChange = () => {
+    setChecked(!checked);
   };
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -63,7 +72,7 @@ const PaymentLinkDialog = ({
         "& .MuiDialog-paper": {
           width: 470,
           maxWidth: "50vw",
-          height: 540,
+          height: 570,
           borderRadius: 3,
         },
         p: 2,
@@ -106,7 +115,6 @@ const PaymentLinkDialog = ({
               fullWidth
               label="Name of the student"
               variant="outlined"
-              size="small"
               value={studentName}
               onChange={handleStudentNameChange}
               sx={{
@@ -121,7 +129,7 @@ const PaymentLinkDialog = ({
                 ),
               }}
             />
-            <TextField
+            {/* <TextField
               fullWidth
               label="Phone number"
               variant="outlined"
@@ -139,13 +147,18 @@ const PaymentLinkDialog = ({
                   <Typography fontSize={14} sx={{ mr: 1 }}></Typography>
                 ),
               }}
+            /> */}
+            <PhoneNumberInputField
+              autoFocus={true}
+              label="Phone Number"
+              phone={phoneNumber}
+              setPhoneNumber={setPhoneNumber}
+              onSubmit={() => {}}
             />
-
             <TextField
               fullWidth
               label="Email (optional)"
               variant="outlined"
-              size="small"
               value={email}
               onChange={handleEmailChange}
               sx={{
@@ -165,7 +178,6 @@ const PaymentLinkDialog = ({
               label="Amount to pay"
               type="number"
               variant="outlined"
-              size="small"
               value={amount}
               onChange={handleAmountChange}
               sx={{
@@ -187,7 +199,9 @@ const PaymentLinkDialog = ({
             <Stack spacing={1}>
               <FormGroup sx={{ fontSize: 10 }}>
                 <FormControlLabel
-                  control={<Checkbox />}
+                  control={
+                    <Checkbox checked={checked} onChange={handleChange} />
+                  }
                   label={
                     <Typography sx={{ fontSize: 10, lineHeight: 1.2 }}>
                       I confirm that all these sessions were conducted through
@@ -202,7 +216,9 @@ const PaymentLinkDialog = ({
                 onClick={handleOnSubmit}
                 fullWidth
                 disabled={
-                  !studentName || !phoneNumber || !amount ? true : false
+                  !studentName || !isPhoneNumberValid() || !amount || !checked
+                    ? true
+                    : false
                 }
                 sx={{
                   backgroundColor: "#507FFD",
