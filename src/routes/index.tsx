@@ -11,6 +11,7 @@ import PaymentReviewPage from "../flows/payTutionFees/pages/PaymentReviewPage";
 import PGLoading from "../flows/payTutionFees/pages/PGLoading";
 import PaymentSuccessfulPage from "../flows/payTutionFees/pages/PaymentSuccessfulPage";
 import SlotBookingPage from "../flows/payTutionFees/pages/SlotBookingPage";
+import TutorDashboard from "../flows/tutorDashboard/pages/TutorDashboard";
 
 const AppRoutes = () => {
   return (
@@ -24,6 +25,7 @@ const AppRoutes = () => {
         path="/payment-successful"
         element={<PaymentSuccessfulPage />}
       />
+      <Route path="/tutor-id/dashboard" element={<TutorDashboard/>}/>
     </Routes>
   );
 };
