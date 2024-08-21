@@ -18,6 +18,7 @@ import TutorDashboard from "../flows/tutorOnboarding/pages/TutorDashboard";
 import InputPersonalDetails from "../flows/payTutionFees/pages/InputPersonalDetails";
 import InputTutorDetails from "../flows/payTutionFees/pages/InputTutorDetails";
 
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -29,7 +30,7 @@ const AppRoutes = () => {
       <Route path="/pay/review" element={<PaymentReviewPage />} />
       <Route path="/pay/payment-gateway-payment-flow" element={<PGLoading />} />
       <Route
-        path="/pay/payment-successful"
+        path="/payment-successful"
         element={<PaymentSuccessfulPage />}
       />
       <Route path="tutor/signin" element={<TutorSignIn />}></Route>
