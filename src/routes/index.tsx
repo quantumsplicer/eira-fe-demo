@@ -12,7 +12,7 @@ import PGLoading from "../flows/payTutionFees/pages/PGLoading";
 import PaymentSuccessfulPage from "../flows/payTutionFees/pages/PaymentSuccessfulPage";
 import SlotBookingPage from "../flows/payTutionFees/pages/SlotBookingPage";
 import TutorDashboard from "../flows/tutorDashboard/pages/TutorDashboard";
-
+import StudentDashboard from "../flows/studentDashboard/pages/StudentDashboard";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -25,7 +25,8 @@ const AppRoutes = () => {
         path="/pay/payment-successful"
         element={<PaymentSuccessfulPage />}
       />
-      <Route path="/tutor-id/dashboard" element={<TutorDashboard/>}/>
+      <Route path="/tutor-id/dashboard" element={<TutorDashboard />} />
+      <Route path="/student-id/dashboard" element={<StudentDashboard />} />
     </Routes>
   );
 };
