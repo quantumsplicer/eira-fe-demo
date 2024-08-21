@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { EiraBack1 } from "../../../components/EiraBack1";
+import TutorOnboardingInfo from "../../../components/TutorOnboardingInfo";
+import PaymentReviewInfo from "../../../components/PaymentReviewInfo";
+import Amount from "../../../components/Amount";
 
 const PaymentReviewPage = () => {
   const navigate = useNavigate();
@@ -32,53 +35,65 @@ const PaymentReviewPage = () => {
             top: 20,
           }}
         />
+        <TutorOnboardingInfo
+          infoMessage="Ask them to complete KYC now to receive the payment"
+        />
         <Stack
           justifyContent={"center"}
           alignItems={"center"}
-          sx={{ width: "80%", px: 18 }}
+          sx={{ width: "85%", px: 18 }}
         >
-          <Typography
-            variant="h5"
-            sx={{ fontSize: 20, fontWeight: "bold", mb: 2 }}
-          >
-            Payment Info
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            sx={{ fontSize: 16, mb: 4, textAlign: "center" }}
-          >
-            Confirm payment details and make payment
-          </Typography>
           <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{ width: "100%", mb: 2 }}
+            direction={"row"}
+            alignItems={"center"}
           >
-            <Typography variant="body1">Making payment to:</Typography>
-            <Typography variant="body1" fontWeight="bold">
+            <Typography
+              variant="h5"
+              sx={{ fontSize: 20 }}
+              color={"#969696"}
+              mr={1}
+            >
+              paying
+            </Typography>
+            <Amount amount="5000" />
+          </Stack>
+          <Stack
+            direction={"row"}
+            alignItems={"center"}
+          >
+            <Typography
+              variant="h5"
+              sx={{ fontSize: 20 }}
+              color={"#969696"}
+              mr={1}
+            >
+              to
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{ fontSize: 20 }}
+              mr={1}
+              fontWeight={"bold"}
+            >
               Suneel Satpal
             </Typography>
           </Stack>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{ width: "100%", mb: 2 }}
+          <Typography
+            variant="subtitle1"
+            sx={{ fontSize: 16, mt: 3, mb: 4, textAlign: "center" }}
           >
-            <Typography variant="body1">Phone:</Typography>
-            <Typography variant="body1" fontWeight="bold">
-              +91 9389250148
-            </Typography>
-          </Stack>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{ width: "100%", mb: 2 }}
-          >
-            <Typography variant="body1">Amount:</Typography>
-            <Typography variant="body1" fontWeight="bold">
-              ₹ 5,000
-            </Typography>
-          </Stack>
+            Confirm payment details and make payment
+          </Typography>
+          <Box width={"100%"}>
+            <PaymentReviewInfo
+              accountNumber="**** **** **** 2150"
+              name="Suneel Satpal"
+              phoneNumber="+91 9389250148"
+              sessionStartTime="17:00"
+              sessionEndTime="18:00"
+              sessionDate="24th Aug, 2024"
+            />
+          </Box>
           <Button
             fullWidth
             variant="contained"

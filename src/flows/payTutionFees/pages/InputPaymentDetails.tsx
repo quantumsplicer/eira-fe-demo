@@ -1,35 +1,68 @@
 // src/components/InputPaymentDetails.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
   TextField,
   Button,
-  Container,
   Stack,
 } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { useNavigate } from "react-router-dom";
 import { EiraBack1 } from "../../../components/EiraBack1";
+import NoteBox from "../../../components/NoteBox";
+import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
 
 const InputPaymentDetails: React.FC = () => {
   const navigate = useNavigate();
   const [amount, setAmount] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
+  const [isPhoneNumberInvalid, setIsPhoneNumberInvalid] = useState<boolean>(false);
+
+  const noteBoxHeading = "Things to keep in mind:";
+  const notes = [
+    "Make sure you have the correct details for payment transfer.",
+    "Make sure you are transferring to an onboarded person OR have their account details to onboard them."
+  ]
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(event.target.value);
+    const invalidRegex = /[^0-9]/
+    const inputValue = event.target.value;
+    if (inputValue === '' || !invalidRegex.test(inputValue)) {
+      setAmount(inputValue);
+    }
   };
 
-  const handlePhoneNumberChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setPhoneNumber(event.target.value);
-  };
+  const isPhoneNumberValid = (): boolean => {
+    const regex = /^[6-9]\d{9}$/;
+    // setIsPhoneNumberInvalid(!regex.test(phoneNumber));
+    return regex.test(phoneNumber);
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  }
 
   const handleSubmit = () => {
-    navigate("/pay/create-session");
+    if (!amount || Number(amount) === 0 || !isPhoneNumberValid())
+      return;
+    const isTutorOnboarded = false;
+    if (!isTutorOnboarded) {
+      navigate("/pay/tutor-details");
+    } else {
+      navigate("/pay/create-session");
+    }
   };
+
+  useEffect(() => {
+    setIsButtonDisabled(true);
+    if (Number(amount) !== 0 && phoneNumber.length === 10 && isPhoneNumberValid()) {
+      setIsButtonDisabled(false);
+    }
+  }, [amount, phoneNumber])
 
   return (
     <Stack
@@ -56,7 +89,7 @@ const InputPaymentDetails: React.FC = () => {
         <Stack
           justifyContent={"center"}
           alignItems={"center"}
-          sx={{ width: "80%", px: 18 }}
+          sx={{ width: "85%", px: 18 }}
         >
           <Typography
             variant="h5"
@@ -70,37 +103,18 @@ const InputPaymentDetails: React.FC = () => {
           >
             Enter payment details to make the payment
           </Typography>
-          <Box
-            sx={{
-              mb: 4,
-              backgroundColor: "#f9f9f9",
-              padding: 2,
-              borderRadius: 2,
-            }}
-          >
-            <Typography variant="body2" fontSize={12}>
-              Things to keep in mind:
-            </Typography>
-            <ul>
-              <li>
-                <Typography variant="body2" fontSize={12}>
-                  Make sure you have the correct details for payment transfer.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="body2" fontSize={12}>
-                  Make sure you are transferring to an onboarded person OR have
-                  their account details to onboard them.
-                </Typography>
-              </li>
-            </ul>
-          </Box>
+          <NoteBox
+            heading={noteBoxHeading}
+            notes={notes}
+          />
           <TextField
+            autoFocus
             fullWidth
             label="Amount to pay"
             variant="outlined"
             value={amount}
             onChange={handleAmountChange}
+            onKeyDown={handleKeyDown}
             sx={{
               mb: 2,
               "&:MuiInputBase-input": {
@@ -115,30 +129,13 @@ const InputPaymentDetails: React.FC = () => {
               ),
             }}
           />
-          <TextField
-            fullWidth
+          <PhoneNumberInputField
+            autoFocus={false}
             label="Phone number of the tutor"
-            variant="outlined"
-            value={phoneNumber}
-            onChange={handlePhoneNumberChange}
-            sx={{
-              mb: 2,
-              "&:MuiInputBase-input": {
-                fontSize: 12,
-              },
-            }}
-            InputProps={{
-              startAdornment: (
-                <Stack direction={"row"} spacing={1} sx={{ mr: 1 }}>
-                  <img
-                    src="https://flagcdn.com/w320/in.png"
-                    alt="India Flag"
-                    style={{ width: 24, height: 18, marginRight: 8 }}
-                  />
-                  <Typography fontSize={14}>+91</Typography>
-                </Stack>
-              ),
-            }}
+            phone={phoneNumber}
+            setPhoneNumber={setPhoneNumber}
+            onSubmit={handleSubmit}
+            // isPhoneNumberInvalid={isPhoneNumberInvalid}
           />
           <Button
             fullWidth
@@ -146,6 +143,7 @@ const InputPaymentDetails: React.FC = () => {
             color="primary"
             sx={{ padding: 1.5, borderRadius: 2 }}
             onClick={handleSubmit}
+            disabled={isButtonDisabled}
           >
             Book a slot
           </Button>
