@@ -1,12 +1,6 @@
 // src/components/RightPanel.tsx
 import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Stack,
-} from "@mui/material";
+import { Box, Typography, TextField, Button, Stack } from "@mui/material";
 import OTPDialog from "../../../dialogs/OTPDialog";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { EiraBack1 } from "../../../components/EiraBack1";
@@ -31,6 +25,21 @@ const InputPhone = () => {
       }}
     >
       <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontSize: 40,
+            color: "white",
+            fontWeight: "bold",
+            mb: 2,
+            position: "absolute",
+            top: 100,
+            left: 100,
+            width: "25%"
+          }}
+        >
+          Pay your tuition fees using credit card @ just 1%
+        </Typography>
         <EiraBack1 />
       </Box>
       <Stack sx={{ width: "50%" }} alignItems={"center"}>
@@ -53,13 +62,13 @@ const InputPhone = () => {
             variant="h5"
             sx={{ fontSize: 20, fontWeight: "bold", mb: 2 }}
           >
-            Login as a student
+            Sign up as a student
           </Typography>
           <Typography
             variant="subtitle1"
             sx={{ fontSize: 16, mb: 4, textAlign: "center" }}
           >
-            Enter details and verify phone number to make payment
+            Enter your phone number 
           </Typography>
           <Box
             sx={{
@@ -129,7 +138,7 @@ const InputPhone = () => {
             }}
           >
             <a
-              href="https://google.com"
+              href="https://www.eira.club/privacy-policy"
               target="_blank"
               style={{ textDecoration: "none" }}
             >
@@ -141,7 +150,7 @@ const InputPhone = () => {
               |
             </Typography>
             <a
-              href="https://google.com"
+              href="https://www.eira.club/terms-of-use"
               target="_blank"
               style={{ textDecoration: "none" }}
             >

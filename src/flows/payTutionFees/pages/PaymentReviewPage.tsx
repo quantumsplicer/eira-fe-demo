@@ -22,6 +22,21 @@ const PaymentReviewPage = () => {
       }}
     >
       <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontSize: 40,
+            color: "white",
+            fontWeight: "bold",
+            mb: 2,
+            position: "absolute",
+            top: 100,
+            left: 100,
+            width: "25%",
+          }}
+        >
+          Pay your tuition fees using credit card @ just 1%
+        </Typography>
         <EiraBack1 />
       </Box>
       <Stack sx={{ width: "50%" }} alignItems={"center"}>
@@ -35,18 +50,13 @@ const PaymentReviewPage = () => {
             top: 20,
           }}
         />
-        <TutorOnboardingInfo
-          infoMessage="Ask them to complete KYC now to receive the payment"
-        />
+        {/* <TutorOnboardingInfo infoMessage="Ask them to complete KYC now to receive the payment" /> */}
         <Stack
           justifyContent={"center"}
           alignItems={"center"}
           sx={{ width: "85%", px: 18 }}
         >
-          <Stack
-            direction={"row"}
-            alignItems={"center"}
-          >
+          <Stack direction={"row"} alignItems={"center"}>
             <Typography
               variant="h5"
               sx={{ fontSize: 20 }}
@@ -57,10 +67,7 @@ const PaymentReviewPage = () => {
             </Typography>
             <Amount amount="5000" />
           </Stack>
-          <Stack
-            direction={"row"}
-            alignItems={"center"}
-          >
+          <Stack direction={"row"} alignItems={"center"}>
             <Typography
               variant="h5"
               sx={{ fontSize: 20 }}
@@ -79,10 +86,16 @@ const PaymentReviewPage = () => {
             </Typography>
           </Stack>
           <Typography
-            variant="subtitle1"
-            sx={{ fontSize: 16, mt: 3, mb: 4, textAlign: "center" }}
+            variant="h5"
+            sx={{ fontSize: 18, fontWeight: "bold", mt: 4 }}
           >
-            Confirm payment details and make payment
+            Payment Overview
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            sx={{ fontSize: 16, mt: 1, mb: 4, textAlign: "center" }}
+          >
+            Review the payment details and proceed to pay
           </Typography>
           <Box width={"100%"}>
             <PaymentReviewInfo
@@ -114,7 +127,7 @@ const PaymentReviewPage = () => {
             }}
           >
             <a
-              href="https://google.com"
+              href="https://www.eira.club/privacy-policy"
               target="_blank"
               style={{ textDecoration: "none" }}
             >
@@ -126,7 +139,7 @@ const PaymentReviewPage = () => {
               |
             </Typography>
             <a
-              href="https://google.com"
+              href="https://www.eira.club/terms-of-use"
               target="_blank"
               style={{ textDecoration: "none" }}
             >

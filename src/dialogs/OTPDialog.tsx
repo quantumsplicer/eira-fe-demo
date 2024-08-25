@@ -22,17 +22,25 @@ interface OTPDialogProps {
   phoneNumber: string;
 }
 
-const OTPDialog = ({ open, onClose, navigateTo, phoneNumber }: OTPDialogProps) => {
+const OTPDialog = ({
+  open,
+  onClose,
+  navigateTo,
+  phoneNumber,
+}: OTPDialogProps) => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const otpInputsRef = useRef<Array<React.RefObject<HTMLInputElement>>>([]);
   const [isOtpInvalid, setIsOtpInvalid] = useState<boolean>(false);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, index: number) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLDivElement>,
+    index: number
+  ) => {
     if (e.key === "Backspace" && !otp[index]) {
       setActiveIndex(index - 1);
-      setOtp(prev => prev.slice(0, index - 1) + prev.slice(index));
+      setOtp((prev) => prev.slice(0, index - 1) + prev.slice(index));
       return;
     }
     if (e.key === "Enter" && otp.length === OPT_LENGTH) {
@@ -40,31 +48,35 @@ const OTPDialog = ({ open, onClose, navigateTo, phoneNumber }: OTPDialogProps) =
     }
   };
 
-  const handleOTPInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
+  const handleOTPInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    index: number
+  ) => {
     const invalidRegex = /[^0-9]/;
     const inputValue = e.target.value;
 
-    if (inputValue === '' || !invalidRegex.test(inputValue)) {
-
-      setIsOtpInvalid(false)
+    if (inputValue === "" || !invalidRegex.test(inputValue)) {
+      setIsOtpInvalid(false);
 
       // Handle deletion
       if (inputValue === "") {
         // If there is a value at the current index, remove it
         if (otp[index] !== "") {
-          setOtp(prev => prev.slice(0, index) + prev.slice(index + 1));
+          setOtp((prev) => prev.slice(0, index) + prev.slice(index + 1));
           // No need to change activeIndex here as we're staying in the same input
         } else if (index > 0) {
           // If the current index is empty, move one step back and delete the character there
           setActiveIndex(index - 1); // Move back to the previous input
-          setOtp(prev => prev.slice(0, index - 1) + prev.slice(index)); // Delete the character at the new active index
+          setOtp((prev) => prev.slice(0, index - 1) + prev.slice(index)); // Delete the character at the new active index
         }
         return; // Early return after handling deletion
       }
 
       // Handle new input
       if (inputValue.length === 1) {
-        setOtp(prev => prev.slice(0, index) + inputValue + prev.slice(index + 1));
+        setOtp(
+          (prev) => prev.slice(0, index) + inputValue + prev.slice(index + 1)
+        );
 
         // Move to the next input if not the last one
         if (index < OPT_LENGTH - 1) {
@@ -76,27 +88,29 @@ const OTPDialog = ({ open, onClose, navigateTo, phoneNumber }: OTPDialogProps) =
 
   const verifyOtp = (): boolean => {
     return true;
-  }
+  };
 
   const handleSubmit = () => {
     // navigate("/pay/payment-details")
     if (!verifyOtp()) {
-      setIsOtpInvalid(true)
-      return
+      setIsOtpInvalid(true);
+      return;
     }
-    localStorage.setItem("phoneNumber", phoneNumber)
-    navigate(navigateTo)
-    onClose()
+    localStorage.setItem("phoneNumber", phoneNumber);
+    navigate(navigateTo);
+    onClose();
   };
 
   const resendOtp = () => {
-    setOtp('');
+    setOtp("");
     setIsOtpInvalid(false);
     setActiveIndex(0);
-  }
+  };
 
   useEffect(() => {
-    otpInputsRef.current = Array.from({ length: OPT_LENGTH }).map(() => createRef<HTMLInputElement>());
+    otpInputsRef.current = Array.from({ length: OPT_LENGTH }).map(() =>
+      createRef<HTMLInputElement>()
+    );
   }, []);
 
   useEffect(() => {
@@ -113,7 +127,7 @@ const OTPDialog = ({ open, onClose, navigateTo, phoneNumber }: OTPDialogProps) =
 
   useEffect(() => {
     if (open) {
-      setOtp('')
+      setOtp("");
       setActiveIndex(0);
     }
   }, [open]);
@@ -139,7 +153,7 @@ const OTPDialog = ({ open, onClose, navigateTo, phoneNumber }: OTPDialogProps) =
           sx={{ height: "100%", pb: 10 }}
         >
           <Typography fontSize={18} fontWeight="bold">
-            Verify Phone Number
+            Please verify your phone number
           </Typography>
           <IconButton
             aria-label="close"
@@ -154,7 +168,7 @@ const OTPDialog = ({ open, onClose, navigateTo, phoneNumber }: OTPDialogProps) =
             <CloseIcon />
           </IconButton>
           <Typography variant="body2" sx={{ mb: 2 }}>
-            Enter OTP for phone number verification
+            Enter OTP received on your phone number
           </Typography>
           <Box
             sx={{ display: "flex", justifyContent: "center", gap: 1, pt: 2 }}
@@ -183,26 +197,24 @@ const OTPDialog = ({ open, onClose, navigateTo, phoneNumber }: OTPDialogProps) =
               />
             ))}
           </Box>
-          {
-            isOtpInvalid &&
+          {isOtpInvalid && (
             <Typography color="#d32f2f" fontSize={14}>
               Incorrect OTP. Please retry.
             </Typography>
-          }
-          {
-            isOtpInvalid &&
+          )}
+          {isOtpInvalid && (
             <Typography
               onClick={resendOtp}
               fontSize={14}
               sx={{
                 borderBottom: "1px solid #6285FF",
                 cursor: "pointer",
-                color: "#6285FF"
+                color: "#6285FF",
               }}
             >
               Resend OTP
             </Typography>
-          }
+          )}
           <Button
             variant="contained"
             onClick={handleSubmit}

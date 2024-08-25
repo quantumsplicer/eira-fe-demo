@@ -5,6 +5,7 @@ import { EiraBack1 } from "../../../components/EiraBack1";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import Amount from "../../../components/Amount";
 import PaymentSuccessInfo from "../../../components/PaymentSuccessInfo";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 const PaymentSuccessfulPage = () => {
   return (
@@ -16,6 +17,21 @@ const PaymentSuccessfulPage = () => {
       }}
     >
       <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontSize: 40,
+            color: "white",
+            fontWeight: "bold",
+            mb: 2,
+            position: "absolute",
+            top: 100,
+            left: 100,
+            width: "25%",
+          }}
+        >
+          Pay your tuition fees using credit card @ just 1%
+        </Typography>
         <EiraBack1 />
       </Box>
       <Stack sx={{ width: "50%" }} alignItems={"center"}>
@@ -34,6 +50,9 @@ const PaymentSuccessfulPage = () => {
           alignItems={"center"}
           sx={{ width: "80%", px: 18 }}
         >
+          <CheckCircleOutlineIcon
+                sx={{ color: "green", fontSize: 90, my: 3 }}
+            />
           <Stack
             direction={"row"}
             alignItems={"center"}
@@ -93,8 +112,8 @@ const PaymentSuccessfulPage = () => {
               bottom: 20,
             }}
           >
-            <a
-              href="https://google.com"
+           <a
+              href="https://www.eira.club/privacy-policy"
               target="_blank"
               style={{ textDecoration: "none" }}
             >
@@ -106,7 +125,7 @@ const PaymentSuccessfulPage = () => {
               |
             </Typography>
             <a
-              href="https://google.com"
+              href="https://www.eira.club/terms-of-use"
               target="_blank"
               style={{ textDecoration: "none" }}
             >

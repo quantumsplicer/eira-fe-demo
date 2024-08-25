@@ -58,7 +58,22 @@ const SlotBookingPage = () => {
         m: 0,
       }}
     >
-      <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
+       <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontSize: 40,
+            color: "white",
+            fontWeight: "bold",
+            mb: 2,
+            position: "absolute",
+            top: 100,
+            left: 100,
+            width: "25%"
+          }}
+        >
+          Pay your tuition fees using credit card @ just 1%
+        </Typography>
         <EiraBack1 />
       </Box>
       <Stack sx={{ width: "50%" }} alignItems={"center"}>
@@ -81,13 +96,13 @@ const SlotBookingPage = () => {
             variant="h5"
             sx={{ fontSize: 20, fontWeight: "bold", mb: 2 }}
           >
-            Create Session
+            Book a session
           </Typography>
           <Typography
             variant="subtitle1"
             sx={{ fontSize: 16, mb: 4, textAlign: "center" }}
           >
-            Create session with the tutor
+            Enter session details 
           </Typography>
           <TextField
             required
@@ -122,7 +137,7 @@ const SlotBookingPage = () => {
             onClick={handleSubmit}
             disabled={isButtonDisabled}
           >
-            Proceed to pay
+            Review and pay
           </Button>
           <Stack
             direction="row"
@@ -135,24 +150,24 @@ const SlotBookingPage = () => {
             }}
           >
             <a
-              href="https://google.com"
+              href="https://www.eira.club/privacy-policy"
               target="_blank"
               style={{ textDecoration: "none" }}
             >
               <Typography variant="body2" color="grey">
-                Privacy policies
+                privacy policies
               </Typography>
             </a>
             <Typography variant="body2" color="grey">
               |
             </Typography>
             <a
-              href="https://google.com"
+              href="https://www.eira.club/terms-of-use"
               target="_blank"
               style={{ textDecoration: "none" }}
             >
               <Typography variant="body2" color="grey">
-                Terms of use
+                terms of use
               </Typography>
             </a>
           </Stack>

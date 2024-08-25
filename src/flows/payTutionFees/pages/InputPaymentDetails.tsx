@@ -49,7 +49,7 @@ const InputPaymentDetails: React.FC = () => {
   const handleSubmit = () => {
     if (!amount || Number(amount) === 0 || !isPhoneNumberValid())
       return;
-    const isTutorOnboarded = false;
+    const isTutorOnboarded = true;
     if (!isTutorOnboarded) {
       navigate("/pay/tutor-details");
     } else {
@@ -72,7 +72,22 @@ const InputPaymentDetails: React.FC = () => {
         alignItems: "center",
       }}
     >
-      <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
+       <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontSize: 40,
+            color: "white",
+            fontWeight: "bold",
+            mb: 2,
+            position: "absolute",
+            top: 100,
+            left: 100,
+            width: "25%"
+          }}
+        >
+          Pay your tuition fees using credit card @ just 1%
+        </Typography>
         <EiraBack1 />
       </Box>
       <Stack sx={{ width: "50%" }} alignItems={"center"}>
@@ -101,7 +116,7 @@ const InputPaymentDetails: React.FC = () => {
             variant="subtitle1"
             sx={{ fontSize: 16, mb: 4, textAlign: "center" }}
           >
-            Enter payment details to make the payment
+            Enter payment details
           </Typography>
           <NoteBox
             heading={noteBoxHeading}
@@ -145,7 +160,7 @@ const InputPaymentDetails: React.FC = () => {
             onClick={handleSubmit}
             disabled={isButtonDisabled}
           >
-            Book a slot
+            Book a session
           </Button>
           <Stack
             direction="row"
@@ -158,7 +173,7 @@ const InputPaymentDetails: React.FC = () => {
             }}
           >
             <a
-              href="https://google.com"
+              href="https://www.eira.club/privacy-policy"
               target="_blank"
               style={{ textDecoration: "none" }}
             >
@@ -170,7 +185,7 @@ const InputPaymentDetails: React.FC = () => {
               |
             </Typography>
             <a
-              href="https://google.com"
+              href="https://www.eira.club/terms-of-use"
               target="_blank"
               style={{ textDecoration: "none" }}
             >

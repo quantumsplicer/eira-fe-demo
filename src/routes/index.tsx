@@ -30,7 +30,7 @@ const AppRoutes = () => {
       <Route path="/pay/review" element={<PaymentReviewPage />} />
       <Route path="/pay/payment-gateway-payment-flow" element={<PGLoading />} />
       <Route
-        path="/payment-successful"
+        path="/pay/payment-successful"
         element={<PaymentSuccessfulPage />}
       />
       <Route path="tutor/signin" element={<TutorSignIn />}></Route>

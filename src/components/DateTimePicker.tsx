@@ -32,7 +32,7 @@ const DateTimePicker = ({ selectedDate, setSelectedDate, startTime, setStartTime
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Stack direction="row" spacing={2}>
                     <DatePicker
-                        label="Add date"
+                        label="Date"
                         value={selectedDate}
                         onChange={(newValue) => setSelectedDate(newValue)}
                         minDate={today}

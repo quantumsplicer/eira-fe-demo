@@ -30,19 +30,6 @@ const PaymentSuccessInfo = ({ transactionId, transactionDate, transactionTime, a
                         {transactionId}
                     </Typography>
                 </Stack>
-                <Stack justifyContent={"space-between"} direction={"row"} mb={2}>
-                    <Typography width={"50%"} color={"#7e7e7e"}>
-                        Transaction date & time:
-                    </Typography>
-                    <Stack alignItems={"flex-end"}>
-                        <Typography>
-                            {transactionTime}
-                        </Typography>
-                        <Typography>
-                            {transactionDate}
-                        </Typography>
-                    </Stack>
-                </Stack>
                 <PaymentReviewInfo
                     accountNumber={accountNumber}
                     name={name}
@@ -52,9 +39,6 @@ const PaymentSuccessInfo = ({ transactionId, transactionDate, transactionTime, a
                     sessionDate={sessionDate}
                 />
             </Stack>
-            <CheckCircleOutlineIcon
-                sx={{ color: "green", fontSize: 90, mt: 5 }}
-            />
         </Stack>
     )
 }
