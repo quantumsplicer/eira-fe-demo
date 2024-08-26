@@ -70,31 +70,6 @@ const InputPhone = () => {
           >
             Enter your phone number 
           </Typography>
-          <Box
-            sx={{
-              mb: 4,
-              backgroundColor: "#f9f9f9",
-              padding: 2,
-              borderRadius: 2,
-            }}
-          >
-            <Typography variant="body2" fontSize={12}>
-              Things to keep in mind:
-            </Typography>
-            <ul>
-              <li>
-                <Typography variant="body2" fontSize={12}>
-                  Make sure you have the correct details for payment transfer.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="body2" fontSize={12}>
-                  Make sure you are transferring to an onboarded person OR have
-                  their account details to onboard them.
-                </Typography>
-              </li>
-            </ul>
-          </Box>
           <TextField
             fullWidth
             label="Phone number"

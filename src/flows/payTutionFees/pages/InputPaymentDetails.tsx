@@ -118,10 +118,6 @@ const InputPaymentDetails: React.FC = () => {
           >
             Enter payment details
           </Typography>
-          <NoteBox
-            heading={noteBoxHeading}
-            notes={notes}
-          />
           <TextField
             autoFocus
             fullWidth
