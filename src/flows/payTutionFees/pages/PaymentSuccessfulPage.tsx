@@ -126,7 +126,7 @@ const PaymentSuccessfulPage = () => {
             </Typography>
             <a
               href="https://www.eira.club/terms-of-use"
-              target="_blank"
+              target='_blank'
               style={{ textDecoration: "none" }}
             >
               <Typography variant="body2" color="grey">
