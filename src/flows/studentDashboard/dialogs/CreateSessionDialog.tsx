@@ -20,18 +20,32 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
 import CloseIcon from "@mui/icons-material/Close";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 interface CreateSessionDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: () => void;
 }
+type Inputs = {
+  sessionTitle: string;
+  selectedDate: Dayjs;
+  startTime: Dayjs;
+  endTime: Dayjs;
+  description: string;
+};
 
 const CreateSessionDialog = ({
   open,
   onClose,
   onSubmit,
 }: CreateSessionDialogProps) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
   const [sessionTitle, setSessionTitle] = useState("");
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [startTime, setStartTime] = useState<Dayjs | null>(null);
@@ -99,8 +113,7 @@ const CreateSessionDialog = ({
               fullWidth
               label="Session Title"
               variant="outlined"
-              value={sessionTitle}
-              onChange={handleSessionTitleChange}
+              {...register("sessionTitle", { required: true })}
               sx={{ mb: 2 }}
             />
             <FormControl fullWidth sx={{ mb: 2 }}>
@@ -108,7 +121,8 @@ const CreateSessionDialog = ({
                 <Stack direction="row" spacing={2}>
                   <DatePicker
                     label="Add date"
-                    value={selectedDate}
+                    {...register("selectedDate", { required: true })}
+                    // value={selectedDate}
                     onChange={(newValue) => setSelectedDate(newValue)}
                     // renderInput={(params) => <TextField {...params} />}
                   />

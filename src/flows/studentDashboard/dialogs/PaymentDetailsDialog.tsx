@@ -11,29 +11,30 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 interface PaymentDetailsDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: () => void;
 }
+type Inputs = {
+  phoneNumber: string;
+  amount: string;
+};
 
 const PaymentDetailsDialog = ({
   open,
   onClose,
   onSubmit,
 }: PaymentDetailsDialogProps) => {
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [amount, setAmount] = useState<string>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
 
-  const handlePhoneNumberChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setPhoneNumber(event.target.value);
-  };
-  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(event.target.value);
-  };
   return (
     <Dialog
       open={open}
@@ -86,8 +87,7 @@ const PaymentDetailsDialog = ({
               label="Phone number of the tutor"
               variant="outlined"
               size="small"
-              value={phoneNumber}
-              onChange={handlePhoneNumberChange}
+              {...register("phoneNumber", { required: true })}
               sx={{
                 mb: 0,
                 "&:MuiInputBase-input": {
@@ -107,8 +107,7 @@ const PaymentDetailsDialog = ({
               type="number"
               variant="outlined"
               size="small"
-              value={amount}
-              onChange={handleAmountChange}
+              {...register("amount", { required: true })}
               sx={{
                 mb: 0,
                 "&:MuiInputBase-input": {
@@ -127,9 +126,9 @@ const PaymentDetailsDialog = ({
           <Box sx={{ pt: 1 }}>
             <Button
               variant="contained"
-              onClick={onSubmit}
+              onClick={handleSubmit(onSubmit)}
               fullWidth
-              disabled={!phoneNumber || !amount ? true : false}
+              disabled={Object.keys(errors).length === 0 ? false : true}
               sx={{
                 backgroundColor: "#507FFD",
                 borderRadius: 7,

@@ -14,18 +14,31 @@ import {
 } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 interface TutorDetailsDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: () => void;
 }
+type Inputs = {
+  firstName: string;
+  lastName: string;
+  panNumber: string;
+};
 
 const TutorDetailsDialog = ({
   open,
   onClose,
   onSubmit,
 }: TutorDetailsDialogProps) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [panNumber, setPanNumber] = useState("");
@@ -106,8 +119,7 @@ const TutorDetailsDialog = ({
               fullWidth
               label="First Name"
               variant="outlined"
-              value={firstName}
-              onChange={handleFirstNameChange}
+              {...register("firstName", { required: true })}
               sx={{ mb: 2 }}
               size="small"
             />
@@ -115,8 +127,7 @@ const TutorDetailsDialog = ({
               fullWidth
               label="Last Name"
               variant="outlined"
-              value={lastName}
-              onChange={handleLastNameChange}
+              {...register("lastName", {})}
               sx={{ mb: 2 }}
               size="small"
             />
@@ -124,8 +135,7 @@ const TutorDetailsDialog = ({
               fullWidth
               label="Pan"
               variant="outlined"
-              value={panNumber}
-              onChange={handlePanChange}
+              {...register("panNumber", { required: true })}
               size="small"
               sx={{ mb: 2 }}
             />
@@ -133,9 +143,9 @@ const TutorDetailsDialog = ({
           <Box sx={{ pt: 1 }}>
             <Button
               variant="contained"
-              onClick={onSubmit}
+              onClick={handleSubmit(onSubmit)}
               fullWidth
-              disabled={!firstName || !panNumber ? true : false}
+              disabled={Object.keys(errors).length === 0 ? false : true}
               sx={{
                 backgroundColor: "#507FFD",
                 borderRadius: 7,
