@@ -91,7 +91,7 @@ const PaymentLinkDialog = ({
         >
           <CloseIcon />
         </IconButton>
-        <Stack sx={{ pl: 4, pr: 4, pt: 3 }} spacing={2}>
+        <Stack sx={{ pl: 4, pr: 4, pt: 4 }} spacing={4}>
           <Stack justifyContent="center" alignItems="center" sx={{ pt: 1 }}>
             <Typography sx={{ fontSize: 23, fontWeight: "bold" }}>
               Create a payment Link
@@ -116,6 +116,7 @@ const PaymentLinkDialog = ({
               label="Name of the student"
               variant="outlined"
               value={studentName}
+              size="small"
               onChange={handleStudentNameChange}
               sx={{
                 mb: 0,
@@ -161,6 +162,7 @@ const PaymentLinkDialog = ({
               variant="outlined"
               value={email}
               onChange={handleEmailChange}
+              size="small"
               sx={{
                 mb: 0,
                 "&:MuiInputBase-input": {
@@ -179,6 +181,7 @@ const PaymentLinkDialog = ({
               type="number"
               variant="outlined"
               value={amount}
+              size="small"
               onChange={handleAmountChange}
               sx={{
                 mb: 0,

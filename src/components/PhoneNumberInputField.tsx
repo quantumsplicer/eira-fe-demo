@@ -48,6 +48,7 @@ const PhoneNumberInputField = ({
       value={phone}
       onChange={handlePhoneNumberChange}
       onKeyDown={handleKeyDown}
+      size="small"
       error={phone.length === 10 && !isPhoneNumberValid()}
       helperText={
         phone.length === 10 &&

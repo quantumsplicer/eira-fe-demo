@@ -19,10 +19,17 @@ import MarketingIcon from "@mui/icons-material/CampaignOutlined";
 import InvoiceIcon from "@mui/icons-material/ReceiptOutlined";
 import { useState } from "react";
 import SessionHistory from "./SessionHistory";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const drawerWidth = 220;
 
 const TutorDashboard: React.FC = () => {
+  const theme = createTheme({
+    typography: {
+      fontFamily: "Montserrat", // Set the default font family
+    },
+  });
+
   const [subpage, setSubpage] = useState<string>("Payments");
 
   const handleSubpageChange = (subpageValue: string) => {
@@ -36,86 +43,106 @@ const TutorDashboard: React.FC = () => {
     }
   };
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: "white",
-          boxShadow: 0,
-        }}
-      >
-        <Toolbar>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ color: "black" }}
-          >
-            <img
-              src={EiraLogo}
-              style={{
-                alignSelf: "flex-start",
-                width: 80,
-                position: "absolute",
-                marginLeft: 20,
-                top: 20,
-              }}
-            />
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: {
+    <ThemeProvider theme={theme}>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          sx={{
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+            backgroundColor: "white",
+            boxShadow: 0,
+          }}
+        >
+          <Toolbar>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ color: "black" }}
+            >
+              <img
+                src={EiraLogo}
+                style={{
+                  alignSelf: "flex-start",
+                  width: 80,
+                  position: "absolute",
+                  marginLeft: 20,
+                  top: 20,
+                }}
+              />
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          sx={{
             width: drawerWidth,
-            boxSizing: "border-box",
-            borderWidth: 0,
-            backgroundColor: "#EBF1FF",
-          },
-        }}
-      >
-        <Toolbar />
-        <Box sx={{ overflow: "auto" }}>
-          <List>
-            {["Payments", "Session History", "Invoices", "Marketing"].map(
-              (text, index) => (
-                <ListItem key={text}>
+            flexShrink: 0,
+            [`& .MuiDrawer-paper`]: {
+              width: drawerWidth,
+              boxSizing: "border-box",
+              backgroundColor: "white",
+            },
+          }}
+        >
+          <Toolbar />
+          <Box sx={{ overflow: "auto" }}>
+            <List>
+              {[
+                "Payments",
+                "Your Payment Link",
+                "Session History",
+                "Invoices",
+                "Marketing",
+              ].map((text, index) => (
+                <ListItem key={text} sx={{ width: "100%", pl: "0", pr: "0" }}>
                   <ListItemButton
                     onClick={() => {
                       handleSubpageChange(text);
                     }}
-                    disabled={index === 2 || index === 3 ? true : false}
+                    disabled={index === 3 || index === 4 ? true : false}
                     sx={{
-                      "&:hover": { backgroundColor: "#507FFD", color: "white" },
-                      width: 50,
-                      borderRadius: 3,
+                      backgroundColor: subpage === text ? "#EBF1FF" : "white",
+                      color: subpage === text ? "#507FFD" : "black",
+                      "& *":
+                        subpage === text
+                          ? {
+                              color: "#507FFD",
+                              fontWeight: "bold",
+                            }
+                          : { color: "black" },
+                      "&:hover": {
+                        backgroundColor: "#EBF1FF",
+                        "& *": {
+                          color: "#507FFD",
+                          fontWeight: "bold",
+                        },
+                      },
                     }}
                   >
-                    <ListItemIcon sx={{ p: 0, m: 0 }}>
+                    <ListItemIcon>
                       {index % 2 === 0 ? <HomeIcon /> : <SessionHistoryIcon />}
                     </ListItemIcon>
-                    <Typography sx={{ fontSize: 14 }}>{text}</Typography>
+                    <Typography sx={{ fontSize: 15 }} fontWeight={500}>
+                      {text}
+                    </Typography>
                   </ListItemButton>
                 </ListItem>
-              )
-            )}
-          </List>
-          <Divider />
+              ))}
+            </List>
+            <Divider />
+          </Box>
+        </Drawer>
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, p: 6, backgroundColor: "#F5F5F5" }}
+        >
+          <Toolbar />
+          {displaySubpage()}
         </Box>
-      </Drawer>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 6, backgroundColor: "#F5F5F5" }}
-      >
-        <Toolbar />
-        {displaySubpage()}
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 };
 export default TutorDashboard;
