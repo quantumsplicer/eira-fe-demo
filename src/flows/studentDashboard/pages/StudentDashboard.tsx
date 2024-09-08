@@ -20,52 +20,61 @@ import { useState } from "react";
 import { Stack } from "@mui/material";
 import PaymentBannerCard from "../components/PaymentBannerCard";
 import PaymentHistoryTable from "../components/PaymentHistoryTable";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
 const drawerWidth = 220;
 
 const StudentDashboard: React.FC = () => {
+  const theme = createTheme({
+    typography: {
+      fontFamily: "Montserrat", // Set the default font family
+    },
+  });
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: "white",
-          boxShadow: 0,
-        }}
-      >
-        <Toolbar>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ color: "black" }}
-          >
-            <img
-              src={EiraLogo}
-              style={{
-                alignSelf: "flex-start",
-                width: 80,
-                position: "absolute",
-                marginLeft: 20,
-                top: 20,
-              }}
-            />
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 6, backgroundColor: "#F5F5F5" }}
-      >
-        <Toolbar />
-        <Stack spacing={5} pl={10} pr={10}>
-          <h1>Payments History</h1>
-          <PaymentBannerCard />
-          <PaymentHistoryTable />
-        </Stack>
+    <ThemeProvider theme={theme}>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          sx={{
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+            backgroundColor: "white",
+            boxShadow: 0,
+          }}
+        >
+          <Toolbar>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ color: "black" }}
+            >
+              <img
+                src={EiraLogo}
+                style={{
+                  alignSelf: "flex-start",
+                  width: 80,
+                  position: "absolute",
+                  marginLeft: 20,
+                  top: 20,
+                }}
+              />
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, p: 6, backgroundColor: "#F5F5F5" }}
+        >
+          <Toolbar />
+          <Stack spacing={5} pl={10} pr={10}>
+            <h1>Payments History</h1>
+            <PaymentBannerCard />
+            <PaymentHistoryTable />
+          </Stack>
+        </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 };
 export default StudentDashboard;

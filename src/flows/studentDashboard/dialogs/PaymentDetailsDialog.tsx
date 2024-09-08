@@ -1,5 +1,5 @@
 // src/components/OTPDialog.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -34,16 +34,17 @@ const PaymentDetailsDialog = ({
     watch,
     formState: { errors },
   } = useForm<Inputs>();
-
+  console.log("errors");
+  console.log(errors);
   return (
     <Dialog
       open={open}
       onClose={onClose}
       sx={{
         "& .MuiDialog-paper": {
-          width: 500,
+          width: 450,
           maxWidth: "50vw",
-          height: 500,
+          height: 450,
           borderRadius: 3,
         },
         p: 2,
@@ -62,26 +63,28 @@ const PaymentDetailsDialog = ({
         >
           <CloseIcon />
         </IconButton>
-        <Stack sx={{ pl: 4, pr: 4, pt: 5 }} spacing={8}>
+        <Stack sx={{ pl: 4, pr: 4, pt: 4 }} spacing={6}>
           <Stack justifyContent="center" alignItems="center" sx={{ pt: 1 }}>
-            <Typography sx={{ fontSize: 23, fontWeight: "bold" }}>
+            <Typography fontSize={23} fontWeight={600}>
               Payment Details
             </Typography>
-            <Typography sx={{ fontSize: 13, fontWeight: 550 }}>
-              select a tutor to pay and schedule a session with
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: 12,
-                fontWeight: 550,
-                color: "#989898",
-                lineHeight: 1.2,
-              }}
-            >
-              Link will be sent to them through whatsapp and testSMS
-            </Typography>
+            <Stack>
+              <Typography fontSize={12} fontWeight={550} align="center">
+                select a tutor to pay and schedule a session with
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 11,
+                  fontWeight: 550,
+                  color: "#989898",
+                }}
+                align="center"
+              >
+                Link will be sent to them through whatsapp and testSMS
+              </Typography>
+            </Stack>
           </Stack>
-          <Stack spacing={4} sx={{ pt: 2 }}>
+          <Stack spacing={5} pt={1}>
             <TextField
               fullWidth
               label="Phone number of the tutor"
@@ -123,7 +126,7 @@ const PaymentDetailsDialog = ({
               }}
             />
           </Stack>
-          <Box sx={{ pt: 1 }}>
+          <Box>
             <Button
               variant="contained"
               onClick={handleSubmit(onSubmit)}
@@ -132,7 +135,7 @@ const PaymentDetailsDialog = ({
               sx={{
                 backgroundColor: "#507FFD",
                 borderRadius: 7,
-                fontSize: 15,
+                fontSize: 17,
                 fontWeight: "bold",
                 paddingLeft: 3,
                 paddingRight: 3,
