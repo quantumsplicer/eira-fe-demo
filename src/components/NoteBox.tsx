@@ -5,7 +5,7 @@ import {
 } from "@mui/material";
 
 interface NoteBoxProps {
-    heading: string;
+    heading?: string;
     notes: string[];
 }
 

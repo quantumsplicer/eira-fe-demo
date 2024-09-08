@@ -1,156 +1,142 @@
 // src/components/PaymentReviewPage.tsx
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { useState } from "react";
+import { Box, Button, Stack, Typography, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
-import { EiraBack1 } from "../../../components/EiraBack1";
-import TutorOnboardingInfo from "../../../components/TutorOnboardingInfo";
-import PaymentReviewInfo from "../../../components/PaymentReviewInfo";
-import Amount from "../../../components/Amount";
+import PaymentInfo from "../../../components/PaymentInfo";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import EiraBack from '../../../assets/images/svg/EiraBack.svg'
+import Secure from '../../../assets/images/svg/Secure.svg'
+import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 
 const PaymentReviewPage = () => {
+
+  const [isTutorOnboarded, setIsTutorOnboarded] = useState<boolean>(false);
   const navigate = useNavigate();
+  const paymentDetails = {
+    "Account Number": ["**** **** **** 2150"],
+    "Session date & time": ["17:00 - 18:00", "24th Aug, 2024"]
+  }
   const handleSubmit = () => {
     navigate("/pay/payment-gateway-payment-flow");
   };
   return (
-    <Stack
-      direction="row"
+    <Box
+      pt={7}
       sx={{
-        justifyContent: "center",
-        alignItems: "center",
+        backgroundImage: `url(${EiraBack})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        minWidth: '100vw',
       }}
     >
-      <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
-        <Typography
-          variant="h5"
-          sx={{
-            fontSize: 40,
-            color: "white",
-            fontWeight: "bold",
-            mb: 2,
-            position: "absolute",
-            top: 100,
-            left: 100,
-            width: "25%",
-          }}
-        >
-          Pay your tuition fees using credit card @ just 1%
-        </Typography>
-        <EiraBack1 />
-      </Box>
-      <Stack sx={{ width: "50%" }} alignItems={"center"}>
-        <img
-          src={EiraLogo}
-          style={{
-            alignSelf: "flex-start",
-            width: 80,
-            position: "absolute",
-            marginLeft: 20,
-            top: 20,
-          }}
-        />
-        {/* <TutorOnboardingInfo infoMessage="Ask them to complete KYC now to receive the payment" /> */}
+      <Stack
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
         <Stack
-          justifyContent={"center"}
+          direction={"row"}
           alignItems={"center"}
-          sx={{ width: "85%", px: 18 }}
+          alignSelf={"flex-end"}
         >
-          <Stack direction={"row"} alignItems={"center"}>
-            <Typography
-              variant="h5"
-              sx={{ fontSize: 20 }}
-              color={"#969696"}
-              mr={1}
-            >
-              paying
-            </Typography>
-            <Amount amount="5000" />
-          </Stack>
-          <Stack direction={"row"} alignItems={"center"}>
-            <Typography
-              variant="h5"
-              sx={{ fontSize: 20 }}
-              color={"#969696"}
-              mr={1}
-            >
-              to
-            </Typography>
-            <Typography
-              variant="h5"
-              sx={{ fontSize: 20 }}
-              mr={1}
-              fontWeight={"bold"}
-            >
-              Suneel Satpal
-            </Typography>
-          </Stack>
-          <Typography
-            variant="h5"
-            sx={{ fontSize: 18, fontWeight: "bold", mt: 4 }}
-          >
-            Payment Overview
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            sx={{ fontSize: 16, mt: 1, mb: 4, textAlign: "center" }}
-          >
-            Review the payment details and proceed to pay
-          </Typography>
-          <Box width={"100%"}>
-            <PaymentReviewInfo
-              accountNumber="**** **** **** 2150"
-              name="Suneel Satpal"
-              phoneNumber="+91 9389250148"
-              sessionStartTime="17:00"
-              sessionEndTime="18:00"
-              sessionDate="24th Aug, 2024"
-            />
-          </Box>
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            sx={{ padding: 1.5, borderRadius: 20, height: 45, mt: 5 }}
-            onClick={handleSubmit}
-          >
-            Proceed to pay
-          </Button>
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              mt: 4,
-              textAlign: "center",
-              position: "absolute",
-              bottom: 20,
+          <img
+            src={Secure}
+            style={{
+              height: "50px",
+              width: "50px"
             }}
+          />
+          <Typography
+            color={"white"}
+            fontWeight={"bold"}
           >
-            <a
-              href="https://www.eira.club/privacy-policy"
-              target="_blank"
-              style={{ textDecoration: "none" }}
-            >
-              <Typography variant="body2" color="grey">
-                privacy policies
-              </Typography>
-            </a>
-            <Typography variant="body2" color="grey">
-              |
-            </Typography>
-            <a
-              href="https://www.eira.club/terms-of-use"
-              target="_blank"
-              style={{ textDecoration: "none" }}
-            >
-              <Typography variant="body2" color="grey">
-                terms of use
-              </Typography>
-            </a>
-          </Stack>
+            100% safe
+          </Typography>
         </Stack>
+        <Box
+          width={"55%"}
+          height={"30%"}
+          bgcolor={"#fff"}
+          zIndex={10}
+          p={5}
+          sx={{
+            borderRadius: "20px 0 0 20px"
+          }}
+        >
+          <PaymentBreakupInfo
+            name="Suneel Satpal"
+            phone="+91 93892 50148"
+            amount={5000}
+            settlementDate="7th October"
+            settlementTime="5:00 pm"
+          />
+        </Box>
+        <Box
+          width="30vw"
+          minHeight="90vh"
+          bgcolor={"#fff"}
+          border={"1px solid #ccc"}
+          padding={5}
+          borderRadius={5}
+          boxShadow={"2px -2px 14px 2px #00000021"}
+        >
+          <Stack>
+            <img
+              src={EiraLogo}
+              style={{
+                alignSelf: "flex-start",
+                width: 80,
+              }}
+            />
+            <Stack
+              alignItems={"center"}
+              mt={5}
+            >
+              {
+                !isTutorOnboarded &&
+                <Alert
+                  variant="filled"
+                  severity="info"
+                  icon={<InfoOutlinedIcon sx={{ color: '#DCA566', margin: "auto 0px" }} />}
+                  sx={{
+                    backgroundColor: "rgba(251, 203, 168, 0.25)",
+                    color: "#CE7C4E",
+                    borderRadius: 5,
+                    marginBottom: 5,
+                    padding: 2
+                  }}
+                >
+                  <Typography sx={{ fontSize: 11 }}>
+                    Looks like the tutor is not onboarded!
+                  </Typography>
+                  <Typography sx={{ fontSize: 11 }}>
+                    Ask them to complete KYC now to receive the payment
+                  </Typography>
+                </Alert>
+              }
+              <PaymentInfo
+                amount="5000"
+                name="Suneel Satpal"
+                paymentDetails={paymentDetails}
+                type="review"
+              />
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                sx={{ padding: 1.5, borderRadius: 20, height: 45, mt: 5 }}
+                onClick={handleSubmit}
+              >
+                Proceed to pay
+              </Button>
+            </Stack>
+          </Stack>
+        </Box>
       </Stack>
-    </Stack>
+    </Box>
   );
 };
 

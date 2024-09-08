@@ -10,7 +10,6 @@ interface PhoneNumberInputFieldProps {
     phone: string;
     setPhoneNumber: (phone: string) => void;
     onSubmit: () => void;
-    // isPhoneNumberInvalid: boolean;
     autoFocus: boolean;
 }
 
@@ -40,6 +39,7 @@ const PhoneNumberInputField = ({ label, phone, setPhoneNumber, onSubmit, autoFoc
 
     return (
         <TextField
+            required
             autoFocus={autoFocus}
             fullWidth
             label={label}
@@ -49,10 +49,18 @@ const PhoneNumberInputField = ({ label, phone, setPhoneNumber, onSubmit, autoFoc
             onKeyDown={handleKeyDown}
             error={phone.length === 10 && !isPhoneNumberValid()}
             helperText={phone.length === 10 && !isPhoneNumberValid() && "Enter valid phone number"}
+            InputLabelProps={{
+                shrink: false,
+                style: { top: -40, left: -13, fontSize: 12 },
+            }}
             sx={{
                 mb: 2,
-                "&:MuiInputBase-input": {
-                    fontSize: 12,
+                "& .MuiInputBase-root": {
+                    height: 45,
+                },
+                "& .MuiOutlinedInput-input": {
+                    padding: "12px 14px",
+                    fontSize: 14,
                 },
             }}
             InputProps={{

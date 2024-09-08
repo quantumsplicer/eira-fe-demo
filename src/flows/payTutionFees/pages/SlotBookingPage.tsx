@@ -11,8 +11,10 @@ import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { Dayjs } from "dayjs";
 import dayjs from 'dayjs';
 import { useNavigate } from "react-router-dom";
-import { EiraBack1 } from "../../../components/EiraBack1";
 import DateTimePicker from "../../../components/DateTimePicker";
+import EiraBack from '../../../assets/images/svg/EiraBack.svg'
+import Secure from '../../../assets/images/svg/Secure.svg'
+import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 
 const SlotBookingPage = () => {
   const navigate = useNavigate();
@@ -41,139 +43,165 @@ const SlotBookingPage = () => {
 
   useEffect(() => {
     setIsButtonDisabled(true);
-    if(sessionTitle && selectedDate && selectedDate >= dayjs().startOf('day') && startTime && endTime && endTime > startTime) {
+    if (sessionTitle && selectedDate && selectedDate >= dayjs().startOf('day') && startTime && endTime && endTime > startTime) {
       setIsButtonDisabled(false);
     }
   }, [today, nextHour, sessionTitle, selectedDate, startTime, endTime])
 
   return (
-    <Stack
-      direction="row"
+    <Box
+      pt={7}
       sx={{
-        justifyContent: "center",
-        alignItems: "center",
-        // width: "95vw",
-        height: "100vh",
-        p: 0,
-        m: 0,
+        backgroundImage: `url(${EiraBack})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        minWidth: '100vw',
       }}
     >
-       <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
-        <Typography
-          variant="h5"
-          sx={{
-            fontSize: 40,
-            color: "white",
-            fontWeight: "bold",
-            mb: 2,
-            position: "absolute",
-            top: 100,
-            left: 100,
-            width: "25%"
-          }}
-        >
-          Pay your tuition fees using credit card @ just 1%
-        </Typography>
-        <EiraBack1 />
-      </Box>
-      <Stack sx={{ width: "50%" }} alignItems={"center"}>
-        <img
-          src={EiraLogo}
-          style={{
-            alignSelf: "flex-start",
-            width: 80,
-            position: "absolute",
-            marginLeft: 20,
-            top: 20,
-          }}
-        />
+      <Stack
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
         <Stack
-          justifyContent={"center"}
+          direction={"row"}
           alignItems={"center"}
-          sx={{ width: "100%", px: 18 }}
+          alignSelf={"flex-end"}
         >
-          <Typography
-            variant="h5"
-            sx={{ fontSize: 20, fontWeight: "bold", mb: 2 }}
-          >
-            Book a session
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            sx={{ fontSize: 16, mb: 4, textAlign: "center" }}
-          >
-            Enter session details 
-          </Typography>
-          <TextField
-            required
-            fullWidth
-            label="Session Title"
-            variant="outlined"
-            value={sessionTitle}
-            onChange={handleSessionTitleChange}
-            sx={{ mb: 2 }}
-          />
-          <DateTimePicker
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            startTime={startTime}
-            setStartTime={setStartTime}
-            endTime={endTime}
-            setEndTime={setEndTime}
-          />
-          <TextField
-            fullWidth
-            label="Description"
-            variant="outlined"
-            value={description}
-            onChange={handleDescriptionChange}
-            sx={{ mb: 2 }}
-          />
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            sx={{ padding: 1.5, borderRadius: 2 }}
-            onClick={handleSubmit}
-            disabled={isButtonDisabled}
-          >
-            Review and pay
-          </Button>
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              mt: 4,
-              textAlign: "center",
-              position: "absolute",
-              bottom: 20,
+          <img
+            src={Secure}
+            style={{
+              height: "50px",
+              width: "50px"
             }}
+          />
+          <Typography
+            color={"white"}
+            fontWeight={"bold"}
           >
-            <a
-              href="https://www.eira.club/privacy-policy"
-              target="_blank"
-              style={{ textDecoration: "none" }}
-            >
-              <Typography variant="body2" color="grey">
-                privacy policies
-              </Typography>
-            </a>
-            <Typography variant="body2" color="grey">
-              |
-            </Typography>
-            <a
-              href="https://www.eira.club/terms-of-use"
-              target="_blank"
-              style={{ textDecoration: "none" }}
-            >
-              <Typography variant="body2" color="grey">
-                terms of use
-              </Typography>
-            </a>
-          </Stack>
+            100% safe
+          </Typography>
         </Stack>
+        <Box
+          width={"55%"}
+          height={"30%"}
+          bgcolor={"#fff"}
+          zIndex={10}
+          p={5}
+          sx={{
+            borderRadius: "20px 0 0 20px"
+          }}
+        >
+          <PaymentBreakupInfo
+            name="Suneel Satpal"
+            phone="+91 93892 50148"
+            amount={5000}
+            settlementDate="7th October"
+            settlementTime="5:00 pm"
+          />
+        </Box>
+        <Box
+          width="30vw"
+          minHeight="90vh"
+          bgcolor={"#fff"}
+          border={"1px solid #ccc"}
+          padding={5}
+          borderRadius={5}
+          boxShadow={"2px -2px 14px 2px #00000021"}
+        >
+          <Stack
+            direction={"column"}
+          >
+            <img
+              src={EiraLogo}
+              style={{
+                alignSelf: "flex-start",
+                width: 80,
+              }}
+            />
+            <Stack
+              alignItems={"center"}
+              mt={5}
+            >
+              <Typography
+                variant="h5"
+                sx={{ fontSize: 20, fontWeight: "bold", mt: 5 }}
+              >
+                Create Session
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                sx={{ fontSize: 14, mb: 7, textAlign: "center" }}
+              >
+                Create session with the tutor
+              </Typography>
+              <TextField
+                required
+                fullWidth
+                label="Session Title"
+                variant="outlined"
+                value={sessionTitle}
+                onChange={handleSessionTitleChange}
+                InputLabelProps={{
+                  shrink: false,
+                  style: { top: -40, left: -13, fontSize: 12 },
+                }}
+                sx={{
+                  mb: 2,
+                  "& .MuiInputBase-root": {
+                    height: 45,
+                  },
+                  "& .MuiOutlinedInput-input": {
+                    padding: "12px 14px",
+                    fontSize: 14,
+                  },
+                }}
+              />
+              <DateTimePicker
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+                startTime={startTime}
+                setStartTime={setStartTime}
+                endTime={endTime}
+                setEndTime={setEndTime}
+              />
+              <TextField
+                fullWidth
+                label="Description"
+                variant="outlined"
+                value={description}
+                onChange={handleDescriptionChange}
+                InputLabelProps={{
+                  shrink: false,
+                  style: { top: -40, left: -13, fontSize: 12 },
+                }}
+                sx={{
+                  mb: 2,
+                  "& .MuiInputBase-root": {
+                    height: 45,
+                  },
+                  "& .MuiOutlinedInput-input": {
+                    padding: "12px 14px",
+                    fontSize: 14,
+                  },
+                }}
+              />
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                sx={{ padding: 1.5, borderRadius: 2, mt: 3 }}
+                onClick={handleSubmit}
+                disabled={isButtonDisabled}
+              >
+                Proceed to pay
+              </Button>
+            </Stack>
+          </Stack>
+        </Box>
       </Stack>
-    </Stack>
+    </Box>
   );
 };
 

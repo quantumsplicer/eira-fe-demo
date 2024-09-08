@@ -2,8 +2,9 @@ import React from "react";
 import { Dayjs } from "dayjs";
 import dayjs from 'dayjs';
 import {
+    Box,
     FormControl,
-    Stack,
+    Stack
 } from "@mui/material";
 import {
     DatePicker,
@@ -28,32 +29,98 @@ const DateTimePicker = ({ selectedDate, setSelectedDate, startTime, setStartTime
     const nextHour = now.add(1, 'hour').startOf('hour');
 
     return (
-        <FormControl fullWidth sx={{ mb: 2 }}>
+        <FormControl fullWidth sx={{ mb: 5 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Stack direction="row" spacing={2}>
-                    <DatePicker
-                        label="Date"
-                        value={selectedDate}
-                        onChange={(newValue) => setSelectedDate(newValue)}
-                        minDate={today}
-                    // renderInput={(params) => <TextField {...params} />}
-                    />
-                    <TimePicker
-                        label="Start time"
-                        ampm={false}
-                        value={startTime}
-                        onChange={(newValue) => setStartTime(newValue)}
-                        minTime={selectedDate && selectedDate.isSame(today, 'day') ? nextHour : today}
-                    // renderInput={(params) => <TextField {...params} />}
-                    />
-                    <TimePicker
-                        label="End time"
-                        value={endTime}
-                        ampm={false}
-                        onChange={(newValue) => setEndTime(newValue)}
-                        minTime={startTime ? startTime.add(1, 'hour').startOf('hour') : nextHour.add(1, 'hour').startOf('hour')}
-                    // renderInput={(params) => <TextField {...params} />}
-                    />
+                    <Box width={"40%"}>
+                        <Box
+                            component="label"
+                            sx={{
+                                position: 'relative',
+                                top: -3,
+                                left: 1,
+                                fontSize: 12,
+                                color: 'rgba(0, 0, 0, 0.6)',
+                                pointerEvents: 'none',
+                            }}
+                        >
+                            Add date *
+                        </Box>
+                        <DatePicker
+                            sx={{
+                                "& .MuiInputBase-root": {
+                                    height: 45,
+                                },
+                                "& .MuiOutlinedInput-input": {
+                                    padding: "12px 5px",
+                                    fontSize: 14,
+                                },
+                            }}
+                            value={selectedDate}
+                            onChange={(newValue) => setSelectedDate(newValue)}
+                            minDate={today}
+                        />
+                    </Box>
+                    <Box width={"30%"}>
+                        <Box
+                            component="label"
+                            sx={{
+                                position: 'relative',
+                                top: -3,
+                                left: 1,
+                                fontSize: 12,
+                                color: 'rgba(0, 0, 0, 0.6)',
+                                pointerEvents: 'none',
+                            }}
+                        >
+                            Start time *
+                        </Box>
+                        <TimePicker
+                            sx={{
+                                "& .MuiInputBase-root": {
+                                    height: 45,
+                                },
+                                "& .MuiOutlinedInput-input": {
+                                    padding: "12px 5px",
+                                    fontSize: 14,
+                                },
+                            }}
+                            ampm={false}
+                            value={startTime}
+                            onChange={(newValue) => setStartTime(newValue)}
+                            minTime={selectedDate && selectedDate.isSame(today, 'day') ? nextHour : today}
+                        />
+                    </Box>
+                    <Box width="30%">
+                        <Box
+                            component="label"
+                            sx={{
+                                position: 'relative',
+                                top: -3,
+                                left: 1,
+                                fontSize: 12,
+                                color: 'rgba(0, 0, 0, 0.6)',
+                                pointerEvents: 'none',
+                            }}
+                        >
+                            End time *
+                        </Box>
+                        <TimePicker
+                            sx={{
+                                "& .MuiInputBase-root": {
+                                    height: 45,
+                                },
+                                "& .MuiOutlinedInput-input": {
+                                    padding: "12px 5px",
+                                    fontSize: 14,
+                                },
+                            }}
+                            value={endTime}
+                            ampm={false}
+                            onChange={(newValue) => setEndTime(newValue)}
+                            minTime={startTime ? startTime.add(1, 'hour').startOf('hour') : nextHour.add(1, 'hour').startOf('hour')}
+                        />
+                    </Box>
                 </Stack>
             </LocalizationProvider>
         </FormControl>

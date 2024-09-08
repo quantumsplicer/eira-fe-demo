@@ -3,21 +3,20 @@ import {
     Box,
     Typography,
     Stack,
+    Alert
 } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { useNavigate } from "react-router-dom";
-import { EiraBack1 } from "../../../components/EiraBack1";
-import TutorOnboardingInfo from "../../../components/TutorOnboardingInfo";
 import PersonalDetails from "../../../components/PersonalDetails";
-import BankAccountDetails from "../../../components/BankAccountDetails";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import EiraBack from '../../../assets/images/svg/EiraBack.svg'
+import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
+import Secure from '../../../assets/images/svg/Secure.svg'
 
 const InputTutorDetails: React.FC = () => {
 
-    const [step, setStep] = useState<string>('personal');
-    // const [pan, setPan] = useState<string>('');
     const [isPanUnverified, setIsPanUnverified] = useState<boolean>(false);
     const [isPanVerifying, setIsPanVerifying] = useState<boolean>(false);
-    const [isAccountVerifying, setIsAccountVerifying] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const verifyPan = () => {
@@ -27,111 +26,129 @@ const InputTutorDetails: React.FC = () => {
         setTimeout(() => {
             setIsPanVerifying(false);
             setIsPanUnverified(false)
-            setStep("account");
+            navigate('/pay/create-session');
+            // setStep("account");
             // navigate("/pay/payment-details");
         }, 5000);
     }
 
-    const verifyAccount = () => {
-        setIsAccountVerifying(true);
-        setTimeout(() => {
-            setIsAccountVerifying(false);
-            navigate('/pay/create-session');
-        }, 5000);
-    }
-
     return (
-        <Stack
-            direction="row"
+        <Box
+            pt={7}
             sx={{
-                justifyContent: "center",
-                alignItems: "center",
+                backgroundImage: `url(${EiraBack})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                minHeight: '100vh',
+                minWidth: '100vw',
             }}
         >
-            <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
-                <EiraBack1 />
-            </Box>
-            <Stack sx={{ width: "50%" }} alignItems={"center"}>
-                <img
-                    src={EiraLogo}
-                    style={{
-                        alignSelf: "flex-start",
-                        width: 80,
-                        position: "absolute",
-                        marginLeft: 20,
-                        top: 20,
-                    }}
-                />
-                <TutorOnboardingInfo
-                    infoMessage="Onboard them with us now to make the payment"
-                />
+            <Stack
+                direction={"row"}
+                alignItems={"center"}
+                justifyContent={"center"}
+            >
                 <Stack
-                    justifyContent={"center"}
+                    direction={"row"}
                     alignItems={"center"}
-                    sx={{ width: "85%", px: 18 }}
+                    alignSelf={"flex-end"}
                 >
+                    <img
+                        src={Secure}
+                        style={{
+                            height: "50px",
+                            width: "50px"
+                        }}
+                    />
                     <Typography
-                        variant="h5"
-                        sx={{ fontSize: 20, fontWeight: "bold", mb: 2 }}
+                        color={"white"}
+                        fontWeight={"bold"}
                     >
-                        Tutor {step} details
+                        100% safe
                     </Typography>
-                    <Typography
-                        variant="subtitle1"
-                        sx={{ fontSize: 16, mb: 4, textAlign: "center" }}
+                </Stack>
+                <Box
+                    width={"55%"}
+                    height={"30%"}
+                    bgcolor={"#fff"}
+                    zIndex={10}
+                    p={5}
+                    sx={{
+                        borderRadius: "20px 0 0 20px"
+                    }}
+                >
+                    <PaymentBreakupInfo
+                        name="Suneel Satpal"
+                        phone="+91 93892 50148"
+                        amount={5000}
+                        settlementDate="7th October"
+                        settlementTime="5:00 pm"
+                    />
+                </Box>
+                <Box
+                    width="30vw"
+                    minHeight="90vh"
+                    bgcolor={"#fff"}
+                    border={"1px solid #ccc"}
+                    padding={5}
+                    borderRadius={5}
+                    boxShadow={"2px -2px 14px 2px #00000021"}
+                >
+                    <Stack
+                        direction={"column"}
                     >
-                        Provide Tutor's {step} details for their onboarding
-                    </Typography>
-                    {
-                        step === "personal" &&
+                        <img
+                            src={EiraLogo}
+                            style={{
+                                alignSelf: "flex-start",
+                                width: 80,
+                            }}
+                        />
+                        <Stack
+                            alignItems={"center"}
+                            mt={5}
+                        >
+                            <Alert
+                                variant="filled"
+                                severity="info"
+                                icon={<InfoOutlinedIcon sx={{ color: '#DCA566', margin: "auto 0px" }} />}
+                                sx={{
+                                    backgroundColor: "rgba(251, 203, 168, 0.25)",
+                                    color: "#CE7C4E",
+                                    borderRadius: 5,
+                                    marginBottom: 5,
+                                    padding: 2
+                                }}
+                            >
+                                <Typography sx={{ fontSize: 11 }}>
+                                    Looks like the tutor is not onboarded!
+                                </Typography>
+                                <Typography sx={{ fontSize: 11 }}>
+                                    Onboard them with us now to make the payment
+                                </Typography>
+                            </Alert>
+                            <Typography
+                                variant="h5"
+                                sx={{ fontSize: 20, fontWeight: "bold" }}
+                            >
+                                Tutor personal details
+                            </Typography>
+                            <Typography
+                                variant="subtitle1"
+                                sx={{ fontSize: 14, mb: 4, textAlign: "center" }}
+                            >
+                                Provide Tutor's personal details for their onboarding
+                            </Typography>
                             <PersonalDetails
                                 isPanUnverified={isPanUnverified}
                                 isVerifying={isPanVerifying}
                                 onSubmit={verifyPan}
                             />
-                    }
-                    {
-                        step === "account" &&
-                            <BankAccountDetails
-                                isAccountVerifying={isAccountVerifying}
-                                onSubmit={verifyAccount}
-                            />
-                    }
-                    <Stack
-                        direction="row"
-                        spacing={1}
-                        sx={{
-                            mt: 4,
-                            textAlign: "center",
-                            position: "absolute",
-                            bottom: 20,
-                        }}
-                    >
-                        <a
-                            href="https://google.com"
-                            target="_blank"
-                            style={{ textDecoration: "none" }}
-                        >
-                            <Typography variant="body2" color="grey">
-                                privacy policies
-                            </Typography>
-                        </a>
-                        <Typography variant="body2" color="grey">
-                            |
-                        </Typography>
-                        <a
-                            href="https://google.com"
-                            target="_blank"
-                            style={{ textDecoration: "none" }}
-                        >
-                            <Typography variant="body2" color="grey">
-                                terms of use
-                            </Typography>
-                        </a>
+                        </Stack>
                     </Stack>
-                </Stack>
+                </Box>
             </Stack>
-        </Stack>
+        </Box>
     );
 }
 
