@@ -3,7 +3,7 @@ import {
     Typography
 } from "@mui/material";
 import { useLocation } from 'react-router-dom';
-import DialogMessage from "../../../dialogs/DialogMessage";
+import StatusDialog from "../../../dialogs/StatusDialog";
 
 const TutorDashboard: React.FC = () => {
 
@@ -39,7 +39,7 @@ const TutorDashboard: React.FC = () => {
 
     return (
         <div>
-            <DialogMessage
+            <StatusDialog
                 open={showDialog}
                 onClose={() => setShowDialog(false)}
                 type="success"

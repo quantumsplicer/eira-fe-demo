@@ -13,7 +13,7 @@ const PGLoading: React.FC = () => {
     }, 1000);
 
     const timeout = setTimeout(() => {
-      navigate('/pay/payment-successful');
+      navigate('/payment-successful');
     }, 5000);
 
     return () => {

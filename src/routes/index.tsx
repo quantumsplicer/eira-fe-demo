@@ -30,13 +30,13 @@ const AppRoutes = () => {
       <Route path="/pay/review" element={<PaymentReviewPage />} />
       <Route path="/pay/payment-gateway-payment-flow" element={<PGLoading />} />
       <Route
-        path="/pay/payment-successful"
+        path="/payment-successful"
         element={<PaymentSuccessfulPage />}
       />
-      <Route path="tutor/signin" element={<TutorSignIn />}></Route>
-      <Route path="tutor/signup" element={<TutorSignUp />}></Route>
-      <Route path="tutor/aadhar-verification" element={<AadharVerification />}></Route>
-      <Route path="tutor/dashboard" element={<TutorDashboard />}></Route>
+      <Route path="tutor/signin" element={<TutorSignIn />} />
+      <Route path="tutor/signup" element={<TutorSignUp />} />
+      <Route path="tutor/aadhar-verification" element={<AadharVerification />} />
+      <Route path="tutor/dashboard" element={<TutorDashboard />} />
     </Routes>
   );
 };
