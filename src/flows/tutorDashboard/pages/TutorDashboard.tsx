@@ -15,13 +15,29 @@ import PaymentHistory from "./PaymentHistory";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import HomeIcon from "@mui/icons-material/HomeOutlined";
 import SessionHistoryIcon from "@mui/icons-material/RestoreOutlined";
+import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined";
 import MarketingIcon from "@mui/icons-material/CampaignOutlined";
 import InvoiceIcon from "@mui/icons-material/ReceiptOutlined";
 import { useState } from "react";
 import SessionHistory from "./SessionHistory";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import PaymentLinkDialog from "../dialogs/PaymentLinkDialog";
+import PaymentLinkPage from "./PaymentLinkPage";
+import { Stack } from "@mui/material";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import ProfilePage from "./ProfilePage";
 
 const drawerWidth = 220;
+
+const iconsArray = [
+  <HomeIcon key="home" />,
+  <InsertLinkOutlinedIcon key="link" />,
+  <SessionHistoryIcon key="history" />,
+  <InvoiceIcon key="invoice" />,
+  <MarketingIcon key="marketing" />,
+];
 
 const TutorDashboard: React.FC = () => {
   const theme = createTheme({
@@ -40,6 +56,10 @@ const TutorDashboard: React.FC = () => {
       return <PaymentHistory />;
     } else if (subpage === "Session History") {
       return <SessionHistory />;
+    } else if (subpage === "Your Payment Link") {
+      return <PaymentLinkPage />;
+    } else if (subpage === "Profile Page") {
+      return <ProfilePage />;
     }
   };
   return (
@@ -55,23 +75,55 @@ const TutorDashboard: React.FC = () => {
           }}
         >
           <Toolbar>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ color: "black" }}
+            <Stack
+              direction="row"
+              display="flex"
+              justifyContent="space-between"
+              spacing={130}
             >
-              <img
-                src={EiraLogo}
-                style={{
-                  alignSelf: "flex-start",
-                  width: 80,
-                  position: "absolute",
-                  marginLeft: 20,
-                  top: 20,
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{ color: "black" }}
+              >
+                <img
+                  src={EiraLogo}
+                  style={{
+                    alignSelf: "flex-start",
+                    width: 80,
+                    position: "absolute",
+                    marginLeft: 20,
+                    top: 20,
+                  }}
+                />
+              </Typography>
+              <Box
+                sx={{
+                  position: "fixed",
+                  right: 0,
+                  top: 0,
                 }}
-              />
-            </Typography>
+              >
+                <Stack direction="row" spacing={1} p={2}>
+                  <Typography
+                    color="black"
+                    fontSize={14}
+                    pt={1.4}
+                    fontWeight={600}
+                  >
+                    Maanav Seth
+                  </Typography>
+                  <IconButton
+                    onClick={() => {
+                      handleSubpageChange("Profile Page");
+                    }}
+                  >
+                    <PersonOutlineOutlinedIcon />
+                  </IconButton>
+                </Stack>
+              </Box>
+            </Stack>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -105,6 +157,7 @@ const TutorDashboard: React.FC = () => {
                     sx={{
                       backgroundColor: subpage === text ? "#EBF1FF" : "white",
                       color: subpage === text ? "#507FFD" : "black",
+                      pl: 3,
                       "& *":
                         subpage === text
                           ? {
@@ -112,6 +165,7 @@ const TutorDashboard: React.FC = () => {
                               fontWeight: "bold",
                             }
                           : { color: "black" },
+
                       "&:hover": {
                         backgroundColor: "#EBF1FF",
                         "& *": {
@@ -121,10 +175,11 @@ const TutorDashboard: React.FC = () => {
                       },
                     }}
                   >
-                    <ListItemIcon>
-                      {index % 2 === 0 ? <HomeIcon /> : <SessionHistoryIcon />}
-                    </ListItemIcon>
-                    <Typography sx={{ fontSize: 15 }} fontWeight={500}>
+                    <ListItemIcon>{iconsArray[index]}</ListItemIcon>
+                    <Typography
+                      sx={{ fontSize: 15 }}
+                      fontWeight={subpage === text ? "bold" : "normal"}
+                    >
                       {text}
                     </Typography>
                   </ListItemButton>

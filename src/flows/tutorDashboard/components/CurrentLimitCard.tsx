@@ -111,6 +111,7 @@ const CurrentLimitCard: React.FC = () => {
               fontWeight: "bold",
               width: 150,
               height: 35,
+              textTransform: "none",
             }}
           >
             Complete KYC

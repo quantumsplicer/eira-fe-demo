@@ -196,6 +196,7 @@ const SessionLinkDialog = ({
               fontWeight: "bold",
               height: 45,
               width: "80%",
+              textTransform: "none",
             }}
           >
             Send Session Invite

@@ -271,6 +271,7 @@ const PaymentHistoryTable: React.FC = () => {
                     height: 45,
                     paddingLeft: 3,
                     paddingRight: 3,
+                    textTransform: "none",
                   }}
                 >
                   Create a Payment Link
