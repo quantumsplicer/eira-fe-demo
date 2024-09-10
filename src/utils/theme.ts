@@ -54,11 +54,14 @@ declare module "@mui/material/Button" {
 }
 
 export const theme = {
-  palette: {
-    primary: {
-      main: "#507FFD",
-      light: "#507FFD",
-    },
+  typography: {
+    fontFamily: ['Poppins', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'sans-serif'].join(','),
+  },
+  // palette: {
+  //   primary: {
+  //     main: "#507FFD",
+  //     light: "#507FFD",
+  //   },
     // button: {
     //   dark: "#EFDDE7",
     //   main: "#507FFD",
@@ -78,5 +81,5 @@ export const theme = {
     //   light: "#E2E4EB",
     // },
 
-  },
+  // },
 };

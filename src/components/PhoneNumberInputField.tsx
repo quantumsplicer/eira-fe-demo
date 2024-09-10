@@ -1,43 +1,41 @@
 import React from "react";
-import { Typography, TextField, Stack } from "@mui/material";
+import {
+    Typography,
+    TextField,
+    Stack,
+} from "@mui/material";
 
 interface PhoneNumberInputFieldProps {
-  label: string;
-  phone: string;
-  setPhoneNumber: (phone: string) => void;
-  onSubmit: () => void;
-  // isPhoneNumberInvalid: boolean;
-  autoFocus: boolean;
+    label: string;
+    phone: string;
+    setPhoneNumber: (phone: string) => void;
+    onSubmit: () => void;
+    autoFocus: boolean;
 }
 
-const PhoneNumberInputField = ({
-  label,
-  phone,
-  setPhoneNumber,
-  onSubmit,
-  autoFocus,
-}: PhoneNumberInputFieldProps) => {
-  const handlePhoneNumberChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const invalidRegex = /[^0-9]/;
-    const inputValue = event.target.value;
-    if (inputValue === "" || !invalidRegex.test(inputValue)) {
-      let inputPhoneNumber: string = inputValue.slice(0, 10);
-      setPhoneNumber(inputPhoneNumber);
-    }
-  };
+const PhoneNumberInputField = ({ label, phone, setPhoneNumber, onSubmit, autoFocus }: PhoneNumberInputFieldProps) => {
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" && phone.length === 10 && isPhoneNumberValid()) {
-      onSubmit();
-    }
-  };
+    const handlePhoneNumberChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const invalidRegex = /[^0-9]/
+        const inputValue = event.target.value;
+        if (inputValue === '' || !invalidRegex.test(inputValue)) {
+            let inputPhoneNumber: string = inputValue.slice(0, 10);
+            setPhoneNumber(inputPhoneNumber);
+        }
+    };
 
-  const isPhoneNumberValid = (): boolean => {
-    const regex = /^[6-9]\d{9}$/;
-    return regex.test(phone);
-  };
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === "Enter" && phone.length === 10 && isPhoneNumberValid()) {
+            onSubmit();
+        }
+    }
+
+    const isPhoneNumberValid = (): boolean => {
+        const regex = /^[6-9]\d{9}$/;
+        return regex.test(phone);
+    }
 
   return (
     <TextField
@@ -77,4 +75,4 @@ const PhoneNumberInputField = ({
   );
 };
 
-export default PhoneNumberInputField;
+export default PhoneNumberInputField
