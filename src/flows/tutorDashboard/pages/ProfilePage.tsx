@@ -14,7 +14,7 @@ import ProfileInfoCard from "../components/ProfileInfoCard";
 const ProfilePage: React.FC = () => {
   return (
     <>
-      <Stack spacing={5}>
+      <Stack spacing={5} height="100%">
         <h1>Profile</h1>
         <Stack
           spacing={4}

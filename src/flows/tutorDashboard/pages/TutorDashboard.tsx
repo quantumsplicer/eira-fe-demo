@@ -64,7 +64,12 @@ const TutorDashboard: React.FC = () => {
   };
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: "flex" }}>
+      <Box
+        sx={{
+          display: "flex",
+          border: "2px solid black",
+        }}
+      >
         <CssBaseline />
         <AppBar
           position="fixed"
@@ -189,10 +194,7 @@ const TutorDashboard: React.FC = () => {
             <Divider />
           </Box>
         </Drawer>
-        <Box
-          component="main"
-          sx={{ flexGrow: 1, p: 6, backgroundColor: "#F5F5F5" }}
-        >
+        <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F5F5F5" }}>
           <Toolbar />
           {displaySubpage()}
         </Box>

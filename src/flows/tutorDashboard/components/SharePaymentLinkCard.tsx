@@ -24,47 +24,37 @@ const SharePaymentLinkCard: React.FC = () => {
       <Stack
         sx={{ borderWidth: "2" }}
         direction="row"
-        display="flex"
         justifyContent="space-between"
       >
-        <Box p={4}>
-          <Stack
-            spacing={3}
-            pt={2}
+        <Stack justifyContent="space-evenly" alignItems="center" width="50%">
+          <Stack width="60%">
+            <Typography fontSize={24} fontWeight={590} align="center">
+              Share your eira.club link to collect payment directly
+            </Typography>
+          </Stack>
+
+          <TextField size="small" sx={{ width: "60%" }}></TextField>
+
+          <Button
+            variant="contained"
             sx={{
-              justifyContent: "center",
-              alignItems: "center",
+              backgroundColor: "#507FFD",
+              borderRadius: 3,
+              fontSize: 13,
+              fontWeight: "bold",
+              height: 60,
+              width: "25%",
+              paddingLeft: 3,
+              paddingRight: 3,
+              textTransform: "none",
             }}
           >
-            <Stack>
-              <Typography fontSize={22} fontWeight={590} align="center">
-                Share your eira.club link to collect payment directly
-              </Typography>
+            <Stack direction="row" spacing={2} pt={1} pb={1}>
+              <ShareOutlinedIcon />
+              <Typography>Share Link</Typography>
             </Stack>
-
-            <TextField size="small" sx={{ width: "60%" }}></TextField>
-
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#507FFD",
-                borderRadius: 3,
-                fontSize: 13,
-                fontWeight: "bold",
-                height: 45,
-                width: "40%",
-                paddingLeft: 3,
-                paddingRight: 3,
-                textTransform: "none",
-              }}
-            >
-              <Stack direction="row" spacing={2} pt={1} pb={1}>
-                <ShareOutlinedIcon />
-                <Typography>Share Link</Typography>
-              </Stack>
-            </Button>
-          </Stack>
-        </Box>
+          </Button>
+        </Stack>
         <Box
           sx={{ width: "45%", backgroundColor: "#EBF1FF", borderRadius: 2 }}
           p={0}
