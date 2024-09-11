@@ -7,6 +7,7 @@ import {
   FormControl,
   Stack,
   TextField,
+  TextFieldProps,
   Typography,
   Dialog,
   DialogContent,
@@ -69,11 +70,11 @@ const CreateSessionDialog = ({
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="md"
-      fullWidth
       sx={{
         "& .MuiDialog-paper": {
-          height: 530,
+          width: 1000,
+          maxWidth: 1000,
+          height: 550,
           borderRadius: 3,
         },
       }}
@@ -91,91 +92,168 @@ const CreateSessionDialog = ({
         >
           <CloseIcon />
         </IconButton>
-        <Box>
-          <Stack direction="row" spacing={3}>
-            <Box sx={{ pt: 4, pl: 4 }}>
-              <Stack spacing={2}>
-                <Stack spacing={0.5}>
-                  <Typography fontSize={22} fontWeight={550}>
-                    Making Payment to:
-                  </Typography>
-                  <Stack>
-                    <Typography fontSize={22} fontWeight={650}>
-                      Suneel Satpal
-                    </Typography>
-                    <Typography fontSize={15}>+919997945005</Typography>
-                  </Stack>
-                </Stack>
-                <Box>
-                  <AmountBreakupCard></AmountBreakupCard>
-                </Box>
-              </Stack>
-            </Box>
-            <Divider orientation="vertical" flexItem />
-            <Stack
-              justifyContent="center"
-              alignItems="center"
-              spacing={3}
-              sx={{ height: "100%", pb: 3, pl: 5, pr: 5, pt: 6 }}
-            >
-              <Stack
-                justifyContent="center"
-                alignItems="center"
-                sx={{ height: "100%" }}
-              >
-                <Typography sx={{ fontSize: 24, fontWeight: "bold" }}>
-                  Create Session
-                </Typography>
-                <Typography sx={{ fontSize: 15, fontWeight: 550 }}>
-                  create session with your tutor
-                </Typography>
-              </Stack>
+        <Stack
+          direction="row"
+          justifyContent="space-around"
+          height="100%"
+          alignContent="center"
+        >
+          <Stack justifyContent="space-evenly">
+            <Stack spacing={1}>
+              <Typography fontSize={22} fontWeight={550}>
+                Making Payment to:
+              </Typography>
               <Stack>
+                <Typography fontSize={22} fontWeight={650}>
+                  Suneel Satpal
+                </Typography>
+                <Typography fontSize={15} lineHeight={1.2}>
+                  +919997945005
+                </Typography>
+              </Stack>
+            </Stack>
+            <Box>
+              <AmountBreakupCard></AmountBreakupCard>
+            </Box>
+          </Stack>
+          <Divider
+            orientation="vertical"
+            flexItem
+            sx={{ height: "90%", alignSelf: "center" }}
+          />
+          <Stack justifyContent="space-around" width="40%">
+            <Stack>
+              <Typography fontSize={23} fontWeight={600} align="center">
+                Create Session
+              </Typography>
+              <Typography
+                fontSize={12}
+                fontWeight={550}
+                align="center"
+                lineHeight={1.2}
+              >
+                create session for your students
+              </Typography>
+            </Stack>
+            <Stack height="45%" justifyContent="space-around">
+              <TextField
+                fullWidth
+                label="Session Title"
+                variant="outlined"
+                {...register("sessionTitle", { required: true })}
+                size="small"
+                sx={{
+                  mb: 2,
+                  "& .MuiInputLabel-root": {
+                    fontSize: "0.9rem", // Reduce the font size of the label
+                  },
+                }}
+              />
+              <FormControl fullWidth sx={{ mb: 2 }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Stack direction="row" spacing={3}>
+                    <DatePicker
+                      label="Add date"
+                      {...register("selectedDate", { required: true })}
+                      // value={selectedDate}
+                      onChange={(newValue) => setSelectedDate(newValue)}
+                      slots={{
+                        textField: (params: TextFieldProps) => (
+                          <TextField
+                            {...params}
+                            size="small" // Reduce the input size
+                            sx={{
+                              "& .MuiInputBase-root": {
+                                fontSize: "0.875rem", // Reduce the font size of the input text
+                                height: "36px", // Reduce the height of the input
+                              },
+                              "& .MuiSvgIcon-root": {
+                                fontSize: "1.2rem", // Reduce the size of the calendar icon
+                              },
+                              "& .MuiInputLabel-root": {
+                                fontSize: "0.75rem", // Reduce the font size of the label
+                              },
+                            }}
+                          />
+                        ),
+                      }}
+                    />
+                    <TimePicker
+                      label="Start time"
+                      value={startTime}
+                      onChange={(newValue) => setStartTime(newValue)}
+                      // renderInput={(params) => <TextField {...params} />}
+                      slots={{
+                        textField: (params: TextFieldProps) => (
+                          <TextField
+                            {...params}
+                            size="small" // Reduce the input size
+                            sx={{
+                              "& .MuiInputBase-root": {
+                                fontSize: "0.875rem", // Reduce the font size of the input text
+                                height: "36px", // Reduce the height of the input
+                              },
+                              "& .MuiSvgIcon-root": {
+                                fontSize: "1.2rem", // Reduce the size of the calendar icon
+                              },
+                              "& .MuiInputLabel-root": {
+                                fontSize: "0.75rem", // Reduce the font size of the label
+                              },
+                            }}
+                          />
+                        ),
+                      }}
+                    />
+                    <TimePicker
+                      label="End time"
+                      value={endTime}
+                      onChange={(newValue) => setEndTime(newValue)}
+                      // renderInput={(params) => <TextField {...params} />}
+                      slots={{
+                        textField: (params: TextFieldProps) => (
+                          <TextField
+                            {...params}
+                            size="small" // Reduce the input size
+                            sx={{
+                              "& .MuiInputBase-root": {
+                                fontSize: "0.875rem", // Reduce the font size of the input text
+                                height: "36px", // Reduce the height of the input
+                              },
+                              "& .MuiSvgIcon-root": {
+                                fontSize: "1.2rem", // Reduce the size of the calendar icon
+                              },
+                              "& .MuiInputLabel-root": {
+                                fontSize: "0.75rem", // Reduce the font size of the label
+                              },
+                            }}
+                          />
+                        ),
+                      }}
+                    />
+                  </Stack>
+                </LocalizationProvider>
+              </FormControl>
+              <FormControl fullWidth sx={{ mb: 2 }}>
                 <TextField
                   fullWidth
-                  label="Session Title"
+                  label="Description"
                   variant="outlined"
-                  {...register("sessionTitle", { required: true })}
-                  sx={{ mb: 2 }}
+                  value={description}
+                  onChange={handleDescriptionChange}
+                  size="small"
+                  sx={{
+                    mb: 2,
+                    "& .MuiInputLabel-root": {
+                      fontSize: "0.9rem", // Reduce the font size of the label
+                    },
+                  }}
                 />
-                <FormControl fullWidth sx={{ mb: 2 }}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Stack direction="row" spacing={2}>
-                      <DatePicker
-                        label="Add date"
-                        {...register("selectedDate", { required: true })}
-                        // value={selectedDate}
-                        onChange={(newValue) => setSelectedDate(newValue)}
-                        // renderInput={(params) => <TextField {...params} />}
-                      />
-                      <TimePicker
-                        label="Start time"
-                        value={startTime}
-                        onChange={(newValue) => setStartTime(newValue)}
-                        // renderInput={(params) => <TextField {...params} />}
-                      />
-                      <TimePicker
-                        label="End time"
-                        value={endTime}
-                        onChange={(newValue) => setEndTime(newValue)}
-                        // renderInput={(params) => <TextField {...params} />}
-                      />
-                    </Stack>
-                  </LocalizationProvider>
-                </FormControl>
-                <FormControl fullWidth sx={{ mb: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Description"
-                    variant="outlined"
-                    value={description}
-                    onChange={handleDescriptionChange}
-                    sx={{ mb: 2 }}
-                  />
-                </FormControl>
-              </Stack>
+              </FormControl>
+            </Stack>
+            <Box>
               <Button
                 variant="contained"
+                fullWidth
                 disabled={!selectedDate || !startTime || !endTime}
                 onClick={onSubmit}
                 sx={{
@@ -183,15 +261,15 @@ const CreateSessionDialog = ({
                   borderRadius: 7,
                   fontSize: 15,
                   fontWeight: "bold",
-                  height: 45,
-                  width: "80%",
+                  paddingLeft: 3,
+                  paddingRight: 3,
                 }}
               >
-                Proceed to pay
+                Proceed to Pay
               </Button>
-            </Stack>
+            </Box>
           </Stack>
-        </Box>
+        </Stack>
       </DialogContent>
     </Dialog>
   );

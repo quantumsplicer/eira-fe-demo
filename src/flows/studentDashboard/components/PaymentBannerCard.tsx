@@ -24,44 +24,52 @@ const PaymentBannerCard: React.FC = () => {
         borderRadius: 2,
         backgroundColor: "white",
         boxShadow: 6,
-        alignContent: "center",
         width: "100%",
-        height: "260px",
       }}
     >
       <Stack
-        justifyContent="space-between"
         direction="row"
-        sx={{}}
-        pr={20}
-        pl={5}
+        sx={{
+          justifyContent: "space-around",
+        }}
+        width="fullwidth"
       >
-        <Stack sx={{}} spacing={2} pt={3}>
-          <Button
-            variant="contained"
-            onClick={() => {
-              setActiveDialog("PaymentDetailsDialog");
-            }}
-            sx={{
-              backgroundColor: "#507FFD",
-              borderRadius: 3,
-              fontSize: 18,
-              fontWeight: "bold",
-              height: 80,
-              paddingLeft: 3,
-              paddingRight: 3,
-            }}
-          >
-            Make a New Payment
-          </Button>
-          <Typography>Make a payment through credit @just 1%</Typography>
-        </Stack>
-        <Box
+        <Stack
           sx={{
-            height: "250px",
-            width: "250px",
+            flexDirection: "row",
+            alignItems: "center",
           }}
         >
+          <Stack spacing={1} alignItems="center">
+            <Button
+              variant="contained"
+              onClick={() => {
+                setActiveDialog("PaymentDetailsDialog");
+              }}
+              sx={{
+                backgroundColor: "#507FFD",
+                borderRadius: 3,
+                fontSize: 20,
+                fontWeight: 600,
+                height: 90,
+                paddingLeft: 8,
+                paddingRight: 8,
+                textTransform: "none",
+              }}
+            >
+              Make a new Payment
+            </Button>
+            <Stack direction="row" spacing={1}>
+              <Typography fontSize={12}>
+                Make a payment through Credit
+              </Typography>
+              <Typography fontSize={12} fontWeight="bold">
+                @ just 1%
+              </Typography>
+            </Stack>
+          </Stack>
+        </Stack>
+        <Box>
           <img
             src={PaymentLinkBannerArt}
             style={{

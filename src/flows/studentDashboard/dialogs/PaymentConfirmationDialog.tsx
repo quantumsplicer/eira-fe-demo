@@ -31,7 +31,7 @@ const PaymentConfirmationDialog = ({
         "& .MuiDialog-paper": {
           width: 460,
           maxWidth: "50vw",
-          height: 620,
+          height: 660,
           borderRadius: 3,
         },
       }}
@@ -98,16 +98,29 @@ const PaymentConfirmationDialog = ({
             Create another
           </Link>
         </Stack> */}
-        <Stack justifyContent="center" alignItems="center" spacing={4} pt={5}>
-          <Stack justifyContent="center" alignItems="center" spacing={3}>
+        <Stack justifyContent="center" alignItems="center" spacing={5} pt={5}>
+          <Stack justifyContent="center" alignItems="center" spacing={4}>
             <Typography fontSize={24} fontWeight={550}>
               Payment Successfull!
             </Typography>
-            <Stack justifyContent="center" alignItems="center" spacing={5}>
+            <Stack justifyContent="center" alignItems="center" spacing={4}>
               <Stack justifyContent="center" alignItems="center">
-                <Typography align="center" fontWeight={550} fontSize={19}>
-                  Sent Rs 5000 to
-                </Typography>
+                <Stack direction="row" spacing={1}>
+                  <Typography align="center" fontWeight={550} fontSize={19}>
+                    Sent
+                  </Typography>
+                  <Typography
+                    align="center"
+                    fontWeight={550}
+                    fontSize={19}
+                    color="#1F9254"
+                  >
+                    Rs 5000
+                  </Typography>
+                  <Typography align="center" fontWeight={550} fontSize={19}>
+                    to
+                  </Typography>
+                </Stack>
                 <Typography fontWeight={550} align="center" fontSize={19}>
                   Suneel Satpal
                 </Typography>
@@ -128,35 +141,68 @@ const PaymentConfirmationDialog = ({
               </Typography>
             </Stack>
           </Stack>
-          <Stack spacing={2} width="85%">
+          <Stack spacing={3} width="85%">
             <Stack
               direction="row"
               justifyContent="space-between"
               display="flex"
             >
-              <Typography sx={{ fontSize: 13 }}>Transaction ID</Typography>
+              <Typography
+                sx={{ fontSize: 13 }}
+                color="#969696"
+                fontWeight={600}
+              >
+                Transaction ID
+              </Typography>
               <Typography sx={{ fontSize: 13 }}>1FEDA785CB576A90</Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-              <Typography sx={{ fontSize: 13 }}>Account Number</Typography>
-              <Typography sx={{ fontSize: 13 }}>1FEDA785CB576A90</Typography>
+              <Typography
+                sx={{ fontSize: 13 }}
+                color="#969696"
+                fontWeight={600}
+              >
+                Account Number
+              </Typography>
+              <Typography sx={{ fontSize: 13 }} fontWeight={650}>
+                1FEDA785CB576A90
+              </Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-              <Typography sx={{ fontSize: 13 }}>Account Holder</Typography>
-              <Typography sx={{ fontSize: 13 }}>1FEDA785CB576A90</Typography>
+              <Typography
+                sx={{ fontSize: 13 }}
+                color="#969696"
+                fontWeight={600}
+              >
+                Account Holder
+              </Typography>
+              <Typography sx={{ fontSize: 13 }} fontWeight={650}>
+                1FEDA785CB576A90
+              </Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-              <Typography sx={{ fontSize: 13 }}>
-                {" "}
+              <Typography
+                sx={{ fontSize: 13 }}
+                color="#969696"
+                fontWeight={600}
+              >
                 Transaction date and time
               </Typography>
-              <Typography sx={{ fontSize: 13 }}>1FEDA785CB576A90</Typography>
+              <Typography sx={{ fontSize: 13 }} fontWeight={650}>
+                1FEDA785CB576A90
+              </Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-              <Typography sx={{ fontSize: 13 }}>
+              <Typography
+                sx={{ fontSize: 13 }}
+                color="#969696"
+                fontWeight={600}
+              >
                 Tuition date and time
               </Typography>
-              <Typography sx={{ fontSize: 13 }}>1FEDA785CB576A90</Typography>
+              <Typography sx={{ fontSize: 13 }} fontWeight={650}>
+                1FEDA785CB576A90
+              </Typography>
             </Stack>
           </Stack>
         </Stack>

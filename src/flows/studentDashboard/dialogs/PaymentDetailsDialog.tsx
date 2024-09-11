@@ -44,7 +44,7 @@ const PaymentDetailsDialog = ({
         "& .MuiDialog-paper": {
           width: 450,
           maxWidth: "50vw",
-          height: 450,
+          height: 470,
           borderRadius: 3,
         },
         p: 2,
@@ -63,9 +63,9 @@ const PaymentDetailsDialog = ({
         >
           <CloseIcon />
         </IconButton>
-        <Stack sx={{ pl: 4, pr: 4, pt: 4 }} spacing={6}>
-          <Stack justifyContent="center" alignItems="center" sx={{ pt: 1 }}>
-            <Typography fontSize={23} fontWeight={600}>
+        <Stack justifyContent="space-around" height="100%">
+          <Stack>
+            <Typography fontSize={23} fontWeight={600} align="center">
               Payment Details
             </Typography>
             <Stack>
@@ -74,9 +74,10 @@ const PaymentDetailsDialog = ({
               </Typography>
               <Typography
                 sx={{
-                  fontSize: 11,
+                  fontSize: 10,
                   fontWeight: 550,
                   color: "#989898",
+                  lineHeight: 1.1,
                 }}
                 align="center"
               >
@@ -84,7 +85,12 @@ const PaymentDetailsDialog = ({
               </Typography>
             </Stack>
           </Stack>
-          <Stack spacing={5} pt={1}>
+          <Stack
+            height="45%"
+            justifyContent="space-evenly"
+            width="85%"
+            alignSelf="center"
+          >
             <TextField
               fullWidth
               label="Phone number of the tutor"
@@ -126,7 +132,7 @@ const PaymentDetailsDialog = ({
               }}
             />
           </Stack>
-          <Box>
+          <Box width="85%" alignSelf="center">
             <Button
               variant="contained"
               onClick={handleSubmit(onSubmit)}
