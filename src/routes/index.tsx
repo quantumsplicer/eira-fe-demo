@@ -17,7 +17,9 @@ import AadharVerification from "../flows/tutorOnboarding/pages/AadharVerificatio
 import TutorDashboard from "../flows/tutorOnboarding/pages/TutorDashboard";
 import InputPersonalDetails from "../flows/payTutionFees/pages/InputPersonalDetails";
 import InputTutorDetails from "../flows/payTutionFees/pages/InputTutorDetails";
-
+import StudentSignIn from "../flows/studentOnboarding/pages/StudentSignIn";
+import StudentSignUp from "../flows/studentOnboarding/pages/StudentSignUp";
+import InputPayment from "../flows/staticLink/pages/InputPayment";
 
 const AppRoutes = () => {
   return (
@@ -37,6 +39,11 @@ const AppRoutes = () => {
       <Route path="tutor/signup" element={<TutorSignUp />} />
       <Route path="tutor/aadhar-verification" element={<AadharVerification />} />
       <Route path="tutor/dashboard" element={<TutorDashboard />} />
+
+      <Route path="student/signin" element={<StudentSignIn />} />
+      <Route path="student/signup" element={<StudentSignUp />} />
+      <Route path="pay/static/:phoneNumber" element={<InputPayment />} />
+      <Route path="pay/dynamic/:amount/:phoneNumber" element={<PaymentReviewPage />} />
     </Routes>
   );
 };

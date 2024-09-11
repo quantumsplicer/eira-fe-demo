@@ -1,7 +1,7 @@
 // src/components/PaymentReviewPage.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, Stack, Typography, Alert } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import PaymentInfo from "../../../components/PaymentInfo";
@@ -12,15 +12,44 @@ import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 
 const PaymentReviewPage = () => {
 
-  const [isTutorOnboarded, setIsTutorOnboarded] = useState<boolean>(false);
+  const {amount, phoneNumber} = useParams()
+  const location = useLocation();
+  const [isTutorOnboarded, setIsTutorOnboarded] = useState<boolean>(true);
   const navigate = useNavigate();
+  const [routeSource, setRouteSource] = useState<string>("");
   const paymentDetails = {
     "Account Number": ["**** **** **** 2150"],
     "Session date & time": ["17:00 - 18:00", "24th Aug, 2024"]
   }
+
   const handleSubmit = () => {
-    navigate("/pay/payment-gateway-payment-flow");
+    console.log(routeSource)
+    if(routeSource === "Dynamic Flow") {
+      const isStudentSignedIn = localStorage.getItem("studentLogin") === "true";
+      if(isStudentSignedIn) {
+        navigate("/pay/create-session");
+      } else {
+        localStorage.setItem("activeFlow", "dynamicFlow");
+        navigate("/student/signin");
+      }
+    } else {
+      navigate("/pay/payment-gateway-payment-flow");
+    }
   };
+
+  const getRouteSource = (path:string) => {
+    if (path.startsWith('/pay/dynamic')) {
+      return 'Dynamic Flow';
+    } else if (path === '/pay/review') {
+      return 'Tuition Fee Flow';
+    }
+    return 'Unknown Route';
+  };
+
+  useEffect(() => {
+    setRouteSource(getRouteSource(location.pathname))
+  }, [])
+
   return (
     <Box
       pt={7}
@@ -68,8 +97,8 @@ const PaymentReviewPage = () => {
         >
           <PaymentBreakupInfo
             name="Suneel Satpal"
-            phone="+91 93892 50148"
-            amount={5000}
+            phone={phoneNumber ? `+91 ${phoneNumber}` : "+91 93892 50148"}
+            amount={amount ? Number(amount) : 5000}
             settlementDate="7th October"
             settlementTime="5:00 pm"
           />
@@ -93,7 +122,7 @@ const PaymentReviewPage = () => {
             />
             <Stack
               alignItems={"center"}
-              mt={5}
+              mt={isTutorOnboarded ? 15 : 5}
             >
               {
                 !isTutorOnboarded &&

@@ -97,6 +97,11 @@ const OTPDialog = ({
       return;
     }
     localStorage.setItem("phoneNumber", phoneNumber)
+    if (navigateTo.includes("student")) {
+      localStorage.setItem("studentLogin", "true");
+    } else if (navigateTo.includes("tutor")) {
+      localStorage.setItem("tutorLogin", "true");
+    }
     navigate(navigateTo)
     // onClose()
   };
@@ -167,6 +172,7 @@ const OTPDialog = ({
       <Typography
         fontWeight={"bold"}
         variant="h6"
+        mt={8}
       >
         Verify Phone Number
       </Typography>
@@ -177,7 +183,7 @@ const OTPDialog = ({
         Enter OTP for phone number verification
       </Typography>
       <Box
-        sx={{ display: "flex", justifyContent: "center", gap: 1, pt: 2 }}
+        sx={{ display: "flex", justifyContent: "center", gap: 1, pt: 2, mt: 8 }}
       >
         {Array.from({ length: OPT_LENGTH }).map((_, index) => (
           <TextField
@@ -233,7 +239,7 @@ const OTPDialog = ({
           // position: "absolute",
           // bottom: 20,
           width: "80%",
-          marginTop: 5,
+          marginTop: 10,
           height: 45,
           borderRadius: 20,
         }}

@@ -54,6 +54,7 @@ const PhoneNumberInputField = ({ label, phone, setPhoneNumber, onSubmit, autoFoc
                 style: { top: -40, left: -13, fontSize: 12 },
             }}
             sx={{
+                mt: 3,
                 mb: 2,
                 "& .MuiInputBase-root": {
                     height: 45,

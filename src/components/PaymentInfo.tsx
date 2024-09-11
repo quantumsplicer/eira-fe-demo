@@ -5,7 +5,7 @@ import {
     Box
 } from "@mui/material";
 import Amount from "./Amount";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import tickMark from '../assets/images/png/tick-mark.png'
 
 interface PaymentInfoProps {
     amount: string;
@@ -61,8 +61,12 @@ const PaymentInfo = ({ amount, name, paymentDetails, type }: PaymentInfoProps) =
             </Stack>
             {
                 type === "success" &&
-                <CheckCircleOutlineIcon
-                    sx={{ color: "green", fontSize: 90, mt: 3 }}
+                <img
+                    src={tickMark}
+                    style={{
+                        marginTop: "30px",
+                        width: 90
+                    }}
                 />
             }
             {
