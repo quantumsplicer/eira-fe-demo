@@ -11,7 +11,7 @@ const PaymentHistory: React.FC = () => {
     <>
       <Stack spacing={5}>
         <h1>Payments</h1>
-        <Stack direction="row" spacing={5}>
+        <Stack direction="row" spacing={7}>
           {/* <PaymentLinkCard /> */}
           <UnsettledAmountCard />
           <CurrentLimitCard />

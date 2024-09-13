@@ -67,7 +67,6 @@ const TutorDashboard: React.FC = () => {
       <Box
         sx={{
           display: "flex",
-          border: "2px solid black",
         }}
       >
         <CssBaseline />
@@ -194,7 +193,15 @@ const TutorDashboard: React.FC = () => {
             <Divider />
           </Box>
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F5F5F5" }}>
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            backgroundColor: "#F5F5F5",
+            p: 5,
+            minHeight: 900,
+          }}
+        >
           <Toolbar />
           {displaySubpage()}
         </Box>

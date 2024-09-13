@@ -20,8 +20,6 @@ interface BankAccount {
 
 const accountsData: BankAccount[] = [
   { accountNumber: "*******7890", ifscCode: "IFSC001", isPrimary: true },
-  { accountNumber: "*******4321", ifscCode: "IFSC002", isPrimary: false },
-  { accountNumber: "*******4455", ifscCode: "IFSC003", isPrimary: false },
 ];
 const AccountsListCard: React.FC = () => {
   const [activeDialog, setActiveDialog] = useState<string>("None");
@@ -50,13 +48,13 @@ const AccountsListCard: React.FC = () => {
           p: 4,
         }}
       >
-        <Stack spacing={3} pl={2} pt={1}>
+        <Stack spacing={4} pl={2} pt={1}>
           <Stack>
             <Typography fontSize={22} fontWeight={550}>
-              Accounts
+              Account
             </Typography>
             <Typography color="#898989" fontWeight={550}>
-              Selct your primary account for settlement
+              Your active account for settlements
             </Typography>
           </Stack>
           <Stack pl={0.5}>
@@ -77,7 +75,7 @@ const AccountsListCard: React.FC = () => {
           >
             Save Changes
           </Button>
-          <Button
+          {/* <Button
             variant="contained"
             sx={{
               backgroundColor: "#507FFD",
@@ -99,7 +97,7 @@ const AccountsListCard: React.FC = () => {
                 Add Bank Account
               </Typography>
             </Stack>
-          </Button>
+          </Button> */}
         </Stack>
       </Stack>
       <AddBankAccountDialog

@@ -21,28 +21,8 @@ const ProfilePhotoUpload: React.FC = () => {
       <Avatar
         alt="Profile Photo"
         src={image || undefined}
-        sx={{ width: 100, height: 100, marginBottom: 1 }}
+        sx={{ width: 150, height: 150, marginBottom: 1 }}
       />
-      <Button
-        variant="contained"
-        component="label"
-        sx={{
-          backgroundColor: "#507FFD",
-          borderRadius: 3,
-          fontSize: 9,
-          fontWeight: "bold",
-          height: 23,
-          textTransform: "none",
-        }}
-      >
-        Upload Photo
-        <input
-          type="file"
-          hidden
-          accept="image/*"
-          onChange={handleImageUpload}
-        />
-      </Button>
     </Stack>
   );
 };

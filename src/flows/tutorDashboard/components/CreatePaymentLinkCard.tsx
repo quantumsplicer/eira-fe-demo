@@ -18,7 +18,7 @@ const CreatePaymentLinkCard: React.FC = () => {
         pr: 6,
         borderRadius: 2,
         width: "100%",
-        height: "110px",
+        height: "140px",
         backgroundColor: "white",
         boxShadow: 6,
         alignContent: "center",
@@ -26,7 +26,7 @@ const CreatePaymentLinkCard: React.FC = () => {
     >
       <Stack direction="row" display="flex" justifyContent="space-between">
         <Stack p={1}>
-          <Typography fontSize={18} fontWeight={600}>
+          <Typography fontSize={22} fontWeight={600}>
             Create a Payment Link for Student
           </Typography>
         </Stack>
@@ -36,7 +36,7 @@ const CreatePaymentLinkCard: React.FC = () => {
           sx={{
             backgroundColor: "#507FFD",
             borderRadius: 3,
-            fontSize: 13,
+            fontSize: 16,
             height: 45,
             width: "25%",
             textTransform: "none",
