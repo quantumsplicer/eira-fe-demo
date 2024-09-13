@@ -2,9 +2,11 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import { Divider, Stack, Typography } from "@mui/material";
 
-const amount = 20000;
+interface AmountBreakupCardProps {
+  amount: number;
+}
 
-const AmountBreakupCard: React.FC = () => {
+const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
   return (
     <Stack
       sx={{
@@ -29,7 +31,7 @@ const AmountBreakupCard: React.FC = () => {
               Payment Amount:
             </Typography>
             <Typography fontSize={15} fontWeight={550}>
-              Rs 5000
+              Rs {amount}
             </Typography>
           </Stack>
           <Stack direction="row" display="flex" justifyContent="space-between">
@@ -37,7 +39,7 @@ const AmountBreakupCard: React.FC = () => {
               Platform Fees(1%)
             </Typography>
             <Typography fontSize={15} fontWeight={550}>
-              Rs 50
+              Rs {amount * 0.01}
             </Typography>
           </Stack>
           <Stack direction="row" display="flex" justifyContent="space-between">
@@ -45,7 +47,7 @@ const AmountBreakupCard: React.FC = () => {
               GST (18% of Platform fees):
             </Typography>
             <Typography fontSize={15} fontWeight={550}>
-              Rs 9
+              Rs {(amount * 0.01 * 0.18).toFixed(2)}
             </Typography>
           </Stack>
         </Stack>
@@ -54,7 +56,7 @@ const AmountBreakupCard: React.FC = () => {
         <Stack direction="row" display="flex" justifyContent="space-between">
           <Typography fontWeight="bold">Total Payable</Typography>
           <Typography fontSize={20} color="#2AC426" fontWeight={600}>
-            Rs 5018
+            Rs {(amount * 1.0118).toFixed(2)}
           </Typography>
         </Stack>
       </Stack>

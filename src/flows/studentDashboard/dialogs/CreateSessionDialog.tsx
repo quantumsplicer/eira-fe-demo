@@ -1,5 +1,5 @@
 // src/components/OTPDialog.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -22,18 +22,19 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
 import CloseIcon from "@mui/icons-material/Close";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
 interface CreateSessionDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: () => void;
+  amount: number;
 }
 type Inputs = {
   sessionTitle: string;
-  selectedDate: Dayjs;
-  startTime: Dayjs;
-  endTime: Dayjs;
+  selectedDate: Dayjs | null;
+  startTime: Dayjs | null;
+  endTime: Dayjs | null;
   description: string;
 };
 
@@ -41,13 +42,21 @@ const CreateSessionDialog = ({
   open,
   onClose,
   onSubmit,
+  amount,
 }: CreateSessionDialogProps) => {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>();
+    control,
+  } = useForm<Inputs>({
+    defaultValues: {
+      selectedDate: null,
+      startTime: null,
+      endTime: null,
+    },
+  });
   const [sessionTitle, setSessionTitle] = useState("");
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [startTime, setStartTime] = useState<Dayjs | null>(null);
@@ -65,7 +74,10 @@ const CreateSessionDialog = ({
   ) => {
     setDescription(event.target.value);
   };
-
+  useEffect(() => {
+    console.log("These are errors");
+    console.log(errors);
+  }, [errors]);
   return (
     <Dialog
       open={open}
@@ -113,7 +125,7 @@ const CreateSessionDialog = ({
               </Stack>
             </Stack>
             <Box>
-              <AmountBreakupCard></AmountBreakupCard>
+              <AmountBreakupCard amount={amount}></AmountBreakupCard>
             </Box>
           </Stack>
           <Divider
@@ -135,69 +147,172 @@ const CreateSessionDialog = ({
                 create session for your students
               </Typography>
             </Stack>
-            <Stack height="45%" justifyContent="space-around">
+            <Stack height="45%" justifyContent="space-around" spacing={2}>
               <TextField
                 fullWidth
                 label="Session Title"
                 variant="outlined"
                 {...register("sessionTitle", { required: true })}
                 size="small"
+                error={errors.sessionTitle !== undefined ? true : false}
+                helperText={errors.sessionTitle ? "Required" : ""}
                 sx={{
-                  mb: 2,
+                  mb: 0,
                   "& .MuiInputLabel-root": {
-                    fontSize: "0.9rem", // Reduce the font size of the label
+                    transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                  },
+                  "& .MuiInputBase-root": {
+                    marginTop: "16px", // Add space between label and input box
+                  },
+                  "&:MuiInputBase-input": {
+                    fontSize: 12,
+                  },
+                  "& legend": {
+                    width: 0,
                   },
                 }}
               />
               <FormControl fullWidth sx={{ mb: 2 }}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Stack direction="row" spacing={3}>
-                    <DatePicker
-                      label="Add date"
-                      {...register("selectedDate", { required: true })}
-                      // value={selectedDate}
-                      onChange={(newValue) => setSelectedDate(newValue)}
-                      slots={{
-                        textField: (params: TextFieldProps) => (
-                          <TextField
-                            {...params}
-                            size="small" // Reduce the input size
-                            sx={{
-                              "& .MuiInputBase-root": {
-                                fontSize: "0.875rem", // Reduce the font size of the input text
-                                height: "36px", // Reduce the height of the input
-                              },
-                              "& .MuiSvgIcon-root": {
-                                fontSize: "1.2rem", // Reduce the size of the calendar icon
-                              },
-                              "& .MuiInputLabel-root": {
-                                fontSize: "0.75rem", // Reduce the font size of the label
-                              },
-                            }}
-                          />
-                        ),
-                      }}
-                    />
-                    <TimePicker
+                {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
+                <Stack direction="row" spacing={3}>
+                  <Controller
+                    name="selectedDate"
+                    control={control}
+                    rules={{ required: "Date is required" }}
+                    render={({ field }) => (
+                      <DatePicker
+                        label="Add date"
+                        value={field.value}
+                        onChange={(newValue) => field.onChange(newValue)}
+                        slots={{
+                          textField: (params: TextFieldProps) => (
+                            <TextField
+                              {...params}
+                              size="small" // Reduce the input size
+                              error={
+                                errors.selectedDate !== undefined ? true : false
+                              }
+                              helperText={errors.selectedDate ? "Required" : ""}
+                              sx={{
+                                mb: 0,
+                                "& .MuiInputLabel-root": {
+                                  transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                                },
+                                "& .MuiInputBase-root": {
+                                  marginTop: "16px", // Add space between label and input box
+                                },
+                                "&:MuiInputBase-input": {
+                                  fontSize: 12,
+                                },
+                                "& legend": {
+                                  width: 0,
+                                },
+                              }}
+                            />
+                          ),
+                        }}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name="startTime"
+                    control={control}
+                    rules={{ required: "Date is required" }}
+                    render={({ field }) => (
+                      <TimePicker
+                        label="Start Time"
+                        value={field.value}
+                        onChange={(newValue) => field.onChange(newValue)}
+                        slots={{
+                          textField: (params: TextFieldProps) => (
+                            <TextField
+                              {...params}
+                              size="small"
+                              error={
+                                errors.startTime !== undefined ? true : false
+                              }
+                              helperText={errors.startTime ? "Required" : ""}
+                              sx={{
+                                mb: 0,
+                                "& .MuiInputLabel-root": {
+                                  transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                                },
+                                "& .MuiInputBase-root": {
+                                  marginTop: "16px", // Add space between label and input box
+                                },
+                                "&:MuiInputBase-input": {
+                                  fontSize: 12,
+                                },
+                                "& legend": {
+                                  width: 0,
+                                },
+                              }}
+                            />
+                          ),
+                        }}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name="endTime"
+                    control={control}
+                    rules={{ required: "Date is required" }}
+                    render={({ field }) => (
+                      <TimePicker
+                        label="End Time"
+                        value={field.value}
+                        onChange={(newValue) => field.onChange(newValue)}
+                        slots={{
+                          textField: (params: TextFieldProps) => (
+                            <TextField
+                              {...params}
+                              size="small" // Reduce the input size
+                              error={
+                                errors.endTime !== undefined ? true : false
+                              }
+                              helperText={errors.endTime ? "Required" : ""}
+                              sx={{
+                                mb: 0,
+                                "& .MuiInputLabel-root": {
+                                  transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                                },
+                                "& .MuiInputBase-root": {
+                                  marginTop: "16px", // Add space between label and input box
+                                },
+                                "&:MuiInputBase-input": {
+                                  fontSize: 12,
+                                },
+                                "& legend": {
+                                  width: 0,
+                                },
+                              }}
+                            />
+                          ),
+                        }}
+                      />
+                    )}
+                  />
+                  {/* <TimePicker
                       label="Start time"
-                      value={startTime}
-                      onChange={(newValue) => setStartTime(newValue)}
-                      // renderInput={(params) => <TextField {...params} />}
                       slots={{
                         textField: (params: TextFieldProps) => (
                           <TextField
                             {...params}
                             size="small" // Reduce the input size
+                            {...register("startTime", { required: true })}
                             sx={{
-                              "& .MuiInputBase-root": {
-                                fontSize: "0.875rem", // Reduce the font size of the input text
-                                height: "36px", // Reduce the height of the input
-                              },
-                              "& .MuiSvgIcon-root": {
-                                fontSize: "1.2rem", // Reduce the size of the calendar icon
-                              },
+                              mb: 0,
                               "& .MuiInputLabel-root": {
-                                fontSize: "0.75rem", // Reduce the font size of the label
+                                transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                              },
+                              "& .MuiInputBase-root": {
+                                marginTop: "16px", // Add space between label and input box
+                              },
+                              "&:MuiInputBase-input": {
+                                fontSize: 12,
+                              },
+                              "& legend": {
+                                width: 0,
                               },
                             }}
                           />
@@ -206,45 +321,55 @@ const CreateSessionDialog = ({
                     />
                     <TimePicker
                       label="End time"
-                      value={endTime}
-                      onChange={(newValue) => setEndTime(newValue)}
                       // renderInput={(params) => <TextField {...params} />}
                       slots={{
                         textField: (params: TextFieldProps) => (
                           <TextField
                             {...params}
                             size="small" // Reduce the input size
+                            {...register("endTime", { required: true })}
                             sx={{
-                              "& .MuiInputBase-root": {
-                                fontSize: "0.875rem", // Reduce the font size of the input text
-                                height: "36px", // Reduce the height of the input
-                              },
-                              "& .MuiSvgIcon-root": {
-                                fontSize: "1.2rem", // Reduce the size of the calendar icon
-                              },
+                              mb: 0,
                               "& .MuiInputLabel-root": {
-                                fontSize: "0.75rem", // Reduce the font size of the label
+                                transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                              },
+                              "& .MuiInputBase-root": {
+                                marginTop: "16px", // Add space between label and input box
+                              },
+                              "&:MuiInputBase-input": {
+                                fontSize: 12,
+                              },
+                              "& legend": {
+                                width: 0,
                               },
                             }}
                           />
                         ),
                       }}
-                    />
-                  </Stack>
-                </LocalizationProvider>
+                    /> */}
+                </Stack>
+                {/* </LocalizationProvider> */}
               </FormControl>
               <FormControl fullWidth sx={{ mb: 2 }}>
                 <TextField
                   fullWidth
                   label="Description"
                   variant="outlined"
-                  value={description}
-                  onChange={handleDescriptionChange}
+                  {...register("description")}
                   size="small"
                   sx={{
-                    mb: 2,
+                    mb: 0,
                     "& .MuiInputLabel-root": {
-                      fontSize: "0.9rem", // Reduce the font size of the label
+                      transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                    },
+                    "& .MuiInputBase-root": {
+                      marginTop: "16px", // Add space between label and input box
+                    },
+                    "&:MuiInputBase-input": {
+                      fontSize: 12,
+                    },
+                    "& legend": {
+                      width: 0,
                     },
                   }}
                 />
@@ -254,8 +379,8 @@ const CreateSessionDialog = ({
               <Button
                 variant="contained"
                 fullWidth
-                disabled={!selectedDate || !startTime || !endTime}
-                onClick={onSubmit}
+                disabled={Object.keys(errors).length === 0 ? false : true}
+                onClick={handleSubmit(onSubmit)}
                 sx={{
                   backgroundColor: "#507FFD",
                   borderRadius: 7,

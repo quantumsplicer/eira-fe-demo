@@ -19,11 +19,13 @@ interface CompletePaymentDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: () => void;
+  amount: number;
 }
 const CompletePaymentDialog = ({
   open,
   onClose,
   onSubmit,
+  amount,
 }: CompletePaymentDialogProps) => {
   return (
     <Dialog
@@ -72,7 +74,7 @@ const CompletePaymentDialog = ({
               </Stack>
             </Stack>
             <Box>
-              <AmountBreakupCard></AmountBreakupCard>
+              <AmountBreakupCard amount={amount}></AmountBreakupCard>
             </Box>
           </Stack>
           <Divider
@@ -80,7 +82,7 @@ const CompletePaymentDialog = ({
             flexItem
             sx={{ height: "90%", alignSelf: "center" }}
           />
-          <Stack justifyContent="space-between" width="40%">
+          <Stack justifyContent="space-between" width="40%" pt={5}>
             <Box
               sx={{
                 display: "flex",

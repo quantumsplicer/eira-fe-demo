@@ -22,6 +22,7 @@ interface TutorDetailsDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: () => void;
+  amount: number;
 }
 type Inputs = {
   firstName: string;
@@ -33,6 +34,7 @@ const TutorDetailsDialog = ({
   open,
   onClose,
   onSubmit,
+  amount,
 }: TutorDetailsDialogProps) => {
   const {
     register,
@@ -64,7 +66,7 @@ const TutorDetailsDialog = ({
         "& .MuiDialog-paper": {
           width: 1000,
           maxWidth: 1000,
-          height: 550,
+          height: 600,
           borderRadius: 3,
         },
       }}
@@ -103,7 +105,7 @@ const TutorDetailsDialog = ({
               </Stack>
             </Stack>
             <Box>
-              <AmountBreakupCard></AmountBreakupCard>
+              <AmountBreakupCard amount={amount}></AmountBreakupCard>
             </Box>
           </Stack>
           <Divider
@@ -111,7 +113,7 @@ const TutorDetailsDialog = ({
             flexItem
             sx={{ height: "90%", alignSelf: "center" }}
           />
-          <Stack justifyContent="space-between" width="40%">
+          <Stack justifyContent="space-between" width="40%" pt={5}>
             <Box
               sx={{
                 display: "flex",
@@ -149,30 +151,79 @@ const TutorDetailsDialog = ({
                   Provide relevant details for their onboarding
                 </Typography>
               </Stack>
-              <Stack>
+              <Stack spacing={3}>
                 <TextField
                   fullWidth
                   label="First Name"
                   variant="outlined"
                   {...register("firstName", { required: true })}
-                  sx={{ mb: 2 }}
                   size="small"
+                  error={errors.firstName !== undefined ? true : false}
+                  helperText={errors.firstName ? "Required" : ""}
+                  sx={{
+                    mb: 0,
+                    "& .MuiInputLabel-root": {
+                      transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                    },
+                    "& .MuiInputBase-root": {
+                      marginTop: "16px", // Add space between label and input box
+                    },
+                    "&:MuiInputBase-input": {
+                      fontSize: 10,
+                    },
+                    "& legend": {
+                      width: 0,
+                    },
+                  }}
                 />
                 <TextField
                   fullWidth
                   label="Last Name"
                   variant="outlined"
                   {...register("lastName", {})}
-                  sx={{ mb: 2 }}
                   size="small"
+                  sx={{
+                    mb: 0,
+                    "& .MuiInputLabel-root": {
+                      transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                    },
+                    "& .MuiInputBase-root": {
+                      marginTop: "16px", // Add space between label and input box
+                    },
+                    "&:MuiInputBase-input": {
+                      fontSize: 10,
+                    },
+                    "& legend": {
+                      width: 0,
+                    },
+                  }}
                 />
                 <TextField
                   fullWidth
                   label="Pan"
                   variant="outlined"
-                  {...register("panNumber", { required: true })}
+                  {...register("panNumber", {
+                    required: true,
+                    pattern: /^[A-Z]{5}[0-9]{4}[A-Z]$/,
+                  })}
                   size="small"
-                  sx={{ mb: 2 }}
+                  error={errors.panNumber !== undefined ? true : false}
+                  helperText={errors.panNumber ? "Invalid Pan" : ""}
+                  sx={{
+                    mb: 0,
+                    "& .MuiInputLabel-root": {
+                      transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                    },
+                    "& .MuiInputBase-root": {
+                      marginTop: "16px", // Add space between label and input box
+                    },
+                    "&:MuiInputBase-input": {
+                      fontSize: 10,
+                    },
+                    "& legend": {
+                      width: 0,
+                    },
+                  }}
                 />
               </Stack>
               <Box>

@@ -17,6 +17,7 @@ import PaymentConfirmationDialog from "../dialogs/PaymentConfirmationDialog";
 const amount = 20000;
 const PaymentBannerCard: React.FC = () => {
   const [activeDialog, setActiveDialog] = useState<string>("None");
+  const [amount, setAmount] = useState<number>(0);
   return (
     <Box
       sx={{
@@ -40,7 +41,7 @@ const PaymentBannerCard: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <Stack spacing={1} alignItems="center">
+          <Stack spacing={2} alignItems="center">
             <Button
               variant="contained"
               onClick={() => {
@@ -60,10 +61,10 @@ const PaymentBannerCard: React.FC = () => {
               Make a new Payment
             </Button>
             <Stack direction="row" spacing={1}>
-              <Typography fontSize={12}>
+              <Typography fontSize={20} fontWeight={500}>
                 Make a payment through Credit
               </Typography>
-              <Typography fontSize={12} fontWeight="bold">
+              <Typography fontSize={20} fontWeight="bold">
                 @ just 1%
               </Typography>
             </Stack>
@@ -84,8 +85,9 @@ const PaymentBannerCard: React.FC = () => {
         onClose={() => {
           setActiveDialog("None");
         }}
-        onSubmit={() => {
+        onSubmit={(value: number) => {
           setActiveDialog("TutorDetailsDialog");
+          setAmount(value);
         }}
       />
       <TutorDetailsDialog
@@ -96,6 +98,7 @@ const PaymentBannerCard: React.FC = () => {
         onSubmit={() => {
           setActiveDialog("CreateSessionDialog");
         }}
+        amount={amount}
       />
       <CreateSessionDialog
         open={activeDialog === "CreateSessionDialog" ? true : false}
@@ -105,6 +108,7 @@ const PaymentBannerCard: React.FC = () => {
         onSubmit={() => {
           setActiveDialog("CompletePaymentDialog");
         }}
+        amount={amount}
       />
       <CompletePaymentDialog
         open={activeDialog === "CompletePaymentDialog" ? true : false}
@@ -114,6 +118,7 @@ const PaymentBannerCard: React.FC = () => {
         onSubmit={() => {
           setActiveDialog("PaymentConfirmationDialog");
         }}
+        amount={amount}
       />
       <PaymentConfirmationDialog
         open={activeDialog === "PaymentConfirmationDialog" ? true : false}

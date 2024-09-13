@@ -29,9 +29,10 @@ const PaymentConfirmationDialog = ({
       onClose={onClose}
       sx={{
         "& .MuiDialog-paper": {
-          width: 460,
+          width: 430,
           maxWidth: "50vw",
-          height: 660,
+          height: 580,
+          maxHeight: 600,
           borderRadius: 3,
         },
       }}
@@ -98,9 +99,9 @@ const PaymentConfirmationDialog = ({
             Create another
           </Link>
         </Stack> */}
-        <Stack justifyContent="center" alignItems="center" spacing={5} pt={5}>
-          <Stack justifyContent="center" alignItems="center" spacing={4}>
-            <Typography fontSize={24} fontWeight={550}>
+        <Stack justifyContent="center" alignItems="center" spacing={6} pt={5}>
+          <Stack justifyContent="center" alignItems="center" spacing={1}>
+            <Typography fontSize={22} fontWeight={550}>
               Payment Successfull!
             </Typography>
             <Stack justifyContent="center" alignItems="center" spacing={4}>
@@ -129,19 +130,35 @@ const PaymentConfirmationDialog = ({
                 <img
                   src={TickMark}
                   style={{
-                    width: "100px",
-                    height: "100px",
+                    width: "90px",
+                    height: "90px",
                   }}
                 />
               </Box>
             </Stack>
             <Stack justifyContent="center" alignItems="center">
-              <Typography align="center" fontSize={14}>
-                settlement on 7th January at 5:00pm
-              </Typography>
+              <Stack direction="row" spacing={1}>
+                <Typography
+                  align="center"
+                  fontSize={14}
+                  letterSpacing={0}
+                  color="#969696"
+                  fontWeight={600}
+                >
+                  settlement on
+                </Typography>
+                <Typography
+                  align="center"
+                  fontSize={14}
+                  letterSpacing={0}
+                  fontWeight={600}
+                >
+                  7th January at 5:00pm
+                </Typography>
+              </Stack>
             </Stack>
           </Stack>
-          <Stack spacing={3} width="85%">
+          <Stack spacing={2} width="85%">
             <Stack
               direction="row"
               justifyContent="space-between"

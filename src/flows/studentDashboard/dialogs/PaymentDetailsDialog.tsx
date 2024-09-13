@@ -12,15 +12,16 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { error } from "console";
 
 interface PaymentDetailsDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: (value: number) => void;
 }
 type Inputs = {
   phoneNumber: string;
-  amount: string;
+  amount: number;
 };
 
 const PaymentDetailsDialog = ({
@@ -34,8 +35,10 @@ const PaymentDetailsDialog = ({
     watch,
     formState: { errors },
   } = useForm<Inputs>();
-  console.log("errors");
-  console.log(errors);
+
+  const handleFormSubmit: SubmitHandler<Inputs> = (data) => {
+    onSubmit(data.amount);
+  };
   return (
     <Dialog
       open={open}
@@ -44,10 +47,9 @@ const PaymentDetailsDialog = ({
         "& .MuiDialog-paper": {
           width: 450,
           maxWidth: "50vw",
-          height: 470,
+          height: 510,
           borderRadius: 3,
         },
-        p: 2,
       }}
     >
       <DialogContent dividers>
@@ -63,7 +65,7 @@ const PaymentDetailsDialog = ({
         >
           <CloseIcon />
         </IconButton>
-        <Stack justifyContent="space-around" height="100%">
+        <Stack justifyContent="space-around" height="100%" pt={4}>
           <Stack>
             <Typography fontSize={23} fontWeight={600} align="center">
               Payment Details
@@ -92,35 +94,69 @@ const PaymentDetailsDialog = ({
             alignSelf="center"
           >
             <TextField
+              label="Phone Number"
               fullWidth
-              label="Phone number of the tutor"
               variant="outlined"
               size="small"
-              {...register("phoneNumber", { required: true })}
+              {...register("phoneNumber", {
+                required: true,
+                maxLength: 10,
+                minLength: 10,
+                pattern: /^[6-9]\d{9}$/,
+              })}
+              error={errors.phoneNumber !== undefined ? true : false}
               sx={{
                 mb: 0,
+                "& .MuiInputLabel-root": {
+                  transform: "translate(0, -10px) scale(0.8)", // Move the label above
+                },
+                "& .MuiInputBase-root": {
+                  marginTop: "16px", // Add space between label and input box
+                },
                 "&:MuiInputBase-input": {
                   fontSize: 12,
                 },
+                "& legend": {
+                  width: 0,
+                },
               }}
+              helperText={errors.phoneNumber ? "Invalid number" : ""}
               InputProps={{
                 startAdornment: (
-                  <Typography fontSize={14} sx={{ mr: 1 }}></Typography>
+                  <Stack direction={"row"} spacing={1} sx={{ mr: 1 }}>
+                    <img
+                      src="https://flagcdn.com/w320/in.png"
+                      alt="India Flag"
+                      style={{ width: 24, height: 18, marginRight: 8 }}
+                    />
+                    <Typography fontSize={14}>+91</Typography>
+                  </Stack>
                 ),
               }}
             />
 
             <TextField
+              label="Amount"
               fullWidth
-              label="Amount to pay"
               type="number"
               variant="outlined"
               size="small"
               {...register("amount", { required: true })}
+              error={errors.amount !== undefined ? true : false}
+              helperText={errors.amount ? "Required" : ""}
               sx={{
                 mb: 0,
+                "& .MuiInputLabel-root": {
+                  transform: "translate(0, -10px) scale(0.8)", // Move the label above
+                },
+                "& .MuiInputBase-root": {
+                  marginTop: "16px", // Add space between label and input box
+                },
                 "&:MuiInputBase-input": {
                   fontSize: 10,
+                },
+                "& legend": {
+                  width: 0,
                 },
               }}
               InputProps={{
@@ -135,7 +171,7 @@ const PaymentDetailsDialog = ({
           <Box width="85%" alignSelf="center">
             <Button
               variant="contained"
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleSubmit(handleFormSubmit)}
               fullWidth
               disabled={Object.keys(errors).length === 0 ? false : true}
               sx={{
