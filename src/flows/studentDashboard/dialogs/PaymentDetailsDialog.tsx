@@ -11,7 +11,7 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { error } from "console";
 
 interface PaymentDetailsDialogProps {
@@ -33,7 +33,8 @@ const PaymentDetailsDialog = ({
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    control,
+    formState: { errors, isValid },
   } = useForm<Inputs>();
 
   const handleFormSubmit: SubmitHandler<Inputs> = (data) => {
@@ -93,79 +94,97 @@ const PaymentDetailsDialog = ({
             width="85%"
             alignSelf="center"
           >
-            <TextField
-              label="Phone Number"
-              fullWidth
-              variant="outlined"
-              size="small"
-              {...register("phoneNumber", {
-                required: true,
+            <Controller
+              name="phoneNumber"
+              control={control}
+              rules={{
+                required: "This field is required",
                 maxLength: 10,
                 minLength: 10,
-                pattern: /^[6-9]\d{9}$/,
-              })}
-              error={errors.phoneNumber !== undefined ? true : false}
-              sx={{
-                mb: 0,
-                "& .MuiInputLabel-root": {
-                  transform: "translate(0, -10px) scale(0.8)", // Move the label above
-                },
-                "& .MuiInputBase-root": {
-                  marginTop: "16px", // Add space between label and input box
-                },
-                "&:MuiInputBase-input": {
-                  fontSize: 12,
-                },
-                "& legend": {
-                  width: 0,
+                pattern: {
+                  value: /^[6-9]\d{9}$/,
+                  message: "Invalid Number",
                 },
               }}
-              helperText={errors.phoneNumber ? "Invalid number" : ""}
-              InputProps={{
-                startAdornment: (
-                  <Stack direction={"row"} spacing={1} sx={{ mr: 1 }}>
-                    <img
-                      src="https://flagcdn.com/w320/in.png"
-                      alt="India Flag"
-                      style={{ width: 24, height: 18, marginRight: 8 }}
-                    />
-                    <Typography fontSize={14}>+91</Typography>
-                  </Stack>
-                ),
-              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Phone Number"
+                  fullWidth
+                  variant="outlined"
+                  size="small"
+                  error={!!errors.phoneNumber}
+                  helperText={
+                    errors.phoneNumber ? errors.phoneNumber.message : ""
+                  }
+                  sx={{
+                    mb: 0,
+                    "& .MuiInputLabel-root": {
+                      transform: "translate(0, -10px) scale(0.8)", // Move the label above
+                    },
+                    "& .MuiInputBase-root": {
+                      marginTop: "16px", // Add space between label and input box
+                    },
+                    "&:MuiInputBase-input": {
+                      fontSize: 12,
+                    },
+                    "& legend": {
+                      width: 0,
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <Stack direction={"row"} spacing={1} sx={{ mr: 1 }}>
+                        <img
+                          src="https://flagcdn.com/w320/in.png"
+                          alt="India Flag"
+                          style={{ width: 24, height: 18, marginRight: 8 }}
+                        />
+                        <Typography fontSize={14}>+91</Typography>
+                      </Stack>
+                    ),
+                  }}
+                />
+              )}
             />
-
-            <TextField
-              label="Amount"
-              fullWidth
-              type="number"
-              variant="outlined"
-              size="small"
-              {...register("amount", { required: true })}
-              error={errors.amount !== undefined ? true : false}
-              helperText={errors.amount ? "Required" : ""}
-              sx={{
-                mb: 0,
-                "& .MuiInputLabel-root": {
-                  transform: "translate(0, -10px) scale(0.8)", // Move the label above
-                },
-                "& .MuiInputBase-root": {
-                  marginTop: "16px", // Add space between label and input box
-                },
-                "&:MuiInputBase-input": {
-                  fontSize: 10,
-                },
-                "& legend": {
-                  width: 0,
-                },
-              }}
-              InputProps={{
-                startAdornment: (
-                  <Typography fontSize={14} sx={{ mr: 1 }}>
-                    ₹
-                  </Typography>
-                ),
-              }}
+            <Controller
+              name="amount"
+              control={control}
+              rules={{ required: "Required" }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Amount"
+                  fullWidth
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  error={!!errors.amount}
+                  helperText={errors.amount ? errors.amount.message : ""}
+                  sx={{
+                    mb: 0,
+                    "& .MuiInputLabel-root": {
+                      transform: "translate(0, -10px) scale(0.8)", // Move the label above
+                    },
+                    "& .MuiInputBase-root": {
+                      marginTop: "16px", // Add space between label and input box
+                    },
+                    "&:MuiInputBase-input": {
+                      fontSize: 10,
+                    },
+                    "& legend": {
+                      width: 0,
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <Typography fontSize={14} sx={{ mr: 1 }}>
+                        ₹
+                      </Typography>
+                    ),
+                  }}
+                />
+              )}
             />
           </Stack>
           <Box width="85%" alignSelf="center">
@@ -173,7 +192,7 @@ const PaymentDetailsDialog = ({
               variant="contained"
               onClick={handleSubmit(handleFormSubmit)}
               fullWidth
-              disabled={Object.keys(errors).length === 0 ? false : true}
+              disabled={!isValid}
               sx={{
                 backgroundColor: "#507FFD",
                 borderRadius: 7,

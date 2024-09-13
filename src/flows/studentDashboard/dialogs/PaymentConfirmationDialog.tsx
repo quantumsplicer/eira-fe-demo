@@ -116,7 +116,7 @@ const PaymentConfirmationDialog = ({
                     fontSize={19}
                     color="#1F9254"
                   >
-                    Rs 5000
+                    ₹ 5000
                   </Typography>
                   <Typography align="center" fontWeight={550} fontSize={19}>
                     to

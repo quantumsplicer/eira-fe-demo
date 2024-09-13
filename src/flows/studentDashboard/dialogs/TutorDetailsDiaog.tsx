@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
 
 interface TutorDetailsDialogProps {
@@ -40,7 +40,8 @@ const TutorDetailsDialog = ({
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    control,
+    formState: { errors, isValid },
   } = useForm<Inputs>();
 
   const [firstName, setFirstName] = useState("");
@@ -152,78 +153,105 @@ const TutorDetailsDialog = ({
                 </Typography>
               </Stack>
               <Stack spacing={3}>
-                <TextField
-                  fullWidth
-                  label="First Name"
-                  variant="outlined"
-                  {...register("firstName", { required: true })}
-                  size="small"
-                  error={errors.firstName !== undefined ? true : false}
-                  helperText={errors.firstName ? "Required" : ""}
-                  sx={{
-                    mb: 0,
-                    "& .MuiInputLabel-root": {
-                      transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                    },
-                    "& .MuiInputBase-root": {
-                      marginTop: "16px", // Add space between label and input box
-                    },
-                    "&:MuiInputBase-input": {
-                      fontSize: 10,
-                    },
-                    "& legend": {
-                      width: 0,
-                    },
-                  }}
+                <Controller
+                  name="firstName"
+                  control={control}
+                  rules={{ required: "First Name is required" }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="First Name"
+                      variant="outlined"
+                      size="small"
+                      error={!!errors.firstName}
+                      helperText={
+                        errors.firstName ? errors.firstName.message : ""
+                      }
+                      sx={{
+                        mb: 0,
+                        "& .MuiInputLabel-root": {
+                          transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                        },
+                        "& .MuiInputBase-root": {
+                          marginTop: "16px", // Add space between label and input box
+                        },
+                        "&:MuiInputBase-input": {
+                          fontSize: 10,
+                        },
+                        "& legend": {
+                          width: 0,
+                        },
+                      }}
+                    />
+                  )}
                 />
-                <TextField
-                  fullWidth
-                  label="Last Name"
-                  variant="outlined"
-                  {...register("lastName", {})}
-                  size="small"
-                  sx={{
-                    mb: 0,
-                    "& .MuiInputLabel-root": {
-                      transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                    },
-                    "& .MuiInputBase-root": {
-                      marginTop: "16px", // Add space between label and input box
-                    },
-                    "&:MuiInputBase-input": {
-                      fontSize: 10,
-                    },
-                    "& legend": {
-                      width: 0,
-                    },
-                  }}
+                <Controller
+                  name="lastName"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="Last Name"
+                      variant="outlined"
+                      size="small"
+                      sx={{
+                        mb: 0,
+                        "& .MuiInputLabel-root": {
+                          transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                        },
+                        "& .MuiInputBase-root": {
+                          marginTop: "16px", // Add space between label and input box
+                        },
+                        "&:MuiInputBase-input": {
+                          fontSize: 10,
+                        },
+                        "& legend": {
+                          width: 0,
+                        },
+                      }}
+                    />
+                  )}
                 />
-                <TextField
-                  fullWidth
-                  label="Pan"
-                  variant="outlined"
-                  {...register("panNumber", {
-                    required: true,
-                    pattern: /^[A-Z]{5}[0-9]{4}[A-Z]$/,
-                  })}
-                  size="small"
-                  error={errors.panNumber !== undefined ? true : false}
-                  helperText={errors.panNumber ? "Invalid Pan" : ""}
-                  sx={{
-                    mb: 0,
-                    "& .MuiInputLabel-root": {
-                      transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                    },
-                    "& .MuiInputBase-root": {
-                      marginTop: "16px", // Add space between label and input box
-                    },
-                    "&:MuiInputBase-input": {
-                      fontSize: 10,
-                    },
-                    "& legend": {
-                      width: 0,
+                <Controller
+                  name="panNumber"
+                  control={control}
+                  rules={{
+                    required: "This field is required",
+                    pattern: {
+                      value: /^[A-Z]{5}[0-9]{4}[A-Z]$/,
+                      message: "Invalid Pan",
                     },
                   }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="Pan"
+                      variant="outlined"
+                      size="small"
+                      error={!!errors.panNumber}
+                      helperText={
+                        errors.panNumber ? errors.panNumber.message : ""
+                      }
+                      sx={{
+                        mb: 0,
+                        "& .MuiInputLabel-root": {
+                          transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                        },
+                        "& .MuiInputBase-root": {
+                          marginTop: "16px", // Add space between label and input box
+                        },
+                        "&:MuiInputBase-input": {
+                          fontSize: 10,
+                        },
+                        "& legend": {
+                          width: 0,
+                        },
+                      }}
+                    />
+                  )}
                 />
               </Stack>
               <Box>
@@ -231,7 +259,7 @@ const TutorDetailsDialog = ({
                   variant="contained"
                   onClick={handleSubmit(onSubmit)}
                   fullWidth
-                  disabled={Object.keys(errors).length === 0 ? false : true}
+                  disabled={!isValid}
                   sx={{
                     backgroundColor: "#507FFD",
                     borderRadius: 7,

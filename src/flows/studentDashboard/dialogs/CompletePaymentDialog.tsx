@@ -124,7 +124,7 @@ const CompletePaymentDialog = ({
                       align="center"
                       color="#1F9254"
                     >
-                      Rs 5,000
+                      ₹ 5,000
                     </Typography>
                   </Stack>
                   <Stack direction="row" spacing={1}>

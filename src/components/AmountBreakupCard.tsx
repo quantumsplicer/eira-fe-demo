@@ -31,7 +31,7 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
               Payment Amount:
             </Typography>
             <Typography fontSize={15} fontWeight={550}>
-              Rs {amount}
+              ₹ {amount}
             </Typography>
           </Stack>
           <Stack direction="row" display="flex" justifyContent="space-between">
@@ -39,7 +39,7 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
               Platform Fees(1%)
             </Typography>
             <Typography fontSize={15} fontWeight={550}>
-              Rs {amount * 0.01}
+              ₹ {amount * 0.01}
             </Typography>
           </Stack>
           <Stack direction="row" display="flex" justifyContent="space-between">
@@ -47,7 +47,7 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
               GST (18% of Platform fees):
             </Typography>
             <Typography fontSize={15} fontWeight={550}>
-              Rs {(amount * 0.01 * 0.18).toFixed(2)}
+              ₹ {(amount * 0.01 * 0.18).toFixed(2)}
             </Typography>
           </Stack>
         </Stack>
@@ -56,7 +56,7 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
         <Stack direction="row" display="flex" justifyContent="space-between">
           <Typography fontWeight="bold">Total Payable</Typography>
           <Typography fontSize={20} color="#2AC426" fontWeight={600}>
-            Rs {(amount * 1.0118).toFixed(2)}
+            ₹ {(amount * 1.0118).toFixed(2)}
           </Typography>
         </Stack>
       </Stack>

@@ -48,7 +48,7 @@ const CreateSessionDialog = ({
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isValid },
     control,
   } = useForm<Inputs>({
     defaultValues: {
@@ -148,30 +148,40 @@ const CreateSessionDialog = ({
               </Typography>
             </Stack>
             <Stack height="45%" justifyContent="space-around" spacing={2}>
-              <TextField
-                fullWidth
-                label="Session Title"
-                variant="outlined"
-                {...register("sessionTitle", { required: true })}
-                size="small"
-                error={errors.sessionTitle !== undefined ? true : false}
-                helperText={errors.sessionTitle ? "Required" : ""}
-                sx={{
-                  mb: 0,
-                  "& .MuiInputLabel-root": {
-                    transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                  },
-                  "& .MuiInputBase-root": {
-                    marginTop: "16px", // Add space between label and input box
-                  },
-                  "&:MuiInputBase-input": {
-                    fontSize: 12,
-                  },
-                  "& legend": {
-                    width: 0,
-                  },
-                }}
+              <Controller
+                name="sessionTitle"
+                control={control}
+                rules={{ required: "Required" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    label="Session Title"
+                    variant="outlined"
+                    size="small"
+                    error={!!errors.sessionTitle}
+                    helperText={
+                      errors.sessionTitle ? errors.sessionTitle.message : ""
+                    }
+                    sx={{
+                      mb: 0,
+                      "& .MuiInputLabel-root": {
+                        transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                      },
+                      "& .MuiInputBase-root": {
+                        marginTop: "16px", // Add space between label and input box
+                      },
+                      "&:MuiInputBase-input": {
+                        fontSize: 12,
+                      },
+                      "& legend": {
+                        width: 0,
+                      },
+                    }}
+                  />
+                )}
               />
+
               <FormControl fullWidth sx={{ mb: 2 }}>
                 {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
                 <Stack direction="row" spacing={3}>
@@ -292,86 +302,37 @@ const CreateSessionDialog = ({
                       />
                     )}
                   />
-                  {/* <TimePicker
-                      label="Start time"
-                      slots={{
-                        textField: (params: TextFieldProps) => (
-                          <TextField
-                            {...params}
-                            size="small" // Reduce the input size
-                            {...register("startTime", { required: true })}
-                            sx={{
-                              mb: 0,
-                              "& .MuiInputLabel-root": {
-                                transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                              },
-                              "& .MuiInputBase-root": {
-                                marginTop: "16px", // Add space between label and input box
-                              },
-                              "&:MuiInputBase-input": {
-                                fontSize: 12,
-                              },
-                              "& legend": {
-                                width: 0,
-                              },
-                            }}
-                          />
-                        ),
-                      }}
-                    />
-                    <TimePicker
-                      label="End time"
-                      // renderInput={(params) => <TextField {...params} />}
-                      slots={{
-                        textField: (params: TextFieldProps) => (
-                          <TextField
-                            {...params}
-                            size="small" // Reduce the input size
-                            {...register("endTime", { required: true })}
-                            sx={{
-                              mb: 0,
-                              "& .MuiInputLabel-root": {
-                                transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                              },
-                              "& .MuiInputBase-root": {
-                                marginTop: "16px", // Add space between label and input box
-                              },
-                              "&:MuiInputBase-input": {
-                                fontSize: 12,
-                              },
-                              "& legend": {
-                                width: 0,
-                              },
-                            }}
-                          />
-                        ),
-                      }}
-                    /> */}
                 </Stack>
                 {/* </LocalizationProvider> */}
               </FormControl>
               <FormControl fullWidth sx={{ mb: 2 }}>
-                <TextField
-                  fullWidth
-                  label="Description"
-                  variant="outlined"
-                  {...register("description")}
-                  size="small"
-                  sx={{
-                    mb: 0,
-                    "& .MuiInputLabel-root": {
-                      transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                    },
-                    "& .MuiInputBase-root": {
-                      marginTop: "16px", // Add space between label and input box
-                    },
-                    "&:MuiInputBase-input": {
-                      fontSize: 12,
-                    },
-                    "& legend": {
-                      width: 0,
-                    },
-                  }}
+                <Controller
+                  name="description"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="Description"
+                      variant="outlined"
+                      size="small"
+                      sx={{
+                        mb: 0,
+                        "& .MuiInputLabel-root": {
+                          transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                        },
+                        "& .MuiInputBase-root": {
+                          marginTop: "16px", // Add space between label and input box
+                        },
+                        "&:MuiInputBase-input": {
+                          fontSize: 12,
+                        },
+                        "& legend": {
+                          width: 0,
+                        },
+                      }}
+                    />
+                  )}
                 />
               </FormControl>
             </Stack>
@@ -379,7 +340,7 @@ const CreateSessionDialog = ({
               <Button
                 variant="contained"
                 fullWidth
-                disabled={Object.keys(errors).length === 0 ? false : true}
+                disabled={!isValid}
                 onClick={handleSubmit(onSubmit)}
                 sx={{
                   backgroundColor: "#507FFD",
