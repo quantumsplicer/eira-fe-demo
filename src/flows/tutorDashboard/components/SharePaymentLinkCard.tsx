@@ -38,7 +38,7 @@ const SharePaymentLinkCard: React.FC = () => {
       }}
     >
       <Stack
-        sx={{ borderWidth: "2" }}
+        sx={{ borderWidth: "2", height: "100%" }}
         direction="row"
         justifyContent="space-between"
       >
@@ -86,29 +86,30 @@ const SharePaymentLinkCard: React.FC = () => {
         </Stack>
         <Box
           sx={{
-            width: "46.5%",
+            width: "47%",
             backgroundColor: "#EBF1FF",
             borderTopRightRadius: 4,
             borderBottomRightRadius: 4,
+            backgroundImage: { Background },
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
           }}
-          p={0}
         >
-          <img src={Background} style={{ width: "100%", height: "100%" }} />
-          <Box
-            sx={{
-              position: "absolute", // Position child box absolutely relative to the parent
-              top: "58.7%",
-              left: "80%",
-              transform: "translate(-50%, -50%)", // Center child box
-              padding: 2, // Padding inside the child box
-              borderRadius: 1, // Rounded corners for the child box
-            }}
+          <Stack
+            justifyContent="center"
+            direction="row"
+            alignItems="flex-end"
+            height="100%"
           >
-            <img src={AndroidDevice} style={{ width: "90%", height: "90%" }} />
-          </Box>
-          {/* <Box>
-            <img src={AndroidDevice} style={{ width: "20%", height: "20%" }} />
-          </Box> */}
+            <img
+              src={AndroidDevice}
+              style={{
+                width: "40%",
+                height: "70%",
+              }}
+            />
+          </Stack>
         </Box>
       </Stack>
     </Box>

@@ -53,17 +53,17 @@ const BankAccountsList: React.FC<BankAccountsListProps> = ({ accounts }) => {
                   </Typography>
                 </Stack>
               </Box>
-              <RadioGroup
+              {/* <RadioGroup
                 value={selectedAccount}
                 onChange={() => handleSelectAccount(account.accountNumber)}
               >
                 <FormControlLabel
                   value={account.accountNumber}
-                  control={<Radio />}
+                  control={<Radio/>}
                   label=""
                   sx={{ margin: 0 }}
                 />
-              </RadioGroup>
+              </RadioGroup> */}
             </ListItem>
             <Divider />
           </React.Fragment>

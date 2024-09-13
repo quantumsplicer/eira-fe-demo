@@ -36,7 +36,7 @@ const ProfileInfoCard: React.FC = () => {
           spacing={0.5}
         >
           <Typography fontSize={20} fontWeight={600}>
-            Maanav Seth
+            Anagh Pranshu
           </Typography>
           <Typography>+919997945005</Typography>
         </Stack>

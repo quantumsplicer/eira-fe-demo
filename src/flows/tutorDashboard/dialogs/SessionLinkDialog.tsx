@@ -42,7 +42,7 @@ const SessionLinkDialog = ({
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isValid },
     control,
   } = useForm<Inputs>({
     defaultValues: {
@@ -91,6 +91,7 @@ const SessionLinkDialog = ({
       prev.filter((attendee) => attendee !== attendeeToDelete)
     );
   };
+
   return (
     <Dialog
       open={activeDialog === "SessionLinkDialog" ? true : false}
@@ -119,111 +120,6 @@ const SessionLinkDialog = ({
         >
           <CloseIcon />
         </IconButton>
-        {/* <Stack
-          justifyContent="center"
-          alignItems="center"
-          spacing={1}
-          sx={{ height: "100%", pb: 3, pl: 5, pr: 5, pt: 5 }}
-        >
-          <Stack
-            justifyContent="center"
-            alignItems="center"
-            sx={{ height: "100%" }}
-          >
-            <Typography sx={{ fontSize: 24, fontWeight: "bold" }}>
-              Create Session
-            </Typography>
-            <Typography sx={{ fontSize: 15, fontWeight: 550 }}>
-              create session for your students
-            </Typography>
-          </Stack>
-          <Stack>
-            <TextField
-              fullWidth
-              label="Session Title"
-              variant="outlined"
-              value={sessionTitle}
-              onChange={handleSessionTitleChange}
-              sx={{ mb: 2 }}
-            />
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Stack direction="row" spacing={2}>
-                  <DatePicker
-                    label="Add date"
-                    value={selectedDate}
-                    onChange={(newValue) => setSelectedDate(newValue)}
-                    // renderInput={(params) => <TextField {...params} />}
-                  />
-                  <TimePicker
-                    label="Start time"
-                    value={startTime}
-                    onChange={(newValue) => setStartTime(newValue)}
-                    // renderInput={(params) => <TextField {...params} />}
-                  />
-                  <TimePicker
-                    label="End time"
-                    value={endTime}
-                    onChange={(newValue) => setEndTime(newValue)}
-                    // renderInput={(params) => <TextField {...params} />}
-                  />
-                </Stack>
-              </LocalizationProvider>
-            </FormControl>
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                label="Add new attendee"
-                value={attendeeInput}
-                onChange={(e) => setAttendeeInput(e.target.value)}
-                onKeyPress={handleAddAttendee}
-                sx={{ mb: 2 }}
-              />
-              <Stack direction="row" flexWrap="wrap" gap={0.5}>
-                {attendees.map((attendee) => (
-                  <Chip
-                    key={attendee}
-                    label={attendee}
-                    onDelete={handleDeleteAttendee(attendee)}
-                  />
-                ))}
-              </Stack>
-              <TextField
-                fullWidth
-                label="Description"
-                variant="outlined"
-                value={description}
-                onChange={handleDescriptionChange}
-                sx={{ mb: 2 }}
-              />
-            </FormControl>
-          </Stack>
-          <Button
-            variant="contained"
-            disabled={
-              !sessionTitle ||
-              !selectedDate ||
-              !startTime ||
-              !endTime ||
-              attendees.length === 0
-                ? true
-                : false
-            }
-            onClick={handleOnSubmit}
-            sx={{
-              backgroundColor: "#507FFD",
-              borderRadius: 7,
-              fontSize: 15,
-              fontWeight: "bold",
-              height: 45,
-              width: "80%",
-              textTransform: "none",
-            }}
-          >
-            Send Session Invite
-          </Button>
-        </Stack> */}
         <Stack justifyContent="space-between" spacing={5} pt={5}>
           <Stack>
             <Typography fontSize={23} fontWeight={600} align="center">
@@ -244,29 +140,37 @@ const SessionLinkDialog = ({
             width="85%"
             alignSelf="center"
           >
-            <TextField
-              fullWidth
-              label="Session Title"
-              variant="outlined"
-              {...register("sessionTitle", { required: true })}
-              size="small"
-              error={errors.sessionTitle !== undefined ? true : false}
-              helperText={errors.sessionTitle ? "Required" : ""}
-              sx={{
-                mb: 0,
-                "& .MuiInputLabel-root": {
-                  transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                },
-                "& .MuiInputBase-root": {
-                  marginTop: "16px", // Add space between label and input box
-                },
-                "&:MuiInputBase-input": {
-                  fontSize: 12,
-                },
-                "& legend": {
-                  width: 0,
-                },
-              }}
+            <Controller
+              name="sessionTitle"
+              control={control}
+              rules={{ required: "Session Title required" }}
+              render={({ field }) => (
+                <TextField
+                  fullWidth
+                  label="Session Title"
+                  variant="outlined"
+                  size="small"
+                  error={!!errors.sessionTitle}
+                  helperText={
+                    errors.sessionTitle ? errors.sessionTitle.message : ""
+                  }
+                  sx={{
+                    mb: 0,
+                    "& .MuiInputLabel-root": {
+                      transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                    },
+                    "& .MuiInputBase-root": {
+                      marginTop: "16px", // Add space between label and input box
+                    },
+                    "&:MuiInputBase-input": {
+                      fontSize: 12,
+                    },
+                    "& legend": {
+                      width: 0,
+                    },
+                  }}
+                />
+              )}
             />
             <FormControl fullWidth sx={{ mb: 2 }}>
               {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
@@ -453,7 +357,7 @@ const SessionLinkDialog = ({
             <Button
               variant="contained"
               fullWidth
-              disabled={Object.keys(errors).length === 0 ? false : true}
+              disabled={!isValid}
               onClick={handleSubmit(handleOnSubmit)}
               sx={{
                 backgroundColor: "#507FFD",

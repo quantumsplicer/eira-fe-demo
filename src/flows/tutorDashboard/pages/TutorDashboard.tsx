@@ -116,7 +116,7 @@ const TutorDashboard: React.FC = () => {
                     pt={1.4}
                     fontWeight={600}
                   >
-                    Maanav Seth
+                    Anagh Pranshu
                   </Typography>
                   <IconButton
                     onClick={() => {
@@ -199,7 +199,7 @@ const TutorDashboard: React.FC = () => {
             flexGrow: 1,
             backgroundColor: "#F5F5F5",
             p: 5,
-            minHeight: 900,
+            minHeight: 1000,
           }}
         >
           <Toolbar />

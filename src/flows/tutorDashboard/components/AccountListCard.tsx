@@ -62,7 +62,7 @@ const AccountsListCard: React.FC = () => {
           </Stack>
         </Stack>
         <Stack direction="row" sx={{ justifyContent: "flex-end" }} spacing={4}>
-          <Button
+          {/* <Button
             variant="outlined"
             sx={{
               fontSize: 14,
@@ -74,7 +74,7 @@ const AccountsListCard: React.FC = () => {
             }}
           >
             Save Changes
-          </Button>
+          </Button> */}
           {/* <Button
             variant="contained"
             sx={{
