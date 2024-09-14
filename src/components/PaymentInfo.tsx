@@ -1,22 +1,40 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
     Stack,
     Typography,
     Box
 } from "@mui/material";
 import Amount from "./Amount";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import tickMark from '../assets/images/png/tick-mark.png'
 
 interface PaymentInfoProps {
     amount: string;
     name: string;
-    paymentDetails: Record<string, string[]>;
+    paymentDetails: Record<string, string>;
     type: string;
+}
+
+const formattedInfo = {
+    "Transaction ID": ["Transaction ID"],
+    "Account Number": ["Account Number"],
+    "Account Holder": ["Payee Name", "Payee Phone"],
+    "Transaction date & time": ["Transaction Date", "Transaction Time"],
+    "Session date & time": ["Session Date", "Session Time"]
 }
 
 const PaymentInfo = ({ amount, name, paymentDetails, type }: PaymentInfoProps) => {
 
-    const infoKeys = Object.keys(paymentDetails)
+    const formattedPaymentDetails = useMemo(() => {
+        const paymentDetailsKeys = Object.keys(paymentDetails);
+        const newValue = Object.entries(formattedInfo).reduce((acc: Record<string, string[]>, [key, details]) => {
+            // Check if all elements in details exist in paymentDetailsKeys
+            if (details.every(detail => paymentDetailsKeys.includes(detail))) {
+              acc[key] = details.map(detail => paymentDetails[detail]);
+            }
+            return acc;
+        }, {});
+        return newValue;
+    }, [ paymentDetails ])
 
     return (
         <>
@@ -61,8 +79,12 @@ const PaymentInfo = ({ amount, name, paymentDetails, type }: PaymentInfoProps) =
             </Stack>
             {
                 type === "success" &&
-                <CheckCircleOutlineIcon
-                    sx={{ color: "green", fontSize: 90, mt: 3 }}
+                <img
+                    src={tickMark}
+                    style={{
+                        marginTop: "30px",
+                        width: 90
+                    }}
                 />
             }
             {
@@ -110,7 +132,7 @@ const PaymentInfo = ({ amount, name, paymentDetails, type }: PaymentInfoProps) =
             <Box width={"100%"} mt={5}>
                 <Stack>
                     {
-                        infoKeys.map((key, index) => {
+                        Object.keys(formattedPaymentDetails).map((key, index) => {
                             return (
                                 <Stack justifyContent={"space-between"} direction={"row"} mb={2} key={index}>
                                     <Typography width={"50%"} color={"#7e7e7e"}>
@@ -118,7 +140,7 @@ const PaymentInfo = ({ amount, name, paymentDetails, type }: PaymentInfoProps) =
                                     </Typography>
                                     <Stack alignItems={"flex-end"}>
                                         {
-                                            paymentDetails[key].map((value, index) => {
+                                            formattedPaymentDetails[key].map((value, index) => {
                                                 return (
                                                     <Typography key={index}>
                                                         {value}

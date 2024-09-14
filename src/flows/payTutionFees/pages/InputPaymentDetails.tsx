@@ -12,8 +12,8 @@ import { useNavigate } from "react-router-dom";
 import NoteBox from "../../../components/NoteBox";
 import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
-import Secure from '../../../assets/images/svg/Secure.svg'
 import { useCheckInvitationAcceptanceQuery } from "../../../APIs/definitions/invitations";
+import SafeLogo from "../../../components/SafeLogo";
 
 const InputPaymentDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -84,27 +84,13 @@ const InputPaymentDetails: React.FC = () => {
         alignItems={"center"}
         justifyContent={"space-between"}
       >
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
+        <Box
           position={"absolute"}
           bottom={52}
           left={45}
         >
-          <img
-            src={Secure}
-            style={{
-              height: "50px",
-              width: "50px"
-            }}
-          />
-          <Typography
-            color={"white"}
-            fontWeight={"bold"}
-          >
-            100% safe
-          </Typography>
-        </Stack>
+          <SafeLogo />
+        </Box>
         <Typography
           ml={10}
           color={"white"}

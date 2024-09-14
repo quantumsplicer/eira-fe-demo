@@ -19,7 +19,14 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import TickMark from "../../../assets/images/png/tick-mark.png";
 import Link from "@mui/material/Link";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
+
+type Inputs = {
+  phoneNumber: string;
+  email: string;
+  amount: number;
+};
 
 interface PaymentLinkDialogProps {
   activeDialog: string;
@@ -30,6 +37,14 @@ const PaymentLinkDialog = ({
   activeDialog,
   setActiveDialog,
 }: PaymentLinkDialogProps) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    control,
+    formState: { errors, isValid },
+  } = useForm<Inputs>();
+
   const handleOnClose = () => {
     setActiveDialog("None");
   };
@@ -72,7 +87,8 @@ const PaymentLinkDialog = ({
         "& .MuiDialog-paper": {
           width: 470,
           maxWidth: "50vw",
-          height: 570,
+          maxHeight: 650,
+          height: 590,
           borderRadius: 3,
         },
         p: 2,
@@ -91,12 +107,12 @@ const PaymentLinkDialog = ({
         >
           <CloseIcon />
         </IconButton>
-        <Stack sx={{ pl: 4, pr: 4, pt: 3 }} spacing={2}>
-          <Stack justifyContent="center" alignItems="center" sx={{ pt: 1 }}>
-            <Typography sx={{ fontSize: 23, fontWeight: "bold" }}>
+        <Stack sx={{ pl: 4, pr: 4, pt: 4 }} spacing={7}>
+          <Stack justifyContent="center" alignItems="center" sx={{ pt: 0 }}>
+            <Typography sx={{ fontSize: 22, fontWeight: 600 }}>
               Create a payment Link
             </Typography>
-            <Typography sx={{ fontSize: 12, fontWeight: 550, lineHeight: 1.2 }}>
+            <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
               create Link to share with your students
             </Typography>
             <Typography
@@ -104,106 +120,153 @@ const PaymentLinkDialog = ({
                 fontSize: 11,
                 fontWeight: 550,
                 color: "#989898",
-                lineHeight: 1.2,
+                pt: 0.5,
+                lineHeight: 0.6,
               }}
             >
               Link will be sent to them through whatsapp and text sms
             </Typography>
           </Stack>
-          <Stack spacing={2.3} sx={{ pt: 2 }}>
-            <TextField
-              fullWidth
-              label="Name of the student"
-              variant="outlined"
-              value={studentName}
-              onChange={handleStudentNameChange}
-              sx={{
-                mb: 0,
-                "&:MuiInputBase-input": {
-                  fontSize: 7,
+          <Stack spacing={4} sx={{ pt: 1 }}>
+            <Controller
+              name="phoneNumber"
+              control={control}
+              rules={{
+                required: "Required",
+                pattern: {
+                  value: /^[6-9]\d{9}$/,
+                  message: "Invalid Number",
                 },
               }}
-              InputProps={{
-                startAdornment: (
-                  <Typography fontSize={10} sx={{ mr: 1 }}></Typography>
-                ),
-              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Phone Number"
+                  fullWidth
+                  variant="outlined"
+                  size="small"
+                  error={!!errors.phoneNumber}
+                  helperText={
+                    errors.phoneNumber ? errors.phoneNumber.message : ""
+                  }
+                  sx={{
+                    mb: 0,
+                    "& .MuiInputLabel-root": {
+                      transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                    },
+                    "& .MuiInputBase-root": {
+                      marginTop: "16px", // Add space between label and input box
+                    },
+                    "&:MuiInputBase-input": {
+                      fontSize: 12,
+                    },
+                    "& legend": {
+                      width: 0,
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <Stack direction={"row"} spacing={1} sx={{ mr: 1 }}>
+                        <img
+                          src="https://flagcdn.com/w320/in.png"
+                          alt="India Flag"
+                          style={{ width: 24, height: 18, marginRight: 8 }}
+                        />
+                        <Typography fontSize={14}>+91</Typography>
+                      </Stack>
+                    ),
+                  }}
+                />
+              )}
             />
-            {/* <TextField
-              fullWidth
-              label="Phone number"
-              variant="outlined"
-              size="small"
-              value={phoneNumber}
-              onChange={handleNumberChange}
-              sx={{
-                mb: 0,
-                "&:MuiInputBase-input": {
-                  fontSize: 12,
-                },
-              }}
-              InputProps={{
-                startAdornment: (
-                  <Typography fontSize={14} sx={{ mr: 1 }}></Typography>
-                ),
-              }}
-            /> */}
-            <PhoneNumberInputField
-              autoFocus={true}
-              label="Phone Number"
-              phone={phoneNumber}
-              setPhoneNumber={setPhoneNumber}
-              onSubmit={() => {}}
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  label="Email (optional)"
+                  variant="outlined"
+                  size="small"
+                  sx={{
+                    mb: 0,
+                    "& .MuiInputLabel-root": {
+                      transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                    },
+                    "& .MuiInputBase-root": {
+                      marginTop: "16px", // Add space between label and input box
+                    },
+                    "&:MuiInputBase-input": {
+                      fontSize: 12,
+                    },
+                    "& legend": {
+                      width: 0,
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <Typography fontSize={14} sx={{ mr: 1 }}></Typography>
+                    ),
+                  }}
+                />
+              )}
             />
-            <TextField
-              fullWidth
-              label="Email (optional)"
-              variant="outlined"
-              value={email}
-              onChange={handleEmailChange}
-              sx={{
-                mb: 0,
-                "&:MuiInputBase-input": {
-                  fontSize: 12,
-                },
+
+            <Controller
+              name="amount"
+              control={control}
+              rules={{
+                required: "Required",
               }}
-              InputProps={{
-                startAdornment: (
-                  <Typography fontSize={14} sx={{ mr: 1 }}></Typography>
-                ),
-              }}
-            />
-            <TextField
-              fullWidth
-              label="Amount to pay"
-              type="number"
-              variant="outlined"
-              value={amount}
-              onChange={handleAmountChange}
-              sx={{
-                mb: 0,
-                "&:MuiInputBase-input": {
-                  fontSize: 10,
-                },
-              }}
-              InputProps={{
-                startAdornment: (
-                  <Typography fontSize={14} sx={{ mr: 1 }}>
-                    ₹
-                  </Typography>
-                ),
-              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  label="Amount to pay"
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  error={!!errors.amount}
+                  helperText={errors.amount ? errors.amount.message : ""}
+                  sx={{
+                    mb: 0,
+                    "& .MuiInputLabel-root": {
+                      transform: "translate(0, -6px) scale(0.8)",
+                    },
+                    "& .MuiInputBase-root": {
+                      marginTop: "16px",
+                    },
+                    "&:MuiInputBase-input": {
+                      fontSize: 12,
+                    },
+                    "& legend": {
+                      width: 0,
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <Typography fontSize={14} sx={{ mr: 1 }}>
+                        ₹
+                      </Typography>
+                    ),
+                  }}
+                />
+              )}
             />
           </Stack>
           <Box sx={{ pt: 1 }}>
-            <Stack spacing={1}>
+            <Stack spacing={2}>
               <FormGroup sx={{ fontSize: 10 }}>
                 <FormControlLabel
                   control={
                     <Checkbox checked={checked} onChange={handleChange} />
                   }
                   label={
-                    <Typography sx={{ fontSize: 10, lineHeight: 1.2 }}>
+                    <Typography
+                      sx={{ fontSize: 10, fontWeight: 550 }}
+                      lineHeight={1.3}
+                    >
                       I confirm that all these sessions were conducted through
                       Eira and the payment link generated here is for those
                       sessions only
@@ -213,13 +276,9 @@ const PaymentLinkDialog = ({
               </FormGroup>
               <Button
                 variant="contained"
-                onClick={handleOnSubmit}
+                onClick={handleSubmit(handleOnSubmit)}
                 fullWidth
-                disabled={
-                  !studentName || !isPhoneNumberValid() || !amount || !checked
-                    ? true
-                    : false
-                }
+                disabled={isValid && checked ? false : true}
                 sx={{
                   backgroundColor: "#507FFD",
                   borderRadius: 7,
@@ -227,6 +286,7 @@ const PaymentLinkDialog = ({
                   fontWeight: "bold",
                   paddingLeft: 3,
                   paddingRight: 3,
+                  textTransform: "none",
                 }}
               >
                 Send Payment Link

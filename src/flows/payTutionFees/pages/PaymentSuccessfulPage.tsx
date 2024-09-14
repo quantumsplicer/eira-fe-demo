@@ -3,17 +3,20 @@ import React from "react";
 import { Box, Typography, Stack } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
-import Secure from '../../../assets/images/svg/Secure.svg'
 import PaymentConfirmation from "../../../components/PaymentConfirmation";
+import SafeLogo from "../../../components/SafeLogo";
 
 const PaymentSuccessfulPage = () => {
 
   const paymentDetails = {
-    "Transaction ID": ["1feda785cb576a90"],
-    "Account Number": ["**** **** **** 2150"],
-    "Account Holder": ["Suneel Satpal", "+91 9389250148"],
-    "Transaction date & time": ["15:49", "24th Aug, 2024"],
-    "Session date & time": ["17:00 - 18:00", "24th Aug, 2024"]
+    "Transaction ID": "1feda785cb576a90",
+    "Account Number": "**** **** **** 2150",
+    "Payee Name": "Suneel Satpal",
+    "Payee Phone": "+91 9389250148",
+    "Transaction Date": "24th Aug, 2024",
+    "Transaction Time": "15:49",
+    "Session Date": "24th Aug, 2024",
+    "Session Time": "17:00 - 18:00"
   }
 
   return (
@@ -32,27 +35,13 @@ const PaymentSuccessfulPage = () => {
         alignItems={"center"}
         justifyContent={"center"}
       >
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
+        <Box
           alignSelf={"flex-end"}
           position={"relative"}
           right={404}
         >
-          <img
-            src={Secure}
-            style={{
-              height: "50px",
-              width: "50px"
-            }}
-          />
-          <Typography
-            color={"white"}
-            fontWeight={"bold"}
-          >
-            100% safe
-          </Typography>
-        </Stack>
+          <SafeLogo />
+        </Box>
         <Box
           width="30vw"
           minHeight="90vh"

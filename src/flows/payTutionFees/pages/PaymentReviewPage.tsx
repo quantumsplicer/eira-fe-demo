@@ -1,26 +1,50 @@
 // src/components/PaymentReviewPage.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, Stack, Typography, Alert } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import PaymentInfo from "../../../components/PaymentInfo";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
-import Secure from '../../../assets/images/svg/Secure.svg'
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
+import SafeLogo from "../../../components/SafeLogo";
 
 const PaymentReviewPage = () => {
 
-  const [isTutorOnboarded, setIsTutorOnboarded] = useState<boolean>(false);
+  const {amount, phoneNumber} = useParams()
+  const location = useLocation();
+  const [isTutorOnboarded, setIsTutorOnboarded] = useState<boolean>(true);
   const navigate = useNavigate();
+  const [routeSource, setRouteSource] = useState<string>("");
   const paymentDetails = {
-    "Account Number": ["**** **** **** 2150"],
-    "Session date & time": ["17:00 - 18:00", "24th Aug, 2024"]
+    "Account Number": "**** **** **** 2150",
+    "Session Date": "24th Aug, 202",
+    "Session Time": "17:00 - 18:00"
   }
   const handleSubmit = () => {
-    navigate("/pay/payment-gateway-payment-flow");
+    console.log(routeSource)
+    if(routeSource === "Dynamic Flow") {
+      const isStudentSignedIn = localStorage.getItem("studentLogin") === "true";
+      if(isStudentSignedIn) {
+        navigate("/pay/create-session");
+      } else {
+        localStorage.setItem("activeFlow", "dynamicFlow");
+        navigate("/student/signin");
+      }
+    } else {
+      navigate("/pay/payment-gateway-payment-flow");
+    }
   };
+
+  useEffect(() => {
+    if (location.pathname.startsWith('/pay/dynamic')) {
+      setRouteSource('Dynamic Flow');
+    } else if (location.pathname === '/pay/review') {
+      setRouteSource('Tuition Fee Flow');
+    }
+  }, [])
+
   return (
     <Box
       pt={7}
@@ -37,25 +61,11 @@ const PaymentReviewPage = () => {
         alignItems={"center"}
         justifyContent={"center"}
       >
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
+        <Box
           alignSelf={"flex-end"}
         >
-          <img
-            src={Secure}
-            style={{
-              height: "50px",
-              width: "50px"
-            }}
-          />
-          <Typography
-            color={"white"}
-            fontWeight={"bold"}
-          >
-            100% safe
-          </Typography>
-        </Stack>
+          <SafeLogo />
+        </Box>
         <Box
           width={"55%"}
           height={"30%"}
@@ -68,8 +78,8 @@ const PaymentReviewPage = () => {
         >
           <PaymentBreakupInfo
             name="Suneel Satpal"
-            phone="+91 93892 50148"
-            amount={5000}
+            phone={phoneNumber ? `+91 ${phoneNumber}` : "+91 93892 50148"}
+            amount={amount ? Number(amount) : 5000}
             settlementDate="7th October"
             settlementTime="5:00 pm"
           />
@@ -93,7 +103,7 @@ const PaymentReviewPage = () => {
             />
             <Stack
               alignItems={"center"}
-              mt={5}
+              mt={isTutorOnboarded ? 15 : 5}
             >
               {
                 !isTutorOnboarded &&

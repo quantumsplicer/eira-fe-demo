@@ -13,8 +13,8 @@ import dayjs from 'dayjs';
 import { useNavigate } from "react-router-dom";
 import DateTimePicker from "../../../components/DateTimePicker";
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
-import Secure from '../../../assets/images/svg/Secure.svg'
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
+import SafeLogo from "../../../components/SafeLogo";
 
 const SlotBookingPage = () => {
   const navigate = useNavigate();
@@ -64,25 +64,11 @@ const SlotBookingPage = () => {
         alignItems={"center"}
         justifyContent={"center"}
       >
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
+        <Box
           alignSelf={"flex-end"}
         >
-          <img
-            src={Secure}
-            style={{
-              height: "50px",
-              width: "50px"
-            }}
-          />
-          <Typography
-            color={"white"}
-            fontWeight={"bold"}
-          >
-            100% safe
-          </Typography>
-        </Stack>
+          <SafeLogo />
+        </Box>
         <Box
           width={"55%"}
           height={"30%"}
