@@ -3,13 +3,17 @@ import React from "react";
 import { CssBaseline, Box } from "@mui/material";
 import AppRoutes from "./routes";
 import { PushNotification } from "./components/PushNotification";
+import { Provider } from "react-redux";
+import store from "./stores/configuration";
 
 const App: React.FC = () => {
   return (
-    <Box sx={{marginTop: -3}}>
-      <CssBaseline />
-      <AppRoutes />
-      <PushNotification />
+    <Box sx={{ marginTop: -3 }}>
+      <Provider store={store}>
+        <CssBaseline />
+        <AppRoutes />
+        <PushNotification />
+      </Provider>
     </Box>
   );
 };

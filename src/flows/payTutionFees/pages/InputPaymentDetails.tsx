@@ -13,12 +13,17 @@ import NoteBox from "../../../components/NoteBox";
 import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
 import Secure from '../../../assets/images/svg/Secure.svg'
+import { useCheckInvitationAcceptanceQuery } from "../../../APIs/definitions/invitations";
 
 const InputPaymentDetails: React.FC = () => {
   const navigate = useNavigate();
   const [amount, setAmount] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
+
+  const {data} = useCheckInvitationAcceptanceQuery("6f2c9af2-cbce-49d6-a147-27c40f1c33d4");
+
+  console.log(data)
 
   const noteBoxHeading = "Things to keep in mind:";
   const notes = [

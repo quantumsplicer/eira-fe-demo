@@ -26,4 +26,4 @@ const onGoingPaymentSlice = createSlice({
 
 export const { increment, decrement, incrementByAmount } = onGoingPaymentSlice.actions;
 
-export default onGoingPaymentSlice.reducer;
+export const onGoingPaymentReducer = onGoingPaymentSlice.reducer;
