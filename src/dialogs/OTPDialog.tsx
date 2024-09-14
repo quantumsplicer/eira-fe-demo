@@ -11,7 +11,7 @@ import {
   Stack,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const OPT_LENGTH = 4;
 
@@ -33,6 +33,7 @@ const OTPDialog = ({
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const otpInputsRef = useRef<Array<React.RefObject<HTMLInputElement>>>([]);
   const [isOtpInvalid, setIsOtpInvalid] = useState<boolean>(false);
+  const location = useLocation();
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement>,
@@ -97,6 +98,11 @@ const OTPDialog = ({
       return;
     }
     localStorage.setItem("phoneNumber", phoneNumber)
+    if (location.pathname.includes("student/signin")) {
+      localStorage.setItem("studentLogin", "true");
+    } else if (location.pathname.includes("tutor/signin")) {
+      localStorage.setItem("tutorLogin", "true");
+    }
     navigate(navigateTo)
     // onClose()
   };
@@ -167,6 +173,7 @@ const OTPDialog = ({
       <Typography
         fontWeight={"bold"}
         variant="h6"
+        mt={8}
       >
         Verify Phone Number
       </Typography>
@@ -177,7 +184,7 @@ const OTPDialog = ({
         Enter OTP for phone number verification
       </Typography>
       <Box
-        sx={{ display: "flex", justifyContent: "center", gap: 1, pt: 2 }}
+        sx={{ display: "flex", justifyContent: "center", gap: 1, pt: 2, mt: 8 }}
       >
         {Array.from({ length: OPT_LENGTH }).map((_, index) => (
           <TextField
@@ -233,7 +240,7 @@ const OTPDialog = ({
           // position: "absolute",
           // bottom: 20,
           width: "80%",
-          marginTop: 5,
+          marginTop: 10,
           height: 45,
           borderRadius: 20,
         }}
