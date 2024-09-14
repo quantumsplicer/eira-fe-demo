@@ -5,8 +5,8 @@ import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import PersonalDetails from "../../../components/PersonalDetails";
 import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
-import OTPDialog from "../../../dialogs/OTPDialog";
 import NoteBox from "../../../components/NoteBox";
+import OTPInput from "../../../components/OTPInput";
 
 const StudentSignIn = () => {
 
@@ -131,7 +131,7 @@ const StudentSignIn = () => {
                                             Verify
                                         </Button>
                                     </> :
-                                    <OTPDialog
+                                    <OTPInput
                                         navigateTo="/student/signup"
                                         phoneNumber={phoneNumber}
                                     />

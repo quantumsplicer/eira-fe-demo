@@ -7,8 +7,8 @@ import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import PaymentInfo from "../../../components/PaymentInfo";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
-import Secure from '../../../assets/images/svg/Secure.svg'
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
+import SafeLogo from "../../../components/SafeLogo";
 
 const PaymentReviewPage = () => {
 
@@ -18,10 +18,10 @@ const PaymentReviewPage = () => {
   const navigate = useNavigate();
   const [routeSource, setRouteSource] = useState<string>("");
   const paymentDetails = {
-    "Account Number": ["**** **** **** 2150"],
-    "Session date & time": ["17:00 - 18:00", "24th Aug, 2024"]
+    "Account Number": "**** **** **** 2150",
+    "Session Date": "24th Aug, 202",
+    "Session Time": "17:00 - 18:00"
   }
-
   const handleSubmit = () => {
     console.log(routeSource)
     if(routeSource === "Dynamic Flow") {
@@ -61,25 +61,11 @@ const PaymentReviewPage = () => {
         alignItems={"center"}
         justifyContent={"center"}
       >
-        <Stack
-          direction={"row"}
-          alignItems={"center"}
+        <Box
           alignSelf={"flex-end"}
         >
-          <img
-            src={Secure}
-            style={{
-              height: "50px",
-              width: "50px"
-            }}
-          />
-          <Typography
-            color={"white"}
-            fontWeight={"bold"}
-          >
-            100% safe
-          </Typography>
-        </Stack>
+          <SafeLogo />
+        </Box>
         <Box
           width={"55%"}
           height={"30%"}

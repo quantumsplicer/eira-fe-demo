@@ -11,7 +11,7 @@ import PersonalDetails from "../../../components/PersonalDetails";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
-import Secure from '../../../assets/images/svg/Secure.svg'
+import SafeLogo from "../../../components/SafeLogo";
 
 const InputTutorDetails: React.FC = () => {
 
@@ -48,25 +48,11 @@ const InputTutorDetails: React.FC = () => {
                 alignItems={"center"}
                 justifyContent={"center"}
             >
-                <Stack
-                    direction={"row"}
-                    alignItems={"center"}
+                <Box
                     alignSelf={"flex-end"}
                 >
-                    <img
-                        src={Secure}
-                        style={{
-                            height: "50px",
-                            width: "50px"
-                        }}
-                    />
-                    <Typography
-                        color={"white"}
-                        fontWeight={"bold"}
-                    >
-                        100% safe
-                    </Typography>
-                </Stack>
+                    <SafeLogo />
+                </Box>
                 <Box
                     width={"55%"}
                     height={"30%"}
