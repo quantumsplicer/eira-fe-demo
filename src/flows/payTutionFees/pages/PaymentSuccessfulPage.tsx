@@ -1,138 +1,81 @@
 // src/components/PaymentSuccessfulPage.tsx
 import React from "react";
 import { Box, Typography, Stack } from "@mui/material";
-import { EiraBack1 } from "../../../components/EiraBack1";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import EiraBack from '../../../assets/images/svg/EiraBack.svg'
+import PaymentConfirmation from "../../../components/PaymentConfirmation";
+import SafeLogo from "../../../components/SafeLogo";
 
 const PaymentSuccessfulPage = () => {
+
+  const paymentDetails = {
+    "Transaction ID": "1feda785cb576a90",
+    "Account Number": "**** **** **** 2150",
+    "Payee Name": "Suneel Satpal",
+    "Payee Phone": "+91 9389250148",
+    "Transaction Date": "24th Aug, 2024",
+    "Transaction Time": "15:49",
+    "Session Date": "24th Aug, 2024",
+    "Session Time": "17:00 - 18:00"
+  }
+
   return (
-    <Stack
-      direction="row"
+    <Box
+      pt={7}
       sx={{
-        justifyContent: "center",
-        alignItems: "center",
+        backgroundImage: `url(${EiraBack})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        minWidth: '100vw',
       }}
     >
-      <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
-        <EiraBack1/>
-      </Box>
-      <Stack sx={{ width: "50%" }} alignItems={"center"}>
-        <img
-          src={EiraLogo}
-          style={{
-            alignSelf: "flex-start",
-            width: 80,
-            position: "absolute",
-            marginLeft: 20,
-            top: 20,
-          }}
-        />
-        <Stack
-          justifyContent={"center"}
-          alignItems={"center"}
-          sx={{ width: "80%", px: 18 }}
+      <Stack
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
+        <Box
+          alignSelf={"flex-end"}
+          position={"relative"}
+          right={404}
         >
-          <Typography
-            variant="h5"
-            sx={{ fontSize: 20, fontWeight: "bold", mb: 2 }}
-          >
-            Payment Confirmation
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            sx={{ fontSize: 16, mb: 4, textAlign: "center" }}
-          >
-            Your payment is successful
-          </Typography>
+          <SafeLogo />
+        </Box>
+        <Box
+          width="30vw"
+          minHeight="90vh"
+          bgcolor={"#fff"}
+          border={"1px solid #ccc"}
+          padding={5}
+          borderRadius={5}
+          boxShadow={"2px -2px 14px 2px #00000021"}
+        >
           <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{ width: "100%", mb: 2 }}
+            direction={"column"}
+            width="100%"
           >
-            <Typography variant="body1">Making payment to:</Typography>
-            <Typography variant="body1" fontWeight="bold">
-              Suneel Satpal
-            </Typography>
-          </Stack>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{ width: "100%", mb: 2 }}
-          >
-            <Typography variant="body1">Phone:</Typography>
-            <Typography variant="body1" fontWeight="bold">
-              +91 9389250148
-            </Typography>
-          </Stack>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{ width: "100%", mb: 2 }}
-          >
-            <Typography variant="body1">Amount:</Typography>
-            <Typography variant="body1" fontWeight="bold">
-              ₹ 5,000
-            </Typography>
-          </Stack>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{ width: "100%", mb: 2 }}
-          >
-            <Typography variant="body1">Tuition date & time:</Typography>
-            <Typography variant="body1" fontWeight="bold">
-              5:00 pm - 6:00 pm
-            </Typography>
-          </Stack>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{ width: "100%", mb: 2 }}
-          >
-            <Typography variant="body1">Date:</Typography>
-            <Typography variant="body1" fontWeight="bold">
-              24th July, 2024
-            </Typography>
-          </Stack>
-          <CheckCircleOutlineIcon
-            sx={{ color: "green", fontSize: 60, mt: 4 }}
-          />
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              mt: 4,
-              textAlign: "center",
-              position: "absolute",
-              bottom: 20,
-            }}
-          >
-            <a
-              href="https://google.com"
-              target="_blank"
-              style={{ textDecoration: "none" }}
+            <img
+              src={EiraLogo}
+              style={{
+                alignSelf: "flex-start",
+                width: 80,
+              }}
+            />
+            <Box
+              mt={5}
+              width={"100%"}
             >
-              <Typography variant="body2" color="grey">
-                privacy policies
-              </Typography>
-            </a>
-            <Typography variant="body2" color="grey">
-              |
-            </Typography>
-            <a
-              href="https://google.com"
-              target="_blank"
-              style={{ textDecoration: "none" }}
-            >
-              <Typography variant="body2" color="grey">
-                terms of use
-              </Typography>
-            </a>
+              <PaymentConfirmation
+                name="Suneel Satpal"
+                paymentDetails={paymentDetails}
+                amount="5000"
+              />
+            </Box>
           </Stack>
-        </Stack>
+        </Box>
       </Stack>
-    </Stack>
+    </Box>
   );
 };
 

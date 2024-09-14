@@ -1,16 +1,9 @@
 // src/components/RightPanel.tsx
 import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Container,
-  Stack,
-} from "@mui/material";
-import OTPDialog from "../dialogs/OTPDialog";
+import { Box, Typography, TextField, Button, Stack } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { EiraBack1 } from "../../../components/EiraBack1";
+import OTPInput from "../../../components/OTPInput";
 
 const InputPhone = () => {
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
@@ -32,6 +25,21 @@ const InputPhone = () => {
       }}
     >
       <Box sx={{ width: "50%", p: 2, height: "100vh" }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontSize: 40,
+            color: "white",
+            fontWeight: "bold",
+            mb: 2,
+            position: "absolute",
+            top: 100,
+            left: 100,
+            width: "25%"
+          }}
+        >
+          Pay your tuition fees using credit card @ just 1%
+        </Typography>
         <EiraBack1 />
       </Box>
       <Stack sx={{ width: "50%" }} alignItems={"center"}>
@@ -54,39 +62,14 @@ const InputPhone = () => {
             variant="h5"
             sx={{ fontSize: 20, fontWeight: "bold", mb: 2 }}
           >
-            Login as a student
+            Sign up as a student
           </Typography>
           <Typography
             variant="subtitle1"
             sx={{ fontSize: 16, mb: 4, textAlign: "center" }}
           >
-            Enter details and verify phone number to make payment
+            Enter your phone number 
           </Typography>
-          <Box
-            sx={{
-              mb: 4,
-              backgroundColor: "#f9f9f9",
-              padding: 2,
-              borderRadius: 2,
-            }}
-          >
-            <Typography variant="body2" fontSize={12}>
-              Things to keep in mind:
-            </Typography>
-            <ul>
-              <li>
-                <Typography variant="body2" fontSize={12}>
-                  Make sure you have the correct details for payment transfer.
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="body2" fontSize={12}>
-                  Make sure you are transferring to an onboarded person OR have
-                  their account details to onboard them.
-                </Typography>
-              </li>
-            </ul>
-          </Box>
           <TextField
             fullWidth
             label="Phone number"
@@ -130,7 +113,7 @@ const InputPhone = () => {
             }}
           >
             <a
-              href="https://google.com"
+              href="https://www.eira.club/privacy-policy"
               target="_blank"
               style={{ textDecoration: "none" }}
             >
@@ -142,7 +125,7 @@ const InputPhone = () => {
               |
             </Typography>
             <a
-              href="https://google.com"
+              href="https://www.eira.club/terms-of-use"
               target="_blank"
               style={{ textDecoration: "none" }}
             >
@@ -153,7 +136,12 @@ const InputPhone = () => {
           </Stack>
         </Stack>
       </Stack>
-      <OTPDialog open={otpDialogOpen} onClose={handleCloseOtpDialog} />
+      <OTPInput
+        // open={otpDialogOpen}
+        // onClose={handleCloseOtpDialog}
+        navigateTo="/pay/payment-details"
+        phoneNumber="phoneNumber"
+      />
     </Stack>
   );
 };

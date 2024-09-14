@@ -1,7 +1,7 @@
 // src/components/PGLoading.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, CircularProgress, Typography, Stack } from '@mui/material';
+import { CircularProgress, Typography, Stack } from '@mui/material';
 
 const PGLoading: React.FC = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const PGLoading: React.FC = () => {
     }, 1000);
 
     const timeout = setTimeout(() => {
-      navigate('/pay/payment-successful');
+      navigate('/payment-successful');
     }, 5000);
 
     return () => {

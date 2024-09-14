@@ -15,7 +15,7 @@ const lightTheme = createTheme({ palette: { mode: "light" } });
 interface Person {
   transactionId: string;
   studentPhoneNumber: string;
-  linkCreationDate: string;
+  studentName: string;
   timeOfPaymentReceived: string;
   timeOfSettlement: string;
   amount: number;
@@ -26,7 +26,7 @@ const data: Person[] = [
   {
     transactionId: "123",
     studentPhoneNumber: "+919997945005",
-    linkCreationDate: "today",
+    studentName: "Anagh",
     timeOfPaymentReceived: "today",
     timeOfSettlement: "today",
     amount: 4000,
@@ -36,7 +36,7 @@ const data: Person[] = [
   {
     transactionId: "12312412312",
     studentPhoneNumber: "+919997945005",
-    linkCreationDate: "today",
+    studentName: "today",
     timeOfPaymentReceived: "today",
     timeOfSettlement: "today",
     amount: 4000,
@@ -46,7 +46,7 @@ const data: Person[] = [
   {
     transactionId: "123",
     studentPhoneNumber: "+919997945005",
-    linkCreationDate: "today",
+    studentName: "today",
     timeOfPaymentReceived: "today",
     timeOfSettlement: "today",
     amount: 4000,
@@ -56,7 +56,7 @@ const data: Person[] = [
   {
     transactionId: "123",
     studentPhoneNumber: "+919997945005",
-    linkCreationDate: "today",
+    studentName: "today",
     timeOfPaymentReceived: "today",
     timeOfSettlement: "today",
     amount: 4000,
@@ -66,7 +66,7 @@ const data: Person[] = [
   {
     transactionId: "123",
     studentPhoneNumber: "+919997945005",
-    linkCreationDate: "today",
+    studentName: "today",
     timeOfPaymentReceived: "today",
     timeOfSettlement: "today",
     amount: 4000,
@@ -76,7 +76,7 @@ const data: Person[] = [
   {
     transactionId: "123",
     studentPhoneNumber: "+919997945005",
-    linkCreationDate: "today",
+    studentName: "today",
     timeOfPaymentReceived: "today",
     timeOfSettlement: "today",
     amount: 4000,
@@ -86,7 +86,7 @@ const data: Person[] = [
   {
     transactionId: "123",
     studentPhoneNumber: "+919997945005",
-    linkCreationDate: "today",
+    studentName: "today",
     timeOfPaymentReceived: "today",
     timeOfSettlement: "today",
     amount: 4000,
@@ -96,7 +96,7 @@ const data: Person[] = [
   {
     transactionId: "123",
     studentPhoneNumber: "+919997945005",
-    linkCreationDate: "today",
+    studentName: "today",
     timeOfPaymentReceived: "today",
     timeOfSettlement: "today",
     amount: 4000,
@@ -106,7 +106,7 @@ const data: Person[] = [
   {
     transactionId: "123",
     studentPhoneNumber: "+919997945005",
-    linkCreationDate: "today",
+    studentName: "today",
     timeOfPaymentReceived: "today",
     timeOfSettlement: "today",
     amount: 4000,
@@ -116,7 +116,7 @@ const data: Person[] = [
   {
     transactionId: "123",
     studentPhoneNumber: "+919997945005",
-    linkCreationDate: "today",
+    studentName: "today",
     timeOfPaymentReceived: "today",
     timeOfSettlement: "today",
     amount: 4000,
@@ -150,8 +150,8 @@ const PaymentHistoryTable: React.FC = () => {
       header: "Student's Phone Number",
       enableHiding: false,
     }),
-    columnHelper.accessor("linkCreationDate", {
-      header: "Link Creation Date",
+    columnHelper.accessor("studentName", {
+      header: "Student Name",
       enableHiding: false,
     }),
     columnHelper.accessor("timeOfPaymentReceived", {
@@ -271,6 +271,7 @@ const PaymentHistoryTable: React.FC = () => {
                     height: 45,
                     paddingLeft: 3,
                     paddingRight: 3,
+                    textTransform: "none",
                   }}
                 >
                   Create a Payment Link
