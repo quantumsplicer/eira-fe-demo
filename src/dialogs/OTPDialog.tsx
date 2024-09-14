@@ -11,7 +11,7 @@ import {
   Stack,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const OPT_LENGTH = 4;
 
@@ -33,6 +33,7 @@ const OTPDialog = ({
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const otpInputsRef = useRef<Array<React.RefObject<HTMLInputElement>>>([]);
   const [isOtpInvalid, setIsOtpInvalid] = useState<boolean>(false);
+  const location = useLocation();
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement>,
@@ -97,9 +98,9 @@ const OTPDialog = ({
       return;
     }
     localStorage.setItem("phoneNumber", phoneNumber)
-    if (navigateTo.includes("student")) {
+    if (location.pathname.includes("student/signin")) {
       localStorage.setItem("studentLogin", "true");
-    } else if (navigateTo.includes("tutor")) {
+    } else if (location.pathname.includes("tutor/signin")) {
       localStorage.setItem("tutorLogin", "true");
     }
     navigate(navigateTo)

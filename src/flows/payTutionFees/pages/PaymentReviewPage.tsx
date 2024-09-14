@@ -37,17 +37,12 @@ const PaymentReviewPage = () => {
     }
   };
 
-  const getRouteSource = (path:string) => {
-    if (path.startsWith('/pay/dynamic')) {
-      return 'Dynamic Flow';
-    } else if (path === '/pay/review') {
-      return 'Tuition Fee Flow';
-    }
-    return 'Unknown Route';
-  };
-
   useEffect(() => {
-    setRouteSource(getRouteSource(location.pathname))
+    if (location.pathname.startsWith('/pay/dynamic')) {
+      setRouteSource('Dynamic Flow');
+    } else if (location.pathname === '/pay/review') {
+      setRouteSource('Tuition Fee Flow');
+    }
   }, [])
 
   return (
