@@ -13,7 +13,7 @@ import NoteBox from "../../../components/NoteBox";
 import LinearProgress from '@mui/material/LinearProgress';
 import AadhaarVerifyInfo from "../components/AadhaarVerifyInfo";
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
-import Secure from '../../../assets/images/svg/Secure.svg'
+import SafeLogo from "../../../components/SafeLogo";
 
 const TutorSignUp: React.FC = () => {
 
@@ -61,27 +61,13 @@ const TutorSignUp: React.FC = () => {
                 alignItems={"center"}
                 justifyContent={"space-between"}
             >
-                <Stack
-                    direction={"row"}
-                    alignItems={"center"}
+                <Box
                     position={"absolute"}
                     bottom={52}
                     left={45}
                 >
-                    <img
-                        src={Secure}
-                        style={{
-                            height: "50px",
-                            width: "50px"
-                        }}
-                    />
-                    <Typography
-                        color={"white"}
-                        fontWeight={"bold"}
-                    >
-                        100% safe
-                    </Typography>
-                </Stack>
+                    <SafeLogo />
+                </Box>
                 <Typography
                     ml={10}
                     color={"white"}

@@ -7,9 +7,9 @@ import {
     Button
 } from "@mui/material"
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
-import OTPDialog from "../../../dialogs/OTPDialog";
 import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
 import LoginBg from "../components/LoginBg";
+import OTPInput from "../../../components/OTPInput";
 
 const TutorSignIn: React.FC = () => {
     const [phoneNumber, setPhoneNumber] = useState<string>('')
@@ -91,7 +91,7 @@ const TutorSignIn: React.FC = () => {
                                         Verify
                                     </Button>
                                 </> :
-                                <OTPDialog
+                                <OTPInput
                                     navigateTo="/tutor/signup"
                                     phoneNumber={phoneNumber}
                                 />
