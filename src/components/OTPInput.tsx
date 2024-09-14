@@ -1,33 +1,29 @@
 // src/components/OTPDialog.tsx
 import React, { useState, useRef, createRef, useEffect } from "react";
 import {
-  Dialog,
-  DialogContent,
   TextField,
   Button,
   Box,
-  IconButton,
   Typography,
-  Stack,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const OPT_LENGTH = 4;
 
-interface OTPDialogProps {
+interface OTPInputProps {
   open?: boolean;
   onClose?: () => void;
   navigateTo: string;
   phoneNumber: string;
 }
 
-const OTPDialog = ({
+const OTPInput = ({
   open,
   onClose,
   navigateTo,
   phoneNumber,
-}: OTPDialogProps) => {
+}: OTPInputProps) => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
   const [activeIndex, setActiveIndex] = useState<number>(-1);
@@ -104,7 +100,6 @@ const OTPDialog = ({
       localStorage.setItem("tutorLogin", "true");
     }
     navigate(navigateTo)
-    // onClose()
   };
 
   const resendOtp = () => {
@@ -117,26 +112,7 @@ const OTPDialog = ({
     otpInputsRef.current = Array.from({ length: OPT_LENGTH }).map(() => createRef<HTMLInputElement>());
     setOtp('')
     setActiveIndex(0);
-    // const timer = setTimeout(() => {
-    //   if (otpInputsRef.current[0]?.current) {
-    //     otpInputsRef.current[0].current.focus();
-    //   }
-    // }, 10);
-
-    // return () => clearTimeout(timer);
   }, []);
-
-  // useEffect(() => {
-  //   if (open) {
-  //     const timer = setTimeout(() => {
-  //       if (otpInputsRef.current[activeIndex]?.current) {
-  //         otpInputsRef.current[activeIndex].current?.focus();
-  //       }
-  //     }, 10);
-
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [open, activeIndex]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -148,25 +124,6 @@ const OTPDialog = ({
 
     return () => clearTimeout(timer);
   }, [activeIndex]);
-
-  // useEffect(() => {
-  //   if (open) {
-  //     setOtp('')
-  //     setActiveIndex(0);
-  //   }
-  // }, [open]);
-
-  // useEffect(() => {
-  //   setOtp('')
-  //   setActiveIndex(0);
-  //   const timer = setTimeout(() => {
-  //     if (otpInputsRef.current[activeIndex]?.current) {
-  //       otpInputsRef.current[activeIndex].current.focus();
-  //     }
-  //   }, 10);
-
-  //   return () => clearTimeout(timer);
-  // }, []);
 
   return (
     <>
@@ -237,8 +194,6 @@ const OTPDialog = ({
         disabled={otp.length !== 4}
         fullWidth
         sx={{
-          // position: "absolute",
-          // bottom: 20,
           width: "80%",
           marginTop: 10,
           height: 45,
@@ -248,109 +203,7 @@ const OTPDialog = ({
         Verify OTP
       </Button>
     </>
-    // <Dialog
-    //   open={open}
-    //   onClose={onClose}
-    //   sx={{
-    //     "& .MuiDialog-paper": {
-    //       width: 450,
-    //       maxWidth: "50vw",
-    //       height: 350,
-    //     },
-    //     p: 1,
-    //   }}
-    // >
-    //   <DialogContent dividers>
-    //     <Stack
-    //       justifyContent="center"
-    //       alignItems="center"
-    //       spacing={2}
-    //       sx={{ height: "100%", pb: 10 }}
-    //     >
-    //       <Typography fontSize={18} fontWeight="bold">
-    //         Verify Phone Number
-    //       </Typography>
-    //       <IconButton
-    //         aria-label="close"
-    //         onClick={onClose}
-    //         sx={{
-    //           position: "absolute",
-    //           right: 8,
-    //           top: 0,
-    //           color: (theme) => theme.palette.grey[500],
-    //         }}
-    //       >
-    //         <CloseIcon />
-    //       </IconButton>
-    //       <Typography variant="body2" sx={{ mb: 2 }}>
-    //         Enter OTP for phone number verification
-    //       </Typography>
-    //       <Box
-    //         sx={{ display: "flex", justifyContent: "center", gap: 1, pt: 2 }}
-    //       >
-    //         {Array.from({ length: OPT_LENGTH }).map((_, index) => (
-    //           <TextField
-    //             key={index}
-    //             inputRef={otpInputsRef.current[index]}
-    //             value={otp[index] || ""}
-    //             error={isOtpInvalid}
-    //             variant="outlined"
-    //             sx={{
-    //               borderRadius: 20,
-    //             }}
-    //             onChange={(event) => handleOTPInput(event, index)}
-    //             onKeyDown={(event) => handleKeyDown(event, index)}
-    //             inputProps={{
-    //               maxLength: 1,
-    //               style: {
-    //                 textAlign: "center",
-    //                 padding: 1,
-    //                 width: 40,
-    //                 height: 40,
-    //               },
-    //             }}
-    //           />
-    //         ))}
-    //       </Box>
-    //       {
-    //         isOtpInvalid &&
-    //         <Typography color="#d32f2f" fontSize={14}>
-    //           Incorrect OTP. Please retry.
-    //         </Typography>
-    //       }
-    //       {
-    //         isOtpInvalid &&
-    //         <Typography
-    //           onClick={resendOtp}
-    //           fontSize={14}
-    //           sx={{
-    //             borderBottom: "1px solid #6285FF",
-    //             cursor: "pointer",
-    //             color: "#6285FF"
-    //           }}
-    //         >
-    //           Resend OTP
-    //         </Typography>
-    //       }
-    //       <Button
-    //         variant="contained"
-    //         onClick={handleSubmit}
-    //         disabled={otp.length !== 4}
-    //         fullWidth
-    //         sx={{
-    //           position: "absolute",
-    //           bottom: 20,
-    //           width: "80%",
-    //           height: 40,
-    //           borderRadius: 20,
-    //         }}
-    //       >
-    //         Verify OTP
-    //       </Button>
-    //     </Stack>
-    //   </DialogContent>
-    // </Dialog>
   );
 };
 
-export default OTPDialog;
+export default OTPInput;

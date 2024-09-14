@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 
 interface PaymentConfirmationProps {
-    paymentDetails: Record<string, string[]>;
+    paymentDetails: Record<string, string>;
     name: string;
     amount: string;
 }

@@ -2,9 +2,9 @@ import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 import EiraBack from "../../../assets/images/svg/EiraBack.svg";
-import Secure from "../../../assets/images/svg/Secure.svg";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { useNavigate, useParams } from "react-router-dom";
+import SafeLogo from "../../../components/SafeLogo";
 
 const InputPayment = () => {
 
@@ -53,25 +53,11 @@ const InputPayment = () => {
                 alignItems={"center"}
                 justifyContent={"center"}
             >
-                <Stack
-                    direction={"row"}
-                    alignItems={"center"}
+                <Box
                     alignSelf={"flex-end"}
                 >
-                    <img
-                        src={Secure}
-                        style={{
-                            height: "50px",
-                            width: "50px"
-                        }}
-                    />
-                    <Typography
-                        color={"white"}
-                        fontWeight={"bold"}
-                    >
-                        100% safe
-                    </Typography>
-                </Stack>
+                    <SafeLogo />
+                </Box>
                 <Box
                     width={"55%"}
                     height={"30%"}
