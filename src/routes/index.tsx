@@ -11,6 +11,8 @@ import PaymentReviewPage from "../flows/payTutionFees/pages/PaymentReviewPage";
 import PGLoading from "../flows/payTutionFees/pages/PGLoading";
 import PaymentSuccessfulPage from "../flows/payTutionFees/pages/PaymentSuccessfulPage";
 import SlotBookingPage from "../flows/payTutionFees/pages/SlotBookingPage";
+import TutorDashboard from "../flows/tutorDashboard/pages/TutorDashboard";
+import StudentDashboard from "../flows/studentDashboard/pages/StudentDashboard";
 import TutorSignIn from "../flows/tutorOnboarding/pages/TutorSignIn";
 import TutorSignUp from "../flows/tutorOnboarding/pages/TutorSignUp";
 import AadharVerification from "../flows/tutorOnboarding/pages/AadharVerification";
@@ -35,6 +37,9 @@ const AppRoutes = () => {
         path="/payment-successful"
         element={<PaymentSuccessfulPage />}
       />
+      <Route path="/tutor-id/dashboard" element={<TutorDashboard />} />
+      <Route path="/student-id/dashboard" element={<StudentDashboard />} />
+
       <Route path="tutor/signin" element={<TutorSignIn />} />
       <Route path="tutor/signup" element={<TutorSignUp />} />
       <Route path="tutor/aadhar-verification" element={<AadharVerification />} />
