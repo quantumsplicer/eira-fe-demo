@@ -1,12 +1,14 @@
 // src/components/PaymentSuccessfulPage.tsx
 import React from "react";
-import { Box, Typography, Stack } from "@mui/material";
+import { Box, Typography, Stack, useMediaQuery } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
 import PaymentConfirmation from "../../../components/PaymentConfirmation";
 import SafeLogo from "../../../components/SafeLogo";
 
 const PaymentSuccessfulPage = () => {
+
+  const notPhoneScreen = useMediaQuery('(min-width:850px)');
 
   const paymentDetails = {
     "Transaction ID": "1feda785cb576a90",
@@ -23,7 +25,7 @@ const PaymentSuccessfulPage = () => {
     <Box
       pt={7}
       sx={{
-        backgroundImage: `url(${EiraBack})`,
+        backgroundImage: notPhoneScreen ? `url(${EiraBack})` : '',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         minHeight: '100vh',
@@ -35,21 +37,24 @@ const PaymentSuccessfulPage = () => {
         alignItems={"center"}
         justifyContent={"center"}
       >
+        {
+          notPhoneScreen &&
+          <Box
+            alignSelf={"flex-end"}
+            position={"relative"}
+            right={404}
+          >
+            <SafeLogo />
+          </Box>
+        }
         <Box
-          alignSelf={"flex-end"}
-          position={"relative"}
-          right={404}
-        >
-          <SafeLogo />
-        </Box>
-        <Box
-          width="30vw"
-          minHeight="90vh"
+          width={notPhoneScreen ? "430px" : "100vw"}
+          minHeight={notPhoneScreen ? "90vh" : "100vh"}
           bgcolor={"#fff"}
-          border={"1px solid #ccc"}
+          border={notPhoneScreen ? "1px solid #ccc" : "none"}
           padding={5}
-          borderRadius={5}
-          boxShadow={"2px -2px 14px 2px #00000021"}
+          borderRadius={notPhoneScreen ? 5 : 0}
+          boxShadow={notPhoneScreen ? "2px -2px 14px 2px #00000021" : "none"}
         >
           <Stack
             direction={"column"}
@@ -58,12 +63,12 @@ const PaymentSuccessfulPage = () => {
             <img
               src={EiraLogo}
               style={{
-                alignSelf: "flex-start",
+                alignSelf: notPhoneScreen ? "flex-start" : "center",
                 width: 80,
               }}
             />
             <Box
-              mt={5}
+              mt={notPhoneScreen ? 5 : 10}
               width={"100%"}
             >
               <PaymentConfirmation

@@ -3,7 +3,8 @@ import {
     Box,
     Typography,
     Stack,
-    Alert
+    Alert,
+    useMediaQuery
 } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,7 @@ const InputTutorDetails: React.FC = () => {
 
     const [isPanUnverified, setIsPanUnverified] = useState<boolean>(false);
     const [isPanVerifying, setIsPanVerifying] = useState<boolean>(false);
+    const notPhoneScreen = useMediaQuery('(min-width:850px)');
     const navigate = useNavigate();
 
     const verifyPan = () => {
@@ -36,7 +38,7 @@ const InputTutorDetails: React.FC = () => {
         <Box
             pt={7}
             sx={{
-                backgroundImage: `url(${EiraBack})`,
+                backgroundImage: notPhoneScreen ? `url(${EiraBack})` : '',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 minHeight: '100vh',
@@ -48,37 +50,43 @@ const InputTutorDetails: React.FC = () => {
                 alignItems={"center"}
                 justifyContent={"center"}
             >
+                {
+                    notPhoneScreen &&
+                    <Box
+                        alignSelf={"flex-end"}
+                    >
+                        <SafeLogo />
+                    </Box>
+                }
+                {
+                    notPhoneScreen &&
+                    <Box
+                        width={"55%"}
+                        height={"30%"}
+                        bgcolor={"#fff"}
+                        zIndex={10}
+                        p={5}
+                        sx={{
+                            borderRadius: "20px 0 0 20px"
+                        }}
+                    >
+                        <PaymentBreakupInfo
+                            name="Suneel Satpal"
+                            phone="+91 93892 50148"
+                            amount={5000}
+                            settlementDate="7th October"
+                            settlementTime="5:00 pm"
+                        />
+                    </Box>
+                }
                 <Box
-                    alignSelf={"flex-end"}
-                >
-                    <SafeLogo />
-                </Box>
-                <Box
-                    width={"55%"}
-                    height={"30%"}
+                    width={notPhoneScreen ? "430px" : "100vw"}
+                    minHeight={notPhoneScreen ? "90vh" : "100vh"}
                     bgcolor={"#fff"}
-                    zIndex={10}
-                    p={5}
-                    sx={{
-                        borderRadius: "20px 0 0 20px"
-                    }}
-                >
-                    <PaymentBreakupInfo
-                        name="Suneel Satpal"
-                        phone="+91 93892 50148"
-                        amount={5000}
-                        settlementDate="7th October"
-                        settlementTime="5:00 pm"
-                    />
-                </Box>
-                <Box
-                    width="30vw"
-                    minHeight="90vh"
-                    bgcolor={"#fff"}
-                    border={"1px solid #ccc"}
+                    border={notPhoneScreen ? "1px solid #ccc" : "none"}
                     padding={5}
-                    borderRadius={5}
-                    boxShadow={"2px -2px 14px 2px #00000021"}
+                    borderRadius={notPhoneScreen ? 5 : 0}
+                    boxShadow={notPhoneScreen ? "2px -2px 14px 2px #00000021" : "none"}
                 >
                     <Stack
                         direction={"column"}
@@ -86,7 +94,7 @@ const InputTutorDetails: React.FC = () => {
                         <img
                             src={EiraLogo}
                             style={{
-                                alignSelf: "flex-start",
+                                alignSelf: notPhoneScreen ? "flex-start" : "center",
                                 width: 80,
                             }}
                         />

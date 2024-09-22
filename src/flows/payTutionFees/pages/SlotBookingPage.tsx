@@ -6,6 +6,7 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { Dayjs } from "dayjs";
@@ -24,6 +25,7 @@ const SlotBookingPage = () => {
   const [endTime, setEndTime] = useState<Dayjs | null>(null);
   const [description, setDescription] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
+  const notPhoneScreen = useMediaQuery('(min-width:850px)');
 
   const today = dayjs();
   const tomorrow = dayjs().add(1, 'day');
@@ -38,6 +40,12 @@ const SlotBookingPage = () => {
   };
 
   const handleSubmit = () => {
+    const activeFlow = localStorage.getItem("activeFlow")
+    localStorage.removeItem("activeFlow");
+    if(activeFlow === "dynamicFlow") {
+      navigate("/pay/payment-gateway-payment-flow");
+      return;
+    }
     navigate("/pay/review");
   };
 
@@ -52,7 +60,7 @@ const SlotBookingPage = () => {
     <Box
       pt={7}
       sx={{
-        backgroundImage: `url(${EiraBack})`,
+        backgroundImage: notPhoneScreen ? `url(${EiraBack})` : '',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         minHeight: '100vh',
@@ -64,45 +72,52 @@ const SlotBookingPage = () => {
         alignItems={"center"}
         justifyContent={"center"}
       >
+        {
+          notPhoneScreen &&
+          <Box
+            alignSelf={"flex-end"}
+          >
+            <SafeLogo />
+          </Box>
+        }
+        {
+          notPhoneScreen &&
+          <Box
+            width={"55%"}
+            height={"30%"}
+            bgcolor={"#fff"}
+            zIndex={10}
+            p={5}
+            sx={{
+              borderRadius: "20px 0 0 20px"
+            }}
+          >
+            <PaymentBreakupInfo
+              name="Suneel Satpal"
+              phone="+91 93892 50148"
+              amount={5000}
+              settlementDate="7th October"
+              settlementTime="5:00 pm"
+            />
+          </Box>
+        }
         <Box
-          alignSelf={"flex-end"}
-        >
-          <SafeLogo />
-        </Box>
-        <Box
-          width={"55%"}
-          height={"30%"}
+          width={notPhoneScreen ? "430px" : "100vw"}
+          minHeight={notPhoneScreen ? "90vh" : "100vh"}
           bgcolor={"#fff"}
-          zIndex={10}
-          p={5}
-          sx={{
-            borderRadius: "20px 0 0 20px"
-          }}
-        >
-          <PaymentBreakupInfo
-            name="Suneel Satpal"
-            phone="+91 93892 50148"
-            amount={5000}
-            settlementDate="7th October"
-            settlementTime="5:00 pm"
-          />
-        </Box>
-        <Box
-          width="30vw"
-          minHeight="90vh"
-          bgcolor={"#fff"}
-          border={"1px solid #ccc"}
+          border={notPhoneScreen ? "1px solid #ccc" : "none"}
           padding={5}
-          borderRadius={5}
-          boxShadow={"2px -2px 14px 2px #00000021"}
+          borderRadius={notPhoneScreen ? 5 : 0}
+          boxShadow={notPhoneScreen ? "2px -2px 14px 2px #00000021" : "none"}
         >
           <Stack
             direction={"column"}
+            alignItems={"center"}
           >
             <img
               src={EiraLogo}
               style={{
-                alignSelf: "flex-start",
+                alignSelf: notPhoneScreen ? "flex-start" : "center",
                 width: 80,
               }}
             />
@@ -124,7 +139,6 @@ const SlotBookingPage = () => {
               </Typography>
               <TextField
                 required
-                fullWidth
                 label="Session Title"
                 variant="outlined"
                 value={sessionTitle}
@@ -134,6 +148,10 @@ const SlotBookingPage = () => {
                   style: { top: -40, left: -13, fontSize: 12 },
                 }}
                 sx={{
+                  width: '100%',
+                  minWidth: '320px',
+                  maxWidth: '400px',
+                  mt: notPhoneScreen ? 0 : 3,
                   mb: 2,
                   "& .MuiInputBase-root": {
                     height: 45,
@@ -153,7 +171,6 @@ const SlotBookingPage = () => {
                 setEndTime={setEndTime}
               />
               <TextField
-                fullWidth
                 label="Description"
                 variant="outlined"
                 value={description}
@@ -163,6 +180,9 @@ const SlotBookingPage = () => {
                   style: { top: -40, left: -13, fontSize: 12 },
                 }}
                 sx={{
+                  width: '100%',
+                  minWidth: '320px',
+                  maxWidth: '400px',
                   mb: 2,
                   "& .MuiInputBase-root": {
                     height: 45,
@@ -174,10 +194,16 @@ const SlotBookingPage = () => {
                 }}
               />
               <Button
-                fullWidth
                 variant="contained"
                 color="primary"
-                sx={{ padding: 1.5, borderRadius: 2, mt: 3 }}
+                sx={{
+                  padding: 1.5,
+                  borderRadius: 20,
+                  mt: notPhoneScreen ? 3 : 25,
+                  width: '100%',
+                  minWidth: '320px',
+                  maxWidth: '400px'
+                }}
                 onClick={handleSubmit}
                 disabled={isButtonDisabled}
               >

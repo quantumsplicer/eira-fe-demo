@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import {
+    Box,
+    Button,
+    CircularProgress,
     Stack,
     TextField,
     Typography,
+    useMediaQuery,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import StatusDrawer from "./StatusDrawer";
 
 interface BankAccountDetailsProps {
     isAccountVerifying: boolean;
@@ -22,6 +27,8 @@ const BankAccountDetails = ({ onSubmit }: BankAccountDetailsProps) => {
     const [showAccountVerificationStatus, setShowAccountVerificationStatus] = useState<boolean>(false);
     const [isAccountVerified, setIsAccountVerified] = useState<boolean>(false);
     const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
+    const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+    const notPhoneScreen = useMediaQuery('(min-width:850px)');
 
     const handleAccountNumberInput = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, setAccountNumber: (accNum: string) => void) => {
         const invalidRegex = /[^0-9]/
@@ -63,6 +70,9 @@ const BankAccountDetails = ({ onSubmit }: BankAccountDetailsProps) => {
             setIsAccountVerifying(false);
             setShowAccountVerificationStatus(true);
             setIsAccountVerified(true);
+            if(!notPhoneScreen) {
+                setIsDrawerOpen(true);
+            }
             // setSignUpStep(3);
             // navigate('/tutor/aadhar-verification');
         }, 5000);
@@ -70,7 +80,7 @@ const BankAccountDetails = ({ onSubmit }: BankAccountDetailsProps) => {
 
     const handleSubmitClick = () => {
         if (accountNumber && isAccountNumberValid() && accountNumber === verifyAccountNumber && isIfscValid()) {
-            if(!showAccountVerificationStatus || (showAccountVerificationStatus && !isAccountVerified)) {
+            if (!showAccountVerificationStatus || (showAccountVerificationStatus && !isAccountVerified)) {
                 verifyAccount();
             } else if (showAccountVerificationStatus && isAccountVerified) {
                 onSubmit();
@@ -89,16 +99,47 @@ const BankAccountDetails = ({ onSubmit }: BankAccountDetailsProps) => {
         checkButtonDisability();
     }, [accountNumber, verifyAccountNumber, ifsc])
 
+    const VerifyAadhaarButton = () => {
+        return (
+            <Button
+                onClick={handleSubmitClick}
+                variant="contained"
+                sx={{
+                    width: "320px",
+                    height: 45,
+                    borderRadius: 20
+                }}
+            >
+                Verify Aadhaar
+            </Button>
+        )
+    }
+
+    const TryAgainButton = () => {
+        return (
+            <Button
+                onClick={() => setIsDrawerOpen(false)}
+                variant="contained"
+                sx={{
+                    width: "320px",
+                    height: 45,
+                    borderRadius: 20
+                }}
+            >
+                Try Again
+            </Button>
+        )
+    }
+
     return (
         <>
             <TextField
                 autoFocus
                 required
                 value={accountNumber}
-                disabled={isAccountVerifying || isAccountVerified}
+                disabled={isAccountVerifying || isAccountVerified || isDrawerOpen}
                 onChange={e => handleAccountNumberInput(e, setAccountNumber)}
                 onKeyDown={event => handleKeyDown(event)}
-                fullWidth
                 label="Account Number"
                 variant="outlined"
                 InputLabelProps={{
@@ -106,6 +147,9 @@ const BankAccountDetails = ({ onSubmit }: BankAccountDetailsProps) => {
                     style: { top: -40, left: -13, fontSize: 12 },
                 }}
                 sx={{
+                    width: '100%',
+                    minWidth: '320px',
+                    maxWidth: '400px',
                     mt: 2,
                     mb: 5,
                     "& .MuiInputBase-root": {
@@ -120,13 +164,12 @@ const BankAccountDetails = ({ onSubmit }: BankAccountDetailsProps) => {
             <TextField
                 required
                 value={verifyAccountNumber}
-                disabled={isAccountVerifying || isAccountVerified}
+                disabled={isAccountVerifying || isAccountVerified || isDrawerOpen}
                 onChange={e => handleAccountNumberInput(e, setVerifyAccountNumber)}
                 onKeyDown={event => handleKeyDown(event)}
                 error={verifyAccountNumber !== "" && accountNumber !== verifyAccountNumber}
                 helperText={verifyAccountNumber !== "" && accountNumber !== verifyAccountNumber && "Account numbers do not match"}
                 type="password"
-                fullWidth
                 label="Re-enter Account Number"
                 variant="outlined"
                 InputLabelProps={{
@@ -134,6 +177,9 @@ const BankAccountDetails = ({ onSubmit }: BankAccountDetailsProps) => {
                     style: { top: -40, left: -13, fontSize: 12 },
                 }}
                 sx={{
+                    width: '100%',
+                    minWidth: '320px',
+                    maxWidth: '400px',
                     mb: 5,
                     "& .MuiInputBase-root": {
                         height: 45,
@@ -147,12 +193,11 @@ const BankAccountDetails = ({ onSubmit }: BankAccountDetailsProps) => {
             <TextField
                 required
                 value={ifsc}
-                disabled={isAccountVerifying || isAccountVerified}
+                disabled={isAccountVerifying || isAccountVerified || isDrawerOpen}
                 onChange={e => handleIfscInput(e)}
                 onKeyDown={event => handleKeyDown(event)}
                 error={ifsc.length === 11 && !isIfscValid()}
                 helperText={ifsc.length === 11 && !isIfscValid() && "Enter valid IFSC"}
-                fullWidth
                 label="IFSC"
                 variant="outlined"
                 InputLabelProps={{
@@ -160,6 +205,9 @@ const BankAccountDetails = ({ onSubmit }: BankAccountDetailsProps) => {
                     style: { top: -40, left: -13, fontSize: 12 },
                 }}
                 sx={{
+                    width: '100%',
+                    minWidth: '320px',
+                    maxWidth: '400px',
                     mb: 2,
                     "& .MuiInputBase-root": {
                         height: 45,
@@ -171,34 +219,66 @@ const BankAccountDetails = ({ onSubmit }: BankAccountDetailsProps) => {
                 }}
             />
             {
-                showAccountVerificationStatus ?
+                notPhoneScreen ?
                     (
-                        isAccountVerified ?
-                            <Stack direction="row">
-                                <CheckCircleOutlineIcon sx={{color: "green", mr:1}} />
-                                <Typography>
-                                    Account Verified Successfully!
-                                </Typography>
-                            </Stack> :
-                            <Stack direction="row">
-                                <CancelOutlinedIcon sx={{color: "red", mr:1}} />
-                                <Typography>
-                                    Failed to Verify Account!
-                                </Typography>
-                            </Stack>
+                        showAccountVerificationStatus ?
+                            (
+                                isAccountVerified ?
+                                    <Stack direction="row">
+                                        <CheckCircleOutlineIcon sx={{ color: "green", mr: 1 }} />
+                                        <Typography>
+                                            Account Verified Successfully!
+                                        </Typography>
+                                    </Stack> :
+                                    <Stack direction="row">
+                                        <CancelOutlinedIcon sx={{ color: "red", mr: 1 }} />
+                                        <Typography>
+                                            Failed to Verify Account!
+                                        </Typography>
+                                    </Stack>
+                            ) :
+                            null
                     ) :
-                    null
+                    (
+                        showAccountVerificationStatus && isDrawerOpen ?
+                            (
+                                isAccountVerified ?
+                                    <StatusDrawer
+                                        open={showAccountVerificationStatus && isDrawerOpen}
+                                        type="success"
+                                        headingMessage="Congratulations!!"
+                                        subHeadingMessage1="Account Successfully verified."
+                                        subHeadingMessage2="Please verify your aadhaar to start accepting payments."
+                                        preventDrawerClose={true}
+                                        CustomDrawerButton={VerifyAadhaarButton}
+                                    /> :
+                                    <StatusDrawer
+                                        open={showAccountVerificationStatus && isDrawerOpen}
+                                        type="error"
+                                        headingMessage="Verification Failed!"
+                                        subHeadingMessage1="Error Message"
+                                        subHeadingMessage2="Please Try Again"
+                                        preventDrawerClose={true}
+                                        CustomDrawerButton={TryAgainButton}
+                                    />
+                            ) :
+                            null
+                    )
             }
             <LoadingButton
-                disabled={isButtonDisabled}
+                disabled={isButtonDisabled || (!showAccountVerificationStatus && isAccountVerifying)}
                 onClick={handleSubmitClick}
-                fullWidth
-                loading={isAccountVerifying}
-                loadingPosition="end"
-                // endIcon={null}
                 variant="contained"
                 color="primary"
-                sx={{ padding: 1.5, borderRadius: 20, marginTop: 5, height: 45 }}
+                sx={{
+                    width: '100%',
+                    minWidth: '320px',
+                    maxWidth: '400px',
+                    padding: 1.5,
+                    borderRadius: 20,
+                    marginTop: notPhoneScreen ? 4 : 18,
+                    height: 45
+                }}
             >
                 {
                     showAccountVerificationStatus ?
@@ -206,8 +286,13 @@ const BankAccountDetails = ({ onSubmit }: BankAccountDetailsProps) => {
                             isAccountVerified ? "Next" : "Verify Again"
                         ) :
                         (
-                            isAccountVerifying ? "Verifying" : "Verify Account"
-                        ) 
+                            isAccountVerifying ?
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    Verifying
+                                    <CircularProgress size={14} sx={{ marginLeft: 1, color: "#6f6f6f" }} />
+                                </Box> :
+                                "Verify Account"
+                        )
                 }
             </LoadingButton>
         </>

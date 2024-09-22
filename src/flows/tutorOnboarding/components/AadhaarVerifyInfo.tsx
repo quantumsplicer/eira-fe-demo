@@ -1,4 +1,4 @@
-import { Typography, Stack, Button, Box } from "@mui/material";
+import { Typography, Stack, Button, Box, useMediaQuery } from "@mui/material";
 import React from "react";
 import Aadhaar from "../../../assets/images/svg/Aadhaar.svg";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
@@ -11,6 +11,7 @@ interface AadhaarVerifyInfoProps {
 const AadhaarVerifyInfo = ({aadhaarVerificationFailed}: AadhaarVerifyInfoProps) => {
 
     const navigate = useNavigate();
+    const notPhoneScreen = useMediaQuery('(min-width:850px)');
 
     return (
         <Stack alignItems={"center"} textAlign={"center"}>
@@ -55,10 +56,13 @@ const AadhaarVerifyInfo = ({aadhaarVerificationFailed}: AadhaarVerifyInfoProps) 
             }
             <Button
                 variant="contained"
-                fullWidth
                 sx={{
+                    width: '100%',
+                    minWidth: '320px',
+                    maxWidth: '400px',
                     borderRadius: 20,
-                    height: 45
+                    height: 45,
+                    marginTop: aadhaarVerificationFailed ? 4 : 20
                 }}
                 onClick={() => navigate('/tutor/aadhar-verification')}
             >
@@ -66,13 +70,15 @@ const AadhaarVerifyInfo = ({aadhaarVerificationFailed}: AadhaarVerifyInfoProps) 
             </Button>
             <Button
                 variant="outlined"
-                fullWidth
                 sx={{
+                    width: '100%',
+                    minWidth: '320px',
+                    maxWidth: '400px',
                     borderRadius: 20,
                     marginTop: 1,
                     height: 45
                 }}
-                onClick={() => navigate('/tutor/dashboard')}
+                onClick={() => navigate('/tutor-id/dashboard')}
             >
                 Skip
             </Button>

@@ -10,9 +10,13 @@ interface NoteBoxProps {
 }
 
 const NoteBox = ({ heading, notes }: NoteBoxProps) => {
+
     return (
         <Box
             sx={{
+                width: '100%',
+                minWidth: '320px',
+                maxWidth: '400px',
                 mb: 4,
                 backgroundColor: "#f9f9f9",
                 padding: 2,

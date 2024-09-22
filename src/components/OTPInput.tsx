@@ -5,6 +5,7 @@ import {
   Button,
   Box,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -14,8 +15,10 @@ const OPT_LENGTH = 4;
 interface OTPInputProps {
   open?: boolean;
   onClose?: () => void;
-  navigateTo: string;
+  navigateTo?: string;
   phoneNumber: string;
+  onSubmit?: () => void;
+  isDrawer: boolean;
 }
 
 const OTPInput = ({
@@ -23,6 +26,8 @@ const OTPInput = ({
   onClose,
   navigateTo,
   phoneNumber,
+  onSubmit,
+  isDrawer
 }: OTPInputProps) => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
@@ -30,6 +35,7 @@ const OTPInput = ({
   const otpInputsRef = useRef<Array<React.RefObject<HTMLInputElement>>>([]);
   const [isOtpInvalid, setIsOtpInvalid] = useState<boolean>(false);
   const location = useLocation();
+  const notPhoneScreen = useMediaQuery('(min-width:850px)');
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement>,
@@ -93,13 +99,18 @@ const OTPInput = ({
       setIsOtpInvalid(true);
       return;
     }
+
+    if(onSubmit) {
+      onSubmit();
+    }
+
     localStorage.setItem("phoneNumber", phoneNumber)
     if (location.pathname.includes("student/signin")) {
       localStorage.setItem("studentLogin", "true");
     } else if (location.pathname.includes("tutor/signin")) {
       localStorage.setItem("tutorLogin", "true");
     }
-    navigate(navigateTo)
+    navigateTo && navigate(navigateTo);
   };
 
   const resendOtp = () => {
@@ -130,18 +141,20 @@ const OTPInput = ({
       <Typography
         fontWeight={"bold"}
         variant="h6"
-        mt={8}
+      // mt={8}
       >
         Verify Phone Number
       </Typography>
       <Typography
-        mt={1}
-        mb={5}
+        mt={3}
+        mb={notPhoneScreen || isDrawer ? 7 : 12}
+        textAlign={"center"}
+        color="#6F6F6F"
       >
         Enter OTP for phone number verification
       </Typography>
       <Box
-        sx={{ display: "flex", justifyContent: "center", gap: 1, pt: 2, mt: 8 }}
+        sx={{ display: "flex", justifyContent: "center", gap: 1, pt: 2 }}
       >
         {Array.from({ length: OPT_LENGTH }).map((_, index) => (
           <TextField
@@ -194,8 +207,10 @@ const OTPInput = ({
         disabled={otp.length !== 4}
         fullWidth
         sx={{
-          width: "80%",
-          marginTop: 10,
+          width: '100%',
+          minWidth: '320px',
+          maxWidth: '400px',
+          marginTop: notPhoneScreen || isDrawer ? 10 : 30,
           height: 45,
           borderRadius: 20,
         }}
