@@ -16,7 +16,7 @@ import StudentDashboard from "../flows/studentDashboard/pages/StudentDashboard";
 import TutorSignIn from "../flows/tutorOnboarding/pages/TutorSignIn";
 import TutorSignUp from "../flows/tutorOnboarding/pages/TutorSignUp";
 import AadharVerification from "../flows/tutorOnboarding/pages/AadharVerification";
-import TutorDashboard from "../flows/tutorOnboarding/pages/TutorDashboard";
+//import TutorDashboard from "../flows/tutorOnboarding/pages/TutorDashboard";
 import InputPersonalDetails from "../flows/payTutionFees/pages/InputPersonalDetails";
 import InputTutorDetails from "../flows/payTutionFees/pages/InputTutorDetails";
 import StudentSignIn from "../flows/studentOnboarding/pages/StudentSignIn";
@@ -33,22 +33,25 @@ const AppRoutes = () => {
       <Route path="/pay/create-session" element={<SlotBookingPage />} />
       <Route path="/pay/review" element={<PaymentReviewPage />} />
       <Route path="/pay/payment-gateway-payment-flow" element={<PGLoading />} />
-      <Route
-        path="/payment-successful"
-        element={<PaymentSuccessfulPage />}
-      />
+      <Route path="/payment-successful" element={<PaymentSuccessfulPage />} />
       <Route path="/tutor-id/dashboard" element={<TutorDashboard />} />
       <Route path="/student-id/dashboard" element={<StudentDashboard />} />
 
       <Route path="tutor/signin" element={<TutorSignIn />} />
       <Route path="tutor/signup" element={<TutorSignUp />} />
-      <Route path="tutor/aadhar-verification" element={<AadharVerification />} />
+      <Route
+        path="tutor/aadhar-verification"
+        element={<AadharVerification />}
+      />
       <Route path="tutor/dashboard" element={<TutorDashboard />} />
 
       <Route path="student/signin" element={<StudentSignIn />} />
       <Route path="student/signup" element={<StudentSignUp />} />
       <Route path="pay/static/:phoneNumber" element={<InputPayment />} />
-      <Route path="pay/dynamic/:amount/:phoneNumber" element={<PaymentReviewPage />} />
+      <Route
+        path="pay/dynamic/:amount/:phoneNumber"
+        element={<PaymentReviewPage />}
+      />
     </Routes>
   );
 };

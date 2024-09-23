@@ -9,8 +9,11 @@ import {
   DialogContent,
   IconButton,
   Divider,
+  useMediaQuery,
+  Slide,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Alert from "@mui/material/Alert";
 import { useForm, SubmitHandler } from "react-hook-form";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
@@ -27,31 +30,53 @@ const CompletePaymentDialog = ({
   onSubmit,
   amount,
 }: CompletePaymentDialogProps) => {
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
+
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      sx={{
-        "& .MuiDialog-paper": {
-          width: 1000,
-          maxWidth: 1000,
-          height: 550,
-          borderRadius: 3,
-        },
-      }}
+      fullScreen={isPhoneScreen}
+      hideBackdrop={isPhoneScreen}
+      sx={
+        !isPhoneScreen
+          ? {
+              "& .MuiDialog-paper": {
+                width: 1000,
+                maxWidth: 1000,
+                height: 550,
+                borderRadius: 3,
+              },
+            }
+          : {
+              marginTop: 8,
+              "& .MuiDialog-paper": {
+                boxShadow: 0,
+              },
+            }
+      }
     >
       <DialogContent dividers>
         <IconButton
           aria-label="close"
           onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
+          sx={
+            !isPhoneScreen
+              ? {
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }
+              : {
+                  position: "absolute",
+                  left: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }
+          }
         >
-          <CloseIcon />
+          {!isPhoneScreen ? <CloseIcon /> : <ArrowBackIcon />}
         </IconButton>
         <Stack
           direction="row"
@@ -59,30 +84,42 @@ const CompletePaymentDialog = ({
           height="100%"
           alignContent="center"
         >
-          <Stack justifyContent="space-evenly">
-            <Stack spacing={1}>
-              <Typography fontSize={22} fontWeight={550}>
-                Making Payment to:
-              </Typography>
-              <Stack>
-                <Typography fontSize={22} fontWeight={650}>
-                  Suneel Satpal
-                </Typography>
-                <Typography fontSize={15} lineHeight={1.2}>
-                  +919997945005
-                </Typography>
+          {!isPhoneScreen ? (
+            <>
+              <Stack justifyContent="space-evenly">
+                <Stack spacing={1}>
+                  <Typography fontSize={22} fontWeight={550}>
+                    Making Payment to:
+                  </Typography>
+                  <Stack>
+                    <Typography fontSize={22} fontWeight={650}>
+                      Suneel Satpal
+                    </Typography>
+                    <Typography fontSize={15} lineHeight={1.2}>
+                      +919997945005
+                    </Typography>
+                  </Stack>
+                </Stack>
+                <Box>
+                  <AmountBreakupCard amount={amount}></AmountBreakupCard>
+                </Box>
               </Stack>
-            </Stack>
-            <Box>
-              <AmountBreakupCard amount={amount}></AmountBreakupCard>
-            </Box>
-          </Stack>
-          <Divider
-            orientation="vertical"
-            flexItem
-            sx={{ height: "90%", alignSelf: "center" }}
-          />
-          <Stack justifyContent="space-between" width="40%" pt={5}>
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{ height: "90%", alignSelf: "center" }}
+              />{" "}
+            </>
+          ) : (
+            <></>
+          )}
+          <Stack
+            sx={
+              !isPhoneScreen
+                ? { justifyContent: "space-between", width: "40%", pt: 5 }
+                : { width: "90%" }
+            }
+          >
             <Box
               sx={{
                 display: "flex",
@@ -106,7 +143,14 @@ const CompletePaymentDialog = ({
                 </Typography>
               </Alert>
             </Box>
-            <Stack justifyContent="space-around" height="90%">
+            <Stack
+              spacing={!isPhoneScreen ? 0 : 4}
+              sx={
+                !isPhoneScreen
+                  ? { justifyContent: "space-around", height: "90%" }
+                  : { justifyContent: "space-around", height: "100%" }
+              }
+            >
               <Stack spacing={2}>
                 <Stack alignItems="center">
                   <Stack direction="row" spacing={1}>
@@ -150,7 +194,13 @@ const CompletePaymentDialog = ({
                   Confirm payment detials and make payment
                 </Typography>
               </Stack>
-              <Stack justifyContent="space-evenly" height="40%">
+              <Stack
+                sx={
+                  !isPhoneScreen
+                    ? { justifyContent: "space-evenly", height: "40%" }
+                    : { height: "20%", justifyContent: "space-evenly" }
+                }
+              >
                 <Stack direction="row" justifyContent="space-between">
                   <Typography
                     sx={{ fontSize: 15 }}
@@ -176,6 +226,7 @@ const CompletePaymentDialog = ({
                   </Typography>
                 </Stack>
               </Stack>
+              {!isPhoneScreen ? <></> : <AmountBreakupCard />}
               <Box>
                 <Button
                   variant="contained"

@@ -9,6 +9,7 @@ import {
   Divider,
   Box,
   Stack,
+  useMediaQuery,
 } from "@mui/material";
 
 interface BankAccount {
@@ -22,6 +23,7 @@ interface BankAccountsListProps {
 }
 
 const BankAccountsList: React.FC<BankAccountsListProps> = ({ accounts }) => {
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [selectedAccount, setSelectedAccount] = useState<string | undefined>(
     accounts.find((account) => account.isPrimary)?.accountNumber
   );
@@ -36,12 +38,24 @@ const BankAccountsList: React.FC<BankAccountsListProps> = ({ accounts }) => {
         {accounts.map((account) => (
           <React.Fragment key={account.accountNumber}>
             <ListItem
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                p: 2,
-              }}
+              sx={
+                !isPhoneScreen
+                  ? {
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      p: 2,
+                    }
+                  : {
+                      border: "0.2px solid",
+                      borderColor: "#C3C3C3",
+                      borderRadius: 2,
+                      p: 3,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }
+              }
             >
               <Box>
                 <Stack spacing={1}>
@@ -53,19 +67,23 @@ const BankAccountsList: React.FC<BankAccountsListProps> = ({ accounts }) => {
                   </Typography>
                 </Stack>
               </Box>
-              {/* <RadioGroup
-                value={selectedAccount}
-                onChange={() => handleSelectAccount(account.accountNumber)}
-              >
-                <FormControlLabel
-                  value={account.accountNumber}
-                  control={<Radio/>}
-                  label=""
-                  sx={{ margin: 0 }}
-                />
-              </RadioGroup> */}
+              {!isPhoneScreen ? (
+                <></>
+              ) : (
+                <RadioGroup
+                  value={selectedAccount}
+                  onChange={() => handleSelectAccount(account.accountNumber)}
+                >
+                  <FormControlLabel
+                    value={account.accountNumber}
+                    control={<Radio />}
+                    label=""
+                    sx={{ margin: 0 }}
+                  />
+                </RadioGroup>
+              )}
             </ListItem>
-            <Divider />
+            {!isPhoneScreen ? <Divider /> : <></>}
           </React.Fragment>
         ))}
       </List>

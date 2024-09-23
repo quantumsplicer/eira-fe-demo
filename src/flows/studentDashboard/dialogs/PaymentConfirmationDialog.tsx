@@ -8,8 +8,10 @@ import {
   Dialog,
   DialogContent,
   IconButton,
+  useMediaQuery,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Alert from "@mui/material/Alert";
 import TickMark from "../../../assets/images/png/tick-mark.png";
 import Link from "@mui/material/Link";
@@ -23,32 +25,53 @@ const PaymentConfirmationDialog = ({
   open,
   onClose,
 }: PaymentConfirmationDialogProps) => {
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      sx={{
-        "& .MuiDialog-paper": {
-          width: 430,
-          maxWidth: "50vw",
-          height: 580,
-          maxHeight: 600,
-          borderRadius: 3,
-        },
-      }}
+      fullScreen={isPhoneScreen}
+      hideBackdrop={isPhoneScreen}
+      sx={
+        !isPhoneScreen
+          ? {
+              "& .MuiDialog-paper": {
+                width: 430,
+                maxWidth: "50vw",
+                height: 580,
+                maxHeight: 600,
+                borderRadius: 3,
+              },
+            }
+          : {
+              marginTop: 8,
+              "& .MuiDialog-paper": {
+                boxShadow: 0,
+              },
+            }
+      }
     >
       <DialogContent dividers>
         <IconButton
           aria-label="close"
           onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
+          sx={
+            !isPhoneScreen
+              ? {
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }
+              : {
+                  position: "absolute",
+                  left: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }
+          }
         >
-          <CloseIcon />
+          {!isPhoneScreen ? <CloseIcon /> : <ArrowBackIcon />}
         </IconButton>
         {/* <Stack justifyContent="center" alignItems="center" spacing={4} pt={6}>
           <Stack justifyContent="center" alignItems="center">

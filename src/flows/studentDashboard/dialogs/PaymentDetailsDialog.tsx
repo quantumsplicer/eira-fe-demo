@@ -9,8 +9,10 @@ import {
   Dialog,
   DialogContent,
   IconButton,
+  useMediaQuery,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { error } from "console";
 
@@ -40,31 +42,52 @@ const PaymentDetailsDialog = ({
   const handleFormSubmit: SubmitHandler<Inputs> = (data) => {
     onSubmit(data.amount);
   };
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      sx={{
-        "& .MuiDialog-paper": {
-          width: 450,
-          maxWidth: "50vw",
-          height: 510,
-          borderRadius: 3,
-        },
-      }}
+      fullScreen={isPhoneScreen}
+      hideBackdrop={isPhoneScreen}
+      sx={
+        !isPhoneScreen
+          ? {
+              "& .MuiDialog-paper": {
+                width: 450,
+                maxWidth: "50vw",
+                height: 510,
+                borderRadius: 3,
+              },
+            }
+          : {
+              marginTop: 8,
+              "& .MuiDialog-paper": {
+                boxShadow: 0,
+              },
+            }
+      }
     >
       <DialogContent dividers>
         <IconButton
           aria-label="close"
           onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
+          sx={
+            !isPhoneScreen
+              ? {
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }
+              : {
+                  position: "absolute",
+                  left: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }
+          }
         >
-          <CloseIcon />
+          {!isPhoneScreen ? <CloseIcon /> : <ArrowBackIcon />}
         </IconButton>
         <Stack justifyContent="space-around" height="100%" pt={4}>
           <Stack>

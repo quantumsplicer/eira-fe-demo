@@ -1,6 +1,6 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { Divider, Stack, Typography } from "@mui/material";
+import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import LinkIcon from "@mui/icons-material/LinkOutlined";
 import Link from "@mui/material/Link";
@@ -9,16 +9,26 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopyOutlined";
 import StatusTag from "./StatusTag";
 const amount = 20000;
 const ProfileInfoCard: React.FC = () => {
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   return (
     <Box
-      sx={{
-        pt: 6,
-        borderRadius: 2,
-        width: 480,
-        height: 340,
-        backgroundColor: "white",
-        boxShadow: 6,
-      }}
+      sx={
+        !isPhoneScreen
+          ? {
+              pt: 6,
+              borderRadius: 2,
+              width: "100%",
+              height: 340,
+              backgroundColor: "white",
+              boxShadow: 6,
+            }
+          : {
+              pb: 6,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "white",
+            }
+      }
     >
       <Stack
         sx={{
