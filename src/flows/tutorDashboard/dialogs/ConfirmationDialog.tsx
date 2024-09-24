@@ -13,6 +13,7 @@ import {
   Stack,
   useMediaQuery,
   SwipeableDrawer,
+  Drawer,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
@@ -90,12 +91,10 @@ const ConfirmationDialog = ({
           </DialogContent>
         </Dialog>
       ) : (
-        <SwipeableDrawer
+        <Drawer
           anchor="bottom"
           open={activeDialog === "ConfirmationDialog" ? true : false}
           onClose={handleOnClose}
-          onOpen={() => {}}
-          disableSwipeToOpen={true}
           PaperProps={{
             sx: {
               height: "40vh", // Full height of the viewport
@@ -134,7 +133,7 @@ const ConfirmationDialog = ({
               Create another
             </Link>
           </Stack>
-        </SwipeableDrawer>
+        </Drawer>
       )}
     </>
   );
