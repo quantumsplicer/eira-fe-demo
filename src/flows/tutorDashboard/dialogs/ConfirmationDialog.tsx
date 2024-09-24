@@ -11,6 +11,9 @@ import {
   IconButton,
   Typography,
   Stack,
+  useMediaQuery,
+  SwipeableDrawer,
+  Drawer,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
@@ -37,50 +40,102 @@ const ConfirmationDialog = ({
     setActiveDialog("None");
   };
 
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   return (
-    <Dialog
-      open={activeDialog === "ConfirmationDialog" ? true : false}
-      onClose={handleOnClose}
-      sx={{
-        "& .MuiDialog-paper": {
-          width: 450,
-          maxWidth: "50vw",
-          height: 380,
-          borderRadius: 3,
-        },
-        p: 2,
-      }}
-    >
-      <DialogContent dividers>
-        <Stack justifyContent="center" spacing={4} alignItems="center">
-          <Stack
-            justifyContent="center"
-            alignItems="center"
-            spacing={2}
-            sx={{ height: "100%", pb: 0, pl: 5, pr: 5, pt: 5 }}
-          >
-            <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
-              {heading}
-            </Typography>
-            <Typography align="center" sx={{ fontSize: 11.2, fontWeight: 501 }}>
-              {subHeading}{" "}
-            </Typography>
+    <>
+      {!isPhoneScreen ? (
+        <Dialog
+          open={activeDialog === "ConfirmationDialog" ? true : false}
+          onClose={handleOnClose}
+          sx={{
+            "& .MuiDialog-paper": {
+              width: 450,
+              maxWidth: "50vw",
+              height: 380,
+              borderRadius: 3,
+            },
+            p: 2,
+          }}
+        >
+          <DialogContent dividers>
+            <Stack justifyContent="center" spacing={4} alignItems="center">
+              <Stack
+                justifyContent="center"
+                alignItems="center"
+                spacing={2}
+                sx={{ height: "100%", pb: 0, pl: 5, pr: 5, pt: 5 }}
+              >
+                <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
+                  {heading}
+                </Typography>
+                <Typography
+                  align="center"
+                  sx={{ fontSize: 11.2, fontWeight: 501 }}
+                >
+                  {subHeading}{" "}
+                </Typography>
+              </Stack>
+              <Box>
+                <img
+                  src={TickMark}
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                  }}
+                />
+              </Box>
+              <Link href="#" sx={{ color: "grey", fontSize: 18 }}>
+                Create another
+              </Link>
+            </Stack>
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <Drawer
+          anchor="bottom"
+          open={activeDialog === "ConfirmationDialog" ? true : false}
+          onClose={handleOnClose}
+          PaperProps={{
+            sx: {
+              height: "40vh", // Full height of the viewport
+              borderRadius: 5,
+            },
+          }}
+        >
+          <Stack justifyContent="center" spacing={4} alignItems="center">
+            <Stack
+              justifyContent="center"
+              alignItems="center"
+              spacing={2}
+              sx={{ height: "100%", pb: 0, pl: 5, pr: 5, pt: 5 }}
+            >
+              <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
+                {heading}
+              </Typography>
+              <Typography
+                align="center"
+                sx={{ fontSize: 11.2, fontWeight: 501 }}
+              >
+                {subHeading}{" "}
+              </Typography>
+            </Stack>
+            <Box>
+              <img
+                src={TickMark}
+                alt="Tick mark"
+                style={{
+                  width: "80px",
+                  height: "80px",
+                }}
+              />
+            </Box>
+            <Link href="#" sx={{ color: "grey", fontSize: 18 }}>
+              Create another
+            </Link>
           </Stack>
-          <Box>
-            <img
-              src={TickMark}
-              style={{
-                width: "100px",
-                height: "100px",
-              }}
-            />
-          </Box>
-          <Link href="#" sx={{ color: "grey", fontSize: 18 }}>
-            Create another
-          </Link>
-        </Stack>
-      </DialogContent>
-    </Dialog>
+        </Drawer>
+      )}
+    </>
   );
 };
 export default ConfirmationDialog;

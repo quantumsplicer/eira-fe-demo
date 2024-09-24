@@ -12,6 +12,8 @@ import {
   DialogContent,
   IconButton,
   TextFieldProps,
+  SwipeableDrawer,
+  useMediaQuery,
 } from "@mui/material";
 import {
   DatePicker,
@@ -19,6 +21,7 @@ import {
   LocalizationProvider,
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Dayjs } from "dayjs";
 import CloseIcon from "@mui/icons-material/Close";
@@ -51,6 +54,8 @@ const SessionLinkDialog = ({
       endTime: null,
     },
   });
+
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const handleOnClose = () => {
     setActiveDialog("None");
   };
@@ -96,31 +101,56 @@ const SessionLinkDialog = ({
     <Dialog
       open={activeDialog === "SessionLinkDialog" ? true : false}
       onClose={handleOnClose}
-      sx={{
-        "& .MuiDialog-paper": {
-          width: 550,
-          maxWidth: "50vw",
-          height: 580,
-          maxHeight: 700,
-          borderRadius: 3,
-        },
-        p: 2,
-      }}
+      hideBackdrop={isPhoneScreen}
+      fullScreen={isPhoneScreen}
+      sx={
+        !isPhoneScreen
+          ? {
+              "& .MuiDialog-paper": {
+                width: 550,
+                maxWidth: "50vw",
+                height: 580,
+                maxHeight: 700,
+                borderRadius: 3,
+              },
+              p: 2,
+            }
+          : {
+              marginTop: 10,
+              "& .MuiDialog-paper": {
+                boxShadow: 0,
+              },
+            }
+      }
     >
       <DialogContent dividers>
         <IconButton
           aria-label="close"
           onClick={handleOnClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
+          sx={
+            !isPhoneScreen
+              ? {
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }
+              : {
+                  position: "absolute",
+                  left: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }
+          }
         >
-          <CloseIcon />
+          {!isPhoneScreen ? <CloseIcon /> : <ArrowBackIcon />}
         </IconButton>
-        <Stack justifyContent="space-between" spacing={5} pt={5}>
+        <Stack
+          justifyContent="space-between"
+          spacing={5}
+          pt={5}
+          sx={!isPhoneScreen ? {} : { height: "100%" }}
+        >
           <Stack>
             <Typography fontSize={23} fontWeight={600} align="center">
               Create Session

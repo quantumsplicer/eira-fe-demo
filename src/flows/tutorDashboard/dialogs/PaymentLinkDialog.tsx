@@ -11,8 +11,11 @@ import {
   IconButton,
   Typography,
   Stack,
+  useMediaQuery,
+  SwipeableDrawer,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -52,6 +55,7 @@ const PaymentLinkDialog = ({
     setActiveDialog("ConfirmationDialog");
   };
 
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [studentName, setStudentName] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -83,31 +87,61 @@ const PaymentLinkDialog = ({
     <Dialog
       open={activeDialog === "PaymentLinkDialog" ? true : false}
       onClose={handleOnClose}
-      sx={{
-        "& .MuiDialog-paper": {
-          width: 470,
-          maxWidth: "50vw",
-          maxHeight: 650,
-          height: 590,
-          borderRadius: 3,
-        },
-        p: 2,
-      }}
+      fullScreen={isPhoneScreen}
+      hideBackdrop={isPhoneScreen}
+      sx={
+        !isPhoneScreen
+          ? {
+              "& .MuiDialog-paper": {
+                width: 470,
+                maxWidth: "50vw",
+                maxHeight: 650,
+                height: 590,
+                borderRadius: 3,
+              },
+              p: 2,
+            }
+          : {
+              marginTop: 10,
+              "& .MuiDialog-paper": {
+                boxShadow: 0,
+              },
+            }
+      }
     >
       <DialogContent dividers>
         <IconButton
           aria-label="close"
           onClick={handleOnClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
+          sx={
+            !isPhoneScreen
+              ? {
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }
+              : {
+                  position: "absolute",
+                  left: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }
+          }
         >
-          <CloseIcon />
+          {!isPhoneScreen ? <CloseIcon /> : <ArrowBackIcon />}
         </IconButton>
-        <Stack sx={{ pl: 4, pr: 4, pt: 4 }} spacing={7}>
+        <Stack
+          sx={
+            !isPhoneScreen
+              ? { pl: 4, pr: 4, pt: 4 }
+              : {
+                  height: "100%",
+                  justifyContent: "space-evenly",
+                }
+          }
+          spacing={7}
+        >
           <Stack justifyContent="center" alignItems="center" sx={{ pt: 0 }}>
             <Typography sx={{ fontSize: 22, fontWeight: 600 }}>
               Create a payment Link
@@ -127,7 +161,14 @@ const PaymentLinkDialog = ({
               Link will be sent to them through whatsapp and text sms
             </Typography>
           </Stack>
-          <Stack spacing={4} sx={{ pt: 1 }}>
+          <Stack
+            spacing={4}
+            sx={
+              !isPhoneScreen
+                ? { pt: 1 }
+                : { width: "90%", alignSelf: "center", alignItems: "center" }
+            }
+          >
             <Controller
               name="phoneNumber"
               control={control}
@@ -255,7 +296,13 @@ const PaymentLinkDialog = ({
               )}
             />
           </Stack>
-          <Box sx={{ pt: 1 }}>
+          <Box
+            sx={
+              !isPhoneScreen
+                ? { pt: 1 }
+                : { width: "90%", alignSelf: "center", alignItems: "center" }
+            }
+          >
             <Stack spacing={2}>
               <FormGroup sx={{ fontSize: 10 }}>
                 <FormControlLabel

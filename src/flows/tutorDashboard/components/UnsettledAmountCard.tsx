@@ -1,10 +1,11 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { Divider, Stack, Typography } from "@mui/material";
+import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
 
 const amount = 20000;
 
 const UnsettledAmountCard: React.FC = () => {
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const formatter = new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
@@ -13,74 +14,208 @@ const UnsettledAmountCard: React.FC = () => {
 
   return (
     <Box
-      sx={{
-        p: 2,
-        borderRadius: 2,
-        width: 500,
-        backgroundColor: "white",
-        boxShadow: 6,
-      }}
+      sx={
+        !isPhoneScreen
+          ? {
+              p: 2,
+              borderRadius: 2,
+              width: "50%",
+              backgroundColor: "white",
+              boxShadow: 6,
+            }
+          : {
+              p: 3,
+              width: "100%",
+              backgroundColor: "white",
+              height: 350,
+            }
+      }
     >
-      <Stack direction="row" spacing={2}>
+      <Stack
+        spacing={!isPhoneScreen ? 0 : 2}
+        direction={!isPhoneScreen ? "row" : "column"}
+        sx={!isPhoneScreen ? { justifyContent: "space-between" } : {}}
+      >
         <Box
-          sx={{
-            backgroundColor: "#EBF9F1",
-            width: 190,
-            alignContent: "center",
-            borderRadius: 2,
-            p: 2,
-          }}
+          sx={
+            !isPhoneScreen
+              ? {
+                  backgroundColor: "#EBF9F1",
+                  width: "45%",
+                  alignContent: "center",
+                  borderRadius: 2,
+                  p: 2,
+                }
+              : {
+                  backgroundColor: "#EBF9F1",
+                  width: "100%",
+                  alignContent: "center",
+                  borderRadius: 6,
+                  pt: 4,
+                  pb: 4,
+                  pl: 2,
+                  pr: 2,
+                }
+          }
         >
-          <Stack spacing={0.5} sx={{ alignContent: "center" }}>
-            <Typography fontWeight={600} sx={{ fontSize: 15 }}>
-              Unsettled Amount
-            </Typography>
-            <Typography
-              fontWeight={650}
-              sx={{ color: "#3BB900", fontSize: 27 }}
-            >
-              {formatter.format(amount)}
-            </Typography>
-            <Stack>
-              <Typography sx={{ fontSize: 10 }} color="#898989">
+          <Stack
+            spacing={!isPhoneScreen ? 0 : 0.5}
+            direction={!isPhoneScreen ? "column" : "row"}
+            sx={
+              !isPhoneScreen
+                ? { alignContent: "center" }
+                : {
+                    width: "100%",
+                    justifyContent: "space-between",
+                    alignContent: "center",
+                    pl: 2,
+                    pr: 2,
+                  }
+            }
+          >
+            <Stack spacing={!isPhoneScreen ? 0 : 1}>
+              <Typography
+                sx={
+                  !isPhoneScreen
+                    ? { fontSize: 15, fontWeight: 600 }
+                    : {
+                        fontSize: 16,
+                        fontWeight: 500,
+                      }
+                }
+              >
+                Unsettled Amount
+              </Typography>
+              <Typography
+                sx={
+                  !isPhoneScreen
+                    ? { color: "#3BB900", fontSize: 27, fontWeight: 650 }
+                    : { color: "#3BB900", fontSize: 32, fontWeight: 600 }
+                }
+              >
+                {formatter.format(amount)}
+              </Typography>
+            </Stack>
+            <Stack sx={!isPhoneScreen ? {} : { alignSelf: "center" }}>
+              <Typography
+                sx={
+                  !isPhoneScreen
+                    ? { fontSize: 10 }
+                    : { fontSize: 12, textAlign: "right" }
+                }
+                color="#898989"
+              >
                 Next settlement on
               </Typography>
               <Typography
-                sx={{ fontSize: 10 }}
+                sx={
+                  !isPhoneScreen
+                    ? { fontSize: 10 }
+                    : { fontSize: 11, textAlign: "right" }
+                }
                 fontWeight="bold"
                 color="#898989"
               >
-                13th May 20234 at 5:00pm
+                13th May 2024, 5:00pm
               </Typography>
             </Stack>
           </Stack>
         </Box>
-        <Divider orientation="vertical" variant="middle" flexItem />
-        <Box pt={4}>
-          <Stack spacing={4}>
+        {!isPhoneScreen ? (
+          <Divider orientation="vertical" variant="middle" flexItem />
+        ) : (
+          <></>
+        )}
+        <Box sx={!isPhoneScreen ? { width: "45%" } : {}}>
+          <Stack
+            spacing={4}
+            direction={!isPhoneScreen ? "column" : "row"}
+            sx={
+              !isPhoneScreen
+                ? {
+                    justifyContent: "space-evenly",
+                    height: "100%",
+                  }
+                : {}
+            }
+          >
             <Stack
               direction="row"
               spacing={2}
-              justifyContent="space-between"
-              display="flex"
+              sx={
+                !isPhoneScreen
+                  ? { justifyContent: "space-evenly" }
+                  : {
+                      justifyContent: "space-between",
+                      border: "0.2px solid",
+                      borderColor: "#C3C3C3",
+                      borderRadius: 2,
+                      p: 2,
+                    }
+              }
             >
-              <Typography sx={{ fontSize: 13 }} fontWeight="bold">
+              <Typography
+                sx={
+                  !isPhoneScreen
+                    ? { fontSize: 13, fontWeight: "bold" }
+                    : {
+                        fontSize: 18,
+                        alignSelf: "center",
+                        pl: 1,
+                        fontWeight: 500,
+                      }
+                }
+              >
                 12
               </Typography>
-              <Typography sx={{ fontSize: 11 }}>
+              <Typography
+                sx={
+                  !isPhoneScreen
+                    ? { fontSize: 11, textAlign: "right" }
+                    : { fontSize: 10, textAlign: "right", width: "40%" }
+                }
+              >
                 Transactions since last settlement
               </Typography>
             </Stack>
             <Stack
               direction="row"
-              spacing={1}
-              justifyContent="space-between"
-              display="flex"
+              spacing={!isPhoneScreen ? 1 : 0}
+              sx={
+                !isPhoneScreen
+                  ? {
+                      justifyContent: "space-evenly",
+                    }
+                  : {
+                      justifyContent: "space-between",
+                      border: "0.2px solid",
+                      borderColor: "#C3C3C3",
+                      borderRadius: 2,
+                      p: 2,
+                    }
+              }
             >
-              <Typography sx={{ fontSize: 13 }} fontWeight="bold">
+              <Typography
+                sx={
+                  !isPhoneScreen
+                    ? { fontSize: 13, fontWeight: "bold" }
+                    : {
+                        fontSize: 17,
+                        alignSelf: "center",
+                        pl: 0,
+                        fontWeight: 500,
+                      }
+                }
+              >
                 {formatter.format(amount)}
               </Typography>
-              <Typography sx={{ fontSize: 11 }}>
+              <Typography
+                sx={
+                  !isPhoneScreen
+                    ? { fontSize: 11, textAlign: "right" }
+                    : { fontSize: 10, textAlign: "right", width: "40%" }
+                }
+              >
                 Average transaction amount
               </Typography>
             </Stack>

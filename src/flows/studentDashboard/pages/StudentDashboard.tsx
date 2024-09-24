@@ -17,7 +17,7 @@ import SessionHistoryIcon from "@mui/icons-material/RestoreOutlined";
 import MarketingIcon from "@mui/icons-material/CampaignOutlined";
 import InvoiceIcon from "@mui/icons-material/ReceiptOutlined";
 import { useState } from "react";
-import { Stack } from "@mui/material";
+import { Stack, useMediaQuery } from "@mui/material";
 import PaymentBannerCard from "../components/PaymentBannerCard";
 import PaymentHistoryTable from "../components/PaymentHistoryTable";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -30,6 +30,7 @@ const StudentDashboard: React.FC = () => {
       fontFamily: "Montserrat", // Set the default font family
     },
   });
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
@@ -51,6 +52,7 @@ const StudentDashboard: React.FC = () => {
             >
               <img
                 src={EiraLogo}
+                alt="logo"
                 style={{
                   alignSelf: "flex-start",
                   width: 80,
@@ -64,11 +66,19 @@ const StudentDashboard: React.FC = () => {
         </AppBar>
         <Box
           component="main"
-          sx={{ flexGrow: 1, p: 6, backgroundColor: "#F5F5F5" }}
+          sx={
+            !isPhoneScreen
+              ? { flexGrow: 1, p: 6, backgroundColor: "#F5F5F5" }
+              : { flexGrow: 1, pt: 4, backgroundColor: "#F5F5F5" }
+          }
         >
           <Toolbar />
-          <Stack spacing={5} pl={10} pr={10}>
-            <h1>Payments History</h1>
+          <Stack
+            spacing={!isPhoneScreen ? 5 : 1}
+            pl={!isPhoneScreen ? 10 : 0}
+            pr={!isPhoneScreen ? 10 : 0}
+          >
+            {!isPhoneScreen ? <h1>Payments History</h1> : <></>}
             <PaymentBannerCard />
             <PaymentHistoryTable />
           </Stack>

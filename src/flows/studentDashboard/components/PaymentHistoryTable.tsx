@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from "react";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import React from "react";
+import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
 import {
   createMRTColumnHelper,
   MaterialReactTable,
@@ -9,6 +9,8 @@ import {
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import { darken, lighten, useTheme } from "@mui/material";
 import StatusTag from "../../tutorDashboard/components/StatusTag";
+import PaymentHistoryTableMobile from "../../tutorDashboard/components/PaymentHistoryTableMobile";
+import { Virtuoso } from "react-virtuoso";
 const lightTheme = createTheme({ palette: { mode: "light" } });
 interface Person {
   title: string;
@@ -134,6 +136,7 @@ const data: Person[] = [
 ];
 
 const PaymentHistoryTable: React.FC = () => {
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const theme = useTheme();
   const baseBackgroundColor =
     theme.palette.mode === "dark"
@@ -238,7 +241,11 @@ const PaymentHistoryTable: React.FC = () => {
           my={4}
           gap={4}
           p={2}
-          sx={{ boxShadow: 8, backgroundColor: "white", borderRadius: 2 }}
+          sx={
+            !isPhoneScreen
+              ? { boxShadow: 8, backgroundColor: "white", borderRadius: 2 }
+              : { backgroundColor: "white" }
+          }
         >
           <Stack spacing={2}>
             <Stack direction="row">
@@ -255,17 +262,25 @@ const PaymentHistoryTable: React.FC = () => {
                 </Typography>
               </Box>
             </Stack>
-            <MaterialReactTable table={table} />
+            {!isPhoneScreen ? (
+              <MaterialReactTable table={table} />
+            ) : (
+              <Virtuoso
+                style={{ height: 400 }}
+                data={data}
+                itemContent={(_, user) => (
+                  <PaymentHistoryTableMobile
+                    name={user.title}
+                    phoneNumber={user.tutorPhoneNumber}
+                    status={user.paymentStatus}
+                    amount={user.amount}
+                  />
+                )}
+              />
+            )}
           </Stack>
         </Box>
       </ThemeProvider>
-      {/* <CreatePaymentLinkDialog
-        openForm={createPaymentLinkDialog}
-        closeForm={handleClosePaymentLinkDialog}
-        openConfirmation={openConfirmation}
-        closeConfirmation={handleCloseConfirmation}
-        openConfirmationPage={handleOpenConfirmation}
-      /> */}
     </>
   );
 };
