@@ -4,6 +4,7 @@ import { Box, Typography, TextField, Button, Stack } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { EiraBack1 } from "../../../components/EiraBack1";
 import OTPInput from "../../../components/OTPInput";
+import OTPInputDialog from "../components/OTPInputDialog";
 
 const InputPhone = () => {
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
@@ -35,7 +36,7 @@ const InputPhone = () => {
             position: "absolute",
             top: 100,
             left: 100,
-            width: "25%"
+            width: "25%",
           }}
         >
           Pay your tuition fees using credit card @ just 1%
@@ -68,7 +69,7 @@ const InputPhone = () => {
             variant="subtitle1"
             sx={{ fontSize: 16, mb: 4, textAlign: "center" }}
           >
-            Enter your phone number 
+            Enter your phone number
           </Typography>
           <TextField
             fullWidth
@@ -136,9 +137,9 @@ const InputPhone = () => {
           </Stack>
         </Stack>
       </Stack>
-      <OTPInput
-        // open={otpDialogOpen}
-        // onClose={handleCloseOtpDialog}
+      <OTPInputDialog
+        open={otpDialogOpen}
+        onClose={handleCloseOtpDialog}
         navigateTo="/pay/payment-details"
         phoneNumber="phoneNumber"
       />

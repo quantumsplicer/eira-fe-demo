@@ -24,17 +24,6 @@ const InputPersonalDetails: React.FC = () => {
         "Please make sure you are transferring to a registered tutor or have their account details to onboard them."
     ]
 
-    const verifyPan = () => {
-
-        setIsVerifying(true);
-        // setIsPanUnverified(false);
-        setTimeout(() => {
-            setIsVerifying(false);
-            setIsPanUnverified(false)
-            navigate("/pay/payment-details");
-        }, 5000);
-    }
-
     return (
         <Box>
             <Back1 />
@@ -80,9 +69,6 @@ const InputPersonalDetails: React.FC = () => {
                             notes={notes}
                         />
                         <PersonalDetails
-                            isPanUnverified={isPanUnverified}
-                            isVerifying={isVerifying}
-                            onSubmit={verifyPan}
                         />
                     </Stack>
                 </Stack>

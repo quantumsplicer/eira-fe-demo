@@ -19,19 +19,6 @@ const InputTutorDetails: React.FC = () => {
     const [isPanVerifying, setIsPanVerifying] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    const verifyPan = () => {
-
-        setIsPanVerifying(true);
-        // setIsPanUnverified(false);
-        setTimeout(() => {
-            setIsPanVerifying(false);
-            setIsPanUnverified(false)
-            navigate('/pay/create-session');
-            // setStep("account");
-            // navigate("/pay/payment-details");
-        }, 5000);
-    }
-
     return (
         <Box
             pt={7}
@@ -126,9 +113,6 @@ const InputTutorDetails: React.FC = () => {
                                 Provide Tutor's personal details for their onboarding
                             </Typography>
                             <PersonalDetails
-                                isPanUnverified={isPanUnverified}
-                                isVerifying={isPanVerifying}
-                                onSubmit={verifyPan}
                             />
                         </Stack>
                     </Stack>

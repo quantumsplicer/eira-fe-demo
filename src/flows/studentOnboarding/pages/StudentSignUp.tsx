@@ -21,19 +21,6 @@ const StudentSignUp = () => {
         "Please make sure you are transferring to a registered tutor or have their account details to onboard them."
     ]
 
-    const verifyPan = () => {
-
-        setIsPanVerifying(true);
-        // setIsPanUnverified(false);
-        setTimeout(() => {
-            setIsPanVerifying(false);
-            setIsPanUnverified(false)
-            navigate('/pay/create-session');
-            // setStep("account");
-            // navigate("/pay/payment-details");
-        }, 5000);
-    }
-
     useEffect(() => {
         const flow = localStorage.getItem("activeFlow");
         setActiveFlow(flow)
@@ -110,9 +97,6 @@ const StudentSignUp = () => {
                                 notes={notes}
                             />
                             <PersonalDetails
-                                isPanUnverified={isPanUnverified}
-                                isVerifying={isPanVerifying}
-                                onSubmit={verifyPan}
                             />
                         </Stack>
                     </Stack>

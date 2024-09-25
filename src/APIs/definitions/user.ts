@@ -5,6 +5,7 @@ export interface UserDetails {
   last_name: string;
   phone: string;
   email: string;
+  pan: string;
   role: "tutor" | "student";
   credit_report: any;
   report_fetch_timestamp: string;
@@ -20,7 +21,7 @@ export const authApi = postgresApi.injectEndpoints({
 
     updateUserDetails: builder.mutation<UserDetails, Partial<UserDetails>>({
       query: (body) => ({
-        url: `user/profile`,
+        url: `user/profile/`,
         method: "PATCH",
         body,
       }),

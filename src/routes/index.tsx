@@ -16,7 +16,6 @@ import StudentDashboard from "../flows/studentDashboard/pages/StudentDashboard";
 import TutorSignIn from "../flows/tutorOnboarding/pages/TutorSignIn";
 import TutorSignUp from "../flows/tutorOnboarding/pages/TutorSignUp";
 import AadharVerification from "../flows/tutorOnboarding/pages/AadharVerification";
-import TutorDashboard from "../flows/tutorOnboarding/pages/TutorDashboard";
 import InputPersonalDetails from "../flows/payTutionFees/pages/InputPersonalDetails";
 import InputTutorDetails from "../flows/payTutionFees/pages/InputTutorDetails";
 import StudentSignIn from "../flows/studentOnboarding/pages/StudentSignIn";
@@ -40,8 +39,8 @@ const AppRoutes = () => {
       <Route path="/tutor-id/dashboard" element={<TutorDashboard />} />
       <Route path="/student-id/dashboard" element={<StudentDashboard />} />
 
-      <Route path="tutor/signin" element={<TutorSignIn />} />
-      <Route path="tutor/signup" element={<TutorSignUp />} />
+      <Route path="tutor/login" element={<TutorSignIn />} />
+      <Route path="tutor/personal-details" element={<TutorSignUp />} />
       <Route path="tutor/aadhar-verification" element={<AadharVerification />} />
       <Route path="tutor/dashboard" element={<TutorDashboard />} />
 

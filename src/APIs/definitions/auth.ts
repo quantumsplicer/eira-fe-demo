@@ -7,6 +7,7 @@ export interface GetOtpBody {
 export interface ValidateOtpBody {
   phone: string;
   otp: string;
+  role: "teacher" | "student";
 }
 
 export interface ValidateOtpResponse extends ApiResponse {
@@ -15,7 +16,7 @@ export interface ValidateOtpResponse extends ApiResponse {
 
 export const authApi = postgresApi.injectEndpoints({
     endpoints: (builder) => ({
-      getOtp: builder.query<ApiResponse, GetOtpBody>({
+      getOtp: builder.mutation<ApiResponse, GetOtpBody>({
         query: (body) => ({
           url: `auth/generate-otp/`,
           method: "POST",
@@ -23,7 +24,7 @@ export const authApi = postgresApi.injectEndpoints({
         }),
       }),
 
-      validateOtp: builder.query<ValidateOtpResponse, ValidateOtpBody>({
+      validateOtp: builder.mutation<ValidateOtpResponse, ValidateOtpBody>({
         query: (body) => ({
           url: `auth/validate-otp/`,
           method: "POST",
@@ -33,10 +34,10 @@ export const authApi = postgresApi.injectEndpoints({
           const {data} = await queryFulfilled;
 
           console.log("data", data);
-          localStorage.setItem("access-token", JSON.stringify(data?.token));
+          localStorage.setItem("access-token", data?.token);
         }
       }),
     }),
   });
 
-  export const { useGetOtpQuery } = authApi;
+  export const { useGetOtpMutation, useValidateOtpMutation } = authApi;

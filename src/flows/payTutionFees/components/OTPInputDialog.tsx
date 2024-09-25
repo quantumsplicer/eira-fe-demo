@@ -1,21 +1,36 @@
 // src/components/OTPDialog.tsx
 import React, { useState, useRef, createRef, useEffect } from "react";
-import { TextField, Button, Box, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Dialog,
+  DialogContent,
+  Stack,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   useGetOtpMutation,
   useValidateOtpMutation,
-} from "../APIs/definitions/auth";
+} from "../../../APIs/definitions/auth";
 
 const OPT_LENGTH = 4;
 
 interface OTPInputProps {
+  open: boolean;
+  onClose: () => void;
   navigateTo: string;
   phoneNumber: string;
 }
 
-const OTPInput = ({ navigateTo, phoneNumber }: OTPInputProps) => {
+const OTPInputDialog = ({
+  open,
+  onClose,
+  navigateTo,
+  phoneNumber,
+}: OTPInputProps) => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
   const [activeIndex, setActiveIndex] = useState<number>(-1);
@@ -26,8 +41,6 @@ const OTPInput = ({ navigateTo, phoneNumber }: OTPInputProps) => {
   const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
   const [validateOtp, { isLoading: validateOtpIsLoading }] =
     useValidateOtpMutation();
-
-  
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement>,
@@ -83,15 +96,16 @@ const OTPInput = ({ navigateTo, phoneNumber }: OTPInputProps) => {
 
   const handleSubmit = async () => {
     // navigate("/pay/payment-details")
-    const result = await validateOtp({
-      phone: phoneNumber,
-      otp,
-      role: location.pathname.includes("student") ? "student" : "teacher",
-    });
-    if (!result?.data?.token) {
-      setIsOtpInvalid(true);
-      return;
-    }
+    // const result = await validateOtp({
+    //   phone: phoneNumber,
+    //   otp,
+    //   role: location.pathname.includes("student") ? "student" : "teacher",
+    // });
+
+    // if (!result?.data?.token) {
+    //   setIsOtpInvalid(true);
+    //   return;
+    // }
 
     localStorage.setItem("phoneNumber", phoneNumber);
     if (location.pathname.includes("student")) {
@@ -130,75 +144,85 @@ const OTPInput = ({ navigateTo, phoneNumber }: OTPInputProps) => {
   }, [activeIndex]);
 
   return (
-    <>
-      <Typography fontWeight={"bold"} variant="h6" mt={8}>
-        Verify Phone Number
-      </Typography>
-      <Typography mt={1} mb={5}>
-        Enter OTP for phone number verification
-      </Typography>
-      <Box
-        sx={{ display: "flex", justifyContent: "center", gap: 1, pt: 2, mt: 8 }}
-      >
-        {Array.from({ length: OPT_LENGTH }).map((_, index) => (
-          <TextField
-            key={index}
-            inputRef={otpInputsRef.current[index]}
-            value={otp[index] || ""}
-            error={isOtpInvalid}
-            variant="outlined"
+    <Dialog open={open} onClose={onClose}>
+      <DialogContent>
+        <Stack alignItems={"center"}>
+          <Typography fontWeight={"bold"} variant="h6" mt={8}>
+            Verify Phone Number
+          </Typography>
+          <Typography mt={1} mb={5}>
+            Enter OTP for phone number verification
+          </Typography>
+          <Box
             sx={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 1,
+              pt: 2,
+              mt: 8,
+            }}
+          >
+            {Array.from({ length: OPT_LENGTH }).map((_, index) => (
+              <TextField
+                key={index}
+                inputRef={otpInputsRef.current[index]}
+                value={otp[index] || ""}
+                error={isOtpInvalid}
+                variant="outlined"
+                sx={{
+                  borderRadius: 20,
+                }}
+                onChange={(event) => handleOTPInput(event, index)}
+                onKeyDown={(event) => handleKeyDown(event, index)}
+                inputProps={{
+                  maxLength: 1,
+                  style: {
+                    textAlign: "center",
+                    padding: 1,
+                    width: 40,
+                    height: 40,
+                  },
+                }}
+              />
+            ))}
+          </Box>
+          {isOtpInvalid && (
+            <Typography color="#d32f2f" fontSize={14} mt={1}>
+              Incorrect OTP. Please retry.
+            </Typography>
+          )}
+          {isOtpInvalid && (
+            <Typography
+              onClick={resendOtp}
+              fontSize={14}
+              mt={2}
+              sx={{
+                borderBottom: "1px solid #6285FF",
+                cursor: "pointer",
+                color: "#6285FF",
+              }}
+            >
+              Resend OTP
+            </Typography>
+          )}
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={otp.length !== 4}
+            fullWidth
+            sx={{
+              width: "80%",
+              marginTop: 10,
+              height: 45,
               borderRadius: 20,
             }}
-            onChange={(event) => handleOTPInput(event, index)}
-            onKeyDown={(event) => handleKeyDown(event, index)}
-            inputProps={{
-              maxLength: 1,
-              style: {
-                textAlign: "center",
-                padding: 1,
-                width: 40,
-                height: 40,
-              },
-            }}
-          />
-        ))}
-      </Box>
-      {isOtpInvalid && (
-        <Typography color="#d32f2f" fontSize={14} mt={1}>
-          Incorrect OTP. Please retry.
-        </Typography>
-      )}
-      {isOtpInvalid && (
-        <Typography
-          onClick={resendOtp}
-          fontSize={14}
-          mt={2}
-          sx={{
-            borderBottom: "1px solid #6285FF",
-            cursor: "pointer",
-            color: "#6285FF",
-          }}
-        >
-          Resend OTP
-        </Typography>
-      )}
-      <Button
-        variant="contained"
-        onClick={handleSubmit}
-        disabled={otp.length !== 4}
-        fullWidth
-        sx={{
-          width: "80%",
-          marginTop: 10,
-          height: 45,
-          borderRadius: 20,
-        }}
-      >
-        Verify OTP
-      </Button>
-    </>
+          >
+            Verify OTP
+          </Button>
+        </Stack>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-export default OTPInput;
+export default OTPInputDialog;
