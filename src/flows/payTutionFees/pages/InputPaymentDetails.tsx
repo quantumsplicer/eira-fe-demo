@@ -22,9 +22,7 @@ const InputPaymentDetails: React.FC = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 
   const {data} = useCheckInvitationAcceptanceQuery("6f2c9af2-cbce-49d6-a147-27c40f1c33d4");
-
-  console.log(data)
-
+  
   const noteBoxHeading = "Things to keep in mind:";
   const notes = [
     "Make sure you have the correct details for payment transfer.",

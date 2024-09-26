@@ -7,7 +7,6 @@ import LoginBg from "../components/LoginBg";
 import OTPInput from "../../../components/OTPInput";
 import { useGetOtpMutation } from "../../../APIs/definitions/auth";
 import { LoadingButton } from "@mui/lab";
-import OTPInputDialog from "../../payTutionFees/components/OTPInputDialog";
 
 const TutorSignIn: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -87,8 +86,7 @@ const TutorSignIn: React.FC = () => {
                 </LoadingButton>
               </>
             ) : (
-              <></>
-              // <OTPInputDialog navigateTo="/tutor/personal-details" phoneNumber={phoneNumber} />
+              <OTPInput navigateTo="/tutor/personal-details" phoneNumber={phoneNumber} />
             )}
             <Stack
               direction="row"
