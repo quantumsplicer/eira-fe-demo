@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
@@ -13,6 +13,7 @@ const StudentSignUp = () => {
     const [isPanUnverified, setIsPanUnverified] = useState<boolean>(false);
     const [isPanVerifying, setIsPanVerifying] = useState<boolean>(false);
     const navigate = useNavigate();
+    const notPhoneScreen = useMediaQuery('(min-width:850px)');
 
     const noteBoxHeading = "Note:"
     const notes = [
@@ -30,7 +31,7 @@ const StudentSignUp = () => {
         <Box
             pt={7}
             sx={{
-                backgroundImage: `url(${EiraBack})`,
+                backgroundImage: notPhoneScreen ? `url(${EiraBack})` : 0,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 minHeight: '100vh',
@@ -41,10 +42,10 @@ const StudentSignUp = () => {
                 direction={"row"}
                 alignItems={"center"}
                 justifyContent={"center"}
-                mr={-10}
+                mr={notPhoneScreen ? -10 : 0}
             >
                 {
-                    (activeFlow === "staticFlow" || activeFlow === "dynamicFlow") &&
+                    notPhoneScreen && (activeFlow === "staticFlow" || activeFlow === "dynamicFlow") &&
                     <Box
                         width={"55%"}
                         height={"30%"}
@@ -65,26 +66,26 @@ const StudentSignUp = () => {
                     </Box>
                 }
                 <Box
-                    width="30vw"
-                    minHeight="90vh"
+                    width={notPhoneScreen ? "430px" : "100vw"}
+                    minHeight={notPhoneScreen ? "90vh" : "100vh"}
                     bgcolor={"#fff"}
-                    border={"1px solid #ccc"}
+                    border={notPhoneScreen ? "1px solid #ccc" : "none"}
                     padding={5}
-                    borderRadius={5}
-                    boxShadow={"2px -2px 14px 2px #00000021"}
+                    borderRadius={notPhoneScreen ? 5 : 0}
+                    boxShadow={notPhoneScreen ? "2px -2px 14px 2px #00000021" : "none"}
                     justifySelf={"flex-end"}
                 >
                     <Stack>
                         <img
                             src={EiraLogo}
                             style={{
-                                alignSelf: "flex-start",
+                                alignSelf: notPhoneScreen ? "flex-start" : "center",
                                 width: 80,
                             }}
                         />
                         <Stack
                             alignItems={"center"}
-                            mt={3}
+                            mt={notPhoneScreen ? 3 : 10}
                         >
                             <Typography
                                 variant="h5"
@@ -92,6 +93,15 @@ const StudentSignUp = () => {
                             >
                                 Personal details
                             </Typography>
+                            {
+                                !notPhoneScreen &&
+                                <Typography
+                                    variant="subtitle2"
+                                    sx={{ mb: 10 }}
+                                >
+                                    Enter your personal details below
+                                </Typography>
+                            }
                             <NoteBox
                                 heading={noteBoxHeading}
                                 notes={notes}

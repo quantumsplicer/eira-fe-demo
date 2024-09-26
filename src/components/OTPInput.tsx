@@ -1,6 +1,12 @@
 // src/components/OTPDialog.tsx
 import React, { useState, useRef, createRef, useEffect } from "react";
-import { TextField, Button, Box, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -11,17 +17,29 @@ import {
 const OPT_LENGTH = 4;
 
 interface OTPInputProps {
-  navigateTo: string;
+  open?: boolean;
+  onClose?: () => void;
+  navigateTo?: string;
   phoneNumber: string;
+  onSubmit?: () => void;
+  isDrawer: boolean;
 }
 
-const OTPInput = ({ navigateTo, phoneNumber }: OTPInputProps) => {
+const OTPInput = ({
+  open,
+  onClose,
+  navigateTo,
+  phoneNumber,
+  onSubmit,
+  isDrawer
+}: OTPInputProps) => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const otpInputsRef = useRef<Array<React.RefObject<HTMLInputElement>>>([]);
   const [isOtpInvalid, setIsOtpInvalid] = useState<boolean>(false);
   const location = useLocation();
+  const notPhoneScreen = useMediaQuery('(min-width:850px)');
 
   const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
   const [validateOtp, { isLoading: validateOtpIsLoading }] =
@@ -93,13 +111,17 @@ const OTPInput = ({ navigateTo, phoneNumber }: OTPInputProps) => {
       return;
     }
 
-    localStorage.setItem("phoneNumber", phoneNumber);
+    if(onSubmit) {
+      onSubmit();
+    }
+
+    localStorage.setItem("phoneNumber", phoneNumber)
     if (location.pathname.includes("student")) {
       localStorage.setItem("studentLogin", "true");
     } else if (location.pathname.includes("tutor")) {
       localStorage.setItem("tutorLogin", "true");
     }
-    navigate(navigateTo);
+    navigateTo && navigate(navigateTo);
   };
 
   const resendOtp = () => {
@@ -131,14 +153,23 @@ const OTPInput = ({ navigateTo, phoneNumber }: OTPInputProps) => {
 
   return (
     <>
-      <Typography fontWeight={"bold"} variant="h6" mt={8}>
+      <Typography
+        fontWeight={"bold"}
+        variant="h6"
+      // mt={8}
+      >
         Verify Phone Number
       </Typography>
-      <Typography mt={1} mb={5}>
+      <Typography
+        mt={3}
+        mb={notPhoneScreen || isDrawer ? 7 : 12}
+        textAlign={"center"}
+        color="#6F6F6F"
+      >
         Enter OTP for phone number verification
       </Typography>
       <Box
-        sx={{ display: "flex", justifyContent: "center", gap: 1, pt: 2, mt: 8 }}
+        sx={{ display: "flex", justifyContent: "center", gap: 1, pt: 2 }}
       >
         {Array.from({ length: OPT_LENGTH }).map((_, index) => (
           <TextField
@@ -189,8 +220,10 @@ const OTPInput = ({ navigateTo, phoneNumber }: OTPInputProps) => {
         disabled={otp.length !== 4}
         fullWidth
         sx={{
-          width: "80%",
-          marginTop: 10,
+          width: '100%',
+          minWidth: '320px',
+          maxWidth: '400px',
+          marginTop: notPhoneScreen || isDrawer ? 10 : 30,
           height: 45,
           borderRadius: 20,
         }}

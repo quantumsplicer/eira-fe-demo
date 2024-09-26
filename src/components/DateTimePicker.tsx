@@ -31,7 +31,13 @@ const DateTimePicker = ({ selectedDate, setSelectedDate, startTime, setStartTime
     return (
         <FormControl fullWidth sx={{ mb: 5 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Stack direction="row" spacing={2}>
+                <Stack
+                    direction="row"
+                    spacing={2}
+                    width='100%'
+                    minWidth='320px'
+                    maxWidth='400px'
+                >
                     <Box width={"40%"}>
                         <Box
                             component="label"

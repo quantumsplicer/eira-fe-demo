@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Stack, Box, Typography, Button } from "@mui/material";
+import { Stack, Box, Typography, Button, useMediaQuery } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
 import LoginBg from "../components/LoginBg";
@@ -12,6 +12,7 @@ const TutorSignIn: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   // const [isPhoneNumberInvalid, setIsPhoneNumberInvalid] = useState<boolean>(false)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const notPhoneScreen = useMediaQuery("(min-width:850px)");
 
   const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
 
@@ -30,26 +31,27 @@ const TutorSignIn: React.FC = () => {
 
   return (
     <Box>
-      <LoginBg />
+      {notPhoneScreen && <LoginBg />}
       <Box
-        position={"absolute"}
+        position={notPhoneScreen ? "absolute" : "static"}
         right={35}
         top={35}
         zIndex={1}
-        width={"30%"}
-        height={"90vh"}
+        width={notPhoneScreen ? "430px" : "100%"}
+        minHeight={notPhoneScreen ? "90vh" : "100vh"}
         bgcolor={"white"}
-        border={"1px solid #ccc"}
+        border={notPhoneScreen ? "1px solid #ccc" : "none"}
         padding={5}
-        borderRadius={5}
-        boxShadow={"2px -2px 14px 2px #00000021"}
+        borderRadius={notPhoneScreen ? 5 : 0}
+        boxShadow={notPhoneScreen ? "2px -2px 14px 2px #00000021" : "none"}
       >
         <Stack direction={"column"} width="100%">
           <img
             src={EiraLogo}
             style={{
-              alignSelf: "flex-start",
-              width: 80,
+              alignSelf: notPhoneScreen ? "flex-start" : "center",
+              width: notPhoneScreen ? 80 : 130,
+              marginTop: notPhoneScreen ? 0 : 90,
             }}
           />
           <Stack alignItems={"center"} mt={15}>
@@ -58,7 +60,10 @@ const TutorSignIn: React.FC = () => {
                 <Typography fontWeight={"bold"} variant="h6">
                   Login as a tutor
                 </Typography>
-                <Typography mt={1} mb={7}>
+                <Typography
+                  mt={notPhoneScreen ? 1 : 3}
+                  mb={notPhoneScreen ? 7 : 12}
+                >
                   Enter your phone
                 </Typography>
                 <PhoneNumberInputField
@@ -68,58 +73,65 @@ const TutorSignIn: React.FC = () => {
                   onSubmit={handleSubmit}
                   autoFocus={true}
                 />
-                <LoadingButton
+                <Button
                   disabled={phoneNumber.length !== 10 || !isPhoneNumberValid()}
-                  loading={getOtpIsLoading}
                   onClick={handleSubmit}
-                  fullWidth
                   variant="contained"
                   color="primary"
                   sx={{
+                    width: "100%",
+                    minWidth: "320px",
+                    maxWidth: "400px",
                     padding: 1.5,
                     borderRadius: 20,
-                    marginTop: 5,
+                    marginTop: notPhoneScreen ? 5 : 30,
                     height: 45,
                   }}
                 >
                   Verify
-                </LoadingButton>
+                </Button>
               </>
             ) : (
-              <OTPInput navigateTo="/tutor/personal-details" phoneNumber={phoneNumber} />
+              <OTPInput
+                navigateTo="/tutor/signup"
+                phoneNumber={phoneNumber}
+                isDrawer={false}
+              />
             )}
-            <Stack
-              direction="row"
-              spacing={1}
-              sx={{
-                mt: 4,
-                textAlign: "center",
-                position: "absolute",
-                bottom: 20,
-              }}
-            >
-              <a
-                href="https://google.com"
-                target="_blank"
-                style={{ textDecoration: "none" }}
+            {notPhoneScreen && (
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{
+                  mt: 4,
+                  textAlign: "center",
+                  position: "absolute",
+                  bottom: 20,
+                }}
               >
+                <a
+                  href="https://google.com"
+                  target="_blank"
+                  style={{ textDecoration: "none" }}
+                >
+                  <Typography variant="body2" color="grey">
+                    privacy policies
+                  </Typography>
+                </a>
                 <Typography variant="body2" color="grey">
-                  privacy policies
+                  |
                 </Typography>
-              </a>
-              <Typography variant="body2" color="grey">
-                |
-              </Typography>
-              <a
-                href="https://google.com"
-                target="_blank"
-                style={{ textDecoration: "none" }}
-              >
-                <Typography variant="body2" color="grey">
-                  terms of use
-                </Typography>
-              </a>
-            </Stack>
+                <a
+                  href="https://google.com"
+                  target="_blank"
+                  style={{ textDecoration: "none" }}
+                >
+                  <Typography variant="body2" color="grey">
+                    terms of use
+                  </Typography>
+                </a>
+              </Stack>
+            )}
           </Stack>
         </Stack>
       </Box>

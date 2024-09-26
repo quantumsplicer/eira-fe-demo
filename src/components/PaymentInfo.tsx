@@ -129,7 +129,12 @@ const PaymentInfo = ({ amount, name, paymentDetails, type }: PaymentInfoProps) =
                     Confirm payment details and make payment
                 </Typography>
             }
-            <Box width={"100%"} mt={5}>
+            <Box
+                width='100%'
+                minWidth='320px'
+                maxWidth='400px'
+                mt={5}
+            >
                 <Stack>
                     {
                         Object.keys(formattedPaymentDetails).map((key, index) => {

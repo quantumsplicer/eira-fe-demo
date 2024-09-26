@@ -1,6 +1,6 @@
 // src/components/PaymentReviewPage.tsx
 import { useEffect, useState } from "react";
-import { Box, Button, Stack, Typography, Alert } from "@mui/material";
+import { Box, Button, Stack, Typography, Alert, useMediaQuery, Drawer } from "@mui/material";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
@@ -9,27 +9,32 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 import SafeLogo from "../../../components/SafeLogo";
+import AmountBreakupCard from "../../../components/AmountBreakupCard";
 
 const PaymentReviewPage = () => {
 
-  const {amount, phoneNumber} = useParams()
+  const { amount, phoneNumber } = useParams()
   const location = useLocation();
-  const [isTutorOnboarded, setIsTutorOnboarded] = useState<boolean>(true);
+  const [isTutorOnboarded, setIsTutorOnboarded] = useState<boolean>(false);
   const navigate = useNavigate();
   const [routeSource, setRouteSource] = useState<string>("");
+  const notPhoneScreen = useMediaQuery('(min-width:850px)');
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
   const paymentDetails = {
     "Account Number": "**** **** **** 2150",
     "Session Date": "24th Aug, 202",
     "Session Time": "17:00 - 18:00"
   }
+
   const handleSubmit = () => {
     console.log(routeSource)
-    if(routeSource === "Dynamic Flow") {
+    if (routeSource === "Dynamic Flow") {
       const isStudentSignedIn = localStorage.getItem("studentLogin") === "true";
-      if(isStudentSignedIn) {
+      localStorage.setItem("activeFlow", "dynamicFlow");
+      if (isStudentSignedIn) {
         navigate("/pay/create-session");
       } else {
-        localStorage.setItem("activeFlow", "dynamicFlow");
         navigate("/student/signin");
       }
     } else {
@@ -49,7 +54,7 @@ const PaymentReviewPage = () => {
     <Box
       pt={7}
       sx={{
-        backgroundImage: `url(${EiraBack})`,
+        backgroundImage: notPhoneScreen ? `url(${EiraBack})` : '',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         minHeight: '100vh',
@@ -61,49 +66,55 @@ const PaymentReviewPage = () => {
         alignItems={"center"}
         justifyContent={"center"}
       >
+        {
+          notPhoneScreen &&
+          <Box
+            alignSelf={"flex-end"}
+          >
+            <SafeLogo />
+          </Box>
+        }
+        {
+          notPhoneScreen &&
+          <Box
+            width={"55%"}
+            height={"30%"}
+            bgcolor={"#fff"}
+            zIndex={10}
+            p={5}
+            sx={{
+              borderRadius: "20px 0 0 20px"
+            }}
+          >
+            <PaymentBreakupInfo
+              name="Suneel Satpal"
+              phone={phoneNumber ? `+91 ${phoneNumber}` : "+91 93892 50148"}
+              amount={amount ? Number(amount) : 5000}
+              settlementDate="7th October"
+              settlementTime="5:00 pm"
+            />
+          </Box>
+        }
         <Box
-          alignSelf={"flex-end"}
-        >
-          <SafeLogo />
-        </Box>
-        <Box
-          width={"55%"}
-          height={"30%"}
+          width={notPhoneScreen ? "430px" : "100vw"}
+          minHeight={notPhoneScreen ? "90vh" : "100vh"}
           bgcolor={"#fff"}
-          zIndex={10}
-          p={5}
-          sx={{
-            borderRadius: "20px 0 0 20px"
-          }}
-        >
-          <PaymentBreakupInfo
-            name="Suneel Satpal"
-            phone={phoneNumber ? `+91 ${phoneNumber}` : "+91 93892 50148"}
-            amount={amount ? Number(amount) : 5000}
-            settlementDate="7th October"
-            settlementTime="5:00 pm"
-          />
-        </Box>
-        <Box
-          width="30vw"
-          minHeight="90vh"
-          bgcolor={"#fff"}
-          border={"1px solid #ccc"}
+          border={notPhoneScreen ? "1px solid #ccc" : "none"}
           padding={5}
-          borderRadius={5}
-          boxShadow={"2px -2px 14px 2px #00000021"}
+          borderRadius={notPhoneScreen ? 5 : 0}
+          boxShadow={notPhoneScreen ? "2px -2px 14px 2px #00000021" : "none"}
         >
           <Stack>
             <img
               src={EiraLogo}
               style={{
-                alignSelf: "flex-start",
+                alignSelf: notPhoneScreen ? "flex-start" : "center",
                 width: 80,
               }}
             />
             <Stack
               alignItems={"center"}
-              mt={isTutorOnboarded ? 15 : 5}
+              mt={isTutorOnboarded ? 22 : 5}
             >
               {
                 !isTutorOnboarded &&
@@ -133,11 +144,80 @@ const PaymentReviewPage = () => {
                 paymentDetails={paymentDetails}
                 type="review"
               />
+              {
+                !notPhoneScreen &&
+                <Stack
+                  mt={20}
+                  direction={"row"}
+                  sx={{
+                    cursor: "pointer"
+                  }}
+                  onClick={() => setIsDrawerOpen(true)}
+                >
+                  <InfoOutlinedIcon />
+                  <Typography
+                    ml={1}
+                    borderBottom={"1px solid #000"}
+                  >
+                    Amount breakup
+                  </Typography>
+                </Stack>
+              }
+              {
+                <Drawer
+                  open={isDrawerOpen}
+                  onClose={() => setIsDrawerOpen(false)}
+                  sx={{
+                    width: "100%",
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                      padding: 5,
+                      borderTopLeftRadius: 20,
+                      borderTopRightRadius: 20,
+                      width: "100%",
+                      boxSizing: 'border-box',
+                    },
+                  }}
+                  anchor="bottom"
+                >
+                  <Stack
+                    alignItems={"center"}
+                  >
+                    <AmountBreakupCard
+                      amount={5000}
+                      settlementDate="9th October"
+                      settlementTime="5:00 pm"
+                    />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      sx={{
+                        padding: 1.5,
+                        borderRadius: 20,
+                        mt: 5,
+                        width: '100%',
+                        minWidth: '320px',
+                        maxWidth: '360px',
+                      }}
+                      onClick={() => {setIsDrawerOpen(false)}}
+                    >
+                      Ok
+                    </Button>
+                  </Stack>
+                </Drawer>
+              }
               <Button
-                fullWidth
                 variant="contained"
                 color="primary"
-                sx={{ padding: 1.5, borderRadius: 20, height: 45, mt: 5 }}
+                sx={{
+                  padding: 1.5,
+                  borderRadius: 20,
+                  height: 45,
+                  mt: 5,
+                  width: '100%',
+                  minWidth: '320px',
+                  maxWidth: '400px',
+                }}
                 onClick={handleSubmit}
               >
                 Proceed to pay

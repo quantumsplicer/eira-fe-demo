@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TextField } from "@mui/material";
+import { Box, CircularProgress, TextField, useMediaQuery } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useUpdateUserDetailsMutation } from "../APIs/definitions/user";
 
@@ -13,6 +13,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
   const [pan, setPan] = useState<string>("");
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const [isPanUnverified, setIsPanUnverified] = useState<boolean>(false);
+  const notPhoneScreen = useMediaQuery("(min-width:850px)");
 
   const [updateTutor, { isLoading: updateTutorIsLoading }] =
     useUpdateUserDetailsMutation();
@@ -81,7 +82,6 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         value={firstName}
         onChange={(e) => handleNameInput(e, setFirstName)}
         onKeyDown={(event) => handleKeyDown(event)}
-        fullWidth
         label="First Name (as per PAN)"
         variant="outlined"
         InputLabelProps={{
@@ -89,7 +89,10 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           style: { top: -40, left: -13, fontSize: 12 },
         }}
         sx={{
-          mt: 2,
+          width: "100%",
+          minWidth: "320px",
+          maxWidth: "400px",
+          mt: notPhoneScreen ? 2 : 4,
           mb: 5,
           "& .MuiInputBase-root": {
             height: 45,
@@ -106,7 +109,6 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         value={lastName}
         onChange={(e) => handleNameInput(e, setLastName)}
         onKeyDown={(event) => handleKeyDown(event)}
-        fullWidth
         label="Last Name (as per PAN)"
         variant="outlined"
         InputLabelProps={{
@@ -114,6 +116,9 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           style: { top: -40, left: -13, fontSize: 12 },
         }}
         sx={{
+          width: "100%",
+          minWidth: "320px",
+          maxWidth: "400px",
           mb: 5,
           "& .MuiInputBase-root": {
             height: 45,
@@ -141,7 +146,6 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
               isPanUnverified &&
               "PAN number and given name do not match. Please check again."
         }
-        fullWidth
         label="PAN"
         variant="outlined"
         InputLabelProps={{
@@ -149,6 +153,9 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           style: { top: -40, left: -13, fontSize: 12 },
         }}
         sx={{
+          width: "100%",
+          minWidth: "320px",
+          maxWidth: "400px",
           mb: 2,
           "& .MuiInputBase-root": {
             height: 45,
@@ -160,17 +167,31 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         }}
       />
       <LoadingButton
-        disabled={isButtonDisabled}
+        disabled={isButtonDisabled || updateTutorIsLoading}
         onClick={handleSubmitClick}
-        fullWidth
-        loading={updateTutorIsLoading}
-        loadingPosition="end"
-        // endIcon={null}
         variant="contained"
         color="primary"
-        sx={{ padding: 1.5, borderRadius: 20, marginTop: 4, height: 45 }}
+        sx={{
+          width: "100%",
+          minWidth: "320px",
+          maxWidth: "400px",
+          padding: 1.5,
+          borderRadius: 20,
+          marginTop: notPhoneScreen ? 4 : 18,
+          height: 45,
+        }}
       >
-        {updateTutorIsLoading ? "Verifying" : "Proceed"}
+        {updateTutorIsLoading ? (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            Verifying
+            <CircularProgress
+              size={14}
+              sx={{ marginLeft: 1, color: "#6f6f6f" }}
+            />
+          </Box>
+        ) : (
+          "Proceed"
+        )}
       </LoadingButton>
     </>
   );

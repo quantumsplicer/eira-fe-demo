@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Stack, Box, Typography } from "@mui/material";
+import { Stack, Box, Typography, useMediaQuery } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { useNavigate } from "react-router-dom";
 import PersonalDetails from "../../../components/PersonalDetails";
@@ -18,6 +18,8 @@ const TutorSignUp: React.FC = () => {
     boolean | null
   >(null);
 
+  const notPhoneScreen = useMediaQuery("(min-width:850px)");
+
   const step1Notes = [
     "Input First Name and Last Name as on PAN given.",
     "Make sure you give a valid PAN.",
@@ -31,7 +33,7 @@ const TutorSignUp: React.FC = () => {
     <Box
       pt={7}
       sx={{
-        backgroundImage: `url(${EiraBack})`,
+        backgroundImage: notPhoneScreen ? `url(${EiraBack})` : "",
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "100vh",
@@ -43,41 +45,50 @@ const TutorSignUp: React.FC = () => {
         alignItems={"center"}
         justifyContent={"space-between"}
       >
-        <Box position={"absolute"} bottom={52} left={45}>
-          <SafeLogo />
-        </Box>
-        <Typography
-          ml={10}
-          color={"white"}
-          variant="h3"
-          width={"28%"}
-          fontWeight={"bold"}
-        >
-          Finest tutors use Eira to manage their payments
-        </Typography>
+        {notPhoneScreen && (
+          <Box position={"absolute"} bottom={52} left={45}>
+            <SafeLogo />
+          </Box>
+        )}
+        {notPhoneScreen && (
+          <Typography
+            ml={10}
+            color={"white"}
+            variant="h3"
+            width={"28%"}
+            fontWeight={"bold"}
+          >
+            Finest tutors use Eira to manage their payments
+          </Typography>
+        )}
         <Box
-          mr={5.5}
-          width="30vw"
-          minHeight="90vh"
+          mr={notPhoneScreen ? 5.5 : 0}
+          width={notPhoneScreen ? "430px" : "100vw"}
+          minHeight={notPhoneScreen ? "90vh" : "100vh"}
           bgcolor={"#fff"}
-          border={"1px solid #ccc"}
+          border={notPhoneScreen ? "1px solid #ccc" : "none"}
           padding={5}
-          borderRadius={5}
-          boxShadow={"2px -2px 14px 2px #00000021"}
+          borderRadius={notPhoneScreen ? 5 : 0}
+          boxShadow={notPhoneScreen ? "2px -2px 14px 2px #00000021" : "none"}
         >
           <Stack direction={"column"}>
             <img
               src={EiraLogo}
               style={{
-                alignSelf: "flex-start",
+                alignSelf: notPhoneScreen ? "flex-start" : "center",
                 width: 80,
               }}
             />
-            <Stack alignItems={"center"} mt={2}>
+            <Stack alignItems={"center"} mt={notPhoneScreen ? 2 : 5}>
               <Typography color={"black"} variant="h6" fontWeight={"bold"}>
                 Tutor Sign-up
               </Typography>
-              <Stack direction={"row"} width={"60%"} mt={2} mb={5}>
+              <Stack
+                direction={"row"}
+                width={notPhoneScreen ? "60%" : "300px"}
+                mt={notPhoneScreen ? 2 : 3}
+                mb={notPhoneScreen ? 5 : 7}
+              >
                 <Box width={"32%"} mr={1}>
                   <LinearProgress variant="determinate" value={100} />
                 </Box>
@@ -102,9 +113,7 @@ const TutorSignUp: React.FC = () => {
                 <PersonalDetails onSuccess={() => setSignUpStep(2)} />
               )}
               {signUpStep === 2 && (
-                <BankAccountDetails
-                  onSuccess={() => setSignUpStep(3)}
-                />
+                <BankAccountDetails onSuccess={() => setSignUpStep(3)} />
               )}
               {signUpStep === 3 && (
                 <AadhaarVerifyInfo
