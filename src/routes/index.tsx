@@ -32,10 +32,7 @@ const AppRoutes = () => {
       <Route path="/pay/create-session" element={<SlotBookingPage />} />
       <Route path="/pay/review" element={<PaymentReviewPage />} />
       <Route path="/pay/payment-gateway-payment-flow" element={<PGLoading />} />
-      <Route
-        path="/payment-successful"
-        element={<PaymentSuccessfulPage />}
-      />
+      <Route path="/payment-successful" element={<PaymentSuccessfulPage />} />
       <Route path="/tutor-id/dashboard" element={<TutorDashboard />} />
       <Route path="/student-id/dashboard" element={<StudentDashboard />} />
 
@@ -47,7 +44,10 @@ const AppRoutes = () => {
       <Route path="student/signin" element={<StudentSignIn />} />
       <Route path="student/signup" element={<StudentSignUp />} />
       <Route path="pay/static/:phoneNumber" element={<InputPayment />} />
-      <Route path="pay/dynamic/:amount/:phoneNumber" element={<PaymentReviewPage />} />
+      <Route
+        path="pay/dynamic/:amount/:phoneNumber"
+        element={<PaymentReviewPage />}
+      />
     </Routes>
   );
 };

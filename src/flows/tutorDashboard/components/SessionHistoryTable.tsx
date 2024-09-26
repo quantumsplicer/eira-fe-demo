@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography, useMediaQuery } from "@mui/material";
 import {
   createMRTColumnHelper,
   MaterialReactTable,
@@ -11,6 +11,8 @@ import { darken, lighten, useTheme } from "@mui/material";
 import StatusTag from "./StatusTag";
 import SessionLinkDialog from "../dialogs/SessionLinkDialog";
 import ConfirmationDialog from "../dialogs/ConfirmationDialog";
+import PaymentHistoryTableMobile from "./PaymentHistoryTableMobile";
+import { Virtuoso } from "react-virtuoso";
 
 const lightTheme = createTheme({ palette: { mode: "light" } });
 interface Session {
@@ -171,6 +173,7 @@ const data: Session[] = [
 ];
 
 const SessionHistoryTable: React.FC = () => {
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [activeDialog, setActiveDialog] = useState<string>("None");
   const heading = "Session Successfully created";
   const subHeading =
@@ -261,40 +264,76 @@ const SessionHistoryTable: React.FC = () => {
           my={4}
           gap={4}
           p={2}
-          sx={{ boxShadow: 8, backgroundColor: "white", borderRadius: 2 }}
+          sx={
+            !isPhoneScreen
+              ? { boxShadow: 8, backgroundColor: "white", borderRadius: 2 }
+              : {
+                  backgroundColor: "white",
+                }
+          }
         >
           <Stack spacing={2}>
             <Stack direction="row">
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent: "space-between", // Distribute space between children
-                  width: "100%", // Ensure the Box takes full width of its parent
-                  padding: 2, // Optional: Adjust padding as needed
+                  justifyContent: "space-between",
+                  width: "100%",
+                  padding: 2,
                 }}
               >
-                <Typography sx={{ fontSize: 17, fontWeight: "bold" }}>
+                <Typography
+                  sx={{ fontSize: 17, fontWeight: "bold", alignSelf: "center" }}
+                >
                   Session History
                 </Typography>
                 <Button
                   variant="contained"
                   onClick={openDialog}
-                  sx={{
-                    backgroundColor: "#507FFD",
-                    borderRadius: 3,
-                    fontSize: 13,
-                    fontWeight: "bold",
-                    height: 45,
-                    paddingLeft: 3,
-                    paddingRight: 3,
-                    textTransform: "none",
-                  }}
+                  sx={
+                    !isPhoneScreen
+                      ? {
+                          backgroundColor: "#507FFD",
+                          borderRadius: 3,
+                          fontSize: 13,
+                          fontWeight: "bold",
+                          height: 45,
+                          paddingLeft: 3,
+                          paddingRight: 3,
+                          textTransform: "none",
+                        }
+                      : {
+                          backgroundColor: "#507FFD",
+                          borderRadius: 5,
+                          fontSize: 13,
+                          fontWeight: "bold",
+                          height: 45,
+                          paddingLeft: 3,
+                          paddingRight: 3,
+                          textTransform: "none",
+                        }
+                  }
                 >
                   Create a Session Link
                 </Button>
               </Box>
             </Stack>
-            <MaterialReactTable table={table} />
+            {!isPhoneScreen ? (
+              <MaterialReactTable table={table} />
+            ) : (
+              <Virtuoso
+                style={{ height: 710 }}
+                data={data}
+                itemContent={(_, user) => (
+                  <PaymentHistoryTableMobile
+                    name={user.title}
+                    phoneNumber={user.studentPhoneNumber}
+                    status={user.status}
+                    amount={3}
+                  />
+                )}
+              />
+            )}
           </Stack>
         </Box>
       </ThemeProvider>

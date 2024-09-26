@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import Box from "@mui/material/Box";
-import { Divider, Stack, Typography } from "@mui/material";
+import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import LinkIcon from "@mui/icons-material/LinkOutlined";
 import Link from "@mui/material/Link";
@@ -18,30 +18,59 @@ const amount = 20000;
 const PaymentBannerCard: React.FC = () => {
   const [activeDialog, setActiveDialog] = useState<string>("None");
   const [amount, setAmount] = useState<number>(0);
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   return (
     <Box
-      sx={{
-        p: 4,
-        borderRadius: 2,
-        backgroundColor: "white",
-        boxShadow: 6,
-        width: "100%",
-      }}
+      sx={
+        !isPhoneScreen
+          ? {
+              p: 4,
+              borderRadius: 2,
+              backgroundColor: "white",
+              boxShadow: 6,
+              width: "100%",
+            }
+          : {
+              p: 2,
+              backgroundColor: "white",
+              width: "100%",
+              height: "70vw",
+            }
+      }
     >
       <Stack
         direction="row"
-        sx={{
-          justifyContent: "space-around",
-        }}
+        sx={
+          !isPhoneScreen
+            ? {
+                justifyContent: "space-around",
+              }
+            : {
+                justifyContent: "space-evenly",
+                height: "100%",
+              }
+        }
         width="fullwidth"
       >
         <Stack
-          sx={{
-            flexDirection: "row",
-            alignItems: "center",
-          }}
+          sx={
+            !isPhoneScreen
+              ? {
+                  flexDirection: "row",
+                  alignItems: "center",
+                }
+              : { flexDirection: "row", alignItems: "center", height: "100%" }
+          }
         >
-          <Stack spacing={2} alignItems="center">
+          <Stack
+            spacing={2}
+            alignItems="center"
+            sx={
+              !isPhoneScreen
+                ? {}
+                : { justifyContent: "space-evenly", height: "100%" }
+            }
+          >
             <Button
               variant="contained"
               onClick={() => {
@@ -60,25 +89,49 @@ const PaymentBannerCard: React.FC = () => {
             >
               Make a new Payment
             </Button>
-            <Stack direction="row" spacing={1}>
-              <Typography fontSize={20} fontWeight={500}>
+            <Stack direction="row" spacing={!isPhoneScreen ? 1 : 0}>
+              <Typography
+                sx={
+                  !isPhoneScreen
+                    ? { fontSize: 20, fontWeight: 500 }
+                    : { fontSize: 18, fontWeight: 500 }
+                }
+              >
                 Make a payment through Credit
               </Typography>
-              <Typography fontSize={20} fontWeight="bold">
+              <Typography
+                sx={
+                  !isPhoneScreen
+                    ? { fontSize: 20, fontWeight: "bold" }
+                    : { fontSize: 18, fontWeight: "bold" }
+                }
+              >
                 @ just 1%
               </Typography>
             </Stack>
           </Stack>
         </Stack>
-        <Box>
-          <img
-            src={PaymentLinkBannerArt}
-            style={{
-              width: "250px",
-              height: "250x",
-            }}
-          />
-        </Box>
+        {!isPhoneScreen ? (
+          <Box>
+            <img
+              src={PaymentLinkBannerArt}
+              alt="art"
+              style={
+                !isPhoneScreen
+                  ? {
+                      width: "250px",
+                      height: "250x",
+                    }
+                  : {
+                      width: "250px",
+                      height: "250x",
+                    }
+              }
+            />
+          </Box>
+        ) : (
+          <></>
+        )}
       </Stack>
       <PaymentDetailsDialog
         open={activeDialog === "PaymentDetailsDialog" ? true : false}
@@ -93,7 +146,11 @@ const PaymentBannerCard: React.FC = () => {
       <TutorDetailsDialog
         open={activeDialog === "TutorDetailsDialog" ? true : false}
         onClose={() => {
-          setActiveDialog("None");
+          if (isPhoneScreen) {
+            setActiveDialog("PaymentDetailsDialog");
+          } else {
+            setActiveDialog("None");
+          }
         }}
         onSubmit={() => {
           setActiveDialog("CreateSessionDialog");
@@ -103,7 +160,11 @@ const PaymentBannerCard: React.FC = () => {
       <CreateSessionDialog
         open={activeDialog === "CreateSessionDialog" ? true : false}
         onClose={() => {
-          setActiveDialog("None");
+          if (isPhoneScreen) {
+            setActiveDialog("TutorDetailsDialog");
+          } else {
+            setActiveDialog("None");
+          }
         }}
         onSubmit={() => {
           setActiveDialog("CompletePaymentDialog");
@@ -113,7 +174,11 @@ const PaymentBannerCard: React.FC = () => {
       <CompletePaymentDialog
         open={activeDialog === "CompletePaymentDialog" ? true : false}
         onClose={() => {
-          setActiveDialog("None");
+          if (isPhoneScreen) {
+            setActiveDialog("CreateSessionDialog");
+          } else {
+            setActiveDialog("None");
+          }
         }}
         onSubmit={() => {
           setActiveDialog("PaymentConfirmationDialog");

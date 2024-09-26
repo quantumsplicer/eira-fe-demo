@@ -1,17 +1,10 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { Divider, Stack, Typography, Button } from "@mui/material";
-import InfoIcon from "@mui/icons-material/InfoOutlined";
-import LinkIcon from "@mui/icons-material/LinkOutlined";
-import Link from "@mui/material/Link";
-import IconButton from "@mui/material/IconButton";
-import ContentCopyIcon from "@mui/icons-material/ContentCopyOutlined";
+import { Stack, Typography, useMediaQuery } from "@mui/material";
 import BankAccountsList from "./BankAccountsList";
-import AccountBalanceOutlinedIcon from "@mui/icons-material/AccountBalanceOutlined";
 import { useState } from "react";
 import AddBankAccountDialog from "../dialogs/AddBankAccountDialog";
 
-const amount = 20000;
 interface BankAccount {
   accountNumber: string;
   ifscCode: string;
@@ -22,42 +15,69 @@ const accountsData: BankAccount[] = [
   { accountNumber: "*******7890", ifscCode: "IFSC001", isPrimary: true },
 ];
 const AccountsListCard: React.FC = () => {
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [activeDialog, setActiveDialog] = useState<string>("None");
-  const openDialog = () => {
-    console.log("This function was triggered");
-    setActiveDialog("AddBankAccountDialog");
-  };
+  // const openDialog = () => {
+  //   console.log("This function was triggered");
+  //   setActiveDialog("AddBankAccountDialog");
+  // };
   return (
     <Box
-      sx={{
-        borderRadius: 2,
-        width: 510,
-        height: 550,
-        backgroundColor: "white",
-        boxShadow: 6,
-        display: "flex",
-        justifyContent: "center",
-      }}
+      sx={
+        !isPhoneScreen
+          ? {
+              borderRadius: 2,
+              width: "100%",
+              height: 550,
+              backgroundColor: "white",
+              boxShadow: 6,
+              display: "flex",
+              justifyContent: "center",
+            }
+          : {
+              width: "100%",
+              height: "100%",
+              backgroundColor: "white",
+              display: "flex",
+              justifyContent: "center",
+              pt: 5,
+              pb: 5,
+            }
+      }
     >
       <Stack
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          width: "100%",
-          p: 4,
-        }}
+        sx={
+          !isPhoneScreen
+            ? {
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                width: "100%",
+                p: 4,
+              }
+            : {
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                width: "100%",
+                p: 2,
+              }
+        }
       >
         <Stack spacing={4} pl={2} pt={1}>
           <Stack>
             <Typography fontSize={22} fontWeight={550}>
               Account
             </Typography>
-            <Typography color="#898989" fontWeight={550}>
-              Your active account for settlements
-            </Typography>
+            {!isPhoneScreen ? (
+              <Typography color="#898989" fontWeight={550}>
+                Your active account for settlements
+              </Typography>
+            ) : (
+              <></>
+            )}
           </Stack>
-          <Stack pl={0.5}>
+          <Stack pl={!isPhoneScreen ? 0.5 : 0}>
             <BankAccountsList accounts={accountsData} />
           </Stack>
         </Stack>
@@ -100,6 +120,7 @@ const AccountsListCard: React.FC = () => {
           </Button> */}
         </Stack>
       </Stack>
+
       <AddBankAccountDialog
         activeDialog={activeDialog}
         setActiveDialog={setActiveDialog}

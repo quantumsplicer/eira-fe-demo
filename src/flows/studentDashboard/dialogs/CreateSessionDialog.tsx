@@ -13,6 +13,7 @@ import {
   DialogContent,
   IconButton,
   Divider,
+  useMediaQuery,
 } from "@mui/material";
 import {
   DatePicker,
@@ -22,6 +23,7 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
 import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
 interface CreateSessionDialogProps {
@@ -57,6 +59,7 @@ const CreateSessionDialog = ({
       endTime: null,
     },
   });
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [sessionTitle, setSessionTitle] = useState("");
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [startTime, setStartTime] = useState<Dayjs | null>(null);
@@ -82,27 +85,47 @@ const CreateSessionDialog = ({
     <Dialog
       open={open}
       onClose={onClose}
-      sx={{
-        "& .MuiDialog-paper": {
-          width: 1000,
-          maxWidth: 1000,
-          height: 550,
-          borderRadius: 3,
-        },
-      }}
+      fullScreen={isPhoneScreen}
+      hideBackdrop={isPhoneScreen}
+      sx={
+        !isPhoneScreen
+          ? {
+              "& .MuiDialog-paper": {
+                width: 1000,
+                maxWidth: 1000,
+                height: 550,
+                borderRadius: 3,
+              },
+            }
+          : {
+              marginTop: 8,
+              "& .MuiDialog-paper": {
+                boxShadow: 0,
+              },
+            }
+      }
     >
       <DialogContent dividers>
         <IconButton
           aria-label="close"
           onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
+          sx={
+            !isPhoneScreen
+              ? {
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }
+              : {
+                  position: "absolute",
+                  left: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }
+          }
         >
-          <CloseIcon />
+          {!isPhoneScreen ? <CloseIcon /> : <ArrowBackIcon />}
         </IconButton>
         <Stack
           direction="row"
@@ -110,30 +133,45 @@ const CreateSessionDialog = ({
           height="100%"
           alignContent="center"
         >
-          <Stack justifyContent="space-evenly">
-            <Stack spacing={1}>
-              <Typography fontSize={22} fontWeight={550}>
-                Making Payment to:
-              </Typography>
-              <Stack>
-                <Typography fontSize={22} fontWeight={650}>
-                  Suneel Satpal
-                </Typography>
-                <Typography fontSize={15} lineHeight={1.2}>
-                  +919997945005
-                </Typography>
+          {!isPhoneScreen ? (
+            <>
+              <Stack justifyContent="space-evenly">
+                <Stack spacing={1}>
+                  <Typography fontSize={22} fontWeight={550}>
+                    Making Payment to:
+                  </Typography>
+                  <Stack>
+                    <Typography fontSize={22} fontWeight={650}>
+                      Suneel Satpal
+                    </Typography>
+                    <Typography fontSize={15} lineHeight={1.2}>
+                      +919997945005
+                    </Typography>
+                  </Stack>
+                </Stack>
+                <Box>
+                  <AmountBreakupCard amount={amount}></AmountBreakupCard>
+                </Box>
               </Stack>
-            </Stack>
-            <Box>
-              <AmountBreakupCard amount={amount}></AmountBreakupCard>
-            </Box>
-          </Stack>
-          <Divider
-            orientation="vertical"
-            flexItem
-            sx={{ height: "90%", alignSelf: "center" }}
-          />
-          <Stack justifyContent="space-around" width="40%">
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{ height: "90%", alignSelf: "center" }}
+              />
+            </>
+          ) : (
+            <></>
+          )}
+          <Stack
+            sx={
+              !isPhoneScreen
+                ? { justifyContent: "space-around", width: "40%" }
+                : {
+                    justifyContent: "space-around",
+                    width: "95%",
+                  }
+            }
+          >
             <Stack>
               <Typography fontSize={23} fontWeight={600} align="center">
                 Create Session
@@ -147,7 +185,14 @@ const CreateSessionDialog = ({
                 create session for your students
               </Typography>
             </Stack>
-            <Stack height="45%" justifyContent="space-around" spacing={2}>
+            <Stack
+              sx={
+                !isPhoneScreen
+                  ? { height: "45%", justifyContent: "space-around" }
+                  : { justifyContent: "space-around", height: "35%" }
+              }
+              spacing={2}
+            >
               <Controller
                 name="sessionTitle"
                 control={control}

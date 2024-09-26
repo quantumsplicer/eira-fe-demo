@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography, useMediaQuery } from "@mui/material";
 import {
   createMRTColumnHelper,
   MaterialReactTable,
@@ -11,6 +11,9 @@ import { darken, lighten, useTheme } from "@mui/material";
 import StatusTag from "./StatusTag";
 import PaymentLinkDialog from "../dialogs/PaymentLinkDialog";
 import ConfirmationDialog from "../dialogs/ConfirmationDialog";
+import { Virtuoso } from "react-virtuoso";
+import PaymentHistoryTableMobile from "./PaymentHistoryTableMobile";
+
 const lightTheme = createTheme({ palette: { mode: "light" } });
 interface Person {
   transactionId: string;
@@ -126,6 +129,7 @@ const data: Person[] = [
 ];
 
 const PaymentHistoryTable: React.FC = () => {
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [activeDialog, setActiveDialog] = useState<string>("None");
   const heading = "Link Successfully Created";
   const subHeading =
@@ -245,7 +249,11 @@ const PaymentHistoryTable: React.FC = () => {
           my={4}
           gap={4}
           p={2}
-          sx={{ boxShadow: 8, backgroundColor: "white", borderRadius: 2 }}
+          sx={
+            !isPhoneScreen
+              ? { boxShadow: 8, backgroundColor: "white", borderRadius: 2 }
+              : { backgroundColor: "white" }
+          }
         >
           <Stack spacing={2}>
             <Stack direction="row">
@@ -257,38 +265,65 @@ const PaymentHistoryTable: React.FC = () => {
                   padding: 2, // Optional: Adjust padding as needed
                 }}
               >
-                <Typography sx={{ fontSize: 17, fontWeight: "bold" }}>
+                <Typography
+                  sx={{
+                    fontSize: 17,
+                    fontWeight: "bold",
+                    alignSelf: "center",
+                  }}
+                >
                   Payment History
                 </Typography>
                 <Button
                   variant="contained"
                   onClick={openDialog}
-                  sx={{
-                    backgroundColor: "#507FFD",
-                    borderRadius: 3,
-                    fontSize: 13,
-                    fontWeight: "bold",
-                    height: 45,
-                    paddingLeft: 3,
-                    paddingRight: 3,
-                    textTransform: "none",
-                  }}
+                  sx={
+                    !isPhoneScreen
+                      ? {
+                          backgroundColor: "#507FFD",
+                          borderRadius: 3,
+                          fontSize: 13,
+                          fontWeight: "bold",
+                          height: 45,
+                          paddingLeft: 3,
+                          paddingRight: 3,
+                          textTransform: "none",
+                        }
+                      : {
+                          backgroundColor: "#507FFD",
+                          borderRadius: 5,
+                          fontSize: 13,
+                          fontWeight: "bold",
+                          height: 45,
+                          paddingLeft: 3,
+                          paddingRight: 3,
+                          textTransform: "none",
+                        }
+                  }
                 >
                   Create a Payment Link
                 </Button>
               </Box>
             </Stack>
-            <MaterialReactTable table={table} />
+            {!isPhoneScreen ? (
+              <MaterialReactTable table={table} />
+            ) : (
+              <Virtuoso
+                style={{ height: 800 }}
+                data={data}
+                itemContent={(_, user) => (
+                  <PaymentHistoryTableMobile
+                    name={user.studentName}
+                    phoneNumber={user.studentPhoneNumber}
+                    status={user.status}
+                    amount={user.amount}
+                  />
+                )}
+              />
+            )}
           </Stack>
         </Box>
       </ThemeProvider>
-      {/* <CreatePaymentLinkDialog
-        openForm={createPaymentLinkDialog}
-        closeForm={handleClosePaymentLinkDialog}
-        openConfirmation={openConfirmation}
-        closeConfirmation={handleCloseConfirmation}
-        openConfirmationPage={handleOpenConfirmation}
-      /> */}
       <PaymentLinkDialog
         activeDialog={activeDialog}
         setActiveDialog={setActiveDialog}

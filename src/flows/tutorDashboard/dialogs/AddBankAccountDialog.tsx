@@ -11,6 +11,7 @@ import {
   IconButton,
   Typography,
   Stack,
+  useMediaQuery,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";

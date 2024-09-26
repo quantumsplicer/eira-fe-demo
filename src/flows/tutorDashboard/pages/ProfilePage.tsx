@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider, Stack } from "@mui/material";
+import { Divider, Stack, useMediaQuery } from "@mui/material";
 
 import PaymentLinkCard from "../components/PaymentLinkCard";
 import UnsettledAmountCard from "../components/UnsettledAmountCard";
@@ -12,35 +12,60 @@ import AccountsListCard from "../components/AccountListCard";
 import ProfileInfoCard from "../components/ProfileInfoCard";
 
 const ProfilePage: React.FC = () => {
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
   return (
     <>
-      <Stack spacing={5} height="100%">
-        <h1>Profile</h1>
+      <Stack
+        spacing={!isPhoneScreen ? 2 : 0}
+        sx={!isPhoneScreen ? {} : { pt: 3.5 }}
+        height="100%"
+      >
+        {!isPhoneScreen ? <h1>Profile</h1> : <></>}
         <Stack
-          spacing={4}
-          direction="row"
-          display="flex"
-          justifyContent="space-around"
-          pl={8}
+          spacing={!isPhoneScreen ? 4 : 0}
+          direction={!isPhoneScreen ? "row" : "column"}
+          sx={
+            !isPhoneScreen
+              ? { justifyContent: "space-between" }
+              : { justifyContent: "space-around" }
+          }
         >
           <Stack
-            sx={{
-              flexDirection: "column",
-              justifyContent: "space-between", // Centers vertically
-              alignItems: "center",
-              width: "40%",
-            }}
-            spacing={4}
+            sx={
+              !isPhoneScreen
+                ? {
+                    flexDirection: "column",
+                    justifyContent: "space-between", // Centers vertically
+                    alignItems: "center",
+                    width: "47%",
+                  }
+                : {
+                    flexDirection: "column",
+                    justifyContent: "space-between", // Centers vertically
+                    alignItems: "center",
+                    width: "100%",
+                  }
+            }
+            spacing={!isPhoneScreen ? 4 : 0}
           >
             <ProfilePhotoUpload />
             <ProfileInfoCard />
           </Stack>
+          {!isPhoneScreen ? <></> : <Divider />}
           <Stack
-            sx={{
-              justifyContent: "center", // Centers vertically
-              alignItems: "center",
-              width: "60%",
-            }}
+            sx={
+              !isPhoneScreen
+                ? {
+                    justifyContent: "center", // Centers vertically
+                    alignItems: "center",
+                    width: "47%",
+                  }
+                : {
+                    justifyContent: "center", // Centers vertically
+                    alignItems: "center",
+                    width: "100%",
+                  }
+            }
           >
             <AccountsListCard />
           </Stack>
