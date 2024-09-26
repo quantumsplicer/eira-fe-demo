@@ -1,17 +1,18 @@
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
 import React, { useState } from "react";
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 import EiraBack from "../../../assets/images/svg/EiraBack.svg";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { useNavigate, useParams } from "react-router-dom";
 import SafeLogo from "../../../components/SafeLogo";
+import AmountBreakupCard from "../../../components/AmountBreakupCard";
 
 const InputPayment = () => {
 
-
-    const {phoneNumber} = useParams();
+    const { phoneNumber } = useParams();
     const [amount, setAmount] = useState("");
     const navigate = useNavigate();
+    const notPhoneScreen = useMediaQuery('(min-width:850px)');
 
     const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const invalidRegex = /[^0-9]/
@@ -30,7 +31,7 @@ const InputPayment = () => {
     const handleSubmit = () => {
         localStorage.setItem("activeFlow", "staticFlow");
         const isStudentSignedIn = localStorage.getItem("studentLogin") === "true"
-        if(isStudentSignedIn) {
+        if (isStudentSignedIn) {
             navigate("/pay/create-session");
         } else {
             navigate("/student/signIn");
@@ -41,7 +42,7 @@ const InputPayment = () => {
         <Box
             pt={7}
             sx={{
-                backgroundImage: `url(${EiraBack})`,
+                backgroundImage: notPhoneScreen ? `url(${EiraBack})` : '',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 minHeight: '100vh',
@@ -53,43 +54,49 @@ const InputPayment = () => {
                 alignItems={"center"}
                 justifyContent={"center"}
             >
+                {
+                    notPhoneScreen &&
+                    <Box
+                        alignSelf={"flex-end"}
+                    >
+                        <SafeLogo />
+                    </Box>
+                }
+                {
+                    notPhoneScreen &&
+                    <Box
+                        width={"55%"}
+                        height={"30%"}
+                        bgcolor={"#fff"}
+                        zIndex={10}
+                        p={5}
+                        sx={{
+                            borderRadius: "20px 0 0 20px"
+                        }}
+                    >
+                        <PaymentBreakupInfo
+                            name="Suneel Satpal"
+                            phone={`+91 ${phoneNumber}`}
+                            amount={Number(amount)}
+                            settlementDate="7th October"
+                            settlementTime="5:00 pm"
+                        />
+                    </Box>
+                }
                 <Box
-                    alignSelf={"flex-end"}
-                >
-                    <SafeLogo />
-                </Box>
-                <Box
-                    width={"55%"}
-                    height={"30%"}
+                    width={notPhoneScreen ? "430px" : "100vw"}
+                    minHeight={notPhoneScreen ? "90vh" : "100vh"}
                     bgcolor={"#fff"}
-                    zIndex={10}
-                    p={5}
-                    sx={{
-                        borderRadius: "20px 0 0 20px"
-                    }}
-                >
-                    <PaymentBreakupInfo
-                        name="Suneel Satpal"
-                        phone={`+91 ${phoneNumber}`}
-                        amount={Number(amount)}
-                        settlementDate="7th October"
-                        settlementTime="5:00 pm"
-                    />
-                </Box>
-                <Box
-                    width="30vw"
-                    minHeight="90vh"
-                    bgcolor={"#fff"}
-                    border={"1px solid #ccc"}
+                    border={notPhoneScreen ? "1px solid #ccc" : "none"}
                     padding={5}
-                    borderRadius={5}
-                    boxShadow={"2px -2px 14px 2px #00000021"}
+                    borderRadius={notPhoneScreen ? 5 : 0}
+                    boxShadow={notPhoneScreen ? "2px -2px 14px 2px #00000021" : "none"}
                 >
                     <Stack>
                         <img
                             src={EiraLogo}
                             style={{
-                                alignSelf: "flex-start",
+                                alignSelf: notPhoneScreen ? "flex-start" : "center",
                                 width: 80,
                             }}
                         />
@@ -112,7 +119,6 @@ const InputPayment = () => {
                             <TextField
                                 required
                                 autoFocus
-                                fullWidth
                                 label="Amount to pay"
                                 variant="outlined"
                                 value={amount}
@@ -123,6 +129,9 @@ const InputPayment = () => {
                                     style: { top: -40, left: -13, fontSize: 12 },
                                 }}
                                 sx={{
+                                    width: '100%',
+                                    minWidth: '320px',
+                                    maxWidth: '400px',
                                     mt: 10,
                                     mb: 4,
                                     "& .MuiInputBase-root": {
@@ -141,11 +150,36 @@ const InputPayment = () => {
                                     ),
                                 }}
                             />
+                            {
+                                !notPhoneScreen &&
+                                <Box
+                                    height="300px"
+                                    width="350px"
+                                    bgcolor={"#F5F5F5"}
+                                    pt={2}
+                                    pb={2}
+                                    borderRadius={5}
+                                    mt={3}
+                                    mb={3}
+                                >
+                                    <AmountBreakupCard
+                                        amount={Number(amount)}
+                                        settlementDate={"9th October"}
+                                        settlementTime={"5:00 pm"}
+                                    />
+                                </Box>
+                            }
                             <Button
-                                fullWidth
                                 variant="contained"
                                 color="primary"
-                                sx={{ padding: 1.5, borderRadius: 2, mt: 5 }}
+                                sx={{
+                                    padding: 1.5,
+                                    borderRadius: 20,
+                                    mt: 5,
+                                    width: '100%',
+                                    minWidth: '320px',
+                                    maxWidth: '400px',
+                                }}
                                 onClick={handleSubmit}
                                 disabled={!amount || Number(amount) === 0}
                             >

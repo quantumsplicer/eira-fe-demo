@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Stack,
   Box,
@@ -32,6 +32,9 @@ import PaymentLinkPage from "./PaymentLinkPage";
 import ProfilePage from "./ProfilePage";
 import { isAssertEntry } from "typescript";
 import PaymentLinkDialog from "../dialogs/PaymentLinkDialog";
+import { useLocation } from "react-router-dom";
+import StatusDialog from "../../../dialogs/StatusDialog";
+import StatusDrawer from "../../../components/StatusDrawer";
 
 const PAYMENT_HISTORY_PAGE = "Payment History Page";
 const SESSION_HISTORY_PAGE = "Session History Page";
@@ -62,6 +65,9 @@ const TutorDashboard: React.FC = () => {
   const [subpage, setSubpage] = useState<string>(PAYMENT_HISTORY_PAGE);
   const [mobileOpen, setMobileOpen] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
+  const location = useLocation();
+  const previousUrl = location.state?.previousUrl;
+  const [showDialog, setShowDialog] = useState<boolean>(false);
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -93,6 +99,33 @@ const TutorDashboard: React.FC = () => {
       return <ProfilePage />;
     }
   };
+
+  useEffect(() => {
+    const showAlert = localStorage.getItem('showDialog') === 'true';
+
+    if (showAlert && previousUrl?.endsWith('/tutor/aadhar-verification')) {
+      setShowDialog(true);
+      localStorage.removeItem("showDialog");
+    }
+  }, [previousUrl])
+
+  const ScheduleClassButton: React.FC = () => {
+    return (
+      <>
+        <Typography
+          onClick={() => setShowDialog(false)}
+          sx={{
+            borderBottom: "1px solid #757575",
+            cursor: "pointer",
+            color: theme => theme.palette.grey[600]
+          }}
+        >
+          Schedule a class now
+        </Typography>
+      </>
+    )
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -382,6 +415,26 @@ const TutorDashboard: React.FC = () => {
           {!isPhoneScreen ? <Toolbar /> : <></>}
           {displaySubpage()}
         </Box>
+        {
+          isPhoneScreen ?
+          <StatusDrawer
+              open={showDialog}
+              type="success"
+              headingMessage="Congratulations!!"
+              subHeadingMessage1="You are ready to accept payments on Eira!"
+              preventDrawerClose={true}
+              CustomDrawerButton={ScheduleClassButton}
+            /> :
+            <StatusDialog
+              open={showDialog}
+              onClose={() => setShowDialog(false)}
+              type="success"
+              headingMessage="Congratulations!!"
+              subHeadingMessage="You are ready to accept payments on Eira!"
+              preventDialogClose={false}
+              CustomDialogButton={ScheduleClassButton}
+            />
+        }
       </Box>
     </ThemeProvider>
   );

@@ -13,7 +13,7 @@ const AadharVerification: React.FC = () => {
 
         const timeout = setTimeout(() => {
             localStorage.setItem('showDialog', 'true');
-            navigate('/tutor/dashboard', { state: { previousUrl: window.location.href } });
+            navigate('/tutor-id/dashboard', { state: { previousUrl: window.location.href } });
         }, 5000);
 
         return () => {

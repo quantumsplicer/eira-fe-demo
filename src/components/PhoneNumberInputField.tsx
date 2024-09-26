@@ -2,6 +2,7 @@ import {
     Typography,
     TextField,
     Stack,
+    useMediaQuery,
 } from "@mui/material";
 
 interface PhoneNumberInputFieldProps {
@@ -13,6 +14,8 @@ interface PhoneNumberInputFieldProps {
 }
 
 const PhoneNumberInputField = ({ label, phone, setPhoneNumber, onSubmit, autoFocus }: PhoneNumberInputFieldProps) => {
+
+    const notPhoneScreen = useMediaQuery('(min-width:850px)');
 
     const handlePhoneNumberChange = (
         event: React.ChangeEvent<HTMLInputElement>
@@ -40,7 +43,6 @@ const PhoneNumberInputField = ({ label, phone, setPhoneNumber, onSubmit, autoFoc
         <TextField
             required
             autoFocus={autoFocus}
-            fullWidth
             label={label}
             variant="outlined"
             value={phone}
@@ -53,6 +55,9 @@ const PhoneNumberInputField = ({ label, phone, setPhoneNumber, onSubmit, autoFoc
                 style: { top: -40, left: -13, fontSize: 12 },
             }}
             sx={{
+                width: '100%',
+                minWidth: '320px',
+                maxWidth: '400px',
                 mt: 3,
                 mb: 2,
                 "& .MuiInputBase-root": {
