@@ -9,7 +9,7 @@ import {
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import { darken, lighten, useTheme } from "@mui/material";
 import StatusTag from "../../tutorDashboard/components/StatusTag";
-import PaymentHistoryTableMobile from "../../tutorDashboard/components/PaymentHistoryTableMobile";
+import PaymentHistoryTableMobile from "../../tutorDashboard/components/tables/PaymentHistoryTableMobile";
 import { Virtuoso } from "react-virtuoso";
 const lightTheme = createTheme({ palette: { mode: "light" } });
 interface Person {

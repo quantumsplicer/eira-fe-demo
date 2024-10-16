@@ -24,21 +24,22 @@ import TickMark from "../../../assets/images/png/tick-mark.png";
 import Link from "@mui/material/Link";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
-
-type Inputs = {
-  phoneNumber: string;
-  email: string;
-  amount: number;
-};
+import { PaymentLinkInput } from "../interfaces";
 
 interface PaymentLinkDialogProps {
-  activeDialog: string;
-  setActiveDialog: (dialog: string) => void;
+  open: boolean;
+  onSuccess: () => void;
+  onFailure: () => void;
+  onClose: () => void;
+  onSubmit: (data: PaymentLinkInput) => void;
 }
 
 const PaymentLinkDialog = ({
-  activeDialog,
-  setActiveDialog,
+  open,
+  onSuccess,
+  onFailure,
+  onClose,
+  onSubmit,
 }: PaymentLinkDialogProps) => {
   const {
     register,
@@ -46,46 +47,25 @@ const PaymentLinkDialog = ({
     watch,
     control,
     formState: { errors, isValid },
-  } = useForm<Inputs>();
+  } = useForm<PaymentLinkInput>();
 
   const handleOnClose = () => {
-    setActiveDialog("None");
+    onClose();
   };
-  const handleOnSubmit = () => {
-    setActiveDialog("ConfirmationDialog");
+  const handleOnSubmit = (data: PaymentLinkInput) => {
+    onSubmit(data);
   };
 
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  const [studentName, setStudentName] = useState<string>("");
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [amount, setAmount] = useState<string>();
   const [checked, setChecked] = useState<boolean>();
 
-  const isPhoneNumberValid = (): boolean => {
-    const regex = /^[6-9]\d{9}$/;
-    return regex.test(phoneNumber);
-  };
-  const handleStudentNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setStudentName(event.target.value);
-  };
-  // const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setPhoneNumber(event.target.value);
-  // };
   const handleChange = () => {
     setChecked(!checked);
   };
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(event.target.value);
-  };
+
   return (
     <Dialog
-      open={activeDialog === "PaymentLinkDialog" ? true : false}
+      open={open}
       onClose={handleOnClose}
       fullScreen={isPhoneScreen}
       hideBackdrop={isPhoneScreen}

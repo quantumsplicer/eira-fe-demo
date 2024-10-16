@@ -8,10 +8,8 @@ import {
 } from "material-react-table";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import { darken, lighten, useTheme } from "@mui/material";
-import StatusTag from "./StatusTag";
-import SessionLinkDialog from "../dialogs/SessionLinkDialog";
-import ConfirmationDialog from "../dialogs/ConfirmationDialog";
-import PaymentHistoryTableMobile from "./PaymentHistoryTableMobile";
+import StatusTag from "../StatusTag";
+import SessionLinkDialog from "../../dialogs/SessionLinkDialog";
 import { Virtuoso } from "react-virtuoso";
 
 const lightTheme = createTheme({ palette: { mode: "light" } });
@@ -321,18 +319,19 @@ const SessionHistoryTable: React.FC = () => {
             {!isPhoneScreen ? (
               <MaterialReactTable table={table} />
             ) : (
-              <Virtuoso
-                style={{ height: 710 }}
-                data={data}
-                itemContent={(_, user) => (
-                  <PaymentHistoryTableMobile
-                    name={user.title}
-                    phoneNumber={user.studentPhoneNumber}
-                    status={user.status}
-                    amount={3}
-                  />
-                )}
-              />
+              <></>
+              // <Virtuoso
+              //   style={{ height: 710 }}
+              //   data={data}
+              //   itemContent={(_, user) => (
+              //     <PaymentHistoryTableMobile
+              //       name={user.title}
+              //       phoneNumber={user.studentPhoneNumber}
+              //       status={user.status}
+              //       amount={3}
+              //     />
+              //   )}
+              // />
             )}
           </Stack>
         </Box>
@@ -341,12 +340,12 @@ const SessionHistoryTable: React.FC = () => {
         activeDialog={activeDialog}
         setActiveDialog={setActiveDialog}
       />
-      <ConfirmationDialog
+      {/* <ConfirmationDialog
         activeDialog={activeDialog}
         setActiveDialog={setActiveDialog}
         heading={heading}
         subHeading={subHeading}
-      />
+      /> */}
     </>
   );
 };

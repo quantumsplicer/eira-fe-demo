@@ -48,7 +48,8 @@ const SharePaymentLinkCard: React.FC = () => {
               width: "100%",
               backgroundColor: "white",
               alignContent: "center",
-              height: "100%",
+              height: "80vh",
+              marginTop: "1.5rem",
             }
       }
     >
@@ -164,12 +165,10 @@ const SharePaymentLinkCard: React.FC = () => {
               style={
                 !isPhoneScreen
                   ? {
-                      width: "40%",
-                      height: "70%",
+                      height: "35vh",
                     }
                   : {
-                      width: "70%",
-                      paddingTop: 50,
+                      height: "35vh",
                     }
               }
             />

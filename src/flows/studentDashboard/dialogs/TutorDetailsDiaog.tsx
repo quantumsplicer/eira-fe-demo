@@ -1,5 +1,5 @@
 // src/components/OTPDialog.tsx
-import React, { useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -13,60 +13,81 @@ import {
   IconButton,
   Divider,
   useMediaQuery,
+  Slide,
+  SlideProps,
 } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
+import { PaymentDetails, TutorDetails } from "../interfaces";
 
 interface TutorDetailsDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: () => void;
-  amount: number;
+  onSubmit: (value: TutorDetails) => void;
+  onBack: () => void;
+  tutorDetails: TutorDetails;
+  paymentDetails: PaymentDetails;
 }
-type Inputs = {
-  firstName: string;
-  lastName: string;
-  panNumber: string;
-};
-
+const Transition = forwardRef(function Transition(props: SlideProps, ref) {
+  return (
+    <Slide
+      direction="left"
+      ref={ref}
+      {...props}
+      timeout={{ enter: 300, exit: 300 }}
+    >
+      {props.children}
+    </Slide>
+  );
+});
 const TutorDetailsDialog = ({
   open,
   onClose,
   onSubmit,
-  amount,
+  onBack,
+  tutorDetails,
+  paymentDetails,
 }: TutorDetailsDialogProps) => {
   const {
-    register,
     handleSubmit,
     watch,
     control,
     formState: { errors, isValid },
-  } = useForm<Inputs>();
+  } = useForm<TutorDetails>({
+    defaultValues: tutorDetails,
+  });
+  const handleFormSubmit: SubmitHandler<TutorDetails> = (data) => {
+    onSubmit(data);
+  };
+  const resetForm = () => {
+    control._reset({
+      firstName: "",
+      lastName: "",
+      panNumber: "",
+      phoneNumber: "",
+    });
+  };
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [panNumber, setPanNumber] = useState("");
-  const handleFirstNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setFirstName(event.target.value);
-  };
-  const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLastName(event.target.value);
-  };
-  const handlePanChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPanNumber(event.target.value);
-  };
+  useEffect(() => {
+    if (!open) {
+      resetForm();
+    }
+  }, [open]);
+
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   return (
     <Dialog
       open={open}
       onClose={onClose}
+      TransitionComponent={isPhoneScreen ? Transition : undefined}
       hideBackdrop={isPhoneScreen}
       fullScreen={isPhoneScreen}
+      PaperProps={{
+        style: { transformOrigin: "top right" },
+      }}
       sx={
         !isPhoneScreen
           ? {
@@ -88,7 +109,7 @@ const TutorDetailsDialog = ({
       <DialogContent dividers>
         <IconButton
           aria-label="close"
-          onClick={onClose}
+          onClick={!isPhoneScreen ? onClose : onBack}
           sx={
             !isPhoneScreen
               ? {
@@ -126,10 +147,10 @@ const TutorDetailsDialog = ({
                   </Typography>
                   <Stack>
                     <Typography fontSize={22} fontWeight={650}>
-                      Suneel Satpal
+                      {tutorDetails.firstName} {tutorDetails.lastName}
                     </Typography>
                     <Typography fontSize={15} lineHeight={1.2}>
-                      +919997945005
+                      {tutorDetails.phoneNumber}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -137,7 +158,9 @@ const TutorDetailsDialog = ({
                 <></>
               )}
               <Box>
-                <AmountBreakupCard amount={amount}></AmountBreakupCard>
+                <AmountBreakupCard
+                  amount={paymentDetails.amount}
+                ></AmountBreakupCard>
               </Box>
             </Stack>
           ) : (
@@ -328,7 +351,7 @@ const TutorDetailsDialog = ({
                     </Typography>
                   </Stack>
                   <Stack
-                    spacing={5}
+                    spacing={!isPhoneScreen ? 5 : 1}
                     width="95%"
                     alignSelf="center"
                     alignItems="center"
@@ -436,10 +459,15 @@ const TutorDetailsDialog = ({
                   </Stack>
                 </Stack>
               )}
+              {!isPhoneScreen ? (
+                <></>
+              ) : (
+                <AmountBreakupCard amount={paymentDetails.amount} />
+              )}
               <Box>
                 <Button
                   variant="contained"
-                  onClick={handleSubmit(onSubmit)}
+                  onClick={handleSubmit(handleFormSubmit)}
                   fullWidth
                   disabled={!isValid}
                   sx={{

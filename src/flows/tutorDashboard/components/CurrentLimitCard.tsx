@@ -30,7 +30,7 @@ const CurrentLimitCard: React.FC = () => {
               boxShadow: 6,
             }
           : {
-              p: 2,
+              p: 1,
               width: "100%",
               backgroundColor: "white",
               height: 350,
@@ -45,45 +45,72 @@ const CurrentLimitCard: React.FC = () => {
             : {
                 justifyContent: "space-between",
                 pr: 0,
+                pl: 0,
                 height: "100%",
-                pb: 6,
+                pb: 4,
                 pt: 3,
               }
         }
         spacing={5}
       >
         <Stack
-          spacing={1}
-          direction={!isPhoneScreen ? "column" : "row"}
+          spacing={!isPhoneScreen ? 1 : 4}
+          direction={!isPhoneScreen ? "column" : "column"}
           sx={
             !isPhoneScreen
               ? {}
               : { justifyContent: "space-between", p: 3, alignItems: "center" }
           }
         >
-          <Stack sx={!isPhoneScreen ? {} : {}}>
-            <Typography fontSize={!isPhoneScreen ? 15 : 19} fontWeight={600}>
+          <Stack
+            sx={
+              !isPhoneScreen
+                ? {}
+                : {
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }
+            }
+            spacing={!isPhoneScreen ? 0 : 0}
+            direction={!isPhoneScreen ? "column" : "row"}
+          >
+            <Typography
+              fontSize={!isPhoneScreen ? 15 : "1.2rem"}
+              fontWeight={600}
+            >
               Current Limit
             </Typography>
             <Stack direction="row" spacing={1}>
-              <Typography fontSize={26} fontWeight={650}>
+              <Typography
+                fontSize={!isPhoneScreen ? 26 : "2.5rem"}
+                fontWeight={650}
+                alignSelf="self-end"
+              >
                 {formatter.format(currentLimit)}
               </Typography>
               <Typography
-                fontSize={11}
+                fontSize={!isPhoneScreen ? 11 : "0.75rem"}
                 fontWeight="bold"
                 color="#898989"
-                pt={1.5}
+                alignSelf="flex-end"
+                pb={1}
               >
                 /transaction
               </Typography>
             </Stack>
           </Stack>
           <Stack direction="row" spacing={1}>
-            <Typography fontSize={12} color="#898989">
+            <Typography
+              fontSize={!isPhoneScreen ? 12 : "0.9rem"}
+              color="#898989"
+            >
               Settlement in
             </Typography>
-            <Typography fontSize={12} fontWeight="bold" color="#898989">
+            <Typography
+              fontSize={!isPhoneScreen ? 12 : "1rem"}
+              fontWeight="bold"
+              color="#898989"
+            >
               24 hours
             </Typography>
           </Stack>
@@ -91,29 +118,41 @@ const CurrentLimitCard: React.FC = () => {
         <Stack
           alignItems="center"
           justifyContent={!isPhoneScreen ? "center" : "space-between"}
-          spacing={!isPhoneScreen ? 2 : 0}
-          direction={!isPhoneScreen ? "column" : "row"}
+          spacing={!isPhoneScreen ? 2 : 2}
+          direction={!isPhoneScreen ? "column" : "column"}
           sx={!isPhoneScreen ? {} : { pl: 3, pr: 3 }}
         >
           <Typography
             fontSize={12}
             fontWeight={600}
             align="center"
-            sx={!isPhoneScreen ? {} : { width: "40%", textAlign: "center" }}
+            sx={!isPhoneScreen ? {} : { width: "100%", textAlign: "center" }}
           >
             Complete KYC to increase limit to ₹50,000
           </Typography>
           <Button
             variant="contained"
-            sx={{
-              backgroundColor: "#507FFD",
-              borderRadius: 3,
-              fontSize: 11,
-              fontWeight: "bold",
-              width: 150,
-              height: 35,
-              textTransform: "none",
-            }}
+            sx={
+              !isPhoneScreen
+                ? {
+                    backgroundColor: "#507FFD",
+                    borderRadius: 3,
+                    fontSize: 11,
+                    fontWeight: "bold",
+                    width: 150,
+                    height: 35,
+                    textTransform: "none",
+                  }
+                : {
+                    backgroundColor: "#507FFD",
+                    borderRadius: 3,
+                    fontSize: "0.75rem",
+                    fontWeight: "bold",
+                    width: 150,
+                    height: 35,
+                    textTransform: "none",
+                  }
+            }
           >
             Complete KYC
           </Button>

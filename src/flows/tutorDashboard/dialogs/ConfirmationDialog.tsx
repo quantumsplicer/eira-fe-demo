@@ -24,20 +24,20 @@ import TickMark from "../../../assets/images/png/tick-mark.png";
 import Link from "@mui/material/Link";
 
 interface ConfirmationDialogProps {
-  activeDialog: string;
-  setActiveDialog: (dialog: string) => void;
+  open: boolean;
+  onClose: () => void;
   heading: string;
   subHeading: string;
 }
 
 const ConfirmationDialog = ({
-  activeDialog,
-  setActiveDialog,
+  open,
+  onClose,
   heading,
   subHeading,
 }: ConfirmationDialogProps) => {
   const handleOnClose = () => {
-    setActiveDialog("None");
+    onClose();
   };
 
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
@@ -45,7 +45,7 @@ const ConfirmationDialog = ({
     <>
       {!isPhoneScreen ? (
         <Dialog
-          open={activeDialog === "ConfirmationDialog" ? true : false}
+          open={open}
           onClose={handleOnClose}
           sx={{
             "& .MuiDialog-paper": {
@@ -93,7 +93,7 @@ const ConfirmationDialog = ({
       ) : (
         <Drawer
           anchor="bottom"
-          open={activeDialog === "ConfirmationDialog" ? true : false}
+          open={open}
           onClose={handleOnClose}
           PaperProps={{
             sx: {

@@ -1,17 +1,5 @@
 import React, { useMemo, useState } from "react";
 import { Box, Button, Stack, Typography, Divider } from "@mui/material";
-import {
-  createMRTColumnHelper,
-  MaterialReactTable,
-  type MRT_ColumnDef,
-  useMaterialReactTable,
-} from "material-react-table";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
-import { darken, lighten, useTheme } from "@mui/material";
-import StatusTag from "./StatusTag";
-import PaymentLinkDialog from "../dialogs/PaymentLinkDialog";
-import ConfirmationDialog from "../dialogs/ConfirmationDialog";
-const lightTheme = createTheme({ palette: { mode: "light" } });
 
 interface PaymentHistoryTableMobileProps {
   name: string;
@@ -19,6 +7,7 @@ interface PaymentHistoryTableMobileProps {
   amount: number;
   status: string;
 }
+
 const PaymentHistoryTableMobile = ({
   name,
   phoneNumber,

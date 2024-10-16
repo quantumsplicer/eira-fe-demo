@@ -1,7 +1,7 @@
 import React from "react";
 import { Stack, useMediaQuery } from "@mui/material";
 
-import SessionHistoryTable from "../components/SessionHistoryTable";
+import SessionHistoryTable from "../components/tables/SessionHistoryTable";
 
 const SessionHistory: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");

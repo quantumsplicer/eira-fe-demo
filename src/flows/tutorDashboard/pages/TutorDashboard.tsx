@@ -25,16 +25,17 @@ import SortSharpIcon from "@mui/icons-material/SortSharp";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
-import PaymentHistory from "./PaymentHistory";
+import PaymentHistory from "../subpages/PaymentHistory";
 import SessionHistoryIcon from "@mui/icons-material/RestoreOutlined";
-import SessionHistory from "./SessionHistory";
-import PaymentLinkPage from "./PaymentLinkPage";
-import ProfilePage from "./ProfilePage";
+import SessionHistory from "../subpages/SessionHistory";
+import PaymentLinkPage from "../subpages/PaymentLinkPage";
+import ProfilePage from "../subpages/ProfilePage";
 import { isAssertEntry } from "typescript";
 import PaymentLinkDialog from "../dialogs/PaymentLinkDialog";
 import { useLocation } from "react-router-dom";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
+import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 
 const PAYMENT_HISTORY_PAGE = "Payment History Page";
 const SESSION_HISTORY_PAGE = "Session History Page";
@@ -68,7 +69,7 @@ const TutorDashboard: React.FC = () => {
   const location = useLocation();
   const previousUrl = location.state?.previousUrl;
   const [showDialog, setShowDialog] = useState<boolean>(false);
-
+  const { data: userDetails, isLoading, error } = useGetUserDetailsQuery("");
   const handleDrawerClose = () => {
     setIsClosing(true);
     setMobileOpen(false);
@@ -101,13 +102,13 @@ const TutorDashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    const showAlert = localStorage.getItem('showDialog') === 'true';
+    const showAlert = localStorage.getItem("showDialog") === "true";
 
-    if (showAlert && previousUrl?.endsWith('/tutor/aadhar-verification')) {
+    if (showAlert && previousUrl?.endsWith("/tutor/aadhar-verification")) {
       setShowDialog(true);
       localStorage.removeItem("showDialog");
     }
-  }, [previousUrl])
+  }, [previousUrl]);
 
   const ScheduleClassButton: React.FC = () => {
     return (
@@ -117,14 +118,14 @@ const TutorDashboard: React.FC = () => {
           sx={{
             borderBottom: "1px solid #757575",
             cursor: "pointer",
-            color: theme => theme.palette.grey[600]
+            color: (theme) => theme.palette.grey[600],
           }}
         >
           Schedule a class now
         </Typography>
       </>
-    )
-  }
+    );
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -195,7 +196,7 @@ const TutorDashboard: React.FC = () => {
                       pt={1.4}
                       fontWeight={600}
                     >
-                      Maanav
+                      {userDetails?.first_name}
                     </Typography>
                     <IconButton
                       onClick={() => {
@@ -231,8 +232,10 @@ const TutorDashboard: React.FC = () => {
             variant="permanent"
             sx={{
               width: "18%",
+              minWidth: "200px",
               flexShrink: 0,
               [`& .MuiDrawer-paper`]: {
+                minWidth: "200px",
                 width: "18%",
                 boxSizing: "border-box",
                 backgroundColor: "white",
@@ -331,7 +334,7 @@ const TutorDashboard: React.FC = () => {
                   sx={{ width: 60, height: 60, marginBottom: 1, boxShadow: 5 }}
                 />
                 <Typography fontSize={16} fontWeight={600}>
-                  Maanav Seth
+                  {userDetails?.first_name}
                 </Typography>
               </Stack>
               <Divider />
@@ -415,26 +418,27 @@ const TutorDashboard: React.FC = () => {
           {!isPhoneScreen ? <Toolbar /> : <></>}
           {displaySubpage()}
         </Box>
-        {
-          isPhoneScreen ?
-          <StatusDrawer
-              open={showDialog}
-              type="success"
-              headingMessage="Congratulations!!"
-              subHeadingMessage1="You are ready to accept payments on Eira!"
-              preventDrawerClose={true}
-              CustomDrawerButton={ScheduleClassButton}
-            /> :
-            <StatusDialog
-              open={showDialog}
-              onClose={() => setShowDialog(false)}
-              type="success"
-              headingMessage="Congratulations!!"
-              subHeadingMessage="You are ready to accept payments on Eira!"
-              preventDialogClose={false}
-              CustomDialogButton={ScheduleClassButton}
-            />
-        }
+        {isPhoneScreen ? (
+          // <StatusDrawer
+          //     open={showDialog}
+          //     type="success"
+          //     headingMessage="Congratulations!!"
+          //     subHeadingMessage1="You are ready to accept payments on Eira!"
+          //     preventDrawerClose={true}
+          //     CustomDrawerButton={ScheduleClassButton}
+          //   />
+          <></>
+        ) : (
+          <StatusDialog
+            open={showDialog}
+            onClose={() => setShowDialog(false)}
+            type="success"
+            headingMessage="Congratulations!!"
+            subHeadingMessage="You are ready to accept payments on Eira!"
+            preventDialogClose={false}
+            CustomDialogButton={ScheduleClassButton}
+          />
+        )}
       </Box>
     </ThemeProvider>
   );
