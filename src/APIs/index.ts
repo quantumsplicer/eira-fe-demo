@@ -1,7 +1,8 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-const BASE_URL = 'https://v3j7ktcn-8000.inc1.devtunnels.ms/';
+const BASE_URL = 'http://34.93.136.100/';
+// const BASE_URL = 'https://80a4-2405-201-5800-d9a5-d82b-dded-45b7-ab66.ngrok-free.app/';
 export interface ApiResponse {
   message?: string;
   status?: number;

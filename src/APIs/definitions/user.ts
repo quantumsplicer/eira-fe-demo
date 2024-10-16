@@ -15,7 +15,7 @@ export interface UserDetails {
 
 export const authApi = postgresApi.injectEndpoints({
   endpoints: (builder) => ({
-    getUserDetails: builder.query<UserDetails, string>({
+    getUserDetails: builder.query<UserDetails, void>({
       query: () => `user/me`,
     }),
 
@@ -29,4 +29,4 @@ export const authApi = postgresApi.injectEndpoints({
   }),
 });
 
-export const { useGetUserDetailsQuery, useUpdateUserDetailsMutation } = authApi;
+export const { useLazyGetUserDetailsQuery, useGetUserDetailsQuery, useUpdateUserDetailsMutation } = authApi;

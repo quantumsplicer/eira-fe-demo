@@ -31,10 +31,13 @@ export const authApi = postgresApi.injectEndpoints({
           body
         }),
         onQueryStarted: async (body, {queryFulfilled}) => {
-          const {data} = await queryFulfilled;
-
-          console.log("data", data);
-          localStorage.setItem("access-token", data?.token);
+          try {
+            const {data} = await queryFulfilled;
+            console.log("data", data);
+            localStorage.setItem("access-token", data?.token);
+          } catch (error) {
+            console.log(error)
+          }
         }
       }),
     }),

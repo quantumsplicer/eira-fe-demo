@@ -142,7 +142,7 @@ const InputPhone = () => {
         onClose={handleCloseOtpDialog}
         navigateTo="/pay/payment-details"
         phoneNumber="phoneNumber"
-        isDrawer={false}
+        // isDrawer={false}
       />
     </Stack>
   );

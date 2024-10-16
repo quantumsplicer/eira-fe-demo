@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Stack, Box, Typography, useMediaQuery } from "@mui/material";
+import { Stack, Box, Typography, useMediaQuery, Button } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { useNavigate } from "react-router-dom";
 import PersonalDetails from "../../../components/PersonalDetails";
@@ -10,6 +10,12 @@ import LinearProgress from "@mui/material/LinearProgress";
 import AadhaarVerifyInfo from "../components/AadhaarVerifyInfo";
 import EiraBack from "../../../assets/images/svg/EiraBack.svg";
 import SafeLogo from "../../../components/SafeLogo";
+import StatusDialog from "../../../dialogs/StatusDialog";
+import StatusDrawer from "../../../components/StatusDrawer";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../stores/configuration";
+import { setOnboardingStep } from "../../../stores/slices/onboardingInfoSlice";
+import { useOnboarding } from "../../../customHooks/useOnboarding";
 
 const TutorSignUp: React.FC = () => {
   const [signUpStep, setSignUpStep] = useState<number>(1);
@@ -17,6 +23,11 @@ const TutorSignUp: React.FC = () => {
   const [aadhaarVerificationFailed, setAadhaarVerificationFailed] = useState<
     boolean | null
   >(null);
+  const dispatch = useDispatch();
+  const onboardingStep = useSelector((state: RootState) => state.onboardingInfo.onbaordingStep);
+  const [isSessionExpired, setIsSessionExpired] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const { determineOnboardingStep } = useOnboarding();
 
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
 
@@ -28,6 +39,53 @@ const TutorSignUp: React.FC = () => {
   const step2Notes = [
     "Please ensure that account holder's name is same as the name entered before",
   ];
+
+  useEffect(() => {
+    const token = localStorage.getItem("access-token");
+    if (!token) {
+      setIsSessionExpired(true);
+      return;
+    }
+
+    if (onboardingStep !== 0) {
+      setSignUpStep(onboardingStep);
+      dispatch(setOnboardingStep(0));
+      return;
+    }
+
+    const handleOnboarding =  async () => {
+      const {navigateTo, onboardingStep} = await determineOnboardingStep();
+      dispatch(setOnboardingStep(onboardingStep));
+      if (onboardingStep === 0) {
+        navigate(navigateTo);
+      } else {
+        setSignUpStep(onboardingStep);
+      }
+    }
+
+    handleOnboarding();
+  }, [])
+
+  const LoginButton = () => {
+    return (
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{
+          padding: 1.5,
+          borderRadius: 20,
+          height: 45,
+          mt: 5,
+          width: '100%',
+          minWidth: '320px',
+          maxWidth: '400px',
+        }}
+        onClick={() => navigate("/tutor/login")}
+      >
+        Login
+      </Button>
+    )
+  }
 
   return (
     <Box
@@ -117,11 +175,35 @@ const TutorSignUp: React.FC = () => {
               )}
               {signUpStep === 3 && (
                 <AadhaarVerifyInfo
-                  aadhaarVerificationFailed={aadhaarVerificationFailed}
+                  // aadhaarVerificationFailed={aadhaarVerificationFailed}
+                  showHeading={true}
                 />
               )}
             </Stack>
           </Stack>
+          {
+            isSessionExpired ?
+              (
+                notPhoneScreen ?
+                  <StatusDialog
+                    open={true}
+                    onClose={() => { }}
+                    type="info"
+                    headingMessage="Session Expired!"
+                    subHeadingMessage="Please login again"
+                    preventDialogClose={true}
+                    CustomDialogButton={LoginButton}
+                  /> :
+                  <StatusDrawer
+                    open={true}
+                    type="info"
+                    headingMessage="Session Expired!"
+                    subHeadingMessage1="Please login again"
+                    preventDrawerClose={true}
+                    CustomDrawerButton={LoginButton}
+                  />
+              ) : null
+          }
         </Box>
       </Stack>
     </Box>

@@ -27,6 +27,7 @@ const BankAccountDetails = ({ onSuccess }: BankAccountDetailsProps) => {
   const [isAccountVerified, setIsAccountVerified] = useState<boolean>(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [verificationFailureMessage, setVerificationFailureMessage] = useState<string>('');
   const notPhoneScreen = useMediaQuery('(min-width:850px)');
 
   const [addAccount, { isLoading: addAccountIsLoading }] =
@@ -75,13 +76,25 @@ const BankAccountDetails = ({ onSuccess }: BankAccountDetailsProps) => {
       account_number: accountNumber,
       ifsc: ifsc,
     })
-      .then(() => {
-        setIsAccountVerified(true);
-        setShowAccountVerificationStatus(true);
+      .unwrap()
+      .then((res) => {
+        if (res) {
+          setIsAccountVerified(true);
+          setShowAccountVerificationStatus(true);
+          setIsDrawerOpen(true);
+        } else {
+          setIsAccountVerified(false);
+          setShowAccountVerificationStatus(true);
+          setIsDrawerOpen(true);
+        }
       })
-      .catch(() => {
+      .catch((err) => {
+        if (err.status != 401 && err.status != 403) {
+          setVerificationFailureMessage(err.data?.message);
+        }
         setIsAccountVerified(false);
-        setShowAccountVerificationStatus(false);
+        setShowAccountVerificationStatus(true);
+        setIsDrawerOpen(true);
       });
   };
 
@@ -96,6 +109,8 @@ const BankAccountDetails = ({ onSuccess }: BankAccountDetailsProps) => {
         !showAccountVerificationStatus ||
         (showAccountVerificationStatus && !isAccountVerified)
       ) {
+        setShowAccountVerificationStatus(false);
+        setIsDrawerOpen(false);
         verifyAccount();
       } else if (showAccountVerificationStatus && isAccountVerified) {
         onSuccess();
@@ -158,7 +173,7 @@ const TryAgainButton = () => {
                 autoFocus
                 required
                 value={accountNumber}
-                disabled={addAccountIsLoading || isAccountVerified || isDrawerOpen}
+                disabled={addAccountIsLoading || isAccountVerified || (!notPhoneScreen && isDrawerOpen)}
                 onChange={e => handleAccountNumberInput(e, setAccountNumber)}
                 onKeyDown={event => handleKeyDown(event)}
                 label="Account Number"
@@ -185,7 +200,7 @@ const TryAgainButton = () => {
             <TextField
                 required
                 value={verifyAccountNumber}
-                disabled={addAccountIsLoading || isAccountVerified || isDrawerOpen}
+                disabled={addAccountIsLoading || isAccountVerified || (!notPhoneScreen && isDrawerOpen)}
                 onChange={e => handleAccountNumberInput(e, setVerifyAccountNumber)}
                 onKeyDown={event => handleKeyDown(event)}
                 error={verifyAccountNumber !== "" && accountNumber !== verifyAccountNumber}
@@ -214,7 +229,7 @@ const TryAgainButton = () => {
             <TextField
                 required
                 value={ifsc}
-                disabled={addAccountIsLoading || isAccountVerified || isDrawerOpen}
+                disabled={addAccountIsLoading || isAccountVerified || (!notPhoneScreen && isDrawerOpen)}
                 onChange={e => handleIfscInput(e)}
                 onKeyDown={event => handleKeyDown(event)}
                 error={ifsc.length === 11 && !isIfscValid()}
@@ -275,9 +290,9 @@ const TryAgainButton = () => {
                                     /> :
                                     <StatusDrawer
                                         open={showAccountVerificationStatus && isDrawerOpen}
-                                        type="error"
+                                        type="failure"
                                         headingMessage="Verification Failed!"
-                                        subHeadingMessage1="Error Message"
+                                        subHeadingMessage1={verificationFailureMessage}
                                         subHeadingMessage2="Please Try Again"
                                         preventDrawerClose={true}
                                         CustomDrawerButton={TryAgainButton}

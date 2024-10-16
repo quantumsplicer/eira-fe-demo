@@ -13,7 +13,7 @@ export const bankAccountsApi = postgresApi.injectEndpoints({
 
     addAccount: builder.mutation<ApiResponse, Partial<Account>>({
       query: (body) => ({
-        url: `user/accounts/`,
+        url: `user/accounts/add/`,
         method: "POST",
         body,
       }),
@@ -21,4 +21,4 @@ export const bankAccountsApi = postgresApi.injectEndpoints({
   }),
 });
 
-export const { useGetAccountsQuery, useAddAccountMutation } = bankAccountsApi;
+export const { useGetAccountsQuery, useLazyGetAccountsQuery, useAddAccountMutation } = bankAccountsApi;

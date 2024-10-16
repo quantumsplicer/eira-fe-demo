@@ -10,11 +10,12 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import InfoIcon from '@mui/icons-material/Info';
 
 interface SuccessDialogProps {
     open: boolean;
     onClose: () => void;
-    type: string;
+    type: "success" | "failure" | "info";
     headingMessage: string;
     subHeadingMessage: string;
     preventDialogClose: boolean;
@@ -28,6 +29,24 @@ const StatusDialog = ({ open, onClose, type, headingMessage, subHeadingMessage, 
             return;
         }
         onClose();
+    }
+
+    const getStatusIcon = (status: string) => {
+        switch (status) {
+            case "success":
+                return <CheckCircleOutlineIcon
+                            sx={{ mt: 5, fontSize: 90, color: "green" }}
+                        />
+            case "failure": 
+                return <CancelOutlinedIcon
+                            sx={{ mt: 5, fontSize: 90, color: "red"}}
+                        />
+            case "info":
+                return  <InfoIcon 
+                            sx={{ mt: 5, fontSize: 90, color: "#bebebe"}}
+                        />
+
+        }
     }
 
     return (
@@ -71,18 +90,13 @@ const StatusDialog = ({ open, onClose, type, headingMessage, subHeadingMessage, 
                             <CloseIcon />
                         </IconButton>
                     }
-                    <Typography>
+                    <Typography
+                        textAlign={"center"}
+                    >
                         {subHeadingMessage}
                     </Typography>
                     <Box>
-                        {
-                            type === "success" ?
-                                <CheckCircleOutlineIcon
-                                    sx={{ mt: 5, fontSize: 90, color: "green" }} /> :
-                                <CancelOutlinedIcon
-                                    sx={{ mt: 5, fontSize: 90, color: "red"}} />
-                        }
-                        
+                        {getStatusIcon(type)}
                     </Box>
                     <CustomDialogButton />
                 </Stack>
