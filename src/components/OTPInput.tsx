@@ -21,7 +21,7 @@ interface OTPInputProps {
   onClose?: () => void;
   navigateTo?: string;
   phoneNumber: string;
-  onSubmit?: () => void;
+  onVerified?: () => void;
   isDrawer: boolean;
 }
 
@@ -30,7 +30,7 @@ const OTPInput = ({
   onClose,
   navigateTo,
   phoneNumber,
-  onSubmit,
+  onVerified,
   isDrawer
 }: OTPInputProps) => {
   const navigate = useNavigate();
@@ -44,8 +44,6 @@ const OTPInput = ({
   const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
   const [validateOtp, { isLoading: validateOtpIsLoading }] =
     useValidateOtpMutation();
-
-  
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement>,
@@ -100,7 +98,7 @@ const OTPInput = ({
   };
 
   const handleSubmit = async () => {
-    // navigate("/pay/payment-details")
+    navigate("/pay/payment-details")
     const result = await validateOtp({
       phone: phoneNumber,
       otp,
@@ -111,8 +109,8 @@ const OTPInput = ({
       return;
     }
 
-    if(onSubmit) {
-      onSubmit();
+    if(onVerified) {
+      onVerified();
     }
 
     localStorage.setItem("phoneNumber", phoneNumber)

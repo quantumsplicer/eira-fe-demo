@@ -35,7 +35,7 @@ const PaymentReviewPage = () => {
       if (isStudentSignedIn) {
         navigate("/pay/create-session");
       } else {
-        navigate("/student/signin");
+        navigate("/student/login");
       }
     } else {
       navigate("/pay/payment-gateway-payment-flow");

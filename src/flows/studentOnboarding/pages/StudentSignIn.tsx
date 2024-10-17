@@ -10,8 +10,8 @@ import OTPInput from "../../../components/OTPInput";
 import StudentSignInMobile from "./StudentSignInMobile";
 
 const StudentSignIn = () => {
+    const activeFlow = localStorage.getItem("activeFlow");
 
-    const [activeFlow, setActiveFlow] = useState<string | null>(null);
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
@@ -31,12 +31,7 @@ const StudentSignIn = () => {
             setIsDialogOpen(true)
         }
     }
-
-    useEffect(() => {
-        const flow = localStorage.getItem("activeFlow");
-        setActiveFlow(flow)
-    }, [])
-
+    
     return (
         notPhoneScreen ?
             <Box

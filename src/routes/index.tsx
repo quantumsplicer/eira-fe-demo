@@ -21,11 +21,15 @@ import InputTutorDetails from "../flows/payTutionFees/pages/InputTutorDetails";
 import StudentSignIn from "../flows/studentOnboarding/pages/StudentSignIn";
 import StudentSignUp from "../flows/studentOnboarding/pages/StudentSignUp";
 import InputPayment from "../flows/staticLink/pages/InputPayment";
+import PayFeesContainer from "../flows/payTutionFees/pages/PayFeesContainer";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/pay/verify" element={<InputPhone />} />
+      <Route path="pay-tuition-fees/" element={<PayFeesContainer/>}>
+        <Route path="login" element={<StudentSignIn />} />
+        <Route path="pay/verify" element={<InputPhone />} />
+      </Route>
       <Route path="/pay/personal-details" element={<InputPersonalDetails />} />
       <Route path="/pay/payment-details" element={<InputPaymentDetails />} />
       <Route path="/pay/tutor-details" element={<InputTutorDetails />} />
@@ -41,7 +45,7 @@ const AppRoutes = () => {
       <Route path="tutor/aadhar-verification" element={<AadharVerification />} />
       <Route path="tutor/dashboard" element={<TutorDashboard />} />
 
-      <Route path="student/signin" element={<StudentSignIn />} />
+      <Route path="student/login" element={<StudentSignIn />} />
       <Route path="student/signup" element={<StudentSignUp />} />
       <Route path="pay/static/:phoneNumber" element={<InputPayment />} />
       <Route

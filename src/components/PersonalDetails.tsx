@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, CircularProgress, TextField, useMediaQuery } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useUpdateUserDetailsMutation } from "../APIs/definitions/user";
+import { isPanValid } from "../utils/helperFunctions";
 
 interface PersonalDetailsProps {
   onSuccess?: () => void;
@@ -45,7 +46,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
   };
 
   const handleSubmitClick = () => {
-    if (firstName && lastName && isPanValid()) {
+    if (firstName && lastName && isPanValid(pan)) {
       updateTutor({
         first_name: firstName,
         last_name: lastName,
@@ -61,14 +62,9 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
     }
   };
 
-  const isPanValid = (): boolean => {
-    const regex = /^[A-Z]{3}P[A-Z][0-9]{4}[A-Z]{1}$/;
-    return regex.test(pan);
-  };
-
   useEffect(() => {
     setIsButtonDisabled(true);
-    if (firstName && lastName && pan.length === 10 && isPanValid()) {
+    if (firstName && lastName && pan.length === 10 && isPanValid(pan)) {
       setIsButtonDisabled(false);
     }
   }, [firstName, lastName, pan]);
@@ -136,11 +132,11 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         onChange={(e) => handlePanInput(e)}
         onKeyDown={(event) => handleKeyDown(event)}
         error={
-          (pan.length === 10 && !isPanValid()) ||
+          (pan.length === 10 && !isPanValid(pan)) ||
           (!updateTutorIsLoading && isPanUnverified)
         }
         helperText={
-          pan.length === 10 && !isPanValid()
+          pan.length === 10 && !isPanValid(pan)
             ? "Enter valid PAN"
             : !updateTutorIsLoading &&
               isPanUnverified &&

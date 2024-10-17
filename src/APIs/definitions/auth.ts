@@ -12,32 +12,37 @@ export interface ValidateOtpBody {
 
 export interface ValidateOtpResponse extends ApiResponse {
   token: string;
-} 
+}
 
 export const authApi = postgresApi.injectEndpoints({
-    endpoints: (builder) => ({
-      getOtp: builder.mutation<ApiResponse, GetOtpBody>({
-        query: (body) => ({
-          url: `auth/generate-otp/`,
-          method: "POST",
-          body
-        }),
-      }),
-
-      validateOtp: builder.mutation<ValidateOtpResponse, ValidateOtpBody>({
-        query: (body) => ({
-          url: `auth/validate-otp/`,
-          method: "POST",
-          body
-        }),
-        onQueryStarted: async (body, {queryFulfilled}) => {
-          const {data} = await queryFulfilled;
-
-          console.log("data", data);
-          localStorage.setItem("access-token", data?.token);
-        }
+  endpoints: (builder) => ({
+    getOtp: builder.mutation<ApiResponse, GetOtpBody>({
+      query: (body: GetOtpBody) => ({
+        url: `auth/generate-otp/`,
+        method: "POST",
+        body,
       }),
     }),
-  });
 
-  export const { useGetOtpMutation, useValidateOtpMutation } = authApi;
+    validateOtp: builder.mutation<ValidateOtpResponse, ValidateOtpBody>({
+      query: (body) => ({
+        url: `auth/validate-otp/`,
+        method: "POST",
+        body,
+      }),
+      onQueryStarted: async (body, { queryFulfilled }) => {
+        const { data } = await queryFulfilled;
+
+        // Set up the user type
+        body?.role == "student"
+          ? localStorage.setItem("studentLogin", "true")
+          : localStorage.setItem("tutorLogin", "true");
+
+        // Save the token
+        localStorage.setItem("access-token", data?.token);
+      },
+    }),
+  }),
+});
+
+export const { useGetOtpMutation, useValidateOtpMutation } = authApi;

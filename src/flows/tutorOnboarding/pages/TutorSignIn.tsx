@@ -23,7 +23,7 @@ const TutorSignIn: React.FC = () => {
 
   const handleSubmit = () => {
     if (isPhoneNumberValid()) {
-      getOtp({ phone: phoneNumber }).then((res) => {
+      getOtp({ phone: phoneNumber }).then(() => {
         setIsDialogOpen(true);
       });
     }

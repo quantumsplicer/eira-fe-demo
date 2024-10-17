@@ -1,4 +1,4 @@
-import { ApiResponse, postgresApi } from "..";
+import { postgresApi } from "..";
 
 export interface UserDetails {
   first_name: string;
@@ -13,9 +13,9 @@ export interface UserDetails {
   onboarding_failure_reason: string;
 }
 
-export const authApi = postgresApi.injectEndpoints({
+export const userApi = postgresApi.injectEndpoints({
   endpoints: (builder) => ({
-    getUserDetails: builder.query<UserDetails, string>({
+    getUserDetails: builder.query<UserDetails, void>({
       query: () => `user/me`,
     }),
 
@@ -29,4 +29,4 @@ export const authApi = postgresApi.injectEndpoints({
   }),
 });
 
-export const { useGetUserDetailsQuery, useUpdateUserDetailsMutation } = authApi;
+export const { useLazyGetUserDetailsQuery, useGetUserDetailsQuery, useUpdateUserDetailsMutation } = userApi;

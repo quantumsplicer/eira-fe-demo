@@ -34,7 +34,7 @@ const InputPayment = () => {
         if (isStudentSignedIn) {
             navigate("/pay/create-session");
         } else {
-            navigate("/student/signIn");
+            navigate("/student/login");
         }
     };
 
