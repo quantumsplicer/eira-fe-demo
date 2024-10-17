@@ -21,6 +21,8 @@ import InputTutorDetails from "../flows/payTutionFees/pages/InputTutorDetails";
 import StudentSignIn from "../flows/studentOnboarding/pages/StudentSignIn";
 import StudentSignUp from "../flows/studentOnboarding/pages/StudentSignUp";
 import InputPayment from "../flows/staticLink/pages/InputPayment";
+import KycLogin from "../flows/kyc/pages/KycLogin";
+import AadharVerifyRedirectPage from "../flows/tutorOnboarding/pages/AadharVerifyRedirectPage";
 
 const AppRoutes = () => {
   return (
@@ -39,6 +41,7 @@ const AppRoutes = () => {
       <Route path="tutor/login" element={<TutorSignIn />} />
       <Route path="tutor/personal-details" element={<TutorSignUp />} />
       <Route path="tutor/aadhar-verification" element={<AadharVerification />} />
+      <Route path="tutor/onboarding/aadhar-redirect" element={<AadharVerifyRedirectPage />} />
       <Route path="tutor/dashboard" element={<TutorDashboard />} />
 
       <Route path="student/signin" element={<StudentSignIn />} />
@@ -48,6 +51,8 @@ const AppRoutes = () => {
         path="pay/dynamic/:amount/:phoneNumber"
         element={<PaymentReviewPage />}
       />
+
+      <Route path="tutor/kyc/login" element={<KycLogin />} />
     </Routes>
   );
 };

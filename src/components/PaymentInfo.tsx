@@ -54,7 +54,10 @@ const PaymentInfo = ({ amount, name, paymentDetails, type }: PaymentInfoProps) =
                             "Sent"
                     }
                 </Typography>
-                <Amount amount={amount} />
+                <Amount
+                    amount={Number(amount)}
+                    fontSize={20}
+                />
             </Stack>
             <Stack
                 direction={"row"}
