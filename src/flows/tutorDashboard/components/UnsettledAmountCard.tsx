@@ -1,11 +1,14 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
-
-const amount = 20000;
+import { useGetUserMetricsQuery } from "../../../APIs/definitions/userMetrics";
 
 const UnsettledAmountCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
+  const userMetricsData = useGetUserMetricsQuery();
+  console.log("User metrics data");
+  console.log(userMetricsData);
+
   const formatter = new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
@@ -93,7 +96,7 @@ const UnsettledAmountCard: React.FC = () => {
                     : { color: "#3BB900", fontSize: 32, fontWeight: 600 }
                 }
               >
-                {formatter.format(amount)}
+                {formatter.format(userMetricsData.data?.unsettled_amount || 0)}
               </Typography>
             </Stack>
             <Stack sx={!isPhoneScreen ? {} : { alignSelf: "center" }}>
@@ -166,7 +169,7 @@ const UnsettledAmountCard: React.FC = () => {
                       }
                 }
               >
-                12
+                {userMetricsData.data?.txn_since_last_settlement || 0}
               </Typography>
               <Typography
                 sx={
@@ -207,7 +210,9 @@ const UnsettledAmountCard: React.FC = () => {
                       }
                 }
               >
-                {formatter.format(amount)}
+                {formatter.format(
+                  userMetricsData.data?.avg_transaction_amount || 0
+                )}
               </Typography>
               <Typography
                 sx={

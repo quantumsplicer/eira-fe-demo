@@ -26,16 +26,17 @@ import SortSharpIcon from "@mui/icons-material/SortSharp";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
-import PaymentHistory from "./PaymentHistory";
+import PaymentHistory from "../subpages/PaymentHistory";
 import SessionHistoryIcon from "@mui/icons-material/RestoreOutlined";
-import SessionHistory from "./SessionHistory";
-import PaymentLinkPage from "./PaymentLinkPage";
-import ProfilePage from "./ProfilePage";
+import SessionHistory from "../subpages/SessionHistory";
+import PaymentLinkPage from "../subpages/PaymentLinkPage";
+import ProfilePage from "../subpages/ProfilePage";
 import { isAssertEntry } from "typescript";
 import PaymentLinkDialog from "../dialogs/PaymentLinkDialog";
 import { useLocation, useNavigate } from "react-router-dom";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
+import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import { useDispatch } from "react-redux";
 import { useOnboarding } from "../../../customHooks/useOnboarding";
 import { setOnboardingStep } from "../../../stores/slices/onboardingInfoSlice";
@@ -72,6 +73,8 @@ const TutorDashboard: React.FC = () => {
   const location = useLocation();
   const previousUrl = location.state?.previousUrl;
   const [showDialog, setShowDialog] = useState<boolean>(false);
+
+  const { data: userDetails, isLoading, error } = useGetUserDetailsQuery("");
   const [isSessionExpired, setIsSessionExpired] = useState<boolean>(false);
   const { determineOnboardingStep } = useOnboarding();
   const dispatch = useDispatch();
@@ -109,12 +112,13 @@ const TutorDashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    const showAlert = localStorage.getItem('showDialog') === 'true';
-    if (showAlert && previousUrl?.endsWith('/tutor/onboarding/aadhar-redirect')) {
+    const showAlert = localStorage.getItem("showDialog") === "true";
+
+    if (showAlert && previousUrl?.endsWith("/tutor/aadhar-verification")) {
       setShowDialog(true);
       localStorage.removeItem("showDialog");
     }
-  }, [previousUrl])
+  }, [previousUrl]);
 
   const ScheduleClassButton: React.FC = () => {
     return (
@@ -124,14 +128,14 @@ const TutorDashboard: React.FC = () => {
           sx={{
             borderBottom: "1px solid #757575",
             cursor: "pointer",
-            color: theme => theme.palette.grey[600]
+            color: (theme) => theme.palette.grey[600],
           }}
         >
           Schedule a class now
         </Typography>
       </>
-    )
-  }
+    );
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("access-token");
@@ -245,18 +249,112 @@ const TutorDashboard: React.FC = () => {
                           marginLeft: 20,
                           top: 20,
                         }
-                    }
-                  />
-                </Typography>
-                <Box
-                  sx={{
-                    position: "fixed",
-                    right: 0,
-                    top: 0,
-                  }}
-                >
-                  {!isPhoneScreen ? (
-                    <Stack direction="row" spacing={1} p={2}>
+                  }
+                />
+              </Typography>
+              <Box
+                sx={{
+                  position: "fixed",
+                  right: 0,
+                  top: 0,
+                }}
+              >
+                {!isPhoneScreen ? (
+                  <Stack direction="row" spacing={1} p={2}>
+                    <Typography
+                      color="black"
+                      fontSize={14}
+                      pt={1.4}
+                      fontWeight={600}
+                    >
+                      {userDetails?.first_name}
+                    </Typography>
+                    <IconButton
+                      onClick={() => {
+                        handleSubpageChange(PROFILE_PAGE);
+                      }}
+                    >
+                      <PersonOutlineOutlinedIcon />
+                    </IconButton>
+                  </Stack>
+                ) : (
+                  <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    edge="start"
+                    onClick={handleDrawerToggle}
+                    sx={{ mr: 2, display: { sm: "none" } }}
+                  >
+                    <SortSharpIcon
+                      sx={{
+                        color: "black",
+                        fontSize: "50px",
+                        transform: "scaleX(-1)",
+                      }}
+                    />
+                  </IconButton>
+                )}
+              </Box>
+            </Stack>
+          </Toolbar>
+        </AppBar>
+        {!isPhoneScreen ? (
+          <Drawer
+            variant="permanent"
+            sx={{
+              width: "18%",
+              minWidth: "200px",
+              flexShrink: 0,
+              [`& .MuiDrawer-paper`]: {
+                minWidth: "200px",
+                width: "18%",
+                boxSizing: "border-box",
+                backgroundColor: "white",
+              },
+            }}
+          >
+            <Toolbar />
+            <Box sx={{ overflow: "auto" }}>
+              <List>
+                {[
+                  { title: "Payments", subpage: PAYMENT_HISTORY_PAGE },
+                  { title: "Your Payment Link", subpage: PAYMENT_LINK_PAGE },
+                  { title: "Session History", subpage: SESSION_HISTORY_PAGE },
+                  { title: "Invoices", subpage: "disabled" },
+                  { title: "Marketing", subpage: "disabled" },
+                ].map((entry, index) => (
+                  <ListItem
+                    key={entry.title}
+                    sx={{ width: "100%", pl: "0", pr: "0" }}
+                  >
+                    <ListItemButton
+                      onClick={() => {
+                        handleSubpageChange(entry.subpage);
+                      }}
+                      disabled={index === 3 || index === 4 ? true : false}
+                      sx={{
+                        backgroundColor:
+                          subpage === entry.subpage ? "#EBF1FF" : "white",
+                        color: subpage === entry.subpage ? "#507FFD" : "black",
+                        pl: 3,
+                        "& *":
+                          subpage === entry.subpage
+                            ? {
+                                color: "#507FFD",
+                                fontWeight: "bold",
+                              }
+                            : { color: "black" },
+
+                        "&:hover": {
+                          backgroundColor: "#EBF1FF",
+                          "& *": {
+                            color: "#507FFD",
+                            fontWeight: "bold",
+                          },
+                        },
+                      }}
+                    >
+                      <ListItemIcon>{iconsArray[index]}</ListItemIcon>
                       <Typography
                         color="black"
                         fontSize={14}
@@ -265,32 +363,50 @@ const TutorDashboard: React.FC = () => {
                       >
                         Maanav
                       </Typography>
-                      <IconButton
-                        onClick={() => {
-                          handleSubpageChange(PROFILE_PAGE);
-                        }}
-                      >
-                        <PersonOutlineOutlinedIcon />
-                      </IconButton>
-                    </Stack>
-                  ) : (
-                    <IconButton
-                      color="inherit"
-                      aria-label="open drawer"
-                      edge="start"
-                      onClick={handleDrawerToggle}
-                      sx={{ mr: 2, display: { sm: "none" } }}
-                    >
-                      <SortSharpIcon
-                        sx={{
-                          color: "black",
-                          fontSize: "50px",
-                          transform: "scaleX(-1)",
-                        }}
-                      />
-                    </IconButton>
-                  )}
-                </Box>
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+              <Divider />
+            </Box>
+          </Drawer>
+        ) : (
+          <Drawer
+            variant="temporary"
+            anchor="right"
+            open={mobileOpen}
+            onTransitionEnd={handleDrawerTransitionEnd}
+            onClose={handleDrawerClose}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+              display: { xs: "block", sm: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth + 100,
+                backgroundColor: "white",
+              },
+            }}
+          >
+            <Toolbar />
+
+            <Stack spacing={2}>
+              <Stack
+                pl={2.5}
+                spacing={2}
+                onClick={() => {
+                  handleSubpageChange(PROFILE_PAGE);
+                }}
+              >
+                <Avatar
+                  alt="Profile Photo"
+                  src={undefined}
+                  sx={{ width: 60, height: 60, marginBottom: 1, boxShadow: 5 }}
+                />
+                <Typography fontSize={16} fontWeight={600}>
+                  {userDetails?.first_name}
+                </Typography>
               </Stack>
             </Toolbar>
           </AppBar>
@@ -504,7 +620,28 @@ const TutorDashboard: React.FC = () => {
               />
           }
         </Box>
-      }
+        {isPhoneScreen ? (
+          // <StatusDrawer
+          //     open={showDialog}
+          //     type="success"
+          //     headingMessage="Congratulations!!"
+          //     subHeadingMessage1="You are ready to accept payments on Eira!"
+          //     preventDrawerClose={true}
+          //     CustomDrawerButton={ScheduleClassButton}
+          //   />
+          <></>
+        ) : (
+          <StatusDialog
+            open={showDialog}
+            onClose={() => setShowDialog(false)}
+            type="success"
+            headingMessage="Congratulations!!"
+            subHeadingMessage="You are ready to accept payments on Eira!"
+            preventDialogClose={false}
+            CustomDialogButton={ScheduleClassButton}
+          />
+        )}
+      </Box>
     </ThemeProvider>
   );
 };

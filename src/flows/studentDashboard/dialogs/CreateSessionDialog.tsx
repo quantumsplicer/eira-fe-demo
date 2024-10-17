@@ -26,57 +26,60 @@ import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
+import { PaymentDetails, SessionDetails, TutorDetails } from "../interfaces";
+
 interface CreateSessionDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: () => void;
-  amount: number;
+  onSubmit: (data: SessionDetails) => void;
+  onBack: () => void;
+  sessionDetails: SessionDetails;
+  paymentDetails: PaymentDetails;
+  tutorDetails: TutorDetails;
 }
-type Inputs = {
-  sessionTitle: string;
-  selectedDate: Dayjs | null;
-  startTime: Dayjs | null;
-  endTime: Dayjs | null;
-  description: string;
-};
 
 const CreateSessionDialog = ({
   open,
   onClose,
   onSubmit,
-  amount,
+  onBack,
+  sessionDetails,
+  paymentDetails,
+  tutorDetails,
 }: CreateSessionDialogProps) => {
   const {
-    register,
     handleSubmit,
     watch,
     formState: { errors, isValid },
     control,
-  } = useForm<Inputs>({
+  } = useForm<SessionDetails>({
     defaultValues: {
-      selectedDate: null,
-      startTime: null,
-      endTime: null,
+      sessionTitle: "",
+      date: "",
+      startTime: "",
+      endTime: "",
+      description: "",
     },
   });
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  const [sessionTitle, setSessionTitle] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-  const [startTime, setStartTime] = useState<Dayjs | null>(null);
-  const [endTime, setEndTime] = useState<Dayjs | null>(null);
-  const [description, setDescription] = useState("");
-
-  const handleSessionTitleChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSessionTitle(event.target.value);
+  const resetForm = () => {
+    control._reset({
+      sessionTitle: "",
+      date: null,
+      startTime: null,
+      endTime: null,
+      description: "",
+    });
   };
-
-  const handleDescriptionChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setDescription(event.target.value);
+  const handleFormSubmit: SubmitHandler<SessionDetails> = (data) => {
+    onSubmit(data);
   };
+  useEffect(() => {
+    if (!open) {
+      resetForm();
+    }
+  }, [open]);
+
   useEffect(() => {
     console.log("These are errors");
     console.log(errors);
@@ -108,7 +111,7 @@ const CreateSessionDialog = ({
       <DialogContent dividers>
         <IconButton
           aria-label="close"
-          onClick={onClose}
+          onClick={!isPhoneScreen ? onClose : onBack}
           sx={
             !isPhoneScreen
               ? {
@@ -142,15 +145,17 @@ const CreateSessionDialog = ({
                   </Typography>
                   <Stack>
                     <Typography fontSize={22} fontWeight={650}>
-                      Suneel Satpal
+                      {tutorDetails.firstName} {tutorDetails.lastName}
                     </Typography>
                     <Typography fontSize={15} lineHeight={1.2}>
-                      +919997945005
+                      {tutorDetails.phoneNumber}
                     </Typography>
                   </Stack>
                 </Stack>
                 <Box>
-                  <AmountBreakupCard amount={amount}></AmountBreakupCard>
+                  <AmountBreakupCard
+                    amount={paymentDetails.amount}
+                  ></AmountBreakupCard>
                 </Box>
               </Stack>
               <Divider
@@ -231,7 +236,7 @@ const CreateSessionDialog = ({
                 {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
                 <Stack direction="row" spacing={3}>
                   <Controller
-                    name="selectedDate"
+                    name="date"
                     control={control}
                     rules={{ required: "Date is required" }}
                     render={({ field }) => (
@@ -244,10 +249,8 @@ const CreateSessionDialog = ({
                             <TextField
                               {...params}
                               size="small" // Reduce the input size
-                              error={
-                                errors.selectedDate !== undefined ? true : false
-                              }
-                              helperText={errors.selectedDate ? "Required" : ""}
+                              error={errors.date !== undefined ? true : false}
+                              helperText={errors.date ? "Required" : ""}
                               sx={{
                                 mb: 0,
                                 "& .MuiInputLabel-root": {
@@ -386,7 +389,7 @@ const CreateSessionDialog = ({
                 variant="contained"
                 fullWidth
                 disabled={!isValid}
-                onClick={handleSubmit(onSubmit)}
+                onClick={handleSubmit(handleFormSubmit)}
                 sx={{
                   backgroundColor: "#507FFD",
                   borderRadius: 7,

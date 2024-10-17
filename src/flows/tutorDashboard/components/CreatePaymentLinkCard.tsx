@@ -11,16 +11,13 @@ import {
 import Button from "@mui/material/Button";
 import PaymentLinkDialog from "../dialogs/PaymentLinkDialog";
 import ConfirmationDialog from "../dialogs/ConfirmationDialog";
+import PaymentLinkFlow from "./flows/SendPaymentLinkFlow";
 
 const CreatePaymentLinkCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  const heading = "Link Successfully Created";
-  const subHeading =
-    "your payment link is created and sent to the student on their whatsapp and SMS";
-  const [activeDialog, setActiveDialog] = useState<string>("None");
-  const openDialog = () => {
-    setActiveDialog("PaymentLinkDialog");
-  };
+
+  const [paymentLinkFlowActive, setPaymentLinkFlowActive] =
+    useState<boolean>(false);
 
   return (
     <Box
@@ -39,7 +36,7 @@ const CreatePaymentLinkCard: React.FC = () => {
           : {
               p: 4,
               width: "100%",
-              height: "100%",
+              height: "30vh",
               backgroundColor: "white",
               alignContent: "center",
             }
@@ -62,7 +59,7 @@ const CreatePaymentLinkCard: React.FC = () => {
         </Stack>
         <Button
           variant="contained"
-          onClick={openDialog}
+          onClick={() => setPaymentLinkFlowActive(true)}
           sx={
             !isPhoneScreen
               ? {
@@ -88,16 +85,12 @@ const CreatePaymentLinkCard: React.FC = () => {
           Create Payment Link
         </Button>
       </Stack>
-      <PaymentLinkDialog
-        activeDialog={activeDialog}
-        setActiveDialog={setActiveDialog}
-      />
-      <ConfirmationDialog
-        activeDialog={activeDialog}
-        setActiveDialog={setActiveDialog}
-        heading={heading}
-        subHeading={subHeading}
-      />
+      {paymentLinkFlowActive && (
+        <PaymentLinkFlow
+          isActive={paymentLinkFlowActive}
+          onClose={() => setPaymentLinkFlowActive(false)}
+        />
+      )}
     </Box>
   );
 };

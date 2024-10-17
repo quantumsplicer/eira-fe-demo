@@ -17,21 +17,27 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Alert from "@mui/material/Alert";
 import { useForm, SubmitHandler } from "react-hook-form";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
+import { PaymentDetails, SessionDetails, TutorDetails } from "../interfaces";
 
 interface CompletePaymentDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: () => void;
-  amount: number;
+  onBack: () => void;
+  paymentDetails: PaymentDetails;
+  tutorDetails: TutorDetails;
+  sessionDetails: SessionDetails;
 }
 const CompletePaymentDialog = ({
   open,
   onClose,
   onSubmit,
-  amount,
+  onBack,
+  paymentDetails,
+  tutorDetails,
+  sessionDetails,
 }: CompletePaymentDialogProps) => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-
   return (
     <Dialog
       open={open}
@@ -59,7 +65,7 @@ const CompletePaymentDialog = ({
       <DialogContent dividers>
         <IconButton
           aria-label="close"
-          onClick={onClose}
+          onClick={!isPhoneScreen ? onClose : onBack}
           sx={
             !isPhoneScreen
               ? {
@@ -93,15 +99,17 @@ const CompletePaymentDialog = ({
                   </Typography>
                   <Stack>
                     <Typography fontSize={22} fontWeight={650}>
-                      Suneel Satpal
+                      {tutorDetails.firstName} {tutorDetails.lastName}
                     </Typography>
                     <Typography fontSize={15} lineHeight={1.2}>
-                      +919997945005
+                      {tutorDetails.phoneNumber}
                     </Typography>
                   </Stack>
                 </Stack>
                 <Box>
-                  <AmountBreakupCard amount={amount}></AmountBreakupCard>
+                  <AmountBreakupCard
+                    amount={paymentDetails.amount}
+                  ></AmountBreakupCard>
                 </Box>
               </Stack>
               <Divider
@@ -168,7 +176,7 @@ const CompletePaymentDialog = ({
                       align="center"
                       color="#1F9254"
                     >
-                      ₹ 5,000
+                      ₹ {paymentDetails.amount * 1.0018}
                     </Typography>
                   </Stack>
                   <Stack direction="row" spacing={1}>
@@ -181,7 +189,7 @@ const CompletePaymentDialog = ({
                       to
                     </Typography>
                     <Typography fontSize={23} fontWeight={650} lineHeight={1.2}>
-                      Suneel Satpal
+                      {tutorDetails.firstName} {tutorDetails.lastName}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -210,7 +218,7 @@ const CompletePaymentDialog = ({
                     Account Holder:
                   </Typography>
                   <Typography sx={{ fontSize: 15 }} fontWeight={600}>
-                    Suneel Satpal
+                    {tutorDetails.firstName} {tutorDetails.lastName}
                   </Typography>
                 </Stack>
                 <Stack direction="row" justifyContent="space-between">
@@ -221,12 +229,20 @@ const CompletePaymentDialog = ({
                   >
                     Tuition date and time
                   </Typography>
-                  <Typography sx={{ fontSize: 15 }} fontWeight={600}>
-                    5:00pm - 6:00pm
+                  <Typography sx={{ fontSize: 12 }} fontWeight={600}>
+                    {`${sessionDetails.date?.format(
+                      "DD/MM"
+                    )} - ${sessionDetails.startTime?.format(
+                      "HH:mm"
+                    )} - ${sessionDetails.endTime?.format("HH:mm")}`}
                   </Typography>
                 </Stack>
               </Stack>
-              {!isPhoneScreen ? <></> : <AmountBreakupCard />}
+              {!isPhoneScreen ? (
+                <></>
+              ) : (
+                <AmountBreakupCard amount={paymentDetails.amount} />
+              )}
               <Box>
                 <Button
                   variant="contained"
