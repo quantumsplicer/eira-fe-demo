@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Stack, Box, Typography, Button, useMediaQuery } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
@@ -7,14 +7,35 @@ import LoginBg from "../components/LoginBg";
 import OTPInput from "../../../components/OTPInput";
 import { useGetOtpMutation } from "../../../APIs/definitions/auth";
 import { LoadingButton } from "@mui/lab";
+import { useLazyGetUserDetailsQuery } from "../../../APIs/definitions/user";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setOnboardingStep } from "../../../stores/slices/onboardingInfoSlice";
+import { useOnboarding } from "../../../customHooks/useOnboarding";
 
 const TutorSignIn: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   // const [isPhoneNumberInvalid, setIsPhoneNumberInvalid] = useState<boolean>(false)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
+  const navigate = useNavigate();
 
   const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
+  const { determineOnboardingStep } = useOnboarding();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const handleOnboarding = async () => {
+      const accessToken = localStorage.getItem('access-token');
+      if (accessToken) {
+        const { navigateTo, onboardingStep } = await determineOnboardingStep();
+        dispatch(setOnboardingStep(onboardingStep));
+        navigate(navigateTo);
+      }
+    };
+
+    handleOnboarding();
+  }, [])
 
   const isPhoneNumberValid = (): boolean => {
     const regex = /^[6-9]\d{9}$/;
@@ -23,11 +44,23 @@ const TutorSignIn: React.FC = () => {
 
   const handleSubmit = () => {
     if (isPhoneNumberValid()) {
-      getOtp({ phone: phoneNumber }).then((res) => {
-        setIsDialogOpen(true);
-      });
+      getOtp({
+        phone: phoneNumber
+      })
+        .unwrap()
+        .then((res) => {
+          console.log(res)
+          setIsDialogOpen(true);
+        })
+        .catch(err => console.log(err));
     }
   };
+
+  const handlePostOtpVerification = async () => {
+    const { navigateTo, onboardingStep } = await determineOnboardingStep();
+    dispatch(setOnboardingStep(onboardingStep));
+    navigate(navigateTo);
+  }
 
   return (
     <Box>
@@ -93,7 +126,7 @@ const TutorSignIn: React.FC = () => {
               </>
             ) : (
               <OTPInput
-                navigateTo="/tutor/signup"
+                onSubmit={handlePostOtpVerification}
                 phoneNumber={phoneNumber}
                 isDrawer={false}
               />

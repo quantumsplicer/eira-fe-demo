@@ -51,9 +51,14 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         last_name: lastName,
         pan: pan,
       })
-        .then(() => {
-          setIsPanUnverified(false);
-          onSuccess && onSuccess();
+        .unwrap()
+        .then((res) => {
+          if (res) {
+            setIsPanUnverified(false);
+            onSuccess && onSuccess();
+          } else {
+            setIsPanUnverified(true);
+          }
         })
         .catch(() => {
           setIsPanUnverified(true);

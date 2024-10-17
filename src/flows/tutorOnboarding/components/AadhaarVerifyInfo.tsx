@@ -1,23 +1,48 @@
 import { Typography, Stack, Button, Box, useMediaQuery } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import Aadhaar from "../../../assets/images/svg/Aadhaar.svg";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { useNavigate } from "react-router-dom";
+import { useOnboardUserMutation } from "../../../APIs/definitions/onboarding";
 
 interface AadhaarVerifyInfoProps {
-    aadhaarVerificationFailed: boolean | null;
+    showHeading: boolean;
 }
 
-const AadhaarVerifyInfo = ({aadhaarVerificationFailed}: AadhaarVerifyInfoProps) => {
+const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
 
     const navigate = useNavigate();
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
+    const [aadhaarVerificationFailed, setAadhaarVerificationFailed] = useState<boolean | null>(null);
+
+    const [onboardUser, { isLoading }] = useOnboardUserMutation();
+
+    const handleVerifyClick = () => {
+        onboardUser()
+            .unwrap()
+            .then(res => {
+                console.log(res)
+                if (res.onboarding_link) {
+                    // navigate(res.onboarding_link);
+                } else {
+                    setAadhaarVerificationFailed(true);
+                }
+            })
+            .catch(error => {
+                console.log(error.status);
+                console.log(error.data?.message);
+                setAadhaarVerificationFailed(true);
+            })
+    }
 
     return (
         <Stack alignItems={"center"} textAlign={"center"}>
-            <Typography fontWeight={"bold"}>
-                Aadhaar Verification
-            </Typography>
+            {
+                showHeading &&
+                <Typography fontWeight={"bold"}>
+                    Aadhaar Verification
+                </Typography>
+            }
             <Typography mt={2} color={"#6F6F6F"}>
                 Please keep your Aadhaar egistered phone number with you for verification
             </Typography>
@@ -37,7 +62,7 @@ const AadhaarVerifyInfo = ({aadhaarVerificationFailed}: AadhaarVerifyInfoProps) 
             />
             {
                 aadhaarVerificationFailed &&
-                <Box mb={3} borderRadius={3} p={2} sx={{backgroundColor: "rgba(251, 203, 168, 0.25)"}}>
+                <Box mb={1} borderRadius={3} p={2} sx={{backgroundColor: "rgba(251, 203, 168, 0.25)"}}>
                     <Stack fontSize={12} alignItems={"center"}>
                         <Stack mb={2} direction={"row"} alignItems={"center"}>
                             <CancelOutlinedIcon sx={{color: "red", marginRight: 1}} />
@@ -62,11 +87,11 @@ const AadhaarVerifyInfo = ({aadhaarVerificationFailed}: AadhaarVerifyInfoProps) 
                     maxWidth: '400px',
                     borderRadius: 20,
                     height: 45,
-                    marginTop: aadhaarVerificationFailed ? 4 : 20
+                    marginTop: aadhaarVerificationFailed ? 2 : 17
                 }}
-                onClick={() => navigate('/tutor/aadhar-verification')}
+                onClick={handleVerifyClick}
             >
-                Verify
+                {aadhaarVerificationFailed ? "Verify Again" : "Verify"}
             </Button>
             <Button
                 variant="outlined"

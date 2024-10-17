@@ -6,6 +6,7 @@ import {
   Box,
   Typography,
   useMediaQuery,
+  Stack,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -40,6 +41,7 @@ const OTPInput = ({
   const [isOtpInvalid, setIsOtpInvalid] = useState<boolean>(false);
   const location = useLocation();
   const notPhoneScreen = useMediaQuery('(min-width:850px)');
+  const [resendOtpCountdown, setResendOtpCountdown] = useState<number>(0);
 
   const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
   const [validateOtp, { isLoading: validateOtpIsLoading }] =
@@ -100,7 +102,6 @@ const OTPInput = ({
   };
 
   const handleSubmit = async () => {
-    // navigate("/pay/payment-details")
     const result = await validateOtp({
       phone: phoneNumber,
       otp,
@@ -125,12 +126,32 @@ const OTPInput = ({
   };
 
   const resendOtp = () => {
+    if (resendOtpCountdown > 0) {
+      return;
+    }
     setOtp("");
     setIsOtpInvalid(false);
     setActiveIndex(0);
 
     getOtp({ phone: phoneNumber });
+    startResendOtpCountdown();
   };
+
+  const startResendOtpCountdown = () => {
+    setResendOtpCountdown(30);
+    let remainingTime = 30 * 1000;
+
+    const timer = setInterval(() => {
+      if (remainingTime > 0) {
+        remainingTime -= 1000;
+        setResendOtpCountdown(remainingTime / 1000);
+        
+        if (remainingTime === 0) {
+          clearInterval(timer);
+        }
+      }
+    }, 1000);
+  }
 
   useEffect(() => {
     otpInputsRef.current = Array.from({ length: OPT_LENGTH }).map(() =>
@@ -138,6 +159,7 @@ const OTPInput = ({
     );
     setOtp("");
     setActiveIndex(0);
+    startResendOtpCountdown();
   }, []);
 
   useEffect(() => {
@@ -152,17 +174,19 @@ const OTPInput = ({
   }, [activeIndex]);
 
   return (
-    <>
+    <Stack
+      alignItems={"center"}
+    >
       <Typography
-        fontWeight={"bold"}
+        fontWeight={"500"}
         variant="h6"
-      // mt={8}
+        mt={2}
       >
         Verify Phone Number
       </Typography>
       <Typography
         mt={3}
-        mb={notPhoneScreen || isDrawer ? 7 : 12}
+        mb={notPhoneScreen || isDrawer ? 5 : 12}
         textAlign={"center"}
         color="#6F6F6F"
       >
@@ -200,20 +224,34 @@ const OTPInput = ({
           Incorrect OTP. Please retry.
         </Typography>
       )}
-      {isOtpInvalid && (
+      <Stack
+        mt={2}
+        alignItems={"center"}
+      >
         <Typography
           onClick={resendOtp}
           fontSize={14}
-          mt={2}
+          width={"fit-content"}
           sx={{
-            borderBottom: "1px solid #6285FF",
+            borderBottomWidth: "1px",
+            borderBottomStyle: "solid",
+            borderBottomColor: resendOtpCountdown > 0 ? "#cecece" : "#6285FF",
             cursor: "pointer",
-            color: "#6285FF",
+            color: resendOtpCountdown > 0 ? "#cecece" : "#6285FF",
           }}
         >
           Resend OTP
         </Typography>
-      )}
+        {
+          resendOtpCountdown > 0 && 
+          <Typography
+            fontSize={14}
+            mt={1}
+          >
+            in {resendOtpCountdown} seconds
+          </Typography>
+        }
+      </Stack>
       <Button
         variant="contained"
         onClick={handleSubmit}
@@ -230,7 +268,7 @@ const OTPInput = ({
       >
         Verify OTP
       </Button>
-    </>
+    </Stack>
   );
 };
 
