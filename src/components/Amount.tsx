@@ -4,18 +4,42 @@ import {
 } from "@mui/material";
 
 interface AmountProps {
-    amount: string;
+    amount: number;
+    fontSize?: number;
 }
 
-const Amount = ({amount}: AmountProps) => {
+const Amount = ({amount, fontSize}: AmountProps) => {
+
+    const formatAmount = (amount:number|undefined) : string => {
+        if(amount) {
+            const amtStr = amount.toString();
+            const [whole, decimal] = amtStr.split('.');
+            const lastThreeDigits = whole.slice(-3);
+            let otherDigits = whole.slice(0, -3);
+
+            if (otherDigits.length > 0) {
+                otherDigits = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',';
+            }
+            let formattedAmount = otherDigits + lastThreeDigits;
+
+            if (decimal !== undefined) {
+                formattedAmount += '.' + decimal;
+            }
+        
+            return "₹ "+formattedAmount;
+        }
+        return "-"
+    }
+
     return (
         <Typography
             variant="h5"
-            sx={{ fontSize: 20 }}
+            display={"inline"}
+            sx={{ fontSize: fontSize ? fontSize : 24 }}
             color={"#1F9254"}
             fontWeight={"bold"}
         >
-            ₹ {amount}
+            {formatAmount(amount)}
         </Typography>
     )
 }

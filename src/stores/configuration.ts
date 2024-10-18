@@ -3,9 +3,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import { onGoingPaymentReducer } from "./slices/onGoingPaymentSlice";
 import { invitationsApi } from "../APIs/definitions/invitations";
 import { postgresApi } from "../APIs";
+import { sessionReducer } from "./slices/sessionSlice";
+import { onboardingInfoReducer } from "./slices/onboardingInfoSlice";
 
-const store = configureStore({
+const store: any = configureStore({
   reducer: {
+    session: sessionReducer,
+    onboardingInfo: onboardingInfoReducer,
     onGoingPayment: onGoingPaymentReducer,
     [postgresApi.reducerPath]: postgresApi.reducer,
   },
@@ -13,8 +17,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    })
-      .concat(postgresApi.middleware)
+    }).concat(postgresApi.middleware),
 });
 
 export default store;

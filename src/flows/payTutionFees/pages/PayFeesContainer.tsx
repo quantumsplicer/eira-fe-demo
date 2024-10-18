@@ -9,7 +9,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import NoteBox from "../../../components/NoteBox";
 import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
 import EiraBack from "../../../assets/images/svg/EiraBack.svg";
@@ -21,15 +21,30 @@ import {
   useLazyGetUserDetailsQuery,
 } from "../../../APIs/definitions/user";
 import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
+import { Loading } from "../../../components/Loading";
 
 const PayFeesContainer: React.FC = () => {
-  const { checkCurrentStudentOnboardingState } =
+  const { checkCurrentStudentOnboardingState, checkProcessIsLoading } =
     useGetOnboardingDetails();
 
   useEffect(() => {
-    console.log("asdfadsfsadf")
+    if (window.location.pathname.includes("pay-tuition-fees"))
+      localStorage.setItem("activeFlow", "payTuitionFeesFlow");
+    else if (window.location.pathname.includes("payment-link"))
+      localStorage.setItem("activeFlow", "DynamicLinkFlow");
+    else if (window.location.pathname.includes("static-link"))
+      localStorage.setItem("activeFlow", "StaticLinkFlow");
+    else localStorage.setItem("activeFlow", "defaultFlow");
+
+    localStorage.setItem("activeFlowUrl", window.location.pathname);
+
+    console.log("asdfadsfsadf");
     checkCurrentStudentOnboardingState();
   }, []);
+
+  console.log(checkProcessIsLoading);
+
+  if (checkProcessIsLoading) return <Loading />;
 
   return <Outlet />;
 };

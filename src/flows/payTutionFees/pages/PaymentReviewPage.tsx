@@ -1,81 +1,75 @@
 // src/components/PaymentReviewPage.tsx
 import { useEffect, useState } from "react";
-import { Box, Button, Stack, Typography, Alert, useMediaQuery, Drawer } from "@mui/material";
+import {
+  Box,
+  Button,
+  Stack,
+  Typography,
+  Alert,
+  useMediaQuery,
+  Drawer,
+} from "@mui/material";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import PaymentInfo from "../../../components/PaymentInfo";
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import EiraBack from '../../../assets/images/svg/EiraBack.svg'
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import EiraBack from "../../../assets/images/svg/EiraBack.svg";
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 import SafeLogo from "../../../components/SafeLogo";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
+import { selectAmount } from "../../../stores/slices";
+import { useSelector } from "react-redux";
+import { load } from "@cashfreepayments/cashfree-js";
+import { usePayment } from "../../../hooks/usePayment";
 
 const PaymentReviewPage = () => {
-
-  const { amount, phoneNumber } = useParams()
   const location = useLocation();
   const [isTutorOnboarded, setIsTutorOnboarded] = useState<boolean>(false);
   const navigate = useNavigate();
   const [routeSource, setRouteSource] = useState<string>("");
-  const notPhoneScreen = useMediaQuery('(min-width:850px)');
+  const notPhoneScreen = useMediaQuery("(min-width:850px)");
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const activePaymentAmount = localStorage.getItem("activePaymentAmount");
+  const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
+  const activeFlow = localStorage.getItem("activeFlow");
 
   const paymentDetails = {
     "Account Number": "**** **** **** 2150",
-    "Session Date": "24th Aug, 202",
-    "Session Time": "17:00 - 18:00"
-  }
+    "Session Date": "24th Aug, 2022",
+    "Session Time": "17:00 - 18:00",
+  };
+
+  const { doPayment } = usePayment();
 
   const handleSubmit = () => {
-    console.log(routeSource)
-    if (routeSource === "Dynamic Flow") {
-      const isStudentSignedIn = localStorage.getItem("studentLogin") === "true";
-      localStorage.setItem("activeFlow", "dynamicFlow");
-      if (isStudentSignedIn) {
-        navigate("/pay/create-session");
-      } else {
-        navigate("/student/login");
-      }
-    } else {
-      navigate("/pay/payment-gateway-payment-flow");
-    }
+    navigate("/pay/payment-gateway-payment-flow");
   };
 
   useEffect(() => {
-    if (location.pathname.startsWith('/pay/dynamic')) {
-      setRouteSource('Dynamic Flow');
-    } else if (location.pathname === '/pay/review') {
-      setRouteSource('Tuition Fee Flow');
+    if (!activePaymentAmount || !activePaymentTutorId) {
+      navigate("/pay/payment-details");
     }
-  }, [])
+  }, []);
 
   return (
     <Box
       pt={7}
       sx={{
-        backgroundImage: notPhoneScreen ? `url(${EiraBack})` : '',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '100vh',
-        minWidth: '100vw',
+        backgroundImage: notPhoneScreen ? `url(${EiraBack})` : "",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        minWidth: "100vw",
       }}
     >
-      <Stack
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"center"}
-      >
-        {
-          notPhoneScreen &&
-          <Box
-            alignSelf={"flex-end"}
-          >
+      <Stack direction={"row"} alignItems={"center"} justifyContent={"center"}>
+        {notPhoneScreen && (
+          <Box alignSelf={"flex-end"}>
             <SafeLogo />
           </Box>
-        }
-        {
-          notPhoneScreen &&
+        )}
+        {notPhoneScreen && (
           <Box
             width={"55%"}
             height={"30%"}
@@ -83,18 +77,22 @@ const PaymentReviewPage = () => {
             zIndex={10}
             p={5}
             sx={{
-              borderRadius: "20px 0 0 20px"
+              borderRadius: "20px 0 0 20px",
             }}
           >
             <PaymentBreakupInfo
               name="Suneel Satpal"
-              phone={phoneNumber ? `+91 ${phoneNumber}` : "+91 93892 50148"}
-              amount={amount ? Number(amount) : 5000}
+              phone={
+                activePaymentTutorId
+                  ? `+91 ${activePaymentTutorId}`
+                  : "+91 93892 50148"
+              }
+              amount={Number(activePaymentAmount)}
               settlementDate="7th October"
               settlementTime="5:00 pm"
             />
           </Box>
-        }
+        )}
         <Box
           width={notPhoneScreen ? "430px" : "100vw"}
           minHeight={notPhoneScreen ? "90vh" : "100vh"}
@@ -112,22 +110,22 @@ const PaymentReviewPage = () => {
                 width: 80,
               }}
             />
-            <Stack
-              alignItems={"center"}
-              mt={isTutorOnboarded ? 22 : 5}
-            >
-              {
-                !isTutorOnboarded &&
+            <Stack alignItems={"center"} mt={isTutorOnboarded ? 22 : 5}>
+              {!isTutorOnboarded && (
                 <Alert
                   variant="filled"
                   severity="info"
-                  icon={<InfoOutlinedIcon sx={{ color: '#DCA566', margin: "auto 0px" }} />}
+                  icon={
+                    <InfoOutlinedIcon
+                      sx={{ color: "#DCA566", margin: "auto 0px" }}
+                    />
+                  }
                   sx={{
                     backgroundColor: "rgba(251, 203, 168, 0.25)",
                     color: "#CE7C4E",
                     borderRadius: 5,
                     marginBottom: 5,
-                    padding: 2
+                    padding: 2,
                   }}
                 >
                   <Typography sx={{ fontSize: 11 }}>
@@ -137,32 +135,28 @@ const PaymentReviewPage = () => {
                     Ask them to complete KYC now to receive the payment
                   </Typography>
                 </Alert>
-              }
+              )}
               <PaymentInfo
-                amount="5000"
+                amount={activePaymentAmount as string}
                 name="Suneel Satpal"
                 paymentDetails={paymentDetails}
                 type="review"
               />
-              {
-                !notPhoneScreen &&
+              {!notPhoneScreen && (
                 <Stack
                   mt={20}
                   direction={"row"}
                   sx={{
-                    cursor: "pointer"
+                    cursor: "pointer",
                   }}
                   onClick={() => setIsDrawerOpen(true)}
                 >
                   <InfoOutlinedIcon />
-                  <Typography
-                    ml={1}
-                    borderBottom={"1px solid #000"}
-                  >
+                  <Typography ml={1} borderBottom={"1px solid #000"}>
                     Amount breakup
                   </Typography>
                 </Stack>
-              }
+              )}
               {
                 <Drawer
                   open={isDrawerOpen}
@@ -170,19 +164,17 @@ const PaymentReviewPage = () => {
                   sx={{
                     width: "100%",
                     flexShrink: 0,
-                    '& .MuiDrawer-paper': {
+                    "& .MuiDrawer-paper": {
                       padding: 5,
                       borderTopLeftRadius: 20,
                       borderTopRightRadius: 20,
                       width: "100%",
-                      boxSizing: 'border-box',
+                      boxSizing: "border-box",
                     },
                   }}
                   anchor="bottom"
                 >
-                  <Stack
-                    alignItems={"center"}
-                  >
+                  <Stack alignItems={"center"}>
                     <AmountBreakupCard
                       amount={5000}
                       settlementDate="9th October"
@@ -195,11 +187,13 @@ const PaymentReviewPage = () => {
                         padding: 1.5,
                         borderRadius: 20,
                         mt: 5,
-                        width: '100%',
-                        minWidth: '320px',
-                        maxWidth: '360px',
+                        width: "100%",
+                        minWidth: "320px",
+                        maxWidth: "360px",
                       }}
-                      onClick={() => {setIsDrawerOpen(false)}}
+                      onClick={() => {
+                        setIsDrawerOpen(false);
+                      }}
                     >
                       Ok
                     </Button>
@@ -214,9 +208,9 @@ const PaymentReviewPage = () => {
                   borderRadius: 20,
                   height: 45,
                   mt: 5,
-                  width: '100%',
-                  minWidth: '320px',
-                  maxWidth: '400px',
+                  width: "100%",
+                  minWidth: "320px",
+                  maxWidth: "400px",
                 }}
                 onClick={handleSubmit}
               >

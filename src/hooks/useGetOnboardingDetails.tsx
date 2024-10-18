@@ -4,13 +4,14 @@ import {
   useLazyGetUserDetailsQuery,
 } from "../APIs/definitions/user";
 import { useEffect, useState } from "react";
+import { useLazyGetPaymentInfoFromLinkQuery } from "../APIs/definitions/paymentLinks";
 
 const useGetOnboardingDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [checkProcessIsLoading, setCheckProcessIsLoading] =
-    useState<boolean>(false);
+    useState<boolean>(true);
 
   //   const { data: studentData, isLoading: studentDataIsLoading } =
   //     useGetUserDetailsQuery();
@@ -20,13 +21,40 @@ const useGetOnboardingDetails = () => {
     { data: studentData, isLoading: studentDataIsLoading },
   ] = useLazyGetUserDetailsQuery();
 
+  const [getPaymentLinkInfo] = useLazyGetPaymentInfoFromLinkQuery();
+
   const navigateToCurrentOnboardingStep = async () => {
     const user = await getUserDetails().unwrap();
 
-    if (user?.onboarding_status === "completed") {
-      if (location.pathname.includes("pay-tuition-fees"))
-        navigate("/pay/payment-details");
-      else navigate("/student/dashboard");
+    const activePaymentFlow = localStorage.getItem("activeFlow");
+
+    if (user?.pan && user?.phone && user?.first_name) {
+      switch (activePaymentFlow) {
+        case "payTuitionFeesFlow":
+          navigate("/pay/payment-details");
+          break;
+        case "StaticLinkFlow":
+          break;
+        case "DynamicLinkFlow":
+          try {
+            const activeFlowUrl = localStorage.getItem("activeFlowUrl");
+            const paymentLinkInfo = await getPaymentLinkInfo(
+              activeFlowUrl?.split("/").at(-1) as string
+            ).unwrap();
+
+            localStorage.setItem("activePaymentAmount", `${paymentLinkInfo?.amount}`);
+            localStorage.setItem("activePaymentTutorId", paymentLinkInfo?.phone);
+
+            navigate("/pay/review");
+          } catch {
+            navigate("/pay/review");
+            console.error("Error fetching payment link info");
+          }
+          break;
+        default:
+          navigate("/student/dashboard");
+          break;
+      }
     } else {
       navigate("/student/signup");
     }
@@ -45,7 +73,10 @@ const useGetOnboardingDetails = () => {
     // Check if the user is a student or not
     const isStudent = localStorage.getItem("studentLogin") === "true";
     console.log(isStudent);
-    if (!isStudent) return;
+    if (!isStudent) {
+      setCheckProcessIsLoading(false);
+      return;
+    }
 
     // Check if the student is fully onboarded
     navigateToCurrentOnboardingStep();
@@ -54,6 +85,7 @@ const useGetOnboardingDetails = () => {
 
   useEffect(() => {
     console.log("loading: ", studentDataIsLoading, studentData);
+    setCheckProcessIsLoading(true);
     checkCurrentStudentOnboardingState();
   }, [studentData, studentDataIsLoading]);
 

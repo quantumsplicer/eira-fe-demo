@@ -9,7 +9,7 @@ interface PhoneNumberInputFieldProps {
     label: string;
     phone: string;
     setPhoneNumber: (phone: string) => void;
-    onSubmit: () => void;
+    onSubmit?: () => void;
     autoFocus: boolean;
 }
 
@@ -30,7 +30,7 @@ const PhoneNumberInputField = ({ label, phone, setPhoneNumber, onSubmit, autoFoc
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === "Enter" && phone.length === 10 && isPhoneNumberValid()) {
-            onSubmit();
+            onSubmit && onSubmit();
         }
     }
 

@@ -22,14 +22,12 @@ import StudentSignIn from "../flows/studentOnboarding/pages/StudentSignIn";
 import StudentSignUp from "../flows/studentOnboarding/pages/StudentSignUp";
 import InputPayment from "../flows/staticLink/pages/InputPayment";
 import PayFeesContainer from "../flows/payTutionFees/pages/PayFeesContainer";
+import KycLogin from "../flows/kyc/pages/KycLogin";
+import AadharVerifyRedirectPage from "../flows/tutorOnboarding/pages/AadharVerifyRedirectPage";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="pay-tuition-fees/" element={<PayFeesContainer/>}>
-        <Route path="login" element={<StudentSignIn />} />
-        <Route path="pay/verify" element={<InputPhone />} />
-      </Route>
       <Route path="/pay/personal-details" element={<InputPersonalDetails />} />
       <Route path="/pay/payment-details" element={<InputPaymentDetails />} />
       <Route path="/pay/tutor-details" element={<InputTutorDetails />} />
@@ -37,21 +35,46 @@ const AppRoutes = () => {
       <Route path="/pay/review" element={<PaymentReviewPage />} />
       <Route path="/pay/payment-gateway-payment-flow" element={<PGLoading />} />
       <Route path="/payment-successful" element={<PaymentSuccessfulPage />} />
+      
       <Route path="/tutor-id/dashboard" element={<TutorDashboard />} />
       <Route path="/student-id/dashboard" element={<StudentDashboard />} />
 
       <Route path="tutor/login" element={<TutorSignIn />} />
       <Route path="tutor/personal-details" element={<TutorSignUp />} />
       <Route path="tutor/aadhar-verification" element={<AadharVerification />} />
+      <Route path="tutor/onboarding/aadhar-redirect" element={<AadharVerifyRedirectPage />} />
       <Route path="tutor/dashboard" element={<TutorDashboard />} />
 
-      <Route path="student/login" element={<StudentSignIn />} />
+      <Route path="student/" element={<PayFeesContainer/>}>
+        <Route path="login" element={<StudentSignIn />} />
+      </Route>
+
+      {/**
+       * Pay Tuition Fees route
+       */}
+      <Route path="pay-tuition-fees/" element={<PayFeesContainer/>}>
+        <Route path="login" element={<StudentSignIn />} />
+        <Route path="pay/verify" element={<InputPhone />} />
+      </Route>
+
+      {/** 
+       * Dynamic Payment link route
+      */}
+      <Route path="payment-link/" element={<PayFeesContainer/>}>
+        <Route path=":link-id" element={<StudentSignIn />} />
+      </Route>
+
+      {/** 
+       * Static Payment link route
+      */}
+      <Route path="static-link/" element={<PayFeesContainer/>}>
+        <Route path=":tutor-username" element={<InputPayment />} />
+      </Route>
+
+
       <Route path="student/signup" element={<StudentSignUp />} />
-      <Route path="pay/static/:phoneNumber" element={<InputPayment />} />
-      <Route
-        path="pay/dynamic/:amount/:phoneNumber"
-        element={<PaymentReviewPage />}
-      />
+
+      <Route path="tutor/kyc/login" element={<KycLogin />} />
     </Routes>
   );
 };

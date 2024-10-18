@@ -8,9 +8,7 @@ import {
 } from "material-react-table";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import { darken, lighten, useTheme } from "@mui/material";
-import StatusTag from "./StatusTag";
-import PaymentLinkDialog from "../dialogs/PaymentLinkDialog";
-import ConfirmationDialog from "../dialogs/ConfirmationDialog";
+import StatusTag from "../StatusTag";
 import { Virtuoso } from "react-virtuoso";
 import PaymentHistoryTableMobile from "./PaymentHistoryTableMobile";
 
@@ -324,7 +322,7 @@ const PaymentHistoryTable: React.FC = () => {
           </Stack>
         </Box>
       </ThemeProvider>
-      <PaymentLinkDialog
+      {/* <PaymentLinkDialog
         activeDialog={activeDialog}
         setActiveDialog={setActiveDialog}
       />
@@ -333,7 +331,7 @@ const PaymentHistoryTable: React.FC = () => {
         setActiveDialog={setActiveDialog}
         heading={heading}
         subHeading={subHeading}
-      />
+      /> */}
     </>
   );
 };

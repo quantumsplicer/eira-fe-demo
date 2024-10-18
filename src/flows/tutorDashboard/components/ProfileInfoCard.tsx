@@ -1,15 +1,12 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
-import InfoIcon from "@mui/icons-material/InfoOutlined";
-import LinkIcon from "@mui/icons-material/LinkOutlined";
-import Link from "@mui/material/Link";
-import IconButton from "@mui/material/IconButton";
-import ContentCopyIcon from "@mui/icons-material/ContentCopyOutlined";
 import StatusTag from "./StatusTag";
-const amount = 20000;
+import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
+
 const ProfileInfoCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
+  const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
   return (
     <Box
       sx={
@@ -27,6 +24,8 @@ const ProfileInfoCard: React.FC = () => {
               width: "100%",
               height: "100%",
               backgroundColor: "white",
+              marginTop: "-1rem",
+              paddingTop: "1rem",
             }
       }
     >
@@ -46,9 +45,9 @@ const ProfileInfoCard: React.FC = () => {
           spacing={0.5}
         >
           <Typography fontSize={20} fontWeight={600}>
-            Anagh Pranshu
+            {userDetails?.first_name + " " + userDetails?.last_name}
           </Typography>
-          <Typography>+919997945005</Typography>
+          <Typography>+91{userDetails?.phone}</Typography>
         </Stack>
         <Stack sx={{ width: "80%" }} spacing={2}>
           <Stack direction="row" display="flex" justifyContent="space-between">
@@ -56,7 +55,7 @@ const ProfileInfoCard: React.FC = () => {
               Pan:
             </Typography>
             <Typography color="#3C3C3C" fontWeight={630}>
-              EPZPP4919B
+              {userDetails?.pan}
             </Typography>
           </Stack>
           <Stack direction="row" display="flex" justifyContent="space-between">
@@ -70,7 +69,7 @@ const ProfileInfoCard: React.FC = () => {
               Account Holder:
             </Typography>
             <Typography color="#3C3C3C" fontWeight={630}>
-              Suneel Satpal
+              {userDetails?.first_name + " " + userDetails?.last_name}
             </Typography>
           </Stack>
         </Stack>

@@ -1,5 +1,5 @@
 // src/components/OTPDialog.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import {
   Box,
   Button,
@@ -10,45 +10,75 @@ import {
   DialogContent,
   IconButton,
   useMediaQuery,
+  Slide,
+  SlideProps,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { PaymentDetails } from "../interfaces";
 import { error } from "console";
+
+const Transition = forwardRef(function Transition(props: SlideProps, ref) {
+  return (
+    <Slide
+      direction="right"
+      ref={ref}
+      {...props}
+      timeout={{ enter: 300, exit: 300 }}
+    >
+      {props.children}
+    </Slide>
+  );
+});
 
 interface PaymentDetailsDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (value: number) => void;
+  onSubmit: (value: PaymentDetails) => void;
+  phoneNumberProp: string;
 }
-type Inputs = {
-  phoneNumber: string;
-  amount: number;
-};
 
 const PaymentDetailsDialog = ({
   open,
   onClose,
   onSubmit,
+  phoneNumberProp,
 }: PaymentDetailsDialogProps) => {
   const {
-    register,
     handleSubmit,
     watch,
     control,
+    reset,
     formState: { errors, isValid },
-  } = useForm<Inputs>();
-
-  const handleFormSubmit: SubmitHandler<Inputs> = (data) => {
-    onSubmit(data.amount);
+  } = useForm<PaymentDetails>({
+    defaultValues: {
+      phoneNumber: phoneNumberProp,
+    },
+  });
+  const handleFormSubmit: SubmitHandler<PaymentDetails> = (data) => {
+    onSubmit(data);
   };
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
+  useEffect(() => {
+    console.log(
+      "This is the phone number from payment details dialog",
+      phoneNumberProp
+    );
+  }, [phoneNumberProp]);
+  useEffect(() => {
+    console.log("Component mounted");
+    return () => {
+      console.log("Component unmounted");
+    };
+  }, []);
   return (
     <Dialog
       open={open}
       onClose={onClose}
       fullScreen={isPhoneScreen}
       hideBackdrop={isPhoneScreen}
+      TransitionComponent={isPhoneScreen ? Transition : undefined}
       sx={
         !isPhoneScreen
           ? {
@@ -129,9 +159,14 @@ const PaymentDetailsDialog = ({
                   message: "Invalid Number",
                 },
               }}
-              render={({ field }) => (
+              render={({
+                field: { onChange, onBlur, value, name, ref },
+                fieldState: { invalid, isTouched, isDirty, error },
+              }) => (
                 <TextField
-                  {...field}
+                  value={value}
+                  onChange={onChange}
+                  onBlur={onBlur}
                   label="Phone Number"
                   fullWidth
                   variant="outlined"

@@ -1,4 +1,7 @@
+// onGoingPaymentSlice.ts
+
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../configuration';
 
 interface PaymentState {
   amount: number;
@@ -9,21 +12,18 @@ const initialState: PaymentState = {
 };
 
 const onGoingPaymentSlice = createSlice({
-  name: "onGoingPayment",
+  name: 'onGoingPayment',
   initialState,
   reducers: {
-    increment: (state) => {
-      state.amount += 1;
-    },
-    decrement: (state) => {
-      state.amount -= 1;
-    },
-    incrementByAmount: (state, action: PayloadAction<number>) => {
-      state.amount += action.payload;
+    // Action to set the amount directly
+    setAmount: (state, action: PayloadAction<number>) => {
+      state.amount = action.payload;
     },
   },
 });
 
-export const { increment, decrement, incrementByAmount } = onGoingPaymentSlice.actions;
+export const selectAmount = (state: RootState) => state.onGoingPayment.amount;
+
+export const { setAmount } = onGoingPaymentSlice.actions;
 
 export const onGoingPaymentReducer = onGoingPaymentSlice.reducer;

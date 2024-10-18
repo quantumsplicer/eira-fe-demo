@@ -17,10 +17,7 @@ const accountsData: BankAccount[] = [
 const AccountsListCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [activeDialog, setActiveDialog] = useState<string>("None");
-  // const openDialog = () => {
-  //   console.log("This function was triggered");
-  //   setActiveDialog("AddBankAccountDialog");
-  // };
+
   return (
     <Box
       sx={
@@ -36,12 +33,13 @@ const AccountsListCard: React.FC = () => {
             }
           : {
               width: "100%",
-              height: "100%",
+              height: "50vh",
               backgroundColor: "white",
               display: "flex",
               justifyContent: "center",
               pt: 5,
               pb: 5,
+              marginTop: "-1rem",
             }
       }
     >

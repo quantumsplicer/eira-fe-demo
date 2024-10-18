@@ -1,4 +1,11 @@
-import { Box, Button, Drawer, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Drawer,
+  Stack,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 import MobileBg from "../../../assets/images/svg/StudentMobileSignInBg.svg";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
@@ -12,6 +19,7 @@ import { useGetOtpMutation } from "../../../APIs/definitions/auth";
 import { isPhoneNumberValid } from "../../../utils/helperFunctions";
 import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
 import { LoadingButton } from "@mui/lab";
+import { Loading } from "../../../components/Loading";
 
 const StudentSignInMobile = () => {
   const [phone, setPhone] = useState<string>("");
@@ -43,7 +51,7 @@ const StudentSignInMobile = () => {
       <LoadingButton
         variant="contained"
         color="primary"
-        loading={checkProcessIsLoading}
+        // loading={checkProcessIsLoading}
         sx={{
           padding: 1.5,
           borderRadius: 20,
@@ -60,7 +68,9 @@ const StudentSignInMobile = () => {
     );
   };
 
-  return (
+  return checkProcessIsLoading ? (
+    <Loading />
+  ) : (
     <Box
       // pt={7}
       p={5}

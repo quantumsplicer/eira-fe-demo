@@ -8,6 +8,7 @@ import PersonalDetails from "../../../components/PersonalDetails";
 import { useNavigate } from "react-router-dom";
 
 const StudentSignUp = () => {
+  const navigate = useNavigate();
   const [activeFlow, setActiveFlow] = useState<string | null>(null);
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
 
@@ -21,7 +22,7 @@ const StudentSignUp = () => {
   useEffect(() => {
     const flow = localStorage.getItem("activeFlow");
     setActiveFlow(flow);
-  }, []);
+  }, []);66666
 
   return (
     <Box
@@ -92,7 +93,7 @@ const StudentSignUp = () => {
                 </Typography>
               )}
               <NoteBox heading={noteBoxHeading} notes={notes} />
-              <PersonalDetails />
+              <PersonalDetails onSuccess={() => navigate("/student")}/>
             </Stack>
           </Stack>
         </Box>
