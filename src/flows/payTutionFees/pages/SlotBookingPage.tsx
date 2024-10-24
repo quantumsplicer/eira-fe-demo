@@ -16,6 +16,11 @@ import DateTimePicker from "../../../components/DateTimePicker";
 import EiraBack from "../../../assets/images/svg/EiraBack.svg";
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 import SafeLogo from "../../../components/SafeLogo";
+import { useCreateOrderMutation } from "../../../APIs/definitions/paymentLinks";
+import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../stores/configuration";
+import { setPaymentSessionId } from "../../../stores/slices";
 
 const SlotBookingPage = () => {
   const navigate = useNavigate();
@@ -26,6 +31,13 @@ const SlotBookingPage = () => {
   const [description, setDescription] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
+  const [createOrder] = useCreateOrderMutation();
+  const { data: userDetails } = useGetUserDetailsQuery();
+  const payeeId = useSelector((state: RootState) => state.onGoingPayment.payeeId);
+  const amount = useSelector((state: RootState) => state.onGoingPayment.amount);
+  const activePaymentAmount = localStorage.getItem("activePaymentAmount");
+  const activePaymentPayeeUserId = localStorage.getItem("activePaymentPayeeUserId");
+  const dispatch = useDispatch();
 
   const today = dayjs();
   const tomorrow = dayjs().add(1, "day");
@@ -50,6 +62,19 @@ const SlotBookingPage = () => {
       navigate("/pay/payment-gateway-payment-flow");
       return;
     }
+    createOrder({
+      amount: Number(activePaymentAmount),
+      payer_id: userDetails ? userDetails.id : undefined,
+      payee_id: activePaymentPayeeUserId ? activePaymentPayeeUserId : undefined
+    })
+    .unwrap()
+    .then(res => {
+      dispatch(setPaymentSessionId(res.payment_session_id));
+      localStorage.setItem("activePaymentSessionId", res.payment_session_id);
+    })
+    .catch(err => {
+      console.log(err);
+    })
     navigate("/pay/review");
   };
 
@@ -64,8 +89,16 @@ const SlotBookingPage = () => {
       endTime > startTime
     ) {
       setIsButtonDisabled(false);
+      localStorage.setItem("activePaymentSessionDate", String(selectedDate));
+      localStorage.setItem("activePaymentSessionTime", `${String(startTime)} - ${String(endTime)}`)
     }
   }, [today, nextHour, sessionTitle, selectedDate, startTime, endTime]);
+
+  useEffect(() => {
+    if (!activePaymentAmount || !activePaymentPayeeUserId) {
+      navigate("/pay/payment-details");
+    }
+  }, [])
 
   return (
     <Box

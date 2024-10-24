@@ -9,9 +9,9 @@ export const usePayment = () => {
   };
   initializeSDK();
 
-  const doPayment = async () => {
+  const doPayment = async (paymentSessionId: string) => {
     let checkoutOptions = {
-      paymentSessionId: "your-payment-session-id",
+      paymentSessionId: paymentSessionId,
       redirectTarget: "_self",
     };
     cashfree.checkout(checkoutOptions);

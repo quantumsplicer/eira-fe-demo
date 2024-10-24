@@ -3,9 +3,18 @@ import { PaymentLinkDetails } from "../../flows/tutorDashboard/interfaces";
 interface CreatePaymentLinkRequest {
   amount: number;
   receiver_phone: string;
+  payer_id: string;
+  payee_id: string;
 }
 
-interface CreateOrderRequest {}
+interface CreateOrderRequest {
+  id: string;
+  amount: number;
+  status: string;
+  payment_session_id: string;
+  payer: string;
+  payee: string;
+}
 
 interface PaymentInfoDetailsResponse {
   amount: number;
@@ -26,7 +35,7 @@ export const paymentLinksApi = postgresApi.injectEndpoints({
       }),
     }),
 
-    createPaymentLink: builder.mutation<ApiResponse, CreatePaymentLinkRequest>({
+    createPaymentLink: builder.mutation<ApiResponse, Partial<CreatePaymentLinkRequest>>({
       query: (body) => ({
         url: `payments/payment-link/create/`,
         method: "POST",
@@ -38,9 +47,9 @@ export const paymentLinksApi = postgresApi.injectEndpoints({
       }),
     }),
 
-    createOrder: builder.mutation<ApiResponse, CreatePaymentLinkRequest>({
+    createOrder: builder.mutation<CreateOrderRequest, Partial<CreatePaymentLinkRequest>>({
       query: (body) => ({
-        url: `payments/order/create/`,
+        url: `payments/pg/order/`,
         method: "POST",
         body,
       }),
