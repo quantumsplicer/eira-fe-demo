@@ -1,6 +1,7 @@
 import { postgresApi } from "..";
 
 export interface UserDetails {
+  id: string;
   first_name: string;
   last_name: string;
   phone: string;
@@ -26,7 +27,19 @@ export const userApi = postgresApi.injectEndpoints({
         body,
       }),
     }),
+
+    getUserDetailsByPhone: builder.query<UserDetails[], string>({
+      query: (phone) => `user/search?phone=${phone}`
+    }),
+
+    registerTutorByStudent: builder.mutation<UserDetails, Partial<UserDetails>>({
+      query: (body) => ({
+        url: `user/register/`,
+        method: "POST",
+        body
+      })
+    })
   }),
 });
 
-export const { useLazyGetUserDetailsQuery, useGetUserDetailsQuery, useUpdateUserDetailsMutation } = userApi;
+export const { useLazyGetUserDetailsQuery, useGetUserDetailsQuery, useUpdateUserDetailsMutation, useLazyGetUserDetailsByPhoneQuery, useRegisterTutorByStudentMutation } = userApi;

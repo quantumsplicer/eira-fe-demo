@@ -2,6 +2,7 @@ import { Box, Divider, Stack, Typography } from "@mui/material";
 import moment from "moment";
 import React from "react";
 import { getNextWorkingDay } from "../utils/helperFunctions";
+import { useGetPlatformFeeQuery } from "../APIs/definitions/pg";
 
 interface AmountBreakupCardProps {
   amount?: number;
@@ -14,6 +15,7 @@ const AmountBreakupCard = ({
 }: AmountBreakupCardProps) => {
   const settlementDate = getNextWorkingDay();
   const settlementTime = "5:00 pm";
+  const {data, isLoading} = useGetPlatformFeeQuery("cashfree");
 
   const formatAmount = (amount: number | undefined): string => {
     if (amount) {
@@ -37,8 +39,9 @@ const AmountBreakupCard = ({
   };
 
   const getPlatformFees = (): string => {
+    const baseRate = data?.base_rate ? parseFloat(data.base_rate) : 1;
     if (amount) {
-      const fees = amount / 100;
+      const fees = (amount * baseRate) / 100;
       return formatAmount(fees);
     }
     return "-";
@@ -54,10 +57,11 @@ const AmountBreakupCard = ({
 
   const getTotalAmount = (): string => {
     if (amount) {
-      const fees = amount / 100;
+      const baseRate = data?.base_rate ? parseFloat(data.base_rate) : 1;
+      const fees = (amount * baseRate) / 100;
       const gst = (18 * amount) / 10000;
-      const totalAmt = amount * 1.0018;
-      return formatAmount(Math.ceil(totalAmt * 100) / 100);
+      const totalAmt = amount;
+      return formatAmount(Math.ceil(fees+gst+totalAmt));
     }
     return "-";
   };
@@ -73,7 +77,7 @@ const AmountBreakupCard = ({
           <Typography>{formatAmount(amount)}</Typography>
         </Stack>
         <Stack direction={"row"} justifyContent={"space-between"} mb={1}>
-          <Typography color={"#7e7e7e"}>Platform fees (1%):</Typography>
+          <Typography color={"#7e7e7e"}>Platform fees ({data?.base_rate ? parseFloat(data.base_rate) : '1'}%):</Typography>
           <Typography>{getPlatformFees()}</Typography>
         </Stack>
         <Stack direction={"row"} justifyContent={"space-between"} mb={1}>

@@ -6,6 +6,9 @@ import {
 } from "@mui/material";
 import Amount from "./Amount";
 import tickMark from '../assets/images/png/tick-mark.png'
+import exclamationMark from '../assets/images/svg/ExclamationMark.svg';
+import { useSelector } from "react-redux";
+import { RootState } from "../stores/configuration";
 
 interface PaymentInfoProps {
     amount: string;
@@ -24,11 +27,13 @@ const formattedInfo = {
 
 const PaymentInfo = ({ amount, name, paymentDetails, type }: PaymentInfoProps) => {
 
+    const paymentStatus = useSelector((state: RootState) => state.onGoingPayment.status);
+
     const formattedPaymentDetails = useMemo(() => {
         const paymentDetailsKeys = Object.keys(paymentDetails);
         const newValue = Object.entries(formattedInfo).reduce((acc: Record<string, string[]>, [key, details]) => {
             // Check if all elements in details exist in paymentDetailsKeys
-            if (details.every(detail => paymentDetailsKeys.includes(detail))) {
+            if (details.every(detail => paymentDetailsKeys.includes(detail) && paymentDetails[detail] != null)) {
               acc[key] = details.map(detail => paymentDetails[detail]);
             }
             return acc;
@@ -49,8 +54,8 @@ const PaymentInfo = ({ amount, name, paymentDetails, type }: PaymentInfoProps) =
                     mr={1}
                 >
                     {
-                        type === "review" ?
-                            "paying" :
+                        type === "review" || paymentStatus !== "PAID" ?
+                            "Paying" :
                             "Sent"
                     }
                 </Typography>
@@ -81,47 +86,71 @@ const PaymentInfo = ({ amount, name, paymentDetails, type }: PaymentInfoProps) =
                 </Typography>
             </Stack>
             {
-                type === "success" &&
-                <img
-                    src={tickMark}
-                    style={{
-                        marginTop: "30px",
-                        width: 90
-                    }}
-                />
+                type === "success" ?
+                (
+                    paymentStatus === "PAID" ?
+                        <img
+                            src={tickMark}
+                            style={{
+                                marginTop: "30px",
+                                width: 90
+                            }}
+                        /> :
+                        <img
+                            src={exclamationMark}
+                            style={{
+                                marginTop: "30px",
+                                width: 90
+                            }}
+                        />
+                ) :
+                null
             }
             {
-                type === "success" &&
-                <Box
-                    mt={3}
-                >
-                    <Typography
-                        color={"#7e7e7e"}
-                        component={"span"}
-                        fontWeight={"bold"}
-                    >
-                        Settlement on
-                    </Typography>
-                    <Typography
-                        component={"span"}
-                        fontWeight={"bold"}
-                    >
-                        {` 7th October`}
-                    </Typography>
-                    <Typography
-                        component={"span"}
-                        color={"#7e7e7e"}
-                        fontWeight={"bold"}
-                    >
-                        {` at`}
-                    </Typography>
-                    <Typography
-                        component={"span"}
-                        fontWeight={"bold"}
-                    >
-                        {` 5:00pm`}
-                    </Typography>
-                </Box>
+                type === "success" ?
+                    (
+                        paymentStatus === "PAID" ?
+                            <Box
+                                mt={3}
+                            >
+                                <Typography
+                                    color={"#7e7e7e"}
+                                    component={"span"}
+                                    fontWeight={"bold"}
+                                >
+                                    Settlement on
+                                </Typography>
+                                <Typography
+                                    component={"span"}
+                                    fontWeight={"bold"}
+                                >
+                                    {` 7th October`}
+                                </Typography>
+                                <Typography
+                                    component={"span"}
+                                    color={"#7e7e7e"}
+                                    fontWeight={"bold"}
+                                >
+                                    {` at`}
+                                </Typography>
+                                <Typography
+                                    component={"span"}
+                                    fontWeight={"bold"}
+                                >
+                                    {` 5:00pm`}
+                                </Typography>
+                            </Box> :
+                            <Box
+                                mt={3}
+                            >
+                                <Typography
+                                    color={"#7e7e7e"}
+                                >
+                                    Payment under process
+                                </Typography>
+                            </Box>
+                    ) :
+                null
             }
             {
                 type === "review" &&

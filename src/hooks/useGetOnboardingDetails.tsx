@@ -52,7 +52,7 @@ const useGetOnboardingDetails = () => {
           }
           break;
         default:
-          navigate("/student/dashboard");
+          navigate("/student-id/dashboard");
           break;
       }
     } else {
@@ -62,7 +62,7 @@ const useGetOnboardingDetails = () => {
 
   const checkCurrentStudentOnboardingState = async () => {
     setCheckProcessIsLoading(true);
-    const user = await getUserDetails().unwrap();
+    const user = await getUserDetails().unwrap().catch(err => console.log(err));
     if (studentDataIsLoading) return;
 
     const token = localStorage.getItem("access-token");

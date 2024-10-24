@@ -13,6 +13,8 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 import SafeLogo from "../../../components/SafeLogo";
+import { useDispatch } from "react-redux";
+import { setTutorPhoneNumber } from "../../../stores/slices";
 
 const InputTutorDetails: React.FC = () => {
 
@@ -20,6 +22,7 @@ const InputTutorDetails: React.FC = () => {
     const [isPanVerifying, setIsPanVerifying] = useState<boolean>(false);
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     return (
         <Box
@@ -121,6 +124,7 @@ const InputTutorDetails: React.FC = () => {
                                 Provide Tutor's personal details for their onboarding
                             </Typography>
                             <PersonalDetails
+                                onSuccess={() => navigate("/pay/create-session")}
                             />
                         </Stack>
                     </Stack>
