@@ -9,11 +9,12 @@ interface AmountBreakupCardProps {
   settlementTime?: string;
 }
 
-const AmountBreakupCard = ({
-  amount,
-}: AmountBreakupCardProps) => {
+const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
   const settlementDate = getNextWorkingDay();
   const settlementTime = "5:00 pm";
+  const activePaymentAmount =
+    amount ?? Number(localStorage.getItem("activePaymentAmount"));
+  const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
 
   const formatAmount = (amount: number | undefined): string => {
     if (amount) {
@@ -37,26 +38,26 @@ const AmountBreakupCard = ({
   };
 
   const getPlatformFees = (): string => {
-    if (amount) {
-      const fees = amount / 100;
+    if (activePaymentAmount) {
+      const fees = activePaymentAmount / 100;
       return formatAmount(fees);
     }
     return "-";
   };
 
   const getGst = (): string => {
-    if (amount) {
-      const gst = (18 * amount) / 10000;
+    if (activePaymentAmount) {
+      const gst = (18 * activePaymentAmount) / 10000;
       return formatAmount(gst);
     }
     return "-";
   };
 
   const getTotalAmount = (): string => {
-    if (amount) {
-      const fees = amount / 100;
-      const gst = (18 * amount) / 10000;
-      const totalAmt = amount * 1.0018;
+    if (activePaymentAmount) {
+      const fees = activePaymentAmount / 100;
+      const gst = (18 * activePaymentAmount) / 10000;
+      const totalAmt = activePaymentAmount * 1.0018;
       return formatAmount(Math.ceil(totalAmt * 100) / 100);
     }
     return "-";
@@ -70,7 +71,7 @@ const AmountBreakupCard = ({
       <Stack width={"90%"}>
         <Stack direction={"row"} justifyContent={"space-between"} mb={1}>
           <Typography color={"#7e7e7e"}>Payment Amount:</Typography>
-          <Typography>{formatAmount(amount)}</Typography>
+          <Typography>{formatAmount(activePaymentAmount)}</Typography>
         </Stack>
         <Stack direction={"row"} justifyContent={"space-between"} mb={1}>
           <Typography color={"#7e7e7e"}>Platform fees (1%):</Typography>

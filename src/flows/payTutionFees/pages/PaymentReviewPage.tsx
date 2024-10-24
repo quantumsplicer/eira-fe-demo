@@ -175,11 +175,7 @@ const PaymentReviewPage = () => {
                   anchor="bottom"
                 >
                   <Stack alignItems={"center"}>
-                    <AmountBreakupCard
-                      amount={5000}
-                      settlementDate="9th October"
-                      settlementTime="5:00 pm"
-                    />
+                    <AmountBreakupCard />
                     <Button
                       variant="contained"
                       color="primary"

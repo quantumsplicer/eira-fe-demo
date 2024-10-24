@@ -35,8 +35,10 @@ const baseQueryWithErrorHandling = async (
 ) => {
   const result = await baseQueryWithAuth(args, api, extraOptions);
 
+  const accessToken = localStorage.getItem("access-token");
+
   // Check if the status code is 401 or 403
-  if (result?.error?.status === 401 || result?.error?.status === 403) {
+  if ((result?.error?.status === 401 || result?.error?.status === 403) && accessToken) {
     // Clear the token from local storage
     localStorage.removeItem("access-token");
     window.location.reload();
@@ -48,7 +50,7 @@ const baseQueryWithErrorHandling = async (
 // Define a service using a base URL and expected endpoints
 export const postgresApi = createApi({
   reducerPath: "postgresApi",
-  baseQuery: baseQueryWithAuth,
+  baseQuery: baseQueryWithErrorHandling,
   tagTypes: ["invitations"],
   endpoints: () => ({}),
 });

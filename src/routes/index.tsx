@@ -24,6 +24,7 @@ import InputPayment from "../flows/staticLink/pages/InputPayment";
 import PayFeesContainer from "../flows/payTutionFees/pages/PayFeesContainer";
 import KycLogin from "../flows/kyc/pages/KycLogin";
 import AadharVerifyRedirectPage from "../flows/tutorOnboarding/pages/AadharVerifyRedirectPage";
+import { PageNotFound } from "../components/PageNotFound";
 
 const AppRoutes = () => {
   return (
@@ -75,6 +76,8 @@ const AppRoutes = () => {
       <Route path="student/signup" element={<StudentSignUp />} />
 
       <Route path="tutor/kyc/login" element={<KycLogin />} />
+
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 };

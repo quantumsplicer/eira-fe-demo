@@ -42,8 +42,14 @@ const useGetOnboardingDetails = () => {
               activeFlowUrl?.split("/").at(-1) as string
             ).unwrap();
 
-            localStorage.setItem("activePaymentAmount", `${paymentLinkInfo?.amount}`);
-            localStorage.setItem("activePaymentTutorId", paymentLinkInfo?.phone);
+            localStorage.setItem(
+              "activePaymentAmount",
+              `${paymentLinkInfo?.amount}`
+            );
+            localStorage.setItem(
+              "activePaymentTutorId",
+              paymentLinkInfo?.phone
+            );
 
             navigate("/pay/review");
           } catch {
@@ -62,21 +68,24 @@ const useGetOnboardingDetails = () => {
 
   const checkCurrentStudentOnboardingState = async () => {
     setCheckProcessIsLoading(true);
-    const user = await getUserDetails().unwrap();
-    if (studentDataIsLoading) return;
+    try {
+      await getUserDetails().unwrap();
+      console.log("jgjhvv");
+      if (studentDataIsLoading) return;
 
-    const token = localStorage.getItem("access-token");
-    console.log(token);
-    // Check if the user is already logged in or not
-    if (!token) navigate("/student/login");
+      const token = localStorage.getItem("access-token");
+      console.log(token);
+      // Check if the user is already logged in or not
+      if (!token) navigate("/student/login");
 
-    // Check if the user is a student or not
-    const isStudent = localStorage.getItem("studentLogin") === "true";
-    console.log(isStudent);
-    if (!isStudent) {
-      setCheckProcessIsLoading(false);
-      return;
-    }
+      // Check if the user is a student or not
+      const isStudent = localStorage.getItem("studentLogin") === "true";
+      console.log(isStudent);
+      if (!isStudent) {
+        setCheckProcessIsLoading(false);
+        return;
+      }
+    } catch {}
 
     // Check if the student is fully onboarded
     navigateToCurrentOnboardingStep();
