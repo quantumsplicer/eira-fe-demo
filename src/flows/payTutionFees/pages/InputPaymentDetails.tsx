@@ -16,10 +16,10 @@ import EiraBack from "../../../assets/images/svg/EiraBack.svg";
 import { useCheckInvitationAcceptanceQuery } from "../../../APIs/definitions/invitations";
 import SafeLogo from "../../../components/SafeLogo";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
-import { useLazyGetUserDetailsQuery } from "../../../APIs/definitions/user";
+import { useLazyGetUserDetailsByPhoneQuery, useLazyGetUserDetailsQuery, UserDetails } from "../../../APIs/definitions/user";
 import { LoadingButton } from "@mui/lab";
 import { useDispatch } from "react-redux";
-import { setAmount } from "../../../stores/slices";
+import { setAmount, setPayeeId, setTutorPhoneNumber } from "../../../stores/slices";
 
 const InputPaymentDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -28,6 +28,7 @@ const InputPaymentDetails: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
+  const [isPayeeStudent, setIsPayeeStudent] = useState<boolean>(false);
 
   const { data } = useCheckInvitationAcceptanceQuery(
     "6f2c9af2-cbce-49d6-a147-27c40f1c33d4"
@@ -37,6 +38,9 @@ const InputPaymentDetails: React.FC = () => {
     getUserDetails,
     { data: studentData, isLoading: studentDataIsLoading },
   ] = useLazyGetUserDetailsQuery();
+  const [
+    getTutorDetials
+  ] = useLazyGetUserDetailsByPhoneQuery();
 
   const noteBoxHeading = "Things to keep in mind:";
   const notes = [
@@ -70,13 +74,38 @@ const InputPaymentDetails: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    setIsPayeeStudent(false)
     if (!inputAmount || Number(inputAmount) === 0 || !isPhoneNumberValid()) return;
 
     try {
-      const tutor = await getUserDetails().unwrap();
+      let isTutorOnboarded: boolean = false;
+      let isPayeeStudent;
+      await getTutorDetials(phoneNumber)
+      .unwrap()
+      .then(res => {
+        const tutor = res[0]
+        if (tutor.role === "student") {
+          setIsPayeeStudent(true);
+          isPayeeStudent = true;
+          return;
+        }
+        isTutorOnboarded = !!(tutor.first_name && tutor.last_name && tutor.pan);
+        if (isTutorOnboarded) {
+          dispatch(setPayeeId(tutor.id));
+          localStorage.setItem("activePaymentPayeeUserId", tutor.id);
+          localStorage.setItem("activePaymentTutorName", tutor.first_name + " " + tutor.last_name);
+        }
+      })
+      // const tutor = await getUserDetails().unwrap();
 
-      const isTutorOnboarded = !!(tutor?.first_name && tutor?.last_name && tutor?.pan);
+      // const isTutorOnboarded = !!(tutor?.first_name && tutor?.last_name && tutor?.pan);
 
+      if (isPayeeStudent) {
+        return;
+      }
+
+      dispatch(setTutorPhoneNumber(phoneNumber));
+      dispatch(setAmount(Number(inputAmount)))
       if (!isTutorOnboarded) {
         navigate("/pay/tutor-details");
       } else {
@@ -193,12 +222,30 @@ const InputPaymentDetails: React.FC = () => {
                   ),
                 }}
               />
-              <PhoneNumberInputField
-                autoFocus={false}
-                label="Phone number of the tutor"
-                phone={phoneNumber}
-                setPhoneNumber={handlePhoneNumberChange}
-              />
+              <Stack
+                width='100%'
+                minWidth='320px'
+                maxWidth='400px'
+                mb={isPayeeStudent ? 0 : 1.5}
+              >
+                <PhoneNumberInputField
+                  autoFocus={false}
+                  label="Phone number of the tutor"
+                  phone={phoneNumber}
+                  setPhoneNumber={handlePhoneNumberChange}
+                />
+                {
+                  isPayeeStudent &&
+                  <Typography
+                    color={"red"}
+                    ml={1}
+                    mt={-1}
+                    fontSize={14}
+                  >
+                    This user is registered as a student.
+                  </Typography>
+                }
+              </Stack>
               {!notPhoneScreen && (
                 <Box
                   height="300px"

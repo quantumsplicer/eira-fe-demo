@@ -22,7 +22,7 @@ const StudentSignUp = () => {
   useEffect(() => {
     const flow = localStorage.getItem("activeFlow");
     setActiveFlow(flow);
-  }, []);66666
+  }, []);
 
   return (
     <Box

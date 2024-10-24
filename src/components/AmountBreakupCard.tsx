@@ -2,6 +2,7 @@ import { Box, Divider, Stack, Typography } from "@mui/material";
 import moment from "moment";
 import React from "react";
 import { getNextWorkingDay } from "../utils/helperFunctions";
+import { useGetPlatformFeeQuery } from "../APIs/definitions/pg";
 
 interface AmountBreakupCardProps {
   amount?: number;
@@ -15,6 +16,8 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
   const activePaymentAmount =
     amount ?? Number(localStorage.getItem("activePaymentAmount"));
   const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
+
+  const { data, isLoading } = useGetPlatformFeeQuery("cashfree");
 
   const formatAmount = (amount: number | undefined): string => {
     if (amount) {
@@ -38,8 +41,9 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
   };
 
   const getPlatformFees = (): string => {
+    const baseRate = data?.base_rate ? parseFloat(data.base_rate) : 1;
     if (activePaymentAmount) {
-      const fees = activePaymentAmount / 100;
+      const fees = (activePaymentAmount * baseRate) / 100;
       return formatAmount(fees);
     }
     return "-";
@@ -55,10 +59,10 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
 
   const getTotalAmount = (): string => {
     if (activePaymentAmount) {
-      const fees = activePaymentAmount / 100;
+      const baseRate = data?.base_rate ? parseFloat(data.base_rate) : 1;
+      const fees = (activePaymentAmount * baseRate) / 100;
       const gst = (18 * activePaymentAmount) / 10000;
-      const totalAmt = activePaymentAmount * 1.0018;
-      return formatAmount(Math.ceil(totalAmt * 100) / 100);
+      return formatAmount(Math.ceil(fees + gst + activePaymentAmount));
     }
     return "-";
   };
@@ -74,7 +78,10 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
           <Typography>{formatAmount(activePaymentAmount)}</Typography>
         </Stack>
         <Stack direction={"row"} justifyContent={"space-between"} mb={1}>
-          <Typography color={"#7e7e7e"}>Platform fees (1%):</Typography>
+          <Typography color={"#7e7e7e"}>
+            Platform fees ({data?.base_rate ? parseFloat(data.base_rate) : "1"}
+            %):
+          </Typography>
           <Typography>{getPlatformFees()}</Typography>
         </Stack>
         <Stack direction={"row"} justifyContent={"space-between"} mb={1}>

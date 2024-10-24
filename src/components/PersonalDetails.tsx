@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Box, CircularProgress, TextField, useMediaQuery } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { useUpdateUserDetailsMutation } from "../APIs/definitions/user";
+import { useRegisterTutorByStudentMutation, useUpdateUserDetailsMutation } from "../APIs/definitions/user";
 import { isPanValid } from "../utils/helperFunctions";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../stores/configuration";
+import { setPayeeId } from "../stores/slices";
 
 interface PersonalDetailsProps {
   onSuccess?: () => void;
@@ -15,9 +18,14 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const [isPanUnverified, setIsPanUnverified] = useState<boolean>(false);
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
+  const tutorPhoneNumber = useSelector((state: RootState) => state.onGoingPayment.tutorPhoneNumber);
+  const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
+  const dispatch = useDispatch();
 
   const [updateTutor, { isLoading: updateTutorIsLoading }] =
     useUpdateUserDetailsMutation();
+  const [registerTutor, { isLoading: registerTutorIsLoading }] =
+    useRegisterTutorByStudentMutation();
 
   const handleNameInput = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -47,23 +55,48 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
 
   const handleSubmitClick = () => {
     if (firstName && lastName && isPanValid(pan)) {
-      updateTutor({
-        first_name: firstName,
-        last_name: lastName,
-        pan: pan,
-      })
-        .unwrap()
-        .then((res) => {
-          if (res) {
-            setIsPanUnverified(false);
-            onSuccess && onSuccess();
-          } else {
-            setIsPanUnverified(true);
-          }
+      
+      if (tutorPhoneNumber || activePaymentTutorId) {
+        registerTutor({
+          first_name: firstName,
+          last_name: lastName,
+          pan: pan,
+          phone: activePaymentTutorId ? activePaymentTutorId : tutorPhoneNumber
         })
-        .catch(() => {
-          setIsPanUnverified(true);
-        });
+          .unwrap()
+          .then(res => {
+            if (res) {
+              setIsPanUnverified(false);
+              dispatch(setPayeeId(res.id));
+              localStorage.setItem("activePaymentPayeeUserId", res.id);
+              localStorage.setItem("activePaymentTutorName", res.first_name + " " + res.last_name);
+              onSuccess && onSuccess();
+            } else {
+              setIsPanUnverified(true);
+            }
+          })
+          .catch(() => {
+            setIsPanUnverified(true);
+          })
+      } else {
+        updateTutor({
+          first_name: firstName,
+          last_name: lastName,
+          pan: pan,
+        })
+          .unwrap()
+          .then((res) => {
+            if (res) {
+              setIsPanUnverified(false);
+              onSuccess && onSuccess();
+            } else {
+              setIsPanUnverified(true);
+            }
+          })
+          .catch(() => {
+            setIsPanUnverified(true);
+          });
+      }
     }
   };
 

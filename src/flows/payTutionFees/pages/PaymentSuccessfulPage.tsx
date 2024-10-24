@@ -1,14 +1,19 @@
 // src/components/PaymentSuccessfulPage.tsx
-import React from "react";
-import { Box, Typography, Stack, useMediaQuery } from "@mui/material";
+import React, { useEffect } from "react";
+import { Box, Stack, useMediaQuery } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
 import PaymentConfirmation from "../../../components/PaymentConfirmation";
 import SafeLogo from "../../../components/SafeLogo";
+import { useDispatch } from "react-redux";
+import { useLazyGetPaymentStatusQuery } from "../../../APIs/definitions/payment";
+import { changePaymentStatus } from "../../../stores/slices";
 
 const PaymentSuccessfulPage = () => {
 
   const notPhoneScreen = useMediaQuery('(min-width:850px)');
+  const [getPaymentStatus] = useLazyGetPaymentStatusQuery();
+  const dispatch = useDispatch();
 
   const paymentDetails = {
     "Transaction ID": "1feda785cb576a90",
@@ -20,6 +25,41 @@ const PaymentSuccessfulPage = () => {
     "Session Date": "24th Aug, 2024",
     "Session Time": "17:00 - 18:00"
   }
+
+  useEffect(() => {
+    const desiredStatus = 'PAID';
+    let interval: NodeJS.Timeout;
+    let timeout: NodeJS.Timeout;
+  
+    const fetchPaymentStatus = async () => {
+      console.log("status")
+      const orderId = localStorage.getItem("order_id");
+      if (orderId) {
+        await getPaymentStatus(orderId)
+          .unwrap()
+          .then(res => {
+            if (res.status === desiredStatus) {
+              dispatch(changePaymentStatus(res.status));
+              clearInterval(interval);
+              clearTimeout(timeout);
+            }
+          })
+          .catch(err => {
+            console.error('Error fetching payment status:', err);
+          });
+      };
+    }
+  
+    interval = setInterval(fetchPaymentStatus, 1000);
+    timeout = setTimeout(() => {
+      clearInterval(interval);
+    }, 10000);
+  
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, []);
 
   return (
     <Box
