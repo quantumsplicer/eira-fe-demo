@@ -24,42 +24,76 @@ import { load } from "@cashfreepayments/cashfree-js";
 import { usePayment } from "../../../hooks/usePayment";
 import { RootState } from "../../../stores/configuration";
 import { getNextWorkingDay } from "../../../utils/helperFunctions";
+import { useCreateOrderMutation } from "../../../APIs/definitions/paymentLinks";
+import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
+import moment from "moment";
 
 const PaymentReviewPage = () => {
   const location = useLocation();
   const [isTutorOnboarded, setIsTutorOnboarded] = useState<boolean>(false);
   const navigate = useNavigate();
-  const [routeSource, setRouteSource] = useState<string>("");
-  const notPhoneScreen = useMediaQuery("(min-width:850px)");
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+  const notPhoneScreen = useMediaQuery("(min-width:850px)");
   const activePaymentAmount = localStorage.getItem("activePaymentAmount");
   const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
-  const activePaymentSessionDate = localStorage.getItem("activePaymentSessionDate");
-  const activePaymentSessionTime = localStorage.getItem("activePaymentSessionTime");
+  const activePaymentSessionDate = localStorage.getItem(
+    "activePaymentSessionDate"
+  );
+  const activePaymentSessionTime = localStorage.getItem(
+    "activePaymentSessionTime"
+  );
   const activePaymentSessionId = localStorage.getItem("activePaymentSessionId");
   const activePaymentTutorName = localStorage.getItem("activePaymentTutorName");
+  const activePaymentPayeeUserId = localStorage.getItem(
+    "activePaymentPayeeUserId"
+  );
   const activeFlow = localStorage.getItem("activeFlow");
-  const paymentSessionId = useSelector((state: RootState) => state.onGoingPayment.paymentSessionId);
+
+  const { data: userDetails } = useGetUserDetailsQuery();
+  const [createOrder] = useCreateOrderMutation();
 
   const paymentDetails = {
     "Payee Name": activePaymentTutorName ? activePaymentTutorName : "",
     "Payee Phone": activePaymentTutorId ? `+91 ${activePaymentTutorId}` : "",
-    "Session Date": activePaymentSessionDate ? activePaymentSessionDate : "",
-    "Session Time": activePaymentSessionTime ? activePaymentSessionTime : ""
+    "Session Date": activePaymentSessionDate
+      ? moment(activePaymentSessionDate).format("MMMM D, YYYY")
+      : "",
+    "Session Time": activePaymentSessionTime
+      ? `${moment(activePaymentSessionTime.split("-")[0]).format(
+          "h:mm A z"
+        )} - ${moment(activePaymentSessionTime.split("-")[1]).format(
+          "h:mm A z"
+        )}`
+      : "",
   };
 
   const { doPayment } = usePayment();
 
   const handleSubmit = () => {
-    doPayment(activePaymentSessionId ? activePaymentSessionId : "");
+    createOrder({
+      amount: Number(activePaymentAmount),
+      payer_id: userDetails ? userDetails.id : undefined,
+      payee_id: activePaymentPayeeUserId ?? undefined,
+    })
+      .unwrap()
+      .then((res) => {
+        doPayment(res.payment_session_id);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     // navigate("/pay/payment-gateway-payment-flow");
   };
 
   useEffect(() => {
-    if (!activePaymentAmount || !activePaymentTutorId || !activePaymentTutorName) {
+    if (
+      !activePaymentAmount ||
+      !activePaymentTutorId ||
+      !activePaymentTutorName
+    ) {
       navigate("/pay/payment-details");
-    } else if (!activePaymentSessionDate || !activePaymentSessionTime || !activePaymentSessionId) {
-      navigate("/pay/create-session");
     }
   }, []);
 
@@ -186,9 +220,7 @@ const PaymentReviewPage = () => {
                   anchor="bottom"
                 >
                   <Stack alignItems={"center"}>
-                    <AmountBreakupCard
-                      amount={Number(activePaymentAmount)}
-                    />
+                    <AmountBreakupCard amount={Number(activePaymentAmount)} />
                     <Button
                       variant="contained"
                       color="primary"

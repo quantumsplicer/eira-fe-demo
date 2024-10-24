@@ -31,13 +31,8 @@ const SlotBookingPage = () => {
   const [description, setDescription] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
-  const [createOrder] = useCreateOrderMutation();
-  const { data: userDetails } = useGetUserDetailsQuery();
-  const payeeId = useSelector((state: RootState) => state.onGoingPayment.payeeId);
-  const amount = useSelector((state: RootState) => state.onGoingPayment.amount);
   const activePaymentAmount = localStorage.getItem("activePaymentAmount");
   const activePaymentPayeeUserId = localStorage.getItem("activePaymentPayeeUserId");
-  const dispatch = useDispatch();
 
   const today = dayjs();
   const tomorrow = dayjs().add(1, "day");
@@ -58,23 +53,6 @@ const SlotBookingPage = () => {
   const handleSubmit = () => {
     const activeFlow = localStorage.getItem("activeFlow");
     localStorage.removeItem("activeFlow");
-    if (activeFlow === "dynamicFlow") {
-      navigate("/pay/payment-gateway-payment-flow");
-      return;
-    }
-    createOrder({
-      amount: Number(activePaymentAmount),
-      payer_id: userDetails ? userDetails.id : undefined,
-      payee_id: activePaymentPayeeUserId ? activePaymentPayeeUserId : undefined
-    })
-    .unwrap()
-    .then(res => {
-      dispatch(setPaymentSessionId(res.payment_session_id));
-      localStorage.setItem("activePaymentSessionId", res.payment_session_id);
-    })
-    .catch(err => {
-      console.log(err);
-    })
     navigate("/pay/review");
   };
 

@@ -18,7 +18,16 @@ interface CreateOrderRequest {
 
 interface PaymentInfoDetailsResponse {
   amount: number;
-  phone: string;
+  payee: string;
+  payee_name: string;
+  payee_phone: string;
+  masked_account_number: string;
+}
+
+export interface PaymentDetails {
+  id: string;
+  amount: number;
+  status: string;
 }
 
 export const paymentLinksApi = postgresApi.injectEndpoints({
@@ -35,7 +44,10 @@ export const paymentLinksApi = postgresApi.injectEndpoints({
       }),
     }),
 
-    createPaymentLink: builder.mutation<ApiResponse, Partial<CreatePaymentLinkRequest>>({
+    createPaymentLink: builder.mutation<
+      ApiResponse,
+      Partial<CreatePaymentLinkRequest>
+    >({
       query: (body) => ({
         url: `payments/payment-link/create/`,
         method: "POST",
@@ -47,12 +59,25 @@ export const paymentLinksApi = postgresApi.injectEndpoints({
       }),
     }),
 
-    createOrder: builder.mutation<CreateOrderRequest, Partial<CreatePaymentLinkRequest>>({
+    createOrder: builder.mutation<
+      CreateOrderRequest,
+      Partial<CreatePaymentLinkRequest>
+    >({
       query: (body) => ({
         url: `payments/pg/order/`,
         method: "POST",
         body,
       }),
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        const { data } = await queryFulfilled;
+
+        // Set order id in local storage
+        data?.id && localStorage.setItem("order_id", data?.id);
+      },
+    }),
+
+    getPaymentStatus: builder.query<PaymentDetails, string>({
+      query: (orderId) => `payments/pg/order/${orderId}`,
     }),
 
     getPaymentInfoFromLink: builder.query<PaymentInfoDetailsResponse, string>({
@@ -66,5 +91,7 @@ export const {
   useCreatePaymentLinkMutation,
   useCreateOrderMutation,
   useLazyGetPaymentInfoFromLinkQuery,
+  useGetPaymentStatusQuery,
+  useLazyGetPaymentStatusQuery,
   useGetPaymentInfoFromLinkQuery,
 } = paymentLinksApi;

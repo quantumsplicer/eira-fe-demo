@@ -25,6 +25,7 @@ import PayFeesContainer from "../flows/payTutionFees/pages/PayFeesContainer";
 import KycLogin from "../flows/kyc/pages/KycLogin";
 import AadharVerifyRedirectPage from "../flows/tutorOnboarding/pages/AadharVerifyRedirectPage";
 import { PageNotFound } from "../components/PageNotFound";
+import PaymentRedirect from "../flows/payTutionFees/pages/PaymentRedirect";
 
 const AppRoutes = () => {
   return (
@@ -35,10 +36,11 @@ const AppRoutes = () => {
       <Route path="/pay/create-session" element={<SlotBookingPage />} />
       <Route path="/pay/review" element={<PaymentReviewPage />} />
       <Route path="/pay/payment-gateway-payment-flow" element={<PGLoading />} />
-      <Route path="/payment-successful" element={<PaymentSuccessfulPage />} />
+      <Route path="/pay/redirect" element={<PaymentRedirect />} />
+      <Route path="/pay/status" element={<PaymentSuccessfulPage />} />
       
-      <Route path="/tutor-id/dashboard" element={<TutorDashboard />} />
-      <Route path="/student-id/dashboard" element={<StudentDashboard />} />
+      <Route path="/tutor/dashboard" element={<TutorDashboard />} />
+      <Route path="/student/dashboard" element={<StudentDashboard />} />
 
       <Route path="tutor/login" element={<TutorSignIn />} />
       <Route path="tutor/personal-details" element={<TutorSignUp />} />
@@ -78,6 +80,7 @@ const AppRoutes = () => {
       <Route path="tutor/kyc/login" element={<KycLogin />} />
 
       <Route path="*" element={<PageNotFound />} />
+      <Route path="page-not-found" element={<PageNotFound />} />
     </Routes>
   );
 };

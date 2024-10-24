@@ -84,16 +84,16 @@ const InputPaymentDetails: React.FC = () => {
       .unwrap()
       .then(res => {
         const tutor = res[0]
-        if (tutor.role === "student") {
+        if (tutor?.role === "student") {
           setIsPayeeStudent(true);
           isPayeeStudent = true;
           return;
         }
-        isTutorOnboarded = !!(tutor.first_name && tutor.last_name && tutor.pan);
+        isTutorOnboarded = !!(tutor?.first_name && tutor?.last_name && tutor?.pan);
         if (isTutorOnboarded) {
-          dispatch(setPayeeId(tutor.id));
-          localStorage.setItem("activePaymentPayeeUserId", tutor.id);
-          localStorage.setItem("activePaymentTutorName", tutor.first_name + " " + tutor.last_name);
+          dispatch(setPayeeId(tutor?.id));
+          localStorage.setItem("activePaymentPayeeUserId", tutor?.id);
+          localStorage.setItem("activePaymentTutorName", tutor?.first_name + " " + tutor?.last_name);
         }
       })
       // const tutor = await getUserDetails().unwrap();
@@ -104,8 +104,6 @@ const InputPaymentDetails: React.FC = () => {
         return;
       }
 
-      dispatch(setTutorPhoneNumber(phoneNumber));
-      dispatch(setAmount(Number(inputAmount)))
       if (!isTutorOnboarded) {
         navigate("/pay/tutor-details");
       } else {

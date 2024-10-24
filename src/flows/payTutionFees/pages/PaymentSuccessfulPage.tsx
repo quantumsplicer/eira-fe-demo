@@ -6,14 +6,11 @@ import EiraBack from '../../../assets/images/svg/EiraBack.svg'
 import PaymentConfirmation from "../../../components/PaymentConfirmation";
 import SafeLogo from "../../../components/SafeLogo";
 import { useDispatch } from "react-redux";
-import { useLazyGetPaymentStatusQuery } from "../../../APIs/definitions/payment";
+import { useLazyGetPaymentStatusQuery } from "../../../APIs/definitions/paymentLinks";
 import { changePaymentStatus } from "../../../stores/slices";
 
 const PaymentSuccessfulPage = () => {
-
   const notPhoneScreen = useMediaQuery('(min-width:850px)');
-  const [getPaymentStatus] = useLazyGetPaymentStatusQuery();
-  const dispatch = useDispatch();
 
   const paymentDetails = {
     "Transaction ID": "1feda785cb576a90",
@@ -27,39 +24,13 @@ const PaymentSuccessfulPage = () => {
   }
 
   useEffect(() => {
-    const desiredStatus = 'PAID';
-    let interval: NodeJS.Timeout;
-    let timeout: NodeJS.Timeout;
-  
-    const fetchPaymentStatus = async () => {
-      console.log("status")
-      const orderId = localStorage.getItem("order_id");
-      if (orderId) {
-        await getPaymentStatus(orderId)
-          .unwrap()
-          .then(res => {
-            if (res.status === desiredStatus) {
-              dispatch(changePaymentStatus(res.status));
-              clearInterval(interval);
-              clearTimeout(timeout);
-            }
-          })
-          .catch(err => {
-            console.error('Error fetching payment status:', err);
-          });
-      };
-    }
-  
-    interval = setInterval(fetchPaymentStatus, 1000);
-    timeout = setTimeout(() => {
-      clearInterval(interval);
-    }, 10000);
-  
-    return () => {
-      clearInterval(interval);
-      clearTimeout(timeout);
-    };
-  }, []);
+    localStorage.removeItem("activePaymentAmount");
+    localStorage.removeItem("activePaymentPayeeUserId");
+    localStorage.removeItem("activePaymentTutorId");
+    localStorage.removeItem("activePaymentTutorName");
+    localStorage.removeItem("activePaymentSessionDate");
+    localStorage.removeItem("activePaymentSessionTime");
+  })
 
   return (
     <Box

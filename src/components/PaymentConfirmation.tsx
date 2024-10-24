@@ -4,6 +4,7 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 interface PaymentConfirmationProps {
     paymentDetails: Record<string, string>;
@@ -12,6 +13,7 @@ interface PaymentConfirmationProps {
 }
 
 const PaymentConfirmation = ({ name, paymentDetails, amount }: PaymentConfirmationProps) => {
+    const navigate = useNavigate();
 
     return (
         <Stack alignItems={"center"}>
@@ -22,7 +24,9 @@ const PaymentConfirmation = ({ name, paymentDetails, amount }: PaymentConfirmati
                 type="success"
             />
             <Typography
-                // onClick={}
+                onClick={() => {
+                    navigate("/student/dashboard");
+                }}
                 mt={3}
                 sx={{
                     borderBottom: "1px solid #757575",

@@ -48,12 +48,12 @@ const useGetOnboardingDetails = () => {
             );
             localStorage.setItem(
               "activePaymentTutorId",
-              paymentLinkInfo?.phone
+              paymentLinkInfo?.payee_phone
             );
 
             navigate("/pay/review");
           } catch {
-            navigate("/pay/review");
+            navigate("/page-not-found");
             console.error("Error fetching payment link info");
           }
           break;
