@@ -37,6 +37,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
 import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useLogout } from "../../../utils/logout";
 import { useDispatch } from "react-redux";
 import { useOnboarding } from "../../../customHooks/useOnboarding";
 import { setOnboardingStep } from "../../../stores/slices/onboardingInfoSlice";
@@ -68,18 +70,19 @@ const TutorDashboard: React.FC = () => {
   });
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [subpage, setSubpage] = useState<string>(PAYMENT_HISTORY_PAGE);
-  const [mobileOpen, setMobileOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const location = useLocation();
   const previousUrl = location.state?.previousUrl;
   const [showDialog, setShowDialog] = useState<boolean>(false);
 
   const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
-  
+
   const [isSessionExpired, setIsSessionExpired] = useState<boolean>(false);
   const { determineOnboardingStep } = useOnboarding();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const handleLogout = useLogout();
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -363,7 +366,7 @@ const TutorDashboard: React.FC = () => {
                           pt={1.4}
                           fontWeight={600}
                         >
-                          Maanav
+                          {entry.title}
                         </Typography>
                       </ListItemButton>
                     </ListItem>
@@ -393,27 +396,127 @@ const TutorDashboard: React.FC = () => {
             >
               <Toolbar />
 
-              <Stack spacing={2}>
-                <Stack
-                  pl={2.5}
-                  spacing={2}
-                  onClick={() => {
-                    handleSubpageChange(PROFILE_PAGE);
-                  }}
-                >
-                  <Avatar
-                    alt="Profile Photo"
-                    src={undefined}
-                    sx={{
-                      width: 60,
-                      height: 60,
-                      marginBottom: 1,
-                      boxShadow: 5,
+              <Stack justifyContent="space-between" height="100%">
+                <Stack spacing={2}>
+                  <Stack
+                    pl={2.5}
+                    spacing={2}
+                    onClick={() => {
+                      handleSubpageChange(PROFILE_PAGE);
                     }}
-                  />
-                  <Typography fontSize={16} fontWeight={600}>
-                    {userDetails?.first_name}
-                  </Typography>
+                  >
+                    <Avatar
+                      alt="Profile Photo"
+                      src={undefined}
+                      sx={{
+                        width: 60,
+                        height: 60,
+                        marginBottom: 1,
+                        boxShadow: 5,
+                      }}
+                    />
+                    <Typography fontSize={16} fontWeight={600}>
+                      {userDetails?.first_name}
+                    </Typography>
+                  </Stack>
+                  <List>
+                    {[
+                      { title: "Payments", subpage: PAYMENT_HISTORY_PAGE },
+                      {
+                        title: "Your Payment Link",
+                        subpage: PAYMENT_LINK_PAGE,
+                      },
+                      {
+                        title: "Session History",
+                        subpage: SESSION_HISTORY_PAGE,
+                      },
+                      { title: "Invoices", subpage: "disabled" },
+                      { title: "Marketing", subpage: "disabled" },
+                    ].map((entry, index) => (
+                      <ListItem
+                        key={entry.title}
+                        sx={{ width: "100%", pl: "0", pr: "0" }}
+                      >
+                        <ListItemButton
+                          onClick={() => {
+                            handleSubpageChange(entry.subpage);
+                          }}
+                          disabled={index === 3 || index === 4 ? true : false}
+                          sx={{
+                            backgroundColor:
+                              subpage === entry.subpage ? "#EBF1FF" : "white",
+                            color:
+                              subpage === entry.subpage ? "#507FFD" : "black",
+                            pl: 3,
+                            "& *":
+                              subpage === entry.subpage
+                                ? {
+                                    color: "#507FFD",
+                                    fontWeight: "bold",
+                                  }
+                                : { color: "black" },
+                            "&:hover": {
+                              backgroundColor: "#EBF1FF",
+                              "& *": {
+                                color: "#507FFD",
+                                fontWeight: "bold",
+                              },
+                            },
+                          }}
+                        >
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <ListItemIcon sx={{ alignSelf: "center" }}>
+                              {iconsArray[index]}
+                            </ListItemIcon>
+                            <Typography
+                              color="black"
+                              fontSize={14}
+                              pt={1.4}
+                              fontWeight={600}
+                              sx={{ alignSelf: "center" }}
+                            >
+                              {entry.title}
+                            </Typography>
+                          </Stack>
+                        </ListItemButton>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Stack>
+                <Stack justifyContent="center" p={4}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      handleLogout();
+                    }}
+                    sx={{
+                      backgroundColor: "white",
+                      width: "50%",
+                      boxShadow: 0,
+                      "&:hover": {
+                        backgroundColor: "white",
+                      },
+                      "&:active": {
+                        backgroundColor: "white",
+                      },
+                    }}
+                  >
+                    <LogoutIcon color="error" fontSize="large" />
+                    <Typography
+                      fontSize={18}
+                      fontWeight={600}
+                      color="error"
+                      textTransform="none"
+                      pl={1}
+                    >
+                      Logout
+                    </Typography>
+                  </Button>
                 </Stack>
               </Stack>
             </Drawer>

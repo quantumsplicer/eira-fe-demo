@@ -176,7 +176,7 @@ const CompletePaymentDialog = ({
                       align="center"
                       color="#1F9254"
                     >
-                      ₹ {paymentDetails.amount * 1.0018}
+                      ₹ {(paymentDetails.amount * 1.0018).toFixed(2)}
                     </Typography>
                   </Stack>
                   <Stack direction="row" spacing={1}>
@@ -229,13 +229,24 @@ const CompletePaymentDialog = ({
                   >
                     Tuition date and time
                   </Typography>
-                  <Typography sx={{ fontSize: 12 }} fontWeight={600}>
-                    {`${sessionDetails.date?.format(
-                      "DD/MM"
-                    )} - ${sessionDetails.startTime?.format(
-                      "HH:mm"
-                    )} - ${sessionDetails.endTime?.format("HH:mm")}`}
-                  </Typography>
+                  <Stack spacing={1}>
+                    <Typography
+                      sx={{ fontSize: 12 }}
+                      fontWeight={600}
+                      align="center"
+                    >
+                      {`${sessionDetails.startTime?.format("h:mm A")} - ${sessionDetails.endTime?.format("h:mm A")}`}
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: 12 }}
+                      fontWeight={600}
+                      align="center"
+                    >
+                      {`${sessionDetails.startTime?.format(
+                        "MMMM D, YYYY"
+                      )} `}
+                    </Typography>
+                  </Stack>
                 </Stack>
               </Stack>
               {!isPhoneScreen ? (

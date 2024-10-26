@@ -23,6 +23,27 @@ export interface TransactionsResponse {
   previous: string | null;
   results: Transaction[];
 }
+
+// New SessionResponse interface
+export interface SessionDetails {
+  id: string;
+  start_time: string;
+  end_time: string;
+  duration: number;
+  student_name: string;
+  subject: string;
+  status: string;
+}
+
+export interface SessionsResponse {
+  limit: number;
+  offset: number;
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: SessionDetails[];
+}
+
 export interface PaymentLinkDetails {
   id: string;
   created: string;
@@ -36,4 +57,13 @@ export interface PaymentLinkDetails {
   expiry_timestamp: string | null;
   creator: string;
   payer: string | null;
+}
+export interface CreateSessionLinkRequest {
+  subject: string;
+  amount: number;
+  title: string;
+  starttime: string;
+  endtime: string;
+  teacher_id: string;
+  student_id: string;
 }

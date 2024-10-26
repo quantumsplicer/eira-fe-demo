@@ -336,10 +336,10 @@ const SessionHistoryTable: React.FC = () => {
           </Stack>
         </Box>
       </ThemeProvider>
-      <SessionLinkDialog
+      {/* <SessionLinkDialog
         activeDialog={activeDialog}
         setActiveDialog={setActiveDialog}
-      />
+      /> */}
       {/* <ConfirmationDialog
         activeDialog={activeDialog}
         setActiveDialog={setActiveDialog}

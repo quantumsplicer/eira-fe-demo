@@ -16,8 +16,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { PaymentDetails } from "../interfaces";
-import { error } from "console";
+import { PaymentDetails, TutorDetails } from "../interfaces";
+import AmountBreakupCard from "../../../components/AmountBreakupCard";
 
 const Transition = forwardRef(function Transition(props: SlideProps, ref) {
   return (
@@ -36,14 +36,14 @@ interface PaymentDetailsDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (value: PaymentDetails) => void;
-  phoneNumberProp: string;
+  tutorDetails: TutorDetails;
 }
 
 const PaymentDetailsDialog = ({
   open,
   onClose,
   onSubmit,
-  phoneNumberProp,
+  tutorDetails,
 }: PaymentDetailsDialogProps) => {
   const {
     handleSubmit,
@@ -52,26 +52,16 @@ const PaymentDetailsDialog = ({
     reset,
     formState: { errors, isValid },
   } = useForm<PaymentDetails>({
+    mode: "onChange",
     defaultValues: {
-      phoneNumber: phoneNumberProp,
+      phoneNumber: tutorDetails.phoneNumber,
     },
   });
   const handleFormSubmit: SubmitHandler<PaymentDetails> = (data) => {
     onSubmit(data);
   };
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  useEffect(() => {
-    console.log(
-      "This is the phone number from payment details dialog",
-      phoneNumberProp
-    );
-  }, [phoneNumberProp]);
-  useEffect(() => {
-    console.log("Component mounted");
-    return () => {
-      console.log("Component unmounted");
-    };
-  }, []);
+
   return (
     <Dialog
       open={open}
@@ -119,131 +109,169 @@ const PaymentDetailsDialog = ({
         >
           {!isPhoneScreen ? <CloseIcon /> : <ArrowBackIcon />}
         </IconButton>
-        <Stack justifyContent="space-around" height="100%" pt={4}>
-          <Stack>
-            <Typography fontSize={23} fontWeight={600} align="center">
-              Payment Details
-            </Typography>
-            <Stack>
-              <Typography fontSize={12} fontWeight={550} align="center">
-                select a tutor to pay and schedule a session with
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: 10,
-                  fontWeight: 550,
-                  color: "#989898",
-                  lineHeight: 1.1,
-                }}
-                align="center"
+        <Stack justifyContent="space-between" height="100%" pt={4}>
+          <Stack spacing={isPhoneScreen ? 25 : 0} height="100%">
+            <Stack height="20vh" spacing={isPhoneScreen ? 4 : 0}>
+              <Stack spacing={isPhoneScreen ? 4 : 0} height="100%">
+                <Typography fontSize={23} fontWeight={600} align="center">
+                  Payment Details
+                </Typography>
+                {/* <Stack spacing={isPhoneScreen ? 1 : 0}>
+                  <Typography
+                    fontSize={isPhoneScreen ? "0.9rem" : 12}
+                    fontWeight={550}
+                    align="center"
+                  >
+                    select a tutor to pay and schedule a session with
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: isPhoneScreen ? "0.9rem" : 10,
+                      fontWeight: 550,
+                      color: "#989898",
+                      lineHeight: 1.1,
+                    }}
+                    align="center"
+                  >
+                    Tutor will receive a link to pay, through WhatsApp and SMS
+                  </Typography>
+                </Stack> */}
+              </Stack>
+              {tutorDetails.firstName && tutorDetails.lastName && (
+                <Stack height="100%">
+                  <Typography
+                    fontSize={18}
+                    fontWeight={500}
+                    align="center"
+                    pt={5}
+                  >
+                    You are making a payment to:
+                  </Typography>
+                  <Typography fontSize={18} fontWeight={500} align="center">
+                    {tutorDetails.firstName} {tutorDetails.lastName}
+                  </Typography>
+                </Stack>
+              )}
+              <Stack
+                height={isPhoneScreen ? "50%" : "45%"}
+                justifyContent="space-between"
+                spacing={isPhoneScreen ? 4 : 0}
+                width="85%"
+                alignSelf="center"
               >
-                Link will be sent to them through whatsapp and testSMS
-              </Typography>
+                <Controller
+                  name="phoneNumber"
+                  control={control}
+                  rules={{
+                    required: "This field is required",
+                    maxLength: {
+                      value: 10,
+                      message: "Phone number must be 10 digits long",
+                    },
+                    minLength: {
+                      value: 10,
+                      message: "Phone number must be 10 digits long",
+                    },
+                    pattern: {
+                      value: /^[6-9]\d{9}$/,
+                      message: "Invalid Number",
+                    },
+                  }}
+                  render={({
+                    field: { onChange, onBlur, value, name, ref },
+                    fieldState: { invalid, isTouched, isDirty, error },
+                  }) => (
+                    <TextField
+                      value={value}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      label="Receiver's Phone Number"
+                      fullWidth
+                      type="number"
+                      variant="outlined"
+                      size="small"
+                      error={!!errors.phoneNumber}
+                      helperText={
+                        errors.phoneNumber ? errors.phoneNumber.message : ""
+                      }
+                      sx={{
+                        mb: 0,
+                        "& .MuiInputLabel-root": {
+                          transform: "translate(0, -10px) scale(0.8)", // Move the label above
+                        },
+                        "& .MuiInputBase-root": {
+                          marginTop: "16px", // Add space between label and input box
+                        },
+                        "&:MuiInputBase-input": {
+                          fontSize: 12,
+                        },
+                        "& legend": {
+                          width: 0,
+                        },
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <Stack direction={"row"} spacing={1} sx={{ mr: 1 }}>
+                            <img
+                              src="https://flagcdn.com/w320/in.png"
+                              alt="India Flag"
+                              style={{ width: 24, height: 18, marginRight: 8 }}
+                            />
+                            <Typography fontSize={14}>+91</Typography>
+                          </Stack>
+                        ),
+                      }}
+                    />
+                  )}
+                />
+                <Controller
+                  name="amount"
+                  control={control}
+                  rules={{
+                    required: "Required",
+                    min: { value: 1, message: "Amount must be greater than 0" },
+                  }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Amount"
+                      fullWidth
+                      type="number"
+                      variant="outlined"
+                      size="small"
+                      error={!!errors.amount}
+                      helperText={errors.amount ? errors.amount.message : ""}
+                      sx={{
+                        mb: 0,
+                        "& .MuiInputLabel-root": {
+                          transform: "translate(0, -10px) scale(0.8)", // Move the label above
+                        },
+                        "& .MuiInputBase-root": {
+                          marginTop: "16px", // Add space between label and input box
+                        },
+                        "&:MuiInputBase-input": {
+                          fontSize: 10,
+                        },
+                        "& legend": {
+                          width: 0,
+                        },
+                      }}
+                      InputProps={{
+                        inputMode: "numeric",
+                        startAdornment: (
+                          <Typography fontSize={14} sx={{ mr: 1 }}>
+                            ₹
+                          </Typography>
+                        ),
+                      }}
+                    />
+                  )}
+                />
+              </Stack>
             </Stack>
-          </Stack>
-          <Stack
-            height="45%"
-            justifyContent="space-evenly"
-            width="85%"
-            alignSelf="center"
-          >
-            <Controller
-              name="phoneNumber"
-              control={control}
-              rules={{
-                required: "This field is required",
-                maxLength: 10,
-                minLength: 10,
-                pattern: {
-                  value: /^[6-9]\d{9}$/,
-                  message: "Invalid Number",
-                },
-              }}
-              render={({
-                field: { onChange, onBlur, value, name, ref },
-                fieldState: { invalid, isTouched, isDirty, error },
-              }) => (
-                <TextField
-                  value={value}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  label="Phone Number"
-                  fullWidth
-                  variant="outlined"
-                  size="small"
-                  error={!!errors.phoneNumber}
-                  helperText={
-                    errors.phoneNumber ? errors.phoneNumber.message : ""
-                  }
-                  sx={{
-                    mb: 0,
-                    "& .MuiInputLabel-root": {
-                      transform: "translate(0, -10px) scale(0.8)", // Move the label above
-                    },
-                    "& .MuiInputBase-root": {
-                      marginTop: "16px", // Add space between label and input box
-                    },
-                    "&:MuiInputBase-input": {
-                      fontSize: 12,
-                    },
-                    "& legend": {
-                      width: 0,
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <Stack direction={"row"} spacing={1} sx={{ mr: 1 }}>
-                        <img
-                          src="https://flagcdn.com/w320/in.png"
-                          alt="India Flag"
-                          style={{ width: 24, height: 18, marginRight: 8 }}
-                        />
-                        <Typography fontSize={14}>+91</Typography>
-                      </Stack>
-                    ),
-                  }}
-                />
-              )}
-            />
-            <Controller
-              name="amount"
-              control={control}
-              rules={{ required: "Required" }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Amount"
-                  fullWidth
-                  type="number"
-                  variant="outlined"
-                  size="small"
-                  error={!!errors.amount}
-                  helperText={errors.amount ? errors.amount.message : ""}
-                  sx={{
-                    mb: 0,
-                    "& .MuiInputLabel-root": {
-                      transform: "translate(0, -10px) scale(0.8)", // Move the label above
-                    },
-                    "& .MuiInputBase-root": {
-                      marginTop: "16px", // Add space between label and input box
-                    },
-                    "&:MuiInputBase-input": {
-                      fontSize: 10,
-                    },
-                    "& legend": {
-                      width: 0,
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <Typography fontSize={14} sx={{ mr: 1 }}>
-                        ₹
-                      </Typography>
-                    ),
-                  }}
-                />
-              )}
-            />
+            <Stack>
+              {isPhoneScreen && <AmountBreakupCard amount={watch("amount")} />}
+            </Stack>
           </Stack>
           <Box width="85%" alignSelf="center">
             <Button

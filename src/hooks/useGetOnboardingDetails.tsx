@@ -58,7 +58,7 @@ const useGetOnboardingDetails = () => {
           }
           break;
         default:
-          navigate("/student-id/dashboard");
+          navigate("/student/dashboard");
           break;
       }
     } else {

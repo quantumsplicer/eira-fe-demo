@@ -26,7 +26,7 @@ const TutorSignIn: React.FC = () => {
 
   useEffect(() => {
     const handleOnboarding = async () => {
-      const accessToken = localStorage.getItem('access-token');
+      const accessToken = localStorage.getItem("access-token");
       if (accessToken) {
         const { navigateTo, onboardingStep } = await determineOnboardingStep();
         dispatch(setOnboardingStep(onboardingStep));
@@ -35,7 +35,7 @@ const TutorSignIn: React.FC = () => {
     };
 
     handleOnboarding();
-  }, [])
+  }, []);
 
   const isPhoneNumberValid = (): boolean => {
     const regex = /^[6-9]\d{9}$/;
@@ -45,14 +45,14 @@ const TutorSignIn: React.FC = () => {
   const handleSubmit = () => {
     if (isPhoneNumberValid()) {
       getOtp({
-        phone: phoneNumber
+        phone: phoneNumber,
       })
         .unwrap()
         .then((res) => {
-          console.log(res)
+          console.log(res);
           setIsDialogOpen(true);
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     }
   };
 
@@ -60,7 +60,7 @@ const TutorSignIn: React.FC = () => {
     const { navigateTo, onboardingStep } = await determineOnboardingStep();
     dispatch(setOnboardingStep(onboardingStep));
     navigate(navigateTo);
-  }
+  };
 
   return (
     <Box>
@@ -126,7 +126,7 @@ const TutorSignIn: React.FC = () => {
               </>
             ) : (
               <OTPInput
-                // onSubmit={handlePostOtpVerification}
+                onVerified={handlePostOtpVerification}
                 phoneNumber={phoneNumber}
                 isDrawer={false}
               />

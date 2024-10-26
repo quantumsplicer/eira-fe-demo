@@ -33,7 +33,7 @@ const CurrentLimitCard: React.FC = () => {
               p: 1,
               width: "100%",
               backgroundColor: "white",
-              height: 350,
+              height: 320,
             }
       }
     >
@@ -48,13 +48,13 @@ const CurrentLimitCard: React.FC = () => {
                 pl: 0,
                 height: "100%",
                 pb: 4,
-                pt: 3,
+                pt: 1,
               }
         }
-        spacing={5}
+        spacing={!isPhoneScreen ? 5 : 1}
       >
         <Stack
-          spacing={!isPhoneScreen ? 1 : 4}
+          spacing={!isPhoneScreen ? 1 : 2}
           direction={!isPhoneScreen ? "column" : "column"}
           sx={
             !isPhoneScreen
@@ -69,31 +69,51 @@ const CurrentLimitCard: React.FC = () => {
                 : {
                     justifyContent: "space-between",
                     width: "100%",
+                    alignItems: "center",
                   }
             }
             spacing={!isPhoneScreen ? 0 : 0}
             direction={!isPhoneScreen ? "column" : "row"}
           >
-            <Typography
-              fontSize={!isPhoneScreen ? 15 : "1.2rem"}
-              fontWeight={600}
-            >
-              Current Limit
-            </Typography>
-            <Stack direction="row" spacing={1}>
+            <Stack>
               <Typography
-                fontSize={!isPhoneScreen ? 26 : "2.5rem"}
+                fontSize={!isPhoneScreen ? 15 : "1.6rem"}
+                sx={
+                  !isPhoneScreen ? {} : { alignSelf: "left", textAlign: "left" }
+                }
+                fontWeight={600}
+              >
+                Current
+              </Typography>
+              <Typography
+                fontSize={!isPhoneScreen ? 15 : "1.6rem"}
+                sx={
+                  !isPhoneScreen ? {} : { alignSelf: "left", textAlign: "left" }
+                }
+                fontWeight={600}
+              >
+                Limit
+              </Typography>
+            </Stack>
+            <Stack
+              direction={!isPhoneScreen ? "row" : "column"}
+              spacing={!isPhoneScreen ? 1 : 0}
+            >
+              <Typography
+                fontSize={!isPhoneScreen ? 26 : "2.2rem"}
                 fontWeight={650}
+                sx={!isPhoneScreen ? {} : { pt: 0 }}
                 alignSelf="self-end"
               >
                 {formatter.format(currentLimit)}
               </Typography>
               <Typography
-                fontSize={!isPhoneScreen ? 11 : "0.75rem"}
+                fontSize={!isPhoneScreen ? 11 : "0.9rem"}
                 fontWeight="bold"
                 color="#898989"
                 alignSelf="flex-end"
-                pb={1}
+                pb={!isPhoneScreen ? 2 : 0}
+                sx={!isPhoneScreen ? {} : { marginTop: -1 }}
               >
                 /transaction
               </Typography>

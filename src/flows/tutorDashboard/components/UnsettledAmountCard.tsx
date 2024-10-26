@@ -30,12 +30,12 @@ const UnsettledAmountCard: React.FC = () => {
               p: 3,
               width: "100%",
               backgroundColor: "white",
-              height: 350,
+              height: 320,
             }
       }
     >
       <Stack
-        spacing={!isPhoneScreen ? 0 : 2}
+        spacing={!isPhoneScreen ? 0 : 3}
         direction={!isPhoneScreen ? "row" : "column"}
         sx={!isPhoneScreen ? { justifyContent: "space-between" } : {}}
       >

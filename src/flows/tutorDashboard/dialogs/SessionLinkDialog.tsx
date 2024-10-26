@@ -1,5 +1,5 @@
 // src/components/OTPDialog.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -27,24 +27,33 @@ import { Dayjs } from "dayjs";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface SessionLinkDialogProps {
-  activeDialog: string;
-  setActiveDialog: (dialog: string) => void;
+  open: boolean;
+  onSubmit: (data: any) => void;
+  onClose: () => void;
+  onSuccess: () => void;
+  onFailure: () => void;
 }
 type Inputs = {
   sessionTitle: string;
   selectedDate: Dayjs | null;
   startTime: Dayjs | null;
   endTime: Dayjs | null;
+  attendees: string[];
   description: string;
 };
 const SessionLinkDialog = ({
-  activeDialog,
-  setActiveDialog,
+  open,
+  onClose,
+  onSuccess,
+  onFailure,
+  onSubmit,
 }: SessionLinkDialogProps) => {
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
+    getValues,
     formState: { errors, isValid },
     control,
   } = useForm<Inputs>({
@@ -52,54 +61,42 @@ const SessionLinkDialog = ({
       selectedDate: null,
       startTime: null,
       endTime: null,
+      attendees: [],
     },
   });
 
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  const handleOnClose = () => {
-    setActiveDialog("None");
-  };
-  const handleOnSubmit = () => {
-    setActiveDialog("ConfirmationDialog");
-  };
-  const [sessionTitle, setSessionTitle] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-  const [startTime, setStartTime] = useState<Dayjs | null>(null);
-  const [endTime, setEndTime] = useState<Dayjs | null>(null);
-  const [attendees, setAttendees] = useState<string[]>([]);
   const [attendeeInput, setAttendeeInput] = useState("");
-  const [description, setDescription] = useState("");
 
-  const handleSessionTitleChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSessionTitle(event.target.value);
+  const handleOnClose = () => {
+    onClose();
+  };
+  const handleOnSubmit = (data: any) => {
+    onSubmit(data);
   };
 
-  const handleDescriptionChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setDescription(event.target.value);
-  };
+  const handleAddAttendee = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter" && attendeeInput.trim()) {
+      event.preventDefault();
 
-  const handleAddAttendee = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" && attendeeInput.trim() !== "") {
-      if (!attendees.includes(attendeeInput.trim())) {
-        setAttendees((prev) => [...prev, attendeeInput.trim()]);
+      const currentAttendees = getValues("attendees") || [];
+      // Avoid adding duplicates
+      if (!currentAttendees.includes(attendeeInput.trim())) {
+        setValue("attendees", [...currentAttendees, attendeeInput.trim()]);
+        setAttendeeInput("");
       }
-      setAttendeeInput("");
     }
   };
 
   const handleDeleteAttendee = (attendeeToDelete: string) => () => {
-    setAttendees((prev) =>
-      prev.filter((attendee) => attendee !== attendeeToDelete)
+    setValue(
+      "attendees",
+      getValues("attendees").filter((attendee) => attendee !== attendeeToDelete)
     );
   };
-
   return (
     <Dialog
-      open={activeDialog === "SessionLinkDialog" ? true : false}
+      open={open}
       onClose={handleOnClose}
       hideBackdrop={isPhoneScreen}
       fullScreen={isPhoneScreen}
@@ -176,6 +173,7 @@ const SessionLinkDialog = ({
               rules={{ required: "Session Title required" }}
               render={({ field }) => (
                 <TextField
+                  {...field}
                   fullWidth
                   label="Session Title"
                   variant="outlined"
@@ -202,128 +200,164 @@ const SessionLinkDialog = ({
                 />
               )}
             />
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
-              <Stack direction="row" spacing={3}>
-                <Controller
-                  name="selectedDate"
-                  control={control}
-                  rules={{ required: "Date is required" }}
-                  render={({ field }) => (
-                    <DatePicker
-                      label="Add date"
-                      value={field.value}
-                      onChange={(newValue) => field.onChange(newValue)}
-                      slots={{
-                        textField: (params: TextFieldProps) => (
-                          <TextField
-                            {...params}
-                            size="small" // Reduce the input size
-                            error={
-                              errors.selectedDate !== undefined ? true : false
-                            }
-                            helperText={errors.selectedDate ? "Required" : ""}
-                            sx={{
-                              mb: 0,
-                              "& .MuiInputLabel-root": {
-                                transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                              },
-                              "& .MuiInputBase-root": {
-                                marginTop: "16px", // Add space between label and input box
-                              },
-                              "&:MuiInputBase-input": {
-                                fontSize: 12,
-                              },
-                              "& legend": {
-                                width: 0,
-                              },
-                            }}
-                          />
-                        ),
-                      }}
-                    />
-                  )}
+
+            {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
+            <Stack direction="row" spacing={3}>
+              <Controller
+                name="selectedDate"
+                control={control}
+                rules={{ required: "Date is required" }}
+                render={({ field }) => (
+                  <DatePicker
+                    label="Add date"
+                    value={field.value}
+                    onChange={(newValue) => field.onChange(newValue)}
+                    slots={{
+                      textField: (params: TextFieldProps) => (
+                        <TextField
+                          {...params}
+                          size="small" // Reduce the input size
+                          error={
+                            errors.selectedDate !== undefined ? true : false
+                          }
+                          helperText={errors.selectedDate ? "Required" : ""}
+                          sx={{
+                            mb: 0,
+                            "& .MuiInputLabel-root": {
+                              transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                            },
+                            "& .MuiInputBase-root": {
+                              marginTop: "16px", // Add space between label and input box
+                            },
+                            "&:MuiInputBase-input": {
+                              fontSize: 12,
+                            },
+                            "& legend": {
+                              width: 0,
+                            },
+                          }}
+                        />
+                      ),
+                    }}
+                  />
+                )}
+              />
+              <Controller
+                name="startTime"
+                control={control}
+                rules={{ required: "Date is required" }}
+                render={({ field }) => (
+                  <TimePicker
+                    label="Start Time"
+                    value={field.value}
+                    onChange={(newValue) => field.onChange(newValue)}
+                    slots={{
+                      textField: (params: TextFieldProps) => (
+                        <TextField
+                          {...params}
+                          size="small"
+                          error={errors.startTime !== undefined ? true : false}
+                          helperText={errors.startTime ? "Required" : ""}
+                          sx={{
+                            mb: 0,
+                            "& .MuiInputLabel-root": {
+                              transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                            },
+                            "& .MuiInputBase-root": {
+                              marginTop: "16px", // Add space between label and input box
+                            },
+                            "&:MuiInputBase-input": {
+                              fontSize: 12,
+                            },
+                            "& legend": {
+                              width: 0,
+                            },
+                          }}
+                        />
+                      ),
+                    }}
+                  />
+                )}
+              />
+              <Controller
+                name="endTime"
+                control={control}
+                rules={{ required: "Date is required" }}
+                render={({ field }) => (
+                  <TimePicker
+                    label="End Time"
+                    value={field.value}
+                    onChange={(newValue) => field.onChange(newValue)}
+                    slots={{
+                      textField: (params: TextFieldProps) => (
+                        <TextField
+                          {...params}
+                          size="small" // Reduce the input size
+                          error={errors.endTime !== undefined ? true : false}
+                          helperText={errors.endTime ? "Required" : ""}
+                          sx={{
+                            mb: 0,
+                            "& .MuiInputLabel-root": {
+                              transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                            },
+                            "& .MuiInputBase-root": {
+                              marginTop: "16px", // Add space between label and input box
+                            },
+                            "&:MuiInputBase-input": {
+                              fontSize: 12,
+                            },
+                            "& legend": {
+                              width: 0,
+                            },
+                          }}
+                        />
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </Stack>
+            {/* </LocalizationProvider> */}
+            <Controller
+              name="attendees"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    variant="outlined"
+                    label="Add new attendee"
+                    value={attendeeInput}
+                    onChange={(e) => setAttendeeInput(e.target.value)}
+                    onKeyDown={handleAddAttendee}
+                  />
+                  <Stack direction="row" flexWrap="wrap" gap={0.5}>
+                    {field.value.map((attendee) => (
+                      <Chip
+                        key={attendee}
+                        label={attendee}
+                        onDelete={handleDeleteAttendee(attendee)}
+                      />
+                    ))}
+                  </Stack>
+                </>
+              )}
+            />
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  size="small"
+                  fullWidth
+                  variant="outlined"
+                  label="Description"
                 />
-                <Controller
-                  name="startTime"
-                  control={control}
-                  rules={{ required: "Date is required" }}
-                  render={({ field }) => (
-                    <TimePicker
-                      label="Start Time"
-                      value={field.value}
-                      onChange={(newValue) => field.onChange(newValue)}
-                      slots={{
-                        textField: (params: TextFieldProps) => (
-                          <TextField
-                            {...params}
-                            size="small"
-                            error={
-                              errors.startTime !== undefined ? true : false
-                            }
-                            helperText={errors.startTime ? "Required" : ""}
-                            sx={{
-                              mb: 0,
-                              "& .MuiInputLabel-root": {
-                                transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                              },
-                              "& .MuiInputBase-root": {
-                                marginTop: "16px", // Add space between label and input box
-                              },
-                              "&:MuiInputBase-input": {
-                                fontSize: 12,
-                              },
-                              "& legend": {
-                                width: 0,
-                              },
-                            }}
-                          />
-                        ),
-                      }}
-                    />
-                  )}
-                />
-                <Controller
-                  name="endTime"
-                  control={control}
-                  rules={{ required: "Date is required" }}
-                  render={({ field }) => (
-                    <TimePicker
-                      label="End Time"
-                      value={field.value}
-                      onChange={(newValue) => field.onChange(newValue)}
-                      slots={{
-                        textField: (params: TextFieldProps) => (
-                          <TextField
-                            {...params}
-                            size="small" // Reduce the input size
-                            error={errors.endTime !== undefined ? true : false}
-                            helperText={errors.endTime ? "Required" : ""}
-                            sx={{
-                              mb: 0,
-                              "& .MuiInputLabel-root": {
-                                transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                              },
-                              "& .MuiInputBase-root": {
-                                marginTop: "16px", // Add space between label and input box
-                              },
-                              "&:MuiInputBase-input": {
-                                fontSize: 12,
-                              },
-                              "& legend": {
-                                width: 0,
-                              },
-                            }}
-                          />
-                        ),
-                      }}
-                    />
-                  )}
-                />
-              </Stack>
-              {/* </LocalizationProvider> */}
-            </FormControl>
-            <FormControl fullWidth sx={{ mb: 2 }}>
+              )}
+            />
+            {/* <FormControl fullWidth sx={{ mb: 2 }}>
               <TextField
                 size="small"
                 fullWidth
@@ -381,13 +415,13 @@ const SessionLinkDialog = ({
                   },
                 }}
               />
-            </FormControl>
+            </FormControl> */}
           </Stack>
           <Box width="85%" alignSelf="center" pt={3}>
             <Button
               variant="contained"
               fullWidth
-              disabled={!isValid}
+              // disabled={!isValid}
               onClick={handleSubmit(handleOnSubmit)}
               sx={{
                 backgroundColor: "#507FFD",
@@ -398,7 +432,7 @@ const SessionLinkDialog = ({
                 paddingRight: 3,
               }}
             >
-              Proceed to Pay
+              Send Session Link
             </Button>
           </Box>
         </Stack>

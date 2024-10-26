@@ -53,6 +53,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
     phoneNumber: "",
     amount: 0,
   });
+  const [isTutorOnBoarded, setIsTutorOnBoarded] = useState(false);
   const handleClose = () => {
     setActiveDialog(DialogName.None);
     onClose();
@@ -81,10 +82,12 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
           setPaymentDetails(data);
           setActiveDialog(DialogName.TutorDetails);
         }}
-        phoneNumberProp={tutorDetails.phoneNumber}
+        tutorDetails={tutorDetails}
       />
       <TutorDetailsDialog
-        open={activeDialog === DialogName.TutorDetails && open}
+        open={
+          activeDialog === DialogName.TutorDetails && open && !isTutorOnBoarded
+        }
         onBack={() => {
           setActiveDialog(DialogName.PaymentDetails);
         }}
