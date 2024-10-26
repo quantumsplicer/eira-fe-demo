@@ -29,7 +29,6 @@ import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import moment from "moment";
 
 const PaymentReviewPage = () => {
-  const location = useLocation();
   const [isTutorOnboarded, setIsTutorOnboarded] = useState<boolean>(false);
   const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
@@ -43,15 +42,7 @@ const PaymentReviewPage = () => {
   const activePaymentSessionTime = localStorage.getItem(
     "activePaymentSessionTime"
   );
-  const activePaymentSessionId = localStorage.getItem("activePaymentSessionId");
   const activePaymentTutorName = localStorage.getItem("activePaymentTutorName");
-  const activePaymentPayeeUserId = localStorage.getItem(
-    "activePaymentPayeeUserId"
-  );
-  const activeFlow = localStorage.getItem("activeFlow");
-
-  const { data: userDetails } = useGetUserDetailsQuery();
-  const [createOrder] = useCreateOrderMutation();
 
   const paymentDetails = {
     "Payee Name": activePaymentTutorName ? activePaymentTutorName : "",
@@ -68,23 +59,10 @@ const PaymentReviewPage = () => {
       : "",
   };
 
-  const { doPayment } = usePayment();
+  const { makePayment } = usePayment();
 
   const handleSubmit = () => {
-    createOrder({
-      amount: Number(activePaymentAmount),
-      payer_id: userDetails ? userDetails.id : undefined,
-      payee_id: activePaymentPayeeUserId ?? undefined,
-    })
-      .unwrap()
-      .then((res) => {
-        doPayment(res.payment_session_id);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    // navigate("/pay/payment-gateway-payment-flow");
+    makePayment();
   };
 
   useEffect(() => {

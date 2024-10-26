@@ -17,10 +17,11 @@ import SessionHistoryIcon from "@mui/icons-material/RestoreOutlined";
 import MarketingIcon from "@mui/icons-material/CampaignOutlined";
 import InvoiceIcon from "@mui/icons-material/ReceiptOutlined";
 import { useState } from "react";
-import { Stack, useMediaQuery } from "@mui/material";
+import { Fab, Stack, useMediaQuery } from "@mui/material";
 import PaymentBannerCard from "../components/PaymentBannerCard";
 import PaymentHistoryTable from "../components/PaymentHistoryTable";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import PaymentFlow from "../components/PaymentFlow";
 
 const drawerWidth = 220;
 
@@ -30,7 +31,14 @@ const StudentDashboard: React.FC = () => {
       fontFamily: "Montserrat", // Set the default font family
     },
   });
+
+  const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
+
+  const handleClosePaymentFlow = () => {
+    setIsPaymentFlowActive(false);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
@@ -84,6 +92,43 @@ const StudentDashboard: React.FC = () => {
           </Stack>
         </Box>
       </Box>
+
+      {isPhoneScreen && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            position: "fixed",
+            bottom: 20,
+            width: "100%",
+          }}
+        >
+          <Fab
+            aria-label="make-payment"
+            sx={{
+              width: 300,
+              borderRadius: 50,
+              backgroundColor: "#507FFD",
+              color: "white",
+            }}
+            onClick={() => setIsPaymentFlowActive(true)}
+          >
+            Make a Payment
+          </Fab>
+        </Box>
+      )}
+       {isPaymentFlowActive && (
+        <PaymentFlow
+          open={isPaymentFlowActive}
+          onClose={handleClosePaymentFlow}
+          tutorDetailsProp={{
+            firstName: "",
+            lastName: "",
+            panNumber: "",
+            phoneNumber: "",
+          }}
+        />
+      )}
     </ThemeProvider>
   );
 };

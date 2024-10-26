@@ -24,8 +24,12 @@ export const onboardingApi = postgresApi.injectEndpoints({
                 url: `payments/pg/onboarding/`,
                 method: "POST"
             })
+        }),
+
+        getOnboardingStatus: builder.query<any, string>({
+            query: (userId) => `payments/pg/onboarding/${userId}`
         })
     })
 })
 
-export const { useOnboardUserMutation } = onboardingApi;
+export const { useOnboardUserMutation, useGetOnboardingStatusQuery } = onboardingApi;

@@ -242,8 +242,8 @@ const CreateSessionDialog = ({
                     render={({ field }) => (
                       <DatePicker
                         label="Add date"
-                        value={field.value}
-                        onChange={(newValue) => field.onChange(newValue)}
+                        value={field?.value}
+                        onChange={(newValue) => field?.onChange(newValue)}
                         slots={{
                           textField: (params: TextFieldProps) => (
                             <TextField
@@ -279,8 +279,8 @@ const CreateSessionDialog = ({
                     render={({ field }) => (
                       <TimePicker
                         label="Start Time"
-                        value={field.value}
-                        onChange={(newValue) => field.onChange(newValue)}
+                        value={field?.value}
+                        onChange={(newValue) => field?.onChange(newValue)}
                         slots={{
                           textField: (params: TextFieldProps) => (
                             <TextField
@@ -318,8 +318,8 @@ const CreateSessionDialog = ({
                     render={({ field }) => (
                       <TimePicker
                         label="End Time"
-                        value={field.value}
-                        onChange={(newValue) => field.onChange(newValue)}
+                        value={field?.value}
+                        onChange={(newValue) => field?.onChange(newValue)}
                         slots={{
                           textField: (params: TextFieldProps) => (
                             <TextField

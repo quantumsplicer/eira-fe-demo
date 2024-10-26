@@ -1,6 +1,6 @@
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import moment from "moment";
-import React from "react";
+import React, { useMemo } from "react";
 import { getNextWorkingDay } from "../utils/helperFunctions";
 import { useGetPlatformFeeQuery } from "../APIs/definitions/pg";
 
@@ -14,10 +14,15 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
   const settlementDate = getNextWorkingDay();
   const settlementTime = "5:00 pm";
   const activePaymentAmount =
-    amount ?? Number(localStorage.getItem("activePaymentAmount"));
+    Number(amount) ?? Number(localStorage.getItem("activePaymentAmount"));
   const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
 
   const { data, isLoading } = useGetPlatformFeeQuery("cashfree");
+
+  const baseRate = useMemo(
+    () => (data?.base_rate ? parseFloat(data.base_rate) : 1),
+    [data?.base_rate]
+  );
 
   const formatAmount = (amount: number | undefined): string => {
     if (amount) {
@@ -41,7 +46,6 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
   };
 
   const getPlatformFees = (): string => {
-    const baseRate = data?.base_rate ? parseFloat(data.base_rate) : 1;
     if (activePaymentAmount) {
       const fees = (activePaymentAmount * baseRate) / 100;
       return formatAmount(fees);
@@ -51,7 +55,8 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
 
   const getGst = (): string => {
     if (activePaymentAmount) {
-      const gst = (18 * activePaymentAmount) / 10000;
+      const fees = (activePaymentAmount * baseRate) / 100;
+      const gst = (18 * fees) / 100;
       return formatAmount(gst);
     }
     return "-";
@@ -59,9 +64,8 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
 
   const getTotalAmount = (): string => {
     if (activePaymentAmount) {
-      const baseRate = data?.base_rate ? parseFloat(data.base_rate) : 1;
       const fees = (activePaymentAmount * baseRate) / 100;
-      const gst = (18 * activePaymentAmount) / 10000;
+      const gst = (18 * fees) / 100;
       return formatAmount(Math.ceil(fees + gst + activePaymentAmount));
     }
     return "-";
@@ -79,7 +83,7 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
         </Stack>
         <Stack direction={"row"} justifyContent={"space-between"} mb={1}>
           <Typography color={"#7e7e7e"}>
-            Platform fees ({data?.base_rate ? parseFloat(data.base_rate) : "1"}
+            Platform fees ({baseRate}
             %):
           </Typography>
           <Typography>{getPlatformFees()}</Typography>

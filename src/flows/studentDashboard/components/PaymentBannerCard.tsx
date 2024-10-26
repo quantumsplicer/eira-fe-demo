@@ -51,19 +51,23 @@ const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
 const PaymentBannerCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
+
   const handleClosePaymentFlow = () => {
     setIsPaymentFlowActive(false);
   };
+  
   const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
     firstName: "",
     lastName: "",
     panNumber: "",
     phoneNumber: "",
   });
+
   const handleTutorDetails = (details: TutorDetails) => {
     setTutorDetails(details);
     setIsPaymentFlowActive(true);
   };
+
   const handleOpenPaymentFlow = () => {
     setTutorDetails({
       firstName: "",
@@ -73,6 +77,7 @@ const PaymentBannerCard: React.FC = () => {
     });
     setIsPaymentFlowActive(true);
   };
+
   return (
     <Box
       sx={
