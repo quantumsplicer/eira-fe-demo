@@ -90,16 +90,19 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
             tutor?.pan
           );
 
-          if (isTutorOnboarded) {
-            localStorage.setItem("activePaymentPayeeUserId", tutor?.id);
-            localStorage.setItem(
-              "activePaymentTutorName",
-              tutor?.first_name + " " + tutor?.last_name
-            );
+          console.log(isTutorOnboarded);
 
-            setActiveDialog(DialogName.CompletePayment);
+          if (!isTutorOnboarded) {
+            setActiveDialog(DialogName.TutorDetails);
             setStepOnBack(DialogName.PaymentDetails);
+            return;
           }
+
+          localStorage.setItem("activePaymentPayeeUserId", tutor?.id);
+          localStorage.setItem(
+            "activePaymentTutorName",
+            tutor?.first_name + " " + tutor?.last_name
+          );
 
           const isTutorCashfreeRegistered = !!(
             tutor?.onboarding_status === "COMPLETE"
@@ -169,21 +172,21 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
         />
       )}
       {/* {activeDialog === DialogName.CreateSession && ( */}
-        <CreateSessionDialog
-          open={activeDialog === DialogName.CreateSession && open}
-          onClose={handleClose}
-          onBack={() => {
-            setActiveDialog(stepOnBack);
-          }}
-          onSubmit={(data) => {
-            setSessionDetails(data);
-            setStepOnBack(DialogName.CreateSession);
-            setActiveDialog(DialogName.CompletePayment);
-          }}
-          tutorDetails={tutorDetails}
-          sessionDetails={sessionDetails}
-          paymentDetails={paymentDetails}
-        />
+      <CreateSessionDialog
+        open={activeDialog === DialogName.CreateSession && open}
+        onClose={handleClose}
+        onBack={() => {
+          setActiveDialog(stepOnBack);
+        }}
+        onSubmit={(data) => {
+          setSessionDetails(data);
+          setStepOnBack(DialogName.CreateSession);
+          setActiveDialog(DialogName.CompletePayment);
+        }}
+        tutorDetails={tutorDetails}
+        sessionDetails={sessionDetails}
+        paymentDetails={paymentDetails}
+      />
       {/* )} */}
       {activeDialog === DialogName.CompletePayment && (
         <CompletePaymentDialog

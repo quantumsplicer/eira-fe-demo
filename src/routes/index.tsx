@@ -26,6 +26,10 @@ import KycLogin from "../flows/kyc/pages/KycLogin";
 import AadharVerifyRedirectPage from "../flows/tutorOnboarding/pages/AadharVerifyRedirectPage";
 import { PageNotFound } from "../components/PageNotFound";
 import PaymentRedirect from "../flows/payTutionFees/pages/PaymentRedirect";
+import TutorWebsite from "../flows/tutorWebsite/pages/tutorWebsite";
+import TutorTermsOfUse from "../flows/tutorWebsite/pages/TutorTerms";
+import RefundPolicy from "../flows/tutorWebsite/pages/RefundPolicy";
+import ContactPolicy from "../flows/tutorWebsite/pages/ContactPolicy";
 
 const AppRoutes = () => {
   return (
@@ -78,9 +82,15 @@ const AppRoutes = () => {
       <Route path="student/signup" element={<StudentSignUp />} />
 
       <Route path="tutor/kyc/login" element={<KycLogin />} />
-
+t
       <Route path="*" element={<PageNotFound />} />
       <Route path="page-not-found" element={<PageNotFound />} />
+
+      <Route path="/:tutorUserName" element={<TutorWebsite />} />
+      <Route path="/:tutorUserName/terms-of-use" element={<TutorTermsOfUse />} />
+      <Route path="/:tutorUserName/refund-policy" element={<RefundPolicy />} />
+      <Route path="/:tutorUserName/contact-policy" element={<ContactPolicy />} />
+
     </Routes>
   );
 };
