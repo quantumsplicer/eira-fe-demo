@@ -67,7 +67,7 @@ const PaymentInfo = ({
           mr={1}
           alignSelf={"center"}
         >
-          {type === "review" || paymentStatus?.status !== "PAID"
+          {type === "review" || paymentStatus?.order?.status !== "PAID"
             ? "Paying"
             : "Sent"}
         </Typography>
@@ -108,7 +108,7 @@ const PaymentInfo = ({
         )
       ) : null}
       {type === "success" ? (
-        paymentStatus?.status === "PAID" ? (
+        paymentStatus?.order?.status === "PAID" ? (
           <Box mt={3} alignSelf={"center"}>
             <Typography
               color={"#7e7e7e"}

@@ -38,7 +38,7 @@ interface PaymentDetailsDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (value: PaymentDetails) => void;
-  tutorDetails: TutorDetails;
+  tutorDetails?: TutorDetails;
   phoneNumberProp: string;
   isPayeeStudent?: boolean;
   submitButtonIsLoading?: boolean;
@@ -62,7 +62,7 @@ const PaymentDetailsDialog = ({
   } = useForm<PaymentDetails>({
     mode: "onChange",
     defaultValues: {
-      phoneNumber: tutorDetails.phoneNumber,
+      phoneNumber: tutorDetails?.phoneNumber,
     },
   });
   const handleFormSubmit: SubmitHandler<PaymentDetails> = (data) => {
@@ -145,7 +145,7 @@ const PaymentDetailsDialog = ({
                   </Typography>
                 </Stack> */}
               </Stack>
-              {tutorDetails.firstName && tutorDetails.lastName && (
+              {tutorDetails?.firstName && tutorDetails?.lastName && (
                 <Stack height="100%">
                   <Typography
                     fontSize={18}
@@ -205,7 +205,8 @@ const PaymentDetailsDialog = ({
                           component="span"
                         >
                           {errors.phoneNumber ? errors.phoneNumber.message : ""}
-                          {isPayeeStudent && "This user is registered as a student"}
+                          {isPayeeStudent &&
+                            "This user is registered as a student"}
                         </Typography>
                       }
                       sx={{
