@@ -25,9 +25,16 @@ interface PaymentInfoDetailsResponse {
 }
 
 export interface PaymentDetails {
-  id: string;
-  amount: number;
-  status: string;
+  order: {
+    id: string;
+    amount: number;
+    status: string;
+  }
+  latest_payment_id: string;
+  payment_time: string;
+  payee_name: string;
+  payee_phone: string;
+  masked_account_number: string | null;
 }
 
 export const paymentLinksApi = postgresApi.injectEndpoints({

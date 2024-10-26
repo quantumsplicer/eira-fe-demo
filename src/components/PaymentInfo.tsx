@@ -9,6 +9,7 @@ import {
   useGetPaymentStatusQuery,
   useLazyGetPaymentStatusQuery,
 } from "../APIs/definitions/paymentLinks";
+import { getNextWorkingDay } from "../utils/helperFunctions";
 
 interface PaymentInfoProps {
   amount: string;
@@ -60,7 +61,7 @@ const PaymentInfo = ({
     <>
       <Stack direction={"row"} alignItems={"center"}>
         <Typography variant="h5" sx={{ fontSize: 20 }} color={"#969696"} mr={1}>
-          {type === "review" || paymentStatus?.status !== "PAID" ? "Paying" : "Sent"}
+          {type === "review" || paymentStatus?.order?.status !== "PAID" ? "Paying" : "Sent"}
         </Typography>
         <Amount amount={Number(amount)} fontSize={20} />
       </Stack>
@@ -78,7 +79,7 @@ const PaymentInfo = ({
         </Typography>
       </Stack>
       {type === "success" ? (
-        paymentStatus?.status === "PAID" ? (
+        paymentStatus?.order?.status === "PAID" ? (
           <img
             src={tickMark}
             style={{
@@ -97,17 +98,17 @@ const PaymentInfo = ({
         )
       ) : null}
       {type === "success" ? (
-        paymentStatus?.status === "PAID" ? (
+        paymentStatus?.order?.status === "PAID" ? (
           <Box mt={3}>
             <Typography
               color={"#7e7e7e"}
               component={"span"}
               fontWeight={"bold"}
             >
-              Settlement on
+              {`Settlement on `}
             </Typography>
             <Typography component={"span"} fontWeight={"bold"}>
-              {` 7th October`}
+              {getNextWorkingDay()}
             </Typography>
             <Typography
               component={"span"}

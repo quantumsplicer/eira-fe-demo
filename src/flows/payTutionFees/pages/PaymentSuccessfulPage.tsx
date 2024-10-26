@@ -6,21 +6,38 @@ import EiraBack from '../../../assets/images/svg/EiraBack.svg'
 import PaymentConfirmation from "../../../components/PaymentConfirmation";
 import SafeLogo from "../../../components/SafeLogo";
 import { useDispatch } from "react-redux";
-import { useLazyGetPaymentStatusQuery } from "../../../APIs/definitions/paymentLinks";
+import { useGetPaymentStatusQuery } from "../../../APIs/definitions/paymentLinks";
 import { changePaymentStatus } from "../../../stores/slices";
+import moment from "moment";
 
 const PaymentSuccessfulPage = () => {
   const notPhoneScreen = useMediaQuery('(min-width:850px)');
+  const { data: paymentStatus } = useGetPaymentStatusQuery(localStorage.getItem("order_id") as string);
+
+  const amount = paymentStatus?.order?.amount;
+  const payeeName = paymentStatus?.payee_name;
+  const payeePhone = paymentStatus?.payee_phone;
+  const maskedAccountNumber = paymentStatus?.masked_account_number;
+  const sessionDate = localStorage.getItem("activePaymentSessionDate");
+  const sessionTime = localStorage.getItem("activePaymentSessionTime");
+  const transactionId = paymentStatus?.latest_payment_id;
+  const paymentDateTime = paymentStatus?.payment_time;
 
   const paymentDetails = {
-    "Transaction ID": "1feda785cb576a90",
-    "Account Number": "**** **** **** 2150",
-    "Payee Name": "Suneel Satpal",
-    "Payee Phone": "+91 9389250148",
-    "Transaction Date": "24th Aug, 2024",
-    "Transaction Time": "15:49",
-    "Session Date": "24th Aug, 2024",
-    "Session Time": "17:00 - 18:00"
+    ...(transactionId ? { "Transaction ID": transactionId } : {}),
+    ...(maskedAccountNumber ? { "Account Number": maskedAccountNumber } : {}),
+    ...(payeeName ? { "Payee Name": payeeName } : {}),
+    ...(payeePhone ? { "Payee Phone": `+91 ${payeePhone}` } : {}),
+    ...(paymentDateTime ? { "Transaction Date": moment(paymentDateTime).format("MMMM D, YYYY") } : {}),
+    ...(paymentDateTime ? { "Transaction Time": moment(paymentDateTime).format("h:mm A") } : {}),
+    ...(sessionDate ? { "Session Date": moment(sessionDate).format("MMMM D, YYYY") } : {}),
+    ...(sessionTime ? { "Session Time": 
+          `${moment(sessionTime.split("-")[0]).format(
+            "h:mm A z"
+          )} - ${moment(sessionTime.split("-")[1]).format(
+            "h:mm A z"
+          )}` } 
+        : {})
   }
 
   useEffect(() => {
@@ -30,7 +47,7 @@ const PaymentSuccessfulPage = () => {
     localStorage.removeItem("activePaymentTutorName");
     localStorage.removeItem("activePaymentSessionDate");
     localStorage.removeItem("activePaymentSessionTime");
-  })
+  }, [])
 
   return (
     <Box
@@ -83,9 +100,9 @@ const PaymentSuccessfulPage = () => {
               width={"100%"}
             >
               <PaymentConfirmation
-                name="Suneel Satpal"
+                name={payeeName ?? ""}
                 paymentDetails={paymentDetails}
-                amount="5000"
+                amount={String(amount) ?? ""}
               />
             </Box>
           </Stack>
