@@ -22,7 +22,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
 import { PaymentDetails, TutorDetails } from "../interfaces";
-
+import PersonalDetails from "../../../components/PersonalDetails";
 interface TutorDetailsDialogProps {
   open: boolean;
   onClose: () => void;
@@ -57,25 +57,12 @@ const TutorDetailsDialog = ({
     control,
     formState: { errors, isValid },
   } = useForm<TutorDetails>({
+    mode: "onChange",
     defaultValues: tutorDetails,
   });
   const handleFormSubmit: SubmitHandler<TutorDetails> = (data) => {
     onSubmit(data);
   };
-  const resetForm = () => {
-    control._reset({
-      firstName: "",
-      lastName: "",
-      panNumber: "",
-      phoneNumber: "",
-    });
-  };
-
-  useEffect(() => {
-    if (!open) {
-      resetForm();
-    }
-  }, [open]);
 
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   return (
@@ -135,7 +122,7 @@ const TutorDetailsDialog = ({
           sx={
             !isPhoneScreen
               ? { justifyContent: "space-around" }
-              : { justifyContent: "space-between" }
+              : { justifyContent: "space-between", pt: 4 }
           }
         >
           {!isPhoneScreen ? (
@@ -179,7 +166,7 @@ const TutorDetailsDialog = ({
             spacing={!isPhoneScreen ? 0 : 5}
             sx={
               !isPhoneScreen
-                ? { justifyContent: "space-between", width: "40%", pt: 5 }
+                ? { justifyContent: "space-between", width: "40%", pt: 10 }
                 : { width: "100%", height: "100%", pt: 3 }
             }
           >
@@ -350,8 +337,8 @@ const TutorDetailsDialog = ({
                       Provide relevant details for their onboarding
                     </Typography>
                   </Stack>
-                  <Stack
-                    spacing={!isPhoneScreen ? 5 : 1}
+                  {/* <Stack
+                    spacing={!isPhoneScreen ? 5 : 3}
                     width="95%"
                     alignSelf="center"
                     alignItems="center"
@@ -456,15 +443,17 @@ const TutorDetailsDialog = ({
                         />
                       )}
                     />
-                  </Stack>
+                  </Stack> */}
+                  <PersonalDetails onSuccess={() => {}} />
                 </Stack>
               )}
               {!isPhoneScreen ? (
                 <></>
               ) : (
-                <AmountBreakupCard amount={paymentDetails.amount} />
+                // <AmountBreakupCard amount={paymentDetails.amount} />
+                <></>
               )}
-              <Box>
+              {/* <Box>
                 <Button
                   variant="contained"
                   onClick={handleSubmit(handleFormSubmit)}
@@ -481,7 +470,7 @@ const TutorDetailsDialog = ({
                 >
                   Next
                 </Button>
-              </Box>
+              </Box> */}
             </Stack>
           </Stack>
         </Stack>

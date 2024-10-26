@@ -31,20 +31,17 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     setName: (value: string) => void
   ) => {
-    const invalidRegex = /[^A-Za-z]/;
-    if (invalidRegex.test(event.target.value[event.target.value.length - 1]))
-      return;
-    setName(event.target.value);
+    const invalidRegex = /[^A-Za-z]/g;
+    const sanitizedValue = event.target.value.replace(invalidRegex, "");
+    setName(sanitizedValue);
   };
 
   const handlePanInput = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const invalidRegex = /[^A-Za-z0-9]/;
-    if (invalidRegex.test(event.target.value[event.target.value.length - 1]))
-      return;
-    const inputPan: string = event.target.value.slice(0, 10);
-    setPan(inputPan);
+    const invalidRegex = /[^A-Za-z0-9]/g;
+    const sanitizedValue = event.target.value.replace(invalidRegex, "").slice(0,10);
+    setPan(sanitizedValue);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {

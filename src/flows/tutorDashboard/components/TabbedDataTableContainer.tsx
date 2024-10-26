@@ -57,15 +57,19 @@ const TabbedDataTableContainer: React.FC = () => {
     <>
       <ThemeProvider theme={lightTheme}>
         <Box
-          height="fullheight"
           width="fullwidth"
           my={4}
           gap={4}
           p={2}
           sx={
             !isPhoneScreen
-              ? { boxShadow: 8, backgroundColor: "white", borderRadius: 2 }
-              : { backgroundColor: "white" }
+              ? {
+                  boxShadow: 8,
+                  backgroundColor: "white",
+                  borderRadius: 2,
+                  height: "fullheight",
+                }
+              : { backgroundColor: "white", minHeight: "60vh" }
           }
         >
           <Stack spacing={2}>

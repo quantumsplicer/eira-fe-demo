@@ -93,7 +93,7 @@ const StudentSignUp = () => {
                 </Typography>
               )}
               <NoteBox heading={noteBoxHeading} notes={notes} />
-              <PersonalDetails onSuccess={() => navigate("/student")}/>
+              <PersonalDetails onSuccess={() => navigate("/student")} />
             </Stack>
           </Stack>
         </Box>

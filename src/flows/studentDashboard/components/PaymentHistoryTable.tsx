@@ -1,5 +1,14 @@
-import React from "react";
-import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Divider,
+  Drawer,
+  IconButton,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import {
   createMRTColumnHelper,
   MaterialReactTable,
@@ -9,8 +18,9 @@ import {
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import { darken, lighten, useTheme } from "@mui/material";
 import StatusTag from "../../tutorDashboard/components/StatusTag";
-import PaymentHistoryTableMobile from "../../tutorDashboard/components/tables/PaymentHistoryTableMobile";
 import { Virtuoso } from "react-virtuoso";
+import PaymentInfo from "../../../components/PaymentInfo";
+import CloseIcon from "@mui/icons-material/Close";
 const lightTheme = createTheme({ palette: { mode: "light" } });
 interface Person {
   title: string;
@@ -134,6 +144,99 @@ const data: Person[] = [
     paymentStatus: "Pending",
   },
 ];
+
+interface PaymentHistoryTableMobileProps {
+  name: string;
+  phoneNumber: string;
+  amount: number;
+  status: string;
+}
+
+const PaymentHistoryTableMobile = ({
+  name,
+  phoneNumber,
+  amount,
+  status,
+}: PaymentHistoryTableMobileProps) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const paymentDetails = {
+    "Transaction ID": "1234567890",
+    "Account Number": "1234567890",
+    "Account Holder": "John Doe",
+    "Transaction date & time": "12/05/2024 10:30 AM",
+    "Session date & time": "12/05/2024 10:30 AM",
+  };
+  return (
+    <Button
+      sx={{
+        border: "0.2px solid",
+        borderRadius: 4,
+        borderColor: "#C3C3C3",
+        p: 2,
+        marginBottom: 2,
+        width: "100%",
+      }}
+      onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+    >
+      <Stack direction="row" justifyContent="space-between" width="100%">
+        <Stack direction="row" spacing={2}>
+          <Divider
+            orientation="vertical"
+            flexItem
+            sx={{
+              height: "95%",
+              alignSelf: "center",
+              borderWidth: 2.5,
+              borderColor: "#2AC426",
+            }}
+          />
+          <Stack>
+            <Typography fontSize={18}>{name}</Typography>
+            <Typography fontSize={14} color="#C3C3C3">
+              {phoneNumber}
+            </Typography>
+          </Stack>
+        </Stack>
+        <Stack pr={2}>
+          <Typography fontSize={19} fontWeight={500} textAlign="right">
+            ₹ {amount}
+          </Typography>
+          <Typography fontSize={14} color="#C3C3C3" textAlign="right">
+            {status}
+          </Typography>
+        </Stack>
+      </Stack>
+      <Drawer
+        open={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        sx={{
+          width: "100%",
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            padding: 5,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            width: "100%",
+            boxSizing: "border-box",
+          },
+        }}
+        anchor="bottom"
+      >
+        <Box sx={{ position: "absolute", top: 16, left: 16 }}>
+          <IconButton onClick={() => setIsDrawerOpen(false)}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        <PaymentInfo
+          amount={amount.toString()}
+          name={name}
+          paymentDetails={paymentDetails}
+          type="success"
+        />
+      </Drawer>
+    </Button>
+  );
+};
 
 const PaymentHistoryTable: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
@@ -266,7 +369,7 @@ const PaymentHistoryTable: React.FC = () => {
               <MaterialReactTable table={table} />
             ) : (
               <Virtuoso
-                style={{ height: 400 }}
+                style={{ height: 740 }}
                 data={data}
                 itemContent={(_, user) => (
                   <PaymentHistoryTableMobile

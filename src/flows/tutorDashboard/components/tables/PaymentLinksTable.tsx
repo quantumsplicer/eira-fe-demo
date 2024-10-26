@@ -19,110 +19,6 @@ import { Virtuoso } from "react-virtuoso";
 import { useGetPaymentLinksQuery } from "../../../../APIs/definitions/paymentLinks";
 import { PaymentLinkDetails } from "../../interfaces";
 
-const lightTheme = createTheme({ palette: { mode: "light" } });
-
-// const data: PaymentLinkDetails[] = [
-//   {
-//     transactionId: "123",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "Anagh",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Pending",
-//   },
-//   {
-//     transactionId: "12312412312",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "today",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Pending",
-//   },
-//   {
-//     transactionId: "123",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "today",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Failed",
-//   },
-//   {
-//     transactionId: "123",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "today",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Failed",
-//   },
-//   {
-//     transactionId: "123",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "today",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Success but not settled",
-//   },
-//   {
-//     transactionId: "123",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "today",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Settled",
-//   },
-//   {
-//     transactionId: "123",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "today",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Settled",
-//   },
-//   {
-//     transactionId: "123",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "today",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Settled",
-//   },
-//   {
-//     transactionId: "123",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "today",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Settled",
-//   },
-//   {
-//     transactionId: "123",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "today",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Settled",
-//   },
-// ];
 interface PaymentLinkCellMobileProps {
   name: string;
   phoneNumber: string;
@@ -147,16 +43,6 @@ const PaymentLinkCellMobile = ({
     >
       <Stack direction="row" justifyContent="space-between">
         <Stack direction="row" spacing={2}>
-          <Divider
-            orientation="vertical"
-            flexItem
-            sx={{
-              height: "95%",
-              alignSelf: "center",
-              borderWidth: 2.5,
-              borderColor: "#2AC426",
-            }}
-          />
           <Stack>
             <Typography fontSize={18}>{name}</Typography>
             <Typography fontSize={14} color="#C3C3C3">
@@ -278,7 +164,7 @@ const PaymentLinksTable: React.FC = () => {
     <MaterialReactTable table={table} />
   ) : (
     <Virtuoso
-      style={{ height: 800 }}
+      style={{ minHeight: "30vh", height: "fullheight" }}
       data={data}
       itemContent={(_, user) => (
         <PaymentLinkCellMobile

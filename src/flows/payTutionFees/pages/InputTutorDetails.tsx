@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Typography,
@@ -15,6 +15,7 @@ import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 import SafeLogo from "../../../components/SafeLogo";
 import { useDispatch } from "react-redux";
 import { setTutorPhoneNumber } from "../../../stores/slices";
+import { useLazyGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
 
 const InputTutorDetails: React.FC = () => {
 
@@ -23,6 +24,31 @@ const InputTutorDetails: React.FC = () => {
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const [
+        getTutorDetials
+      ] = useLazyGetUserDetailsByPhoneQuery();
+
+    useEffect(() => {
+        const checkTutorOnboarding = async (tutorPhone: string) => {
+            await getTutorDetials(tutorPhone)
+                .unwrap()
+                .then(res => {
+                    const tutor = res.length && res[0];
+                    const isTutorOnboarded = !!(tutor && tutor?.first_name && tutor?.last_name && tutor?.pan);
+                    if (isTutorOnboarded) {
+                        navigate("/pay/create-session");
+                    }
+                })
+        }
+
+        const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
+        if (!activePaymentTutorId) {
+            navigate("/pay/payment-details");
+        } else {
+            checkTutorOnboarding(activePaymentTutorId);
+        }
+    }, [])
 
     return (
         <Box

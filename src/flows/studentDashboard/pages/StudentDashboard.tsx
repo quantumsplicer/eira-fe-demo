@@ -16,14 +16,38 @@ import HomeIcon from "@mui/icons-material/HomeOutlined";
 import SessionHistoryIcon from "@mui/icons-material/RestoreOutlined";
 import MarketingIcon from "@mui/icons-material/CampaignOutlined";
 import InvoiceIcon from "@mui/icons-material/ReceiptOutlined";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { useState } from "react";
-import { Fab, Stack, useMediaQuery } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  IconButton,
+  Stack,
+  useMediaQuery,
+  Fab
+} from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import PaymentHistoryPage from "../subpages/PaymentHistoryPage";
+import MakePaymentPage from "../subpages/MakePaymentPage";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import SortSharpIcon from "@mui/icons-material/SortSharp";
+import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
+import { useLogout } from "../../../utils/logout";
 import PaymentBannerCard from "../components/PaymentBannerCard";
 import PaymentHistoryTable from "../components/PaymentHistoryTable";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import PaymentFlow from "../components/PaymentFlow";
 
-const drawerWidth = 220;
+const PAYMENT_HISTORY_PAGE = "payment-history-page";
+const MAKE_PAYMENT_PAGE = "make-payment-page";
+const PROFILE_PAGE = "profile-page";
+
+const drawerWidth = 240;
+const iconsArray = [
+  <HomeIcon />,
+  <SessionHistoryIcon />,
+  <MarketingIcon />,
+  <InvoiceIcon />,
+];
 
 const StudentDashboard: React.FC = () => {
   const theme = createTheme({
@@ -34,44 +58,266 @@ const StudentDashboard: React.FC = () => {
 
   const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
+  const [subpage, setSubpage] = useState(MAKE_PAYMENT_PAGE);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
+
+  const displaySubpage = (subpage: string) => {
+    if (subpage === PAYMENT_HISTORY_PAGE) {
+      return <PaymentHistoryPage />;
+    } else if (subpage === MAKE_PAYMENT_PAGE) {
+      return <MakePaymentPage />;
+    } else if (subpage === PROFILE_PAGE) {
+      return <MakePaymentPage />;
+    }
+  };
+  const handleLogout = useLogout();
+  const handleSubpageChange = (subpage: string) => {
+    setSubpage(subpage);
+    handleDrawerClose();
+  };
+  const handleDrawerClose = () => {
+    setIsClosing(true);
+    setIsDrawerOpen(false);
+  };
+
+  const handleDrawerTransitionEnd = () => {
+    setIsClosing(false);
+  };
+
+  const handleDrawerToggle = () => {
+    if (!isClosing) {
+      setIsDrawerOpen(!isDrawerOpen);
+    }
+  };
 
   const handleClosePaymentFlow = () => {
     setIsPaymentFlowActive(false);
   };
-
+      
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar
           position="fixed"
-          sx={{
-            zIndex: (theme) => theme.zIndex.drawer + 1,
-            backgroundColor: "white",
-            boxShadow: 0,
-          }}
+          sx={
+            !isPhoneScreen
+              ? {
+                  zIndex: (theme) => theme.zIndex.drawer + 1,
+                  backgroundColor: "white",
+                  boxShadow: 0,
+                }
+              : {
+                  backgroundColor: "white",
+                  boxShadow: 0,
+                }
+          }
         >
           <Toolbar>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ color: "black" }}
-            >
-              <img
-                src={EiraLogo}
-                alt="logo"
-                style={{
-                  alignSelf: "flex-start",
-                  width: 80,
-                  position: "absolute",
-                  marginLeft: 20,
-                  top: 20,
+            <Stack direction="row" justifyContent="space-between">
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{ color: "black" }}
+              >
+                <img
+                  src={EiraLogo}
+                  alt="logo"
+                  style={{
+                    alignSelf: "flex-start",
+                    width: 80,
+                    position: "absolute",
+                    marginLeft: 20,
+                    top: 20,
+                  }}
+                />
+              </Typography>
+              <Box
+                sx={{
+                  position: "fixed",
+                  right: 0,
+                  top: 0,
                 }}
-              />
-            </Typography>
+              >
+                {!isPhoneScreen ? (
+                  <Stack direction="row" spacing={1} p={2}>
+                    <Typography
+                      color="black"
+                      fontSize={14}
+                      pt={1.4}
+                      fontWeight={600}
+                    >
+                      {userDetails?.first_name}
+                    </Typography>
+                    <IconButton
+                      onClick={() => {
+                        handleSubpageChange(PROFILE_PAGE);
+                      }}
+                    >
+                      <PersonOutlineOutlinedIcon />
+                    </IconButton>
+                  </Stack>
+                ) : (
+                  <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    edge="start"
+                    onClick={handleDrawerToggle}
+                    sx={{ mr: 2, display: { sm: "none" } }}
+                  >
+                    <SortSharpIcon
+                      sx={{
+                        color: "black",
+                        fontSize: "50px",
+                        transform: "scaleX(-1)",
+                      }}
+                    />
+                  </IconButton>
+                )}
+              </Box>
+            </Stack>
           </Toolbar>
         </AppBar>
+        {isPhoneScreen ? (
+          <Drawer
+            variant="temporary"
+            anchor="right"
+            open={isDrawerOpen}
+            onTransitionEnd={handleDrawerTransitionEnd}
+            onClose={handleDrawerClose}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+              display: { xs: "block", sm: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth + 100,
+                backgroundColor: "white",
+              },
+            }}
+          >
+            <Toolbar />
+
+            <Stack justifyContent="space-between" height="100%">
+              <Stack>
+                <Stack spacing={2}>
+                  <Stack
+                    pl={2.5}
+                    spacing={2}
+                    onClick={() => {
+                      handleSubpageChange(PROFILE_PAGE);
+                    }}
+                  >
+                    <Avatar
+                      alt="Profile Photo"
+                      src={undefined}
+                      sx={{
+                        width: 60,
+                        height: 60,
+                        marginBottom: 1,
+                        boxShadow: 5,
+                      }}
+                    />
+                    <Typography fontSize={16} fontWeight={600}>
+                      {userDetails?.first_name}
+                    </Typography>
+                  </Stack>
+                </Stack>
+                <Box sx={{ overflow: "auto" }}>
+                  <List>
+                    {[
+                      {
+                        title: "Payments History",
+                        subpage: PAYMENT_HISTORY_PAGE,
+                      },
+                      { title: "Make Payment", subpage: MAKE_PAYMENT_PAGE },
+                    ].map((entry, index) => (
+                      <ListItem
+                        key={entry.title}
+                        sx={{ width: "100%", pl: "0", pr: "0" }}
+                      >
+                        <ListItemButton
+                          onClick={() => {
+                            handleSubpageChange(entry.subpage);
+                          }}
+                          disabled={index === 3 || index === 4 ? true : false}
+                          sx={{
+                            backgroundColor:
+                              subpage === entry.subpage ? "#EBF1FF" : "white",
+                            color:
+                              subpage === entry.subpage ? "#507FFD" : "black",
+                            pl: 3,
+                            "& *":
+                              subpage === entry.subpage
+                                ? {
+                                    color: "#507FFD",
+                                    fontWeight: "bold",
+                                  }
+                                : { color: "black" },
+                            "&:hover": {
+                              backgroundColor: "#EBF1FF",
+                              "& *": {
+                                color: "#507FFD",
+                                fontWeight: "bold",
+                              },
+                            },
+                          }}
+                        >
+                          <ListItemIcon>{iconsArray[index]}</ListItemIcon>
+                          <Typography
+                            color="black"
+                            fontSize={14}
+                            pt={1.4}
+                            fontWeight={600}
+                          >
+                            {entry.title}
+                          </Typography>
+                        </ListItemButton>
+                      </ListItem>
+                    ))}
+                  </List>
+                  <Divider />
+                </Box>
+              </Stack>
+            </Stack>
+            <Stack justifyContent="center" p={4}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  handleLogout();
+                }}
+                sx={{
+                  backgroundColor: "white",
+                  width: "50%",
+                  boxShadow: 0,
+                  "&:hover": {
+                    backgroundColor: "white",
+                  },
+                  "&:active": {
+                    backgroundColor: "white",
+                  },
+                }}
+              >
+                <LogoutIcon color="error" fontSize="large" />
+                <Typography
+                  fontSize={18}
+                  fontWeight={600}
+                  color="error"
+                  textTransform="none"
+                  pl={1}
+                >
+                  Logout
+                </Typography>
+              </Button>
+            </Stack>
+          </Drawer>
+        ) : (
+          <></>
+        )}
         <Box
           component="main"
           sx={
@@ -81,15 +327,7 @@ const StudentDashboard: React.FC = () => {
           }
         >
           <Toolbar />
-          <Stack
-            spacing={!isPhoneScreen ? 5 : 1}
-            pl={!isPhoneScreen ? 10 : 0}
-            pr={!isPhoneScreen ? 10 : 0}
-          >
-            {!isPhoneScreen ? <h1>Payments History</h1> : <></>}
-            <PaymentBannerCard />
-            <PaymentHistoryTable />
-          </Stack>
+          {displaySubpage(subpage)}
         </Box>
       </Box>
 

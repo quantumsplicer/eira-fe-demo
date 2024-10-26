@@ -13,49 +13,6 @@ import { Virtuoso } from "react-virtuoso";
 import { Transaction } from "../../interfaces";
 import { useGetTransactionsListQuery } from "../../../../APIs/definitions/transactionsList";
 
-// const data: Transaction[] = [
-//   {
-//     transactionId: "123",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "Anagh",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Pending",
-//   },
-//   {
-//     transactionId: "12312412312",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "today",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Pending",
-//   },
-//   {
-//     transactionId: "123",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "today",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Failed",
-//   },
-//   {
-//     transactionId: "123",
-//     studentPhoneNumber: "+919997945005",
-//     studentName: "today",
-//     timeOfPaymentReceived: "today",
-//     timeOfSettlement: "today",
-//     amount: 4000,
-//     paymentMode: "Online",
-//     status: "Failed",
-//   },
-// ];
-
 interface TransactionCellMobileProps {
   name: string;
   phoneNumber: string;
@@ -212,9 +169,9 @@ const TransactionsTable: React.FC = () => {
   });
   return !isPhoneScreen ? (
     <MaterialReactTable table={table} />
-  ) : (
+  ) : data?.results && data?.results.length > 0 ? (
     <Virtuoso
-      style={{ height: "50vh" }}
+      style={{ minHeight: "30vh", height: "fullheight" }}
       data={data?.results || []}
       itemContent={(_, user) => (
         <TransactionCellMobile
@@ -225,6 +182,18 @@ const TransactionsTable: React.FC = () => {
         />
       )}
     />
+  ) : (
+    <Box
+      sx={{
+        minHeight: "30vh",
+        height: "fullheight",
+        backgroundColor: "grey",
+        opacity: 0.2,
+        borderRadius: 5,
+      }}
+    >
+      <Typography>No transactions found</Typography>
+    </Box>
   );
 };
 

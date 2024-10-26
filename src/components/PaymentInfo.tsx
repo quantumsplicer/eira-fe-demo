@@ -9,6 +9,7 @@ import {
   useGetPaymentStatusQuery,
   useLazyGetPaymentStatusQuery,
 } from "../APIs/definitions/paymentLinks";
+import { getNextWorkingDay } from "../utils/helperFunctions";
 
 interface PaymentInfoProps {
   amount: string;
@@ -58,13 +59,21 @@ const PaymentInfo = ({
 
   return (
     <>
-      <Stack direction={"row"} alignItems={"center"}>
-        <Typography variant="h5" sx={{ fontSize: 20 }} color={"#969696"} mr={1}>
-          {type === "review" || paymentStatus?.status !== "PAID" ? "Paying" : "Sent"}
+      <Stack direction={"row"} alignItems={"center"} alignSelf={"center"}>
+        <Typography
+          variant="h5"
+          sx={{ fontSize: 20 }}
+          color={"#969696"}
+          mr={1}
+          alignSelf={"center"}
+        >
+          {type === "review" || paymentStatus?.order?.status !== "PAID"
+            ? "Paying"
+            : "Sent"}
         </Typography>
         <Amount amount={Number(amount)} fontSize={20} />
       </Stack>
-      <Stack direction={"row"} alignItems={"center"}>
+      <Stack direction={"row"} alignItems={"center"} alignSelf={"center"}>
         <Typography variant="h5" sx={{ fontSize: 20 }} color={"#969696"} mr={1}>
           to
         </Typography>
@@ -78,12 +87,13 @@ const PaymentInfo = ({
         </Typography>
       </Stack>
       {type === "success" ? (
-        paymentStatus?.status === "PAID" ? (
+        paymentStatus?.order?.status === "PAID" ? (
           <img
             src={tickMark}
             style={{
               marginTop: "30px",
-              width: 90,
+              width: 70,
+              alignSelf: "center",
             }}
           />
         ) : (
@@ -91,23 +101,24 @@ const PaymentInfo = ({
             src={exclamationMark}
             style={{
               marginTop: "30px",
-              width: 90,
+              width: 70,
+              alignSelf: "center",
             }}
           />
         )
       ) : null}
       {type === "success" ? (
-        paymentStatus?.status === "PAID" ? (
-          <Box mt={3}>
+        paymentStatus?.order?.status === "PAID" ? (
+          <Box mt={3} alignSelf={"center"}>
             <Typography
               color={"#7e7e7e"}
               component={"span"}
               fontWeight={"bold"}
             >
-              Settlement on
+              {`Settlement on `}
             </Typography>
             <Typography component={"span"} fontWeight={"bold"}>
-              {` 7th October`}
+              {getNextWorkingDay()}
             </Typography>
             <Typography
               component={"span"}
@@ -121,7 +132,7 @@ const PaymentInfo = ({
             </Typography>
           </Box>
         ) : (
-          <Box mt={3}>
+          <Box mt={3} alignSelf={"center"}>
             <Typography color={"#7e7e7e"}>Payment under process</Typography>
           </Box>
         )
@@ -129,7 +140,7 @@ const PaymentInfo = ({
       {type === "review" && (
         <Typography
           variant="subtitle1"
-          sx={{ fontSize: 14, mt: 3, textAlign: "center" }}
+          sx={{ fontSize: 14, mt: 3, textAlign: "center", alignSelf: "center" }}
         >
           Confirm payment details and make payment
         </Typography>

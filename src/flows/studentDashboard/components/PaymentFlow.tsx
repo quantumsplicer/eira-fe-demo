@@ -64,7 +64,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
 
   const [getTutorDetials, { isLoading: tutorDetailsIsLoading }] =
     useLazyGetUserDetailsByPhoneQuery();
-
+        
   const handleClose = () => {
     setActiveDialog(DialogName.None);
     onClose();
