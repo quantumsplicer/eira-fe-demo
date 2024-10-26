@@ -29,7 +29,7 @@ const PaymentHistory: React.FC = () => {
               },
             }}
             index={1}
-            navButtonsAlwaysVisible={true}
+            navButtonsAlwaysVisible={false}
           >
             <CurrentLimitCard />
             <UnsettledAmountCard />

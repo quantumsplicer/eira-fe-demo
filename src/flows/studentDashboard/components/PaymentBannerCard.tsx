@@ -186,7 +186,7 @@ const PaymentBannerCard: React.FC = () => {
                     : { fontSize: 12, fontWeight: 500, width: "100%" }
                 }
               >
-                Make a payment through Credit <strong> @ just 1%</strong>
+                Make a payment through Credit Card <strong> @ just 1%</strong>
               </Typography>
             </Stack>
           </Stack>

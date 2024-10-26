@@ -361,7 +361,7 @@ const CreateSessionDialog = ({
                     <TextField
                       {...field}
                       fullWidth
-                      label="Description"
+                      label="Description (optional)"
                       variant="outlined"
                       size="small"
                       sx={{
