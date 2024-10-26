@@ -29,17 +29,30 @@ export const userApi = postgresApi.injectEndpoints({
     }),
 
     getUserDetailsByPhone: builder.query<UserDetails[], string>({
-      query: (phone) => `user/search?phone=${phone}`
+      query: (phone) => ({
+        url: `user/search`,
+        method: "GET",
+        params: { phone },
+      }),
     }),
 
-    registerTutorByStudent: builder.mutation<UserDetails, Partial<UserDetails>>({
-      query: (body) => ({
-        url: `user/register/`,
-        method: "POST",
-        body
-      })
-    })
+    registerTutorByStudent: builder.mutation<UserDetails, Partial<UserDetails>>(
+      {
+        query: (body) => ({
+          url: `user/register/`,
+          method: "POST",
+          body,
+        }),
+      }
+    ),
   }),
 });
 
-export const { useLazyGetUserDetailsQuery, useGetUserDetailsQuery, useUpdateUserDetailsMutation, useLazyGetUserDetailsByPhoneQuery, useRegisterTutorByStudentMutation } = userApi;
+export const {
+  useLazyGetUserDetailsQuery,
+  useGetUserDetailsQuery,
+  useUpdateUserDetailsMutation,
+  useGetUserDetailsByPhoneQuery,
+  useLazyGetUserDetailsByPhoneQuery,
+  useRegisterTutorByStudentMutation,
+} = userApi;

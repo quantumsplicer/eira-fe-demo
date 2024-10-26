@@ -1,5 +1,5 @@
 // src/components/OTPDialog.tsx
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -18,6 +18,9 @@ import Alert from "@mui/material/Alert";
 import { useForm, SubmitHandler } from "react-hook-form";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
 import { PaymentDetails, SessionDetails, TutorDetails } from "../interfaces";
+import { useGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
+import { useGetOnboardingStatusQuery } from "../../../APIs/definitions/onboarding";
+import moment from "moment";
 
 interface CompletePaymentDialogProps {
   open: boolean;
@@ -38,6 +41,29 @@ const CompletePaymentDialog = ({
   sessionDetails,
 }: CompletePaymentDialogProps) => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
+
+  const activePaymentAmount = localStorage.getItem("activePaymentAmount");
+  const activePaymentTutorName = localStorage.getItem("activePaymentTutorName");
+
+  const { data: tutorData } = useGetUserDetailsByPhoneQuery(
+    tutorDetails?.phoneNumber,
+    {
+      skip: !tutorDetails?.phoneNumber,
+    }
+  );
+
+  const { data: tutorOnboardingStatus } = useGetOnboardingStatusQuery(
+    tutorData?.[0]?.id as string,
+    {
+      skip: !tutorData?.[0]?.id,
+    }
+  );
+
+  const tutorIsSubMerchant = useMemo(
+    () => tutorData?.[0]?.onboarding_status === "COMPLETE",
+    [tutorData]
+  );
+
   return (
     <Dialog
       open={open}
@@ -99,7 +125,7 @@ const CompletePaymentDialog = ({
                   </Typography>
                   <Stack>
                     <Typography fontSize={22} fontWeight={650}>
-                      {tutorDetails.firstName} {tutorDetails.lastName}
+                      {activePaymentTutorName}
                     </Typography>
                     <Typography fontSize={15} lineHeight={1.2}>
                       {tutorDetails.phoneNumber}
@@ -107,9 +133,7 @@ const CompletePaymentDialog = ({
                   </Stack>
                 </Stack>
                 <Box>
-                  <AmountBreakupCard
-                    amount={paymentDetails.amount}
-                  ></AmountBreakupCard>
+                  <AmountBreakupCard amount={Number(activePaymentAmount)} />
                 </Box>
               </Stack>
               <Divider
@@ -128,29 +152,31 @@ const CompletePaymentDialog = ({
                 : { width: "90%" }
             }
           >
-            <Box
-              sx={{
-                display: "flex",
-                alignContent: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Alert
-                severity="warning"
+            {tutorOnboardingStatus && (
+              <Box
                 sx={{
-                  borderRadius: "14px",
-                  width: 350,
-                  alignItems: "center",
+                  display: "flex",
+                  alignContent: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Typography sx={{ fontSize: 11 }}>
-                  Looks like the tutor is not onboarded!
-                </Typography>
-                <Typography sx={{ fontSize: 11 }}>
-                  Onboard them with us now to make the payment
-                </Typography>
-              </Alert>
-            </Box>
+                <Alert
+                  severity="warning"
+                  sx={{
+                    borderRadius: "14px",
+                    width: 350,
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography sx={{ fontSize: 11 }}>
+                    Looks like the tutor is not onboarded!
+                  </Typography>
+                  <Typography sx={{ fontSize: 11 }}>
+                    Onboard them with us now to make the payment
+                  </Typography>
+                </Alert>
+              </Box>
+            )}
             <Stack
               spacing={!isPhoneScreen ? 0 : 4}
               sx={
@@ -176,7 +202,7 @@ const CompletePaymentDialog = ({
                       align="center"
                       color="#1F9254"
                     >
-                      ₹ {(paymentDetails.amount * 1.0018).toFixed(2)}
+                      ₹{activePaymentAmount}
                     </Typography>
                   </Stack>
                   <Stack direction="row" spacing={1}>
@@ -189,7 +215,7 @@ const CompletePaymentDialog = ({
                       to
                     </Typography>
                     <Typography fontSize={23} fontWeight={650} lineHeight={1.2}>
-                      {tutorDetails.firstName} {tutorDetails.lastName}
+                      {activePaymentTutorName}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -218,36 +244,34 @@ const CompletePaymentDialog = ({
                     Account Holder:
                   </Typography>
                   <Typography sx={{ fontSize: 15 }} fontWeight={600}>
-                    {tutorDetails.firstName} {tutorDetails.lastName}
+                    {activePaymentTutorName}
                   </Typography>
                 </Stack>
-                <Stack direction="row" justifyContent="space-between">
-                  <Typography
-                    sx={{ fontSize: 15 }}
-                    color="#969696"
-                    fontWeight={600}
-                  >
-                    Tuition date and time
-                  </Typography>
-                  <Stack spacing={1}>
+                {!tutorIsSubMerchant && (
+                  <Stack direction="row" justifyContent="space-between">
                     <Typography
-                      sx={{ fontSize: 12 }}
+                      sx={{ fontSize: 15 }}
+                      color="#969696"
                       fontWeight={600}
-                      align="center"
                     >
-                      {`${sessionDetails.startTime?.format("h:mm A")} - ${sessionDetails.endTime?.format("h:mm A")}`}
+                      Tuition date and time:
                     </Typography>
-                    <Typography
-                      sx={{ fontSize: 12 }}
-                      fontWeight={600}
-                      align="center"
-                    >
-                      {`${sessionDetails.startTime?.format(
-                        "MMMM D, YYYY"
-                      )} `}
-                    </Typography>
+                    <Stack alignItems={"flex-end"} direction="column">
+                      <Typography sx={{ fontSize: 12 }} fontWeight={600}>
+                        {`${moment(`${sessionDetails.date}`).format(
+                          "MMMM D, YYYY"
+                        )}`}
+                      </Typography>
+                      <Typography sx={{ fontSize: 12 }} fontWeight={600}>
+                        {`${moment(`${sessionDetails.startTime}`).format(
+                          "h:mm A z"
+                        )} - ${moment(`${sessionDetails.endTime}`).format(
+                          "h:mm A z"
+                        )}`}
+                      </Typography>
+                    </Stack>
                   </Stack>
-                </Stack>
+                )}
               </Stack>
               {!isPhoneScreen ? (
                 <></>

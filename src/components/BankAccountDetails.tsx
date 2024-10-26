@@ -48,11 +48,9 @@ const BankAccountDetails = ({ onSuccess }: BankAccountDetailsProps) => {
   const handleIfscInput = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const invalidRegex = /[^A-Za-z0-9]/;
-    if (invalidRegex.test(event.target.value[event.target.value.length - 1]))
-      return;
-    const inputIfsc: string = event.target.value.slice(0, 11);
-    setIfsc(inputIfsc);
+    const invalidRegex = /[^A-Za-z0-9]/g;
+    const sanitizedValue = event.target.value.replace(invalidRegex, "").slice(0,11);
+    setIfsc(sanitizedValue);
   };
 
   const isAccountNumberValid = (): boolean => {

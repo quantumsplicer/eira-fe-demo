@@ -24,6 +24,7 @@ import {
   IconButton,
   Stack,
   useMediaQuery,
+  Fab
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import PaymentHistoryPage from "../subpages/PaymentHistoryPage";
@@ -32,6 +33,9 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import SortSharpIcon from "@mui/icons-material/SortSharp";
 import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import { useLogout } from "../../../utils/logout";
+import PaymentBannerCard from "../components/PaymentBannerCard";
+import PaymentHistoryTable from "../components/PaymentHistoryTable";
+import PaymentFlow from "../components/PaymentFlow";
 
 const PAYMENT_HISTORY_PAGE = "payment-history-page";
 const MAKE_PAYMENT_PAGE = "make-payment-page";
@@ -51,6 +55,8 @@ const StudentDashboard: React.FC = () => {
       fontFamily: "Montserrat", // Set the default font family
     },
   });
+
+  const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [subpage, setSubpage] = useState(MAKE_PAYMENT_PAGE);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -85,6 +91,11 @@ const StudentDashboard: React.FC = () => {
       setIsDrawerOpen(!isDrawerOpen);
     }
   };
+
+  const handleClosePaymentFlow = () => {
+    setIsPaymentFlowActive(false);
+  };
+      
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
@@ -319,6 +330,43 @@ const StudentDashboard: React.FC = () => {
           {displaySubpage(subpage)}
         </Box>
       </Box>
+
+      {isPhoneScreen && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            position: "fixed",
+            bottom: 20,
+            width: "100%",
+          }}
+        >
+          <Fab
+            aria-label="make-payment"
+            sx={{
+              width: 300,
+              borderRadius: 50,
+              backgroundColor: "#507FFD",
+              color: "white",
+            }}
+            onClick={() => setIsPaymentFlowActive(true)}
+          >
+            Make a Payment
+          </Fab>
+        </Box>
+      )}
+       {isPaymentFlowActive && (
+        <PaymentFlow
+          open={isPaymentFlowActive}
+          onClose={handleClosePaymentFlow}
+          tutorDetailsProp={{
+            firstName: "",
+            lastName: "",
+            panNumber: "",
+            phoneNumber: "",
+          }}
+        />
+      )}
     </ThemeProvider>
   );
 };

@@ -25,7 +25,7 @@ const PaymentRedirect = () => {
         await getPaymentStatus(orderId)
           .unwrap()
           .then(res => {
-            if (res.status === desiredStatus) {
+            if (res.order.status === desiredStatus) {
               clearInterval(interval);
               clearTimeout(timeout);
               navigate("/pay/status")

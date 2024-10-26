@@ -38,6 +38,7 @@ const InputPaymentDetails: React.FC = () => {
     getUserDetails,
     { data: studentData, isLoading: studentDataIsLoading },
   ] = useLazyGetUserDetailsQuery();
+
   const [
     getTutorDetials
   ] = useLazyGetUserDetailsByPhoneQuery();
@@ -99,10 +100,6 @@ const InputPaymentDetails: React.FC = () => {
       // const tutor = await getUserDetails().unwrap();
 
       // const isTutorOnboarded = !!(tutor?.first_name && tutor?.last_name && tutor?.pan);
-
-      if (isPayeeStudent) {
-        return;
-      }
 
       if (!isTutorOnboarded) {
         navigate("/pay/tutor-details");

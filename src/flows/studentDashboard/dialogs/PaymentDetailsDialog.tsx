@@ -18,6 +18,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { PaymentDetails, TutorDetails } from "../interfaces";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
+import { error } from "console";
+import { LoadingButton } from "@mui/lab";
 
 const Transition = forwardRef(function Transition(props: SlideProps, ref) {
   return (
@@ -37,6 +39,9 @@ interface PaymentDetailsDialogProps {
   onClose: () => void;
   onSubmit: (value: PaymentDetails) => void;
   tutorDetails: TutorDetails;
+  phoneNumberProp: string;
+  isPayeeStudent?: boolean;
+  submitButtonIsLoading?: boolean;
 }
 
 const PaymentDetailsDialog = ({
@@ -44,6 +49,9 @@ const PaymentDetailsDialog = ({
   onClose,
   onSubmit,
   tutorDetails,
+  phoneNumberProp,
+  isPayeeStudent,
+  submitButtonIsLoading,
 }: PaymentDetailsDialogProps) => {
   const {
     handleSubmit,
@@ -190,9 +198,15 @@ const PaymentDetailsDialog = ({
                       type="number"
                       variant="outlined"
                       size="small"
-                      error={!!errors.phoneNumber}
+                      error={!!errors.phoneNumber || isPayeeStudent}
                       helperText={
-                        errors.phoneNumber ? errors.phoneNumber.message : ""
+                        <Typography
+                          sx={{ fontSize: 10, color: "red" }}
+                          component="span"
+                        >
+                          {errors.phoneNumber ? errors.phoneNumber.message : ""}
+                          {isPayeeStudent && "This user is registered as a student"}
+                        </Typography>
                       }
                       sx={{
                         mb: 0,
@@ -274,8 +288,9 @@ const PaymentDetailsDialog = ({
             </Stack>
           </Stack>
           <Box width="85%" alignSelf="center">
-            <Button
+            <LoadingButton
               variant="contained"
+              loading={submitButtonIsLoading}
               onClick={handleSubmit(handleFormSubmit)}
               fullWidth
               disabled={!isValid}
@@ -289,7 +304,7 @@ const PaymentDetailsDialog = ({
               }}
             >
               Next
-            </Button>
+            </LoadingButton>
           </Box>
         </Stack>
       </DialogContent>

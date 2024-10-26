@@ -9,6 +9,7 @@ import {
   useGetPaymentStatusQuery,
   useLazyGetPaymentStatusQuery,
 } from "../APIs/definitions/paymentLinks";
+import { getNextWorkingDay } from "../utils/helperFunctions";
 
 interface PaymentInfoProps {
   amount: string;
@@ -86,7 +87,7 @@ const PaymentInfo = ({
         </Typography>
       </Stack>
       {type === "success" ? (
-        paymentStatus?.status === "PAID" ? (
+        paymentStatus?.order?.status === "PAID" ? (
           <img
             src={tickMark}
             style={{
@@ -114,10 +115,10 @@ const PaymentInfo = ({
               component={"span"}
               fontWeight={"bold"}
             >
-              Settlement on
+              {`Settlement on `}
             </Typography>
             <Typography component={"span"} fontWeight={"bold"}>
-              {` 7th October`}
+              {getNextWorkingDay()}
             </Typography>
             <Typography
               component={"span"}
