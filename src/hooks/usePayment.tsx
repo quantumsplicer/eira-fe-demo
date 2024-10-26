@@ -4,7 +4,7 @@ export const usePayment = () => {
   let cashfree: any;
   var initializeSDK = async function () {
     cashfree = await load({
-      mode: "production",
+      mode: "sandbox",
     });
   };
   initializeSDK();

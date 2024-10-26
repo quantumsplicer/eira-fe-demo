@@ -21,6 +21,7 @@ import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../stores/configuration";
 import { setPaymentSessionId } from "../../../stores/slices";
+import { useCreateSessionMutation } from "../../../APIs/definitions/session";
 
 const SlotBookingPage = () => {
   const navigate = useNavigate();
@@ -34,9 +35,13 @@ const SlotBookingPage = () => {
   const activePaymentAmount = localStorage.getItem("activePaymentAmount");
   const activePaymentPayeeUserId = localStorage.getItem("activePaymentPayeeUserId");
 
+  const [createSession, { isLoading: createSessionIsLoading }] = useCreateSessionMutation();
+  const { data: userDetails } = useGetUserDetailsQuery();
+
   const today = dayjs();
   const tomorrow = dayjs().add(1, "day");
   const nextHour = dayjs().add(1, "hour").startOf("hour");
+  const moment = require('moment-timezone');
 
   const handleSessionTitleChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -53,7 +58,27 @@ const SlotBookingPage = () => {
   const handleSubmit = () => {
     const activeFlow = localStorage.getItem("activeFlow");
     localStorage.removeItem("activeFlow");
-    navigate("/pay/review");
+
+    createSession({
+      subject: description,
+      teacher_id: activePaymentPayeeUserId ?? "",
+      student_id: userDetails?.id ?? "",
+      amount: activePaymentAmount ? Number(activePaymentAmount) : 0,
+      starttime: moment.tz(String(startTime), "ddd, DD MMM YYYY HH:mm:ss [GMT]", "GMT")
+        .tz("Asia/Kolkata")
+        .format("YYYY-MM-DDTHH:mm:ss"),
+      endtime: moment.tz(String(endTime), "ddd, DD MMM YYYY HH:mm:ss [GMT]", "GMT")
+        .tz("Asia/Kolkata")
+        .format("YYYY-MM-DDTHH:mm:ss"),
+      title: sessionTitle
+    })
+      .unwrap()
+      .then(res => {
+        navigate("/pay/review");
+      })
+      .catch(err => {
+        console.log(err);
+      })
   };
 
   useEffect(() => {

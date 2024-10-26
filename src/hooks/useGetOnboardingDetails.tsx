@@ -24,7 +24,7 @@ const useGetOnboardingDetails = () => {
   const [getPaymentLinkInfo] = useLazyGetPaymentInfoFromLinkQuery();
 
   const navigateToCurrentOnboardingStep = async () => {
-    const user = await getUserDetails().unwrap();
+    const user = await getUserDetails().unwrap().catch(err => console.log(err));
 
     const activePaymentFlow = localStorage.getItem("activeFlow");
 
@@ -58,11 +58,15 @@ const useGetOnboardingDetails = () => {
           }
           break;
         default:
-          navigate("/student-id/dashboard");
+          navigate("/student/dashboard");
           break;
       }
     } else {
-      navigate("/student/signup");
+      if (localStorage.getItem("studentLogin") === "true") {
+        navigate("/student/signup");
+      } else {
+        navigate("/student/login");
+      }
     }
   };
 
