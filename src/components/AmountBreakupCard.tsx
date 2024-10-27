@@ -26,7 +26,7 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
 
   const formatAmount = (amount: number | undefined): string => {
     if (amount) {
-      const amtStr = amount.toString();
+      const amtStr = amount.toFixed(2).toString();
       const [whole, decimal] = amtStr.split(".");
       const lastThreeDigits = whole.slice(-3);
       let otherDigits = whole.slice(0, -3);
