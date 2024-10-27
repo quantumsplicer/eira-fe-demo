@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Typography, Container, Stack, Divider } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TutorWebsiteHeader from "../components/TutorWebsiteHeader";
@@ -19,6 +19,7 @@ const RefundPolicy = () => {
 
   const { data: getUserDetails, isLoading: userDetailsIsLoading } =
     useGetUserByUserNameQuery(userName);
+  const [user] = useState(getUserDetails ? getUserDetails[0] : null);
 
   return (
     <ThemeProvider theme={theme}>
@@ -33,15 +34,15 @@ const RefundPolicy = () => {
           <Box>
           <Typography variant="body1">
               <strong>Merchant Name:</strong>{" "}
-              {(getUserDetails?.first_name as string) +
-                (getUserDetails?.last_name as string)}
+              {(user?.first_name as string) +
+                (user?.last_name as string)}
             </Typography>
             <Typography variant="body1">
               <strong>Merchant Address:</strong> -
             </Typography>
             <Typography variant="body1">
               <strong>Merchant Email:</strong> Support+
-              {`${getUserDetails?.phone}`}@eira.club
+              {`${user?.phone}`}@eira.club
             </Typography>
           </Box>
 

@@ -17,7 +17,7 @@ import SessionHistoryIcon from "@mui/icons-material/RestoreOutlined";
 import MarketingIcon from "@mui/icons-material/CampaignOutlined";
 import InvoiceIcon from "@mui/icons-material/ReceiptOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Avatar,
   Button,
@@ -36,6 +36,7 @@ import { useLogout } from "../../../utils/logout";
 import PaymentBannerCard from "../components/PaymentBannerCard";
 import PaymentHistoryTable from "../components/PaymentHistoryTable";
 import PaymentFlow from "../components/PaymentFlow";
+import { useNavigate } from "react-router-dom";
 
 const PAYMENT_HISTORY_PAGE = "payment-history-page";
 const MAKE_PAYMENT_PAGE = "make-payment-page";
@@ -62,6 +63,7 @@ const StudentDashboard: React.FC = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
+  const navigate = useNavigate();
 
   const displaySubpage = (subpage: string) => {
     if (subpage === PAYMENT_HISTORY_PAGE) {
@@ -95,6 +97,12 @@ const StudentDashboard: React.FC = () => {
   const handleClosePaymentFlow = () => {
     setIsPaymentFlowActive(false);
   };
+
+  useEffect(() => {
+    if (!localStorage.getItem("access-token")) {
+      navigate("/student/login");
+    }
+  }, [])
       
   return (
     <ThemeProvider theme={theme}>

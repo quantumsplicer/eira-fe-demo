@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Typography, Container, Stack, Divider } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TutorWebsiteHeader from "../components/TutorWebsiteHeader";
@@ -20,6 +20,8 @@ const TutorTermsOfUse = () => {
   const { data: getUserDetails, isLoading: userDetailsIsLoading } =
     useGetUserByUserNameQuery(userName);
 
+  const [user] = useState(getUserDetails ? getUserDetails[0] : null);
+
   return (
     <ThemeProvider theme={theme}>
       <TutorWebsiteHeader />
@@ -33,17 +35,17 @@ const TutorTermsOfUse = () => {
           <Box>
             <Typography variant="body1">
               <strong>Merchant Name:</strong>{" "}
-              {(getUserDetails?.first_name as string) +
-                (getUserDetails?.last_name as string)}
+              {(user?.first_name as string) +
+                (user?.last_name as string)}
             </Typography>
             <Typography variant="body1">
               <strong>Merchant Address:</strong> VAR
             </Typography>
             <Typography variant="body1">
-              <strong>Merchant Phone Number:</strong> {getUserDetails?.phone}
+              <strong>Merchant Phone Number:</strong> {user?.phone}
             </Typography>
             <Typography variant="body1">
-              <strong>Merchant Email:</strong> Support+{`${getUserDetails?.phone}`}@eira.club
+              <strong>Merchant Email:</strong> Support+{`${user?.phone}`}@eira.club
             </Typography>
           </Box>
 

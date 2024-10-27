@@ -4,6 +4,7 @@ import Aadhaar from "../../../assets/images/svg/Aadhaar.svg";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { useNavigate } from "react-router-dom";
 import { useOnboardUserMutation } from "../../../APIs/definitions/onboarding";
+import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 
 interface AadhaarVerifyInfoProps {
     showHeading: boolean;
@@ -16,9 +17,12 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
     const [aadhaarVerificationFailed, setAadhaarVerificationFailed] = useState<boolean | null>(null);
 
     const [onboardUser, { isLoading }] = useOnboardUserMutation();
+    const { data: userDetails } = useGetUserDetailsQuery();
 
     const handleVerifyClick = () => {
-        onboardUser()
+        onboardUser({
+            user_id: userDetails?.id ?? ""
+        })
             .unwrap()
             .then(res => {
                 console.log(res)
@@ -103,7 +107,7 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
                     marginTop: 1,
                     height: 45
                 }}
-                onClick={() => navigate('/tutor-id/dashboard')}
+                onClick={() => navigate('/tutor/dashboard')}
             >
                 Skip
             </Button>
