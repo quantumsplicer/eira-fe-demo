@@ -104,6 +104,9 @@ const OTPInput = ({
       phone: phoneNumber,
       otp,
       role: location.pathname.includes("student") ? "student" : "teacher",
+    })
+    .catch(err => {
+      console.log(err)
     });
     if (!result?.data?.token) {
       setIsOtpInvalid(true);

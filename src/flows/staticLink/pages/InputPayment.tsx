@@ -19,6 +19,7 @@ const InputPayment = () => {
         const inputValue = event.target.value;
         if (inputValue === '' || !invalidRegex.test(inputValue)) {
             setAmount(inputValue);
+            localStorage.setItem("activePaymentAmount", inputValue);
         }
     };
 
@@ -29,7 +30,6 @@ const InputPayment = () => {
     }
 
     const handleSubmit = () => {
-        localStorage.setItem("activeFlow", "staticFlow");
         const isStudentSignedIn = localStorage.getItem("studentLogin") === "true"
         if (isStudentSignedIn) {
             navigate("/pay/create-session");

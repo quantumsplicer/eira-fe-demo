@@ -45,18 +45,16 @@ const PaymentReviewPage = () => {
   const activePaymentTutorName = localStorage.getItem("activePaymentTutorName");
 
   const paymentDetails = {
-    "Payee Name": activePaymentTutorName ? activePaymentTutorName : "",
-    "Payee Phone": activePaymentTutorId ? `+91 ${activePaymentTutorId}` : "",
-    "Session Date": activePaymentSessionDate
-      ? moment(activePaymentSessionDate).format("MMMM D, YYYY")
-      : "",
-    "Session Time": activePaymentSessionTime
-      ? `${moment(activePaymentSessionTime.split("-")[0]).format(
-          "h:mm A z"
-        )} - ${moment(activePaymentSessionTime.split("-")[1]).format(
-          "h:mm A z"
-        )}`
-      : "",
+    ...(activePaymentTutorName ? { "Payee Name": activePaymentTutorName } : {}),
+    ...(activePaymentTutorId ? { "Payee Phone": `+91 ${activePaymentTutorId}` } : {}),
+    ...(activePaymentSessionDate ? { "Session Date": moment(activePaymentSessionDate).format("MMMM D, YYYY") } : {}),
+    ...(activePaymentSessionTime ? {
+      "Session Time": `${moment(activePaymentSessionTime.split("-")[0]).format(
+        "h:mm A z"
+      )} - ${moment(activePaymentSessionTime.split("-")[1]).format(
+        "h:mm A z"
+      )}`
+    } : {})
   };
 
   const { makePayment } = usePayment();
