@@ -7,10 +7,12 @@ import {
   Button,
   useMediaQuery,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const currentLimit = 5000;
 
 const CurrentLimitCard: React.FC = () => {
+  const navigate = useNavigate();
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const formatter = new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -152,6 +154,9 @@ const CurrentLimitCard: React.FC = () => {
           </Typography>
           <Button
             variant="contained"
+            onClick={() => {
+              navigate("/tutor/kyc")
+            }}
             sx={
               !isPhoneScreen
                 ? {

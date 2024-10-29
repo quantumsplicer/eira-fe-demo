@@ -8,6 +8,7 @@ import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
 import NoteBox from "../../../components/NoteBox";
 import OTPInput from "../../../components/OTPInput";
 import StudentSignInMobile from "./StudentSignInMobile";
+import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
 
 const StudentSignIn = () => {
     const activeFlow = localStorage.getItem("activeFlow");
@@ -21,6 +22,9 @@ const StudentSignIn = () => {
         "Please make sure that the person receiving money is onbaorded on Eiraor you have the necessary details to onboard them."
     ]
 
+    const { checkCurrentStudentOnboardingState } =
+    useGetOnboardingDetails();
+
     const isPhoneNumberValid = (): boolean => {
         const regex = /^[6-9]\d{9}$/;
         return regex.test(phoneNumber);
@@ -31,6 +35,10 @@ const StudentSignIn = () => {
             setIsDialogOpen(true)
         }
     }
+
+    useEffect(() => {
+        checkCurrentStudentOnboardingState();
+    }, []);
     
     return (
         notPhoneScreen ?

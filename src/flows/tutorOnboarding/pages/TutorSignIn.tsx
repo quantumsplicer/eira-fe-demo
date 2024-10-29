@@ -27,7 +27,9 @@ const TutorSignIn: React.FC = () => {
   useEffect(() => {
     const handleOnboarding = async () => {
       const accessToken = localStorage.getItem("access-token");
-      if (accessToken) {
+      const isTutor = localStorage.getItem("tutorLogin") == 'true';
+
+      if (accessToken && isTutor) {
         const { navigateTo, onboardingStep } = await determineOnboardingStep();
         dispatch(setOnboardingStep(onboardingStep));
         navigate(navigateTo);

@@ -6,6 +6,7 @@ import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import NoteBox from "../../../components/NoteBox";
 import PersonalDetails from "../../../components/PersonalDetails";
 import { useNavigate } from "react-router-dom";
+import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
 
 const StudentSignUp = () => {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ const StudentSignUp = () => {
     "Please enter the PAN linked to your mobile number.",
     "Please make sure you are transferring to a registered tutor or have their account details to onboard them.",
   ];
+
+  const { navigateToCurrentOnboardingStep } = useGetOnboardingDetails();
 
   useEffect(() => {
     const flow = localStorage.getItem("activeFlow");
@@ -93,7 +96,12 @@ const StudentSignUp = () => {
                 </Typography>
               )}
               <NoteBox heading={noteBoxHeading} notes={notes} />
-              <PersonalDetails onSuccess={() => navigate("/student")} />
+              <PersonalDetails
+                onSuccess={() => {
+                  console.log("coming here");
+                  navigateToCurrentOnboardingStep();
+                }}
+              />
             </Stack>
           </Stack>
         </Box>

@@ -42,55 +42,58 @@ const AppRoutes = () => {
       <Route path="/pay/payment-gateway-payment-flow" element={<PGLoading />} />
       <Route path="/pay/redirect" element={<PaymentRedirect />} />
       <Route path="/pay/status" element={<PaymentSuccessfulPage />} />
-      
       <Route path="/tutor/dashboard" element={<TutorDashboard />} />
       <Route path="/student/dashboard" element={<StudentDashboard />} />
-
       <Route path="tutor/login" element={<TutorSignIn />} />
       <Route path="tutor/personal-details" element={<TutorSignUp />} />
-      <Route path="tutor/aadhar-verification" element={<AadharVerification />} />
-      <Route path="tutor/onboarding/aadhar-redirect" element={<AadharVerifyRedirectPage />} />
+      <Route
+        path="tutor/aadhar-verification"
+        element={<AadharVerification />}
+      />
+      <Route
+        path="tutor/onboarding/aadhar-redirect"
+        element={<AadharVerifyRedirectPage />}
+      />
       <Route path="tutor/dashboard" element={<TutorDashboard />} />
-
-      <Route path="student/" element={<PayFeesContainer/>}>
-        <Route path="login" element={<StudentSignIn />} />
-      </Route>
 
       {/**
        * Pay Tuition Fees route
        */}
-      <Route path="pay-tuition-fees/" element={<PayFeesContainer/>}>
+      <Route path="pay-tuition-fees/" element={<PayFeesContainer />}>
+        <Route path="" element={<StudentSignIn />} />
         <Route path="login" element={<StudentSignIn />} />
         <Route path="pay/verify" element={<InputPhone />} />
       </Route>
 
-      {/** 
+      {/**
        * Dynamic Payment link route
-      */}
-      <Route path="payment-link/" element={<PayFeesContainer/>}>
+       */}
+      <Route path="payment-link/" element={<PayFeesContainer />}>
         <Route path=":link-id" element={<StudentSignIn />} />
       </Route>
 
-      {/** 
+      {/**
        * Static Payment link route
-      */}
-      <Route path="static-link/" element={<PayFeesContainer/>}>
+       */}
+      <Route path="static-link/" element={<PayFeesContainer />}>
         <Route path=":tutor-username" element={<InputPayment />} />
       </Route>
-
-
+      <Route path="student/login" element={<StudentSignIn />} />
       <Route path="student/signup" element={<StudentSignUp />} />
+      <Route path="tutor/kyc" element={<KycLogin />} />
 
-      <Route path="tutor/kyc/login" element={<KycLogin />} />
-t
       <Route path="*" element={<PageNotFound />} />
       <Route path="page-not-found" element={<PageNotFound />} />
-
       <Route path="/:tutorUserName" element={<TutorWebsite />} />
-      <Route path="/:tutorUserName/terms-of-use" element={<TutorTermsOfUse />} />
+      <Route
+        path="/:tutorUserName/terms-of-use"
+        element={<TutorTermsOfUse />}
+      />
       <Route path="/:tutorUserName/refund-policy" element={<RefundPolicy />} />
-      <Route path="/:tutorUserName/contact-policy" element={<ContactPolicy />} />
-
+      <Route
+        path="/:tutorUserName/contact-policy"
+        element={<ContactPolicy />}
+      />
     </Routes>
   );
 };

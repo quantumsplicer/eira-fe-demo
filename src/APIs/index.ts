@@ -15,7 +15,7 @@ const DEV_SITE_URL = "http://localhost:3000/";
 
 export interface ApiResponse {
   message?: string;
-  status?: number;
+  status?: number ;
 }
 const baseQueryWithAuth = fetchBaseQuery({
   baseUrl: `${BASE_URL}v1/`,

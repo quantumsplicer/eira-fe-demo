@@ -109,17 +109,16 @@ const useGetOnboardingDetails = () => {
     setCheckProcessIsLoading(true);
     try {
       await getUserDetails().unwrap();
-      console.log("jgjhvv");
       if (studentDataIsLoading) return;
 
       const token = localStorage.getItem("access-token");
-      console.log(token);
+
       // Check if the user is already logged in or not
       if (!token) navigate("/student/login");
 
       // Check if the user is a student or not
       const isStudent = localStorage.getItem("studentLogin") === "true";
-      console.log(isStudent);
+
       if (!isStudent) {
         setCheckProcessIsLoading(false);
         return;

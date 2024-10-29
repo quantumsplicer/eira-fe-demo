@@ -107,7 +107,7 @@ const StudentSignInMobile = () => {
             mt={10}
             // fontWeight={"500"}
           >
-            {`Tutions made accessible than ever before with `}
+            {`Easy Credit Card and UPI Education Payments with `}
             <Typography display={"inline"} color={"#507FFD"} fontSize={32}>
               Eira
             </Typography>
@@ -120,7 +120,7 @@ const StudentSignInMobile = () => {
           fontSize={20}
           color={"#6f6f6f"}
         >
-          {`Pay tuition fees via credit card at just `}
+          {`Make education payments via credit card at just `}
           <span
             style={{
               fontWeight: "bold",
@@ -139,13 +139,27 @@ const StudentSignInMobile = () => {
           >
             *
           </span>
+          <span
+            style={{
+              color: "#6f6f6f",
+              fontSize: 20,
+            }}
+          >
+             OR UPI for free
+          </span>
         </Typography>
+        {/* <Typography mt={2} fontSize={20} color={"#6f6f6f"}>
+          OR 
+        </Typography>
+        <Typography mt={2} fontSize={20} color={"#6f6f6f"}>
+          UPI for free
+        </Typography> */}
         <img
           src={MobilePaymentLogo}
           style={{
             width: "100%",
-            minWidth: "250px",
-            maxWidth: "320px",
+            minWidth: "200px",
+            maxWidth: "260px",
           }}
         />
         <Stack direction={"row"} mb={5}>
