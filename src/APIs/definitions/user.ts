@@ -4,6 +4,7 @@ export interface UserDetails {
   id: string;
   first_name: string;
   last_name: string;
+  username: string;
   phone: string;
   email: string;
   pan: string;
@@ -18,6 +19,11 @@ export const userApi = postgresApi.injectEndpoints({
   endpoints: (builder) => ({
     getUserDetails: builder.query<UserDetails, void>({
       query: () => `user/me`,
+      onQueryStarted: async (_, { queryFulfilled }) => {
+        const { data } = await queryFulfilled;
+
+        data?.id && localStorage.setItem("userId", data.id);
+      },
     }),
 
     updateUserDetails: builder.mutation<UserDetails, Partial<UserDetails>>({

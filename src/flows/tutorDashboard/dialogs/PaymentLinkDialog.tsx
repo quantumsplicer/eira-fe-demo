@@ -82,7 +82,6 @@ const PaymentLinkDialog = ({
               p: 2,
             }
           : {
-              marginTop: 10,
               "& .MuiDialog-paper": {
                 boxShadow: 0,
               },
@@ -111,6 +110,7 @@ const PaymentLinkDialog = ({
         >
           {!isPhoneScreen ? <CloseIcon /> : <ArrowBackIcon />}
         </IconButton>
+
         <Stack
           sx={
             !isPhoneScreen
@@ -233,7 +233,6 @@ const PaymentLinkDialog = ({
                 />
               )}
             />
-
             <Controller
               name="amount"
               control={control}

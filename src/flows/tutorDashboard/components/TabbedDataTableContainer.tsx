@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -12,7 +12,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TransactionsTable from "./tables/TransactionsTable";
 import PaymentLinksTable from "./tables/PaymentLinksTable";
 import SendPaymentLinkFlow from "./flows/SendPaymentLinkFlow";
-
+import { useGetPaymentLinksQuery } from "../../../APIs/definitions/paymentLinks";
 const lightTheme = createTheme({ palette: { mode: "light" } });
 
 interface TabPanelProps {
@@ -40,8 +40,10 @@ function CustomTabPanel(props: TabPanelProps) {
 const TabbedDataTableContainer: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [paymentLinkFlowActive, setPaymentLinkFlowActive] = useState(false);
+  const [paymentLinkCreated, setPaymentLinkCreated] = useState(false);
   const [value, setValue] = useState(0);
-
+  const { data, isLoading, isSuccess, isError, error } =
+    useGetPaymentLinksQuery();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -52,7 +54,11 @@ const TabbedDataTableContainer: React.FC = () => {
       "aria-controls": `simple-tabpanel-${index}`,
     };
   };
-
+  useEffect(() => {
+    if (isSuccess) {
+      setPaymentLinkCreated(true);
+    }
+  }, [isSuccess]);
   return (
     <>
       <ThemeProvider theme={lightTheme}>
@@ -164,10 +170,10 @@ const TabbedDataTableContainer: React.FC = () => {
               </Box>
             </Stack>
             <CustomTabPanel value={value} index={0}>
-              <TransactionsTable />
+              <TransactionsTable paymentLinkCreated={paymentLinkCreated} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-              <PaymentLinksTable />
+              <PaymentLinksTable data={data} />
             </CustomTabPanel>
           </Stack>
         </Box>

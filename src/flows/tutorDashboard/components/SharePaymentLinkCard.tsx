@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import {
   Divider,
@@ -17,14 +17,16 @@ import Button from "@mui/material/Button";
 import AndroidDevice from "../../../assets/images/svg/AndroidDevice.svg";
 import Background from "../../../assets/images/svg/MobilePaymentBackground.svg";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
-
+import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 const SharePaymentLinkCard: React.FC = () => {
-  const [tutorPaymentLink, setTutorPaymentLink] =
-    useState<string>("pay.eira.club"); // Text to be copied
+  const { data: tutorDetails } = useGetUserDetailsQuery();
+  const paymentLink = useMemo(() => {
+    return `https://eira.club/${tutorDetails?.username}`;
+  }, [tutorDetails?.username]);
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const copyToClipboard = () => {
     navigator.clipboard
-      .writeText(tutorPaymentLink)
+      .writeText(paymentLink)
       .then(() => {
         alert("Payment Link copied");
       })
@@ -84,7 +86,7 @@ const SharePaymentLinkCard: React.FC = () => {
             size={!isPhoneScreen ? "small" : "medium"}
             disabled
             id="outlined-disabled"
-            defaultValue="payment.eira.club"
+            defaultValue={paymentLink}
           ></TextField>
 
           <Button

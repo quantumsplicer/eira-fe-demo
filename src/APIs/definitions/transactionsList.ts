@@ -1,6 +1,6 @@
 import { ApiResponse, postgresApi } from "..";
 import { TransactionsResponse } from "../../flows/tutorDashboard/interfaces";
-
+import { UserDetails } from "./user";
 export const transactionsList = postgresApi.injectEndpoints({
   endpoints: (builder) => ({
     getTransactionsList: builder.query<TransactionsResponse, void>({

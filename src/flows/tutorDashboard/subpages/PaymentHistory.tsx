@@ -28,11 +28,11 @@ const PaymentHistory: React.FC = () => {
                 backgroundColor: "white",
               },
             }}
-            index={1}
+            index={0}
             navButtonsAlwaysVisible={false}
           >
-            <CurrentLimitCard />
             <UnsettledAmountCard />
+            <CurrentLimitCard />
           </Carousel>
         )}
       </Stack>

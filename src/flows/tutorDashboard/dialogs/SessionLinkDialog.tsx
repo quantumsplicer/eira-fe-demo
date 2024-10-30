@@ -15,17 +15,14 @@ import {
   SwipeableDrawer,
   useMediaQuery,
 } from "@mui/material";
-import {
-  DatePicker,
-  TimePicker,
-  LocalizationProvider,
-} from "@mui/x-date-pickers";
+import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Dayjs } from "dayjs";
 import CloseIcon from "@mui/icons-material/Close";
-
+import { SessionDetails } from "../../../APIs/definitions/session";
+import { useGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
 interface SessionLinkDialogProps {
   open: boolean;
   onSubmit: (data: any) => void;
@@ -113,7 +110,6 @@ const SessionLinkDialog = ({
               p: 2,
             }
           : {
-              marginTop: 10,
               "& .MuiDialog-paper": {
                 boxShadow: 0,
               },
@@ -357,65 +353,6 @@ const SessionLinkDialog = ({
                 />
               )}
             />
-            {/* <FormControl fullWidth sx={{ mb: 2 }}>
-              <TextField
-                size="small"
-                fullWidth
-                variant="outlined"
-                label="Add new attendee"
-                value={attendeeInput}
-                onChange={(e) => setAttendeeInput(e.target.value)}
-                onKeyPress={handleAddAttendee}
-                sx={{
-                  mb: 0,
-                  "& .MuiInputLabel-root": {
-                    transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                  },
-                  "& .MuiInputBase-root": {
-                    marginTop: "16px", // Add space between label and input box
-                  },
-                  "&:MuiInputBase-input": {
-                    fontSize: 12,
-                  },
-                  "& legend": {
-                    width: 0,
-                  },
-                }}
-              />
-              <Stack direction="row" flexWrap="wrap" gap={0.5}>
-                {attendees.map((attendee) => (
-                  <Chip
-                    key={attendee}
-                    label={attendee}
-                    onDelete={handleDeleteAttendee(attendee)}
-                  />
-                ))}
-              </Stack>
-            </FormControl>
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              <TextField
-                fullWidth
-                label="Description"
-                variant="outlined"
-                {...register("description")}
-                size="small"
-                sx={{
-                  mb: 0,
-                  "& .MuiInputLabel-root": {
-                    transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                  },
-                  "& .MuiInputBase-root": {
-                    marginTop: "16px", // Add space between label and input box
-                  },
-                  "&:MuiInputBase-input": {
-                    fontSize: 12,
-                  },
-                  "& legend": {
-                    width: 0,
-                  },
-                }}
-              />
-            </FormControl> */}
           </Stack>
           <Box width="85%" alignSelf="center" pt={3}>
             <Button
@@ -430,6 +367,7 @@ const SessionLinkDialog = ({
                 fontWeight: "bold",
                 paddingLeft: 3,
                 paddingRight: 3,
+                textTransform: "none",
               }}
             >
               Send Session Link

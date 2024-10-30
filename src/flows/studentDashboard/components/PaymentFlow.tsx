@@ -198,6 +198,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
           }}
           onBack={() => {
             setActiveDialog(stepOnBack);
+            setStepOnBack(DialogName.PaymentDetails);
           }}
           tutorDetails={tutorDetails}
           sessionDetails={sessionDetails}

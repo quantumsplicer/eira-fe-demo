@@ -7,8 +7,10 @@ import {
   Button,
   useMediaQuery,
 } from "@mui/material";
-
-const currentLimit = 5000;
+import { useGetOnboardingStatusQuery } from "../../../APIs/definitions/onboarding";
+import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
+import { UserDetails } from "../../../APIs/definitions/user";
+import { useMemo } from "react";
 
 const CurrentLimitCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
@@ -18,6 +20,14 @@ const CurrentLimitCard: React.FC = () => {
     maximumFractionDigits: 0,
   });
 
+  const { data: userDetails } = useGetUserDetailsQuery();
+
+  const currentLimit = useMemo(() => {
+    return userDetails?.onboarding_status === "approved" ? 50000 : 5000;
+  }, [userDetails]);
+  const onboardingStatus = useMemo(() => {
+    return userDetails?.onboarding_status;
+  }, [userDetails]);
   return (
     <Box
       sx={
@@ -148,7 +158,9 @@ const CurrentLimitCard: React.FC = () => {
             align="center"
             sx={!isPhoneScreen ? {} : { width: "100%", textAlign: "center" }}
           >
-            Complete KYC to increase limit to ₹50,000
+            {onboardingStatus === "approved"
+              ? "Congratulations! Your limit has been increased to ₹50,000"
+              : "Complete KYC to increase limit to ₹50,000"}
           </Typography>
           <Button
             variant="contained"
@@ -174,7 +186,9 @@ const CurrentLimitCard: React.FC = () => {
                   }
             }
           >
-            Complete KYC
+            {onboardingStatus === "approved"
+              ? "You've already completed your KYC"
+              : "Complete KYC"}
           </Button>
         </Stack>
       </Stack>

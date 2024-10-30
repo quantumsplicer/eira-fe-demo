@@ -12,14 +12,20 @@ export interface SessionDetails {
 
 export const sessionApi = postgresApi.injectEndpoints({
   endpoints: (builder) => ({
-    createSession: builder.mutation<ApiResponse, SessionDetails>({
+    createSession: builder.mutation<ApiResponse, Partial<SessionDetails>>({
       query: (body) => ({
         url: `schedules/create/`,
         method: "POST",
         body,
       }),
     }),
+    getSessionList: builder.query<ApiResponse, SessionDetails[]>({
+      query: () => ({
+        url: `schedules/`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useCreateSessionMutation } = sessionApi;
+export const { useCreateSessionMutation, useGetSessionListQuery } = sessionApi;

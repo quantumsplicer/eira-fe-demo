@@ -221,7 +221,7 @@ const TutorDashboard: React.FC = () => {
                 : {
                     backgroundColor: "white",
                     boxShadow: 0,
-                    height: "70px",
+                    height: "7.5vh",
                   }
             }
           >
