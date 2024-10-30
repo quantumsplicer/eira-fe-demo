@@ -33,4 +33,4 @@ export const onboardingApi = postgresApi.injectEndpoints({
     })
 })
 
-export const { useOnboardUserMutation, useGetOnboardingStatusQuery } = onboardingApi;
+export const { useOnboardUserMutation, useGetOnboardingStatusQuery, useLazyGetOnboardingStatusQuery } = onboardingApi;

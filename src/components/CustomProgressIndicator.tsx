@@ -1,7 +1,11 @@
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const CustomProgressIndicator = () => {
+interface CustomProgressIndicatorProps {
+    nextStep: number;
+}
+
+const CustomProgressIndicator = ({nextStep} : CustomProgressIndicatorProps) => {
     return (
         <>
             <Stack
@@ -55,7 +59,7 @@ const CustomProgressIndicator = () => {
                     <Box
                         width="50%"
                         height="50%"
-                        bgcolor="#aeaeae"
+                        bgcolor={nextStep === 2 ? "#aeaeae" : "#000"}
                         borderRadius={"50%"}
                     />
                 </Box>
@@ -78,13 +82,16 @@ const CustomProgressIndicator = () => {
                     sx={{
                         borderStyle: "solid",
                         borderColor: "#000",
-                        borderWidth: "1px"
+                        borderWidth: nextStep === 3 || nextStep === 0 ? "2px" : "1px"
                     }}
                 >
                     <Box
                         width="50%"
                         height="50%"
-                        bgcolor="#fff"
+                        bgcolor={ 
+                            nextStep === 2 ? "#fff" :
+                            (nextStep === 3 ? "#aeaeae" : "#000")
+                        }
                         borderRadius={"50%"}
                     />
                 </Box>

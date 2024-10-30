@@ -153,6 +153,10 @@ const CurrentLimitCard: React.FC = () => {
             Complete KYC to increase limit to ₹50,000
           </Typography>
           <Button
+            onClick={() => {
+              localStorage.setItem("activeFlow", "tutorKyc");
+              navigate("/tutor/kyc")
+            }}
             variant="contained"
             onClick={() => {
               navigate("/tutor/kyc")

@@ -2,6 +2,7 @@ import { ApiResponse, postgresApi } from "..";
 
 export interface GetOtpBody {
   phone: string;
+  role: "teacher" | "student";
 }
 
 export interface ValidateOtpBody {

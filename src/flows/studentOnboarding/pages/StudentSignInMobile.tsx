@@ -36,7 +36,7 @@ const StudentSignInMobile = () => {
 
   const handleSubmit = () => {
     if (isPhoneNumberValid(phone)) {
-      getOtp({ phone: phone }).then(() => {
+      getOtp({ phone: phone, role: "student" }).then(() => {
         setIsDrawerOpen(true);
       });
     }
@@ -210,31 +210,49 @@ const StudentSignInMobile = () => {
               CustomDrawerButton={ContinueButton}
             />
           ) : (
-            <Drawer
-              open={isDrawerOpen}
-              // onClose={() => setIsDrawerOpen(false)}
-              sx={{
-                width: "100%",
-                flexShrink: 0,
-                "& .MuiDrawer-paper": {
-                  padding: 5,
-                  borderTopLeftRadius: 20,
-                  borderTopRightRadius: 20,
+            <>
+              <Box
+                  sx={{
+                      position: 'fixed',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      backgroundColor: 'rgba(0, 0, 0, 0.3)', // Adjust opacity as needed
+                      zIndex: 9999, // Higher than most background elements
+                  }}
+                  aria-hidden="true"
+              />
+              <Drawer
+                open={isDrawerOpen}
+                // onClose={() => setIsDrawerOpen(false)}
+                sx={{
+                  zIndex: 10000,
                   width: "100%",
-                  boxSizing: "border-box",
-                },
-              }}
-              anchor="bottom"
-              variant="permanent"
-            >
-              <Stack alignItems={"center"}>
-                <OTPInput
-                  phoneNumber={phone}
-                  onVerified={() => setIsOtpVerificationDone(true)}
-                  isDrawer={true}
-                />
-              </Stack>
-            </Drawer>
+                  flexShrink: 0,
+                  "& .MuiDrawer-paper": {
+                    padding: 5,
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
+                    width: "100%",
+                    boxSizing: "border-box",
+                    height: "500px",
+                  },
+                }}
+                anchor="bottom"
+                variant="permanent"
+              >
+                <Stack alignItems={"center"}>
+                  <OTPInput
+                    role="student"
+                    phoneNumber={phone}
+                    onVerified={() => setIsOtpVerificationDone(true)}
+                    isDrawer={true}
+                    onChangePhoneNumber={() => setIsDrawerOpen(false)}
+                  />
+                </Stack>
+              </Drawer>
+            </>
           )
         ) : null}
       </Stack>

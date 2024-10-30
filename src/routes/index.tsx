@@ -30,6 +30,7 @@ import TutorWebsite from "../flows/tutorWebsite/pages/tutorWebsite";
 import TutorTermsOfUse from "../flows/tutorWebsite/pages/TutorTerms";
 import RefundPolicy from "../flows/tutorWebsite/pages/RefundPolicy";
 import ContactPolicy from "../flows/tutorWebsite/pages/ContactPolicy";
+import TutorOnboardingContainer from "../components/TutorOnboardingContainer";
 
 const AppRoutes = () => {
   return (
@@ -42,19 +43,11 @@ const AppRoutes = () => {
       <Route path="/pay/payment-gateway-payment-flow" element={<PGLoading />} />
       <Route path="/pay/redirect" element={<PaymentRedirect />} />
       <Route path="/pay/status" element={<PaymentSuccessfulPage />} />
-      <Route path="/tutor/dashboard" element={<TutorDashboard />} />
+      
       <Route path="/student/dashboard" element={<StudentDashboard />} />
-      <Route path="tutor/login" element={<TutorSignIn />} />
-      <Route path="tutor/personal-details" element={<TutorSignUp />} />
-      <Route
-        path="tutor/aadhar-verification"
-        element={<AadharVerification />}
-      />
-      <Route
-        path="tutor/onboarding/aadhar-redirect"
-        element={<AadharVerifyRedirectPage />}
-      />
-      <Route path="tutor/dashboard" element={<TutorDashboard />} />
+
+      <Route path="tutor/aadhar-verification" element={<AadharVerification />} />
+      <Route path="tutor/onboarding/aadhar-redirect" element={<AadharVerifyRedirectPage />} />
 
       {/**
        * Pay Tuition Fees route
@@ -82,6 +75,13 @@ const AppRoutes = () => {
       <Route path="student/signup" element={<StudentSignUp />} />
       <Route path="tutor/kyc" element={<KycLogin />} />
 
+      <Route path="tutor/" element={<TutorOnboardingContainer />}>
+        <Route path="login" element={<TutorSignIn />} />
+        <Route path="personal-details" element={<TutorSignUp />} />
+        <Route path="kyc" element={<KycLogin />} />
+        <Route path="dashboard" element={<TutorDashboard />} />
+      </Route>
+t
       <Route path="*" element={<PageNotFound />} />
       <Route path="page-not-found" element={<PageNotFound />} />
       <Route path="/:tutorUserName" element={<TutorWebsite />} />

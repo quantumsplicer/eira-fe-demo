@@ -9,6 +9,7 @@ import NoteBox from "../../../components/NoteBox";
 import OTPInput from "../../../components/OTPInput";
 import StudentSignInMobile from "./StudentSignInMobile";
 import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
+import { useGetOtpMutation } from "../../../APIs/definitions/auth";
 
 const StudentSignIn = () => {
     const activeFlow = localStorage.getItem("activeFlow");
@@ -16,6 +17,7 @@ const StudentSignIn = () => {
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
+    const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
 
     const notes = [
         "Please make sure that you have the bank account details of the payee accessible.",
@@ -32,7 +34,9 @@ const StudentSignIn = () => {
 
     const handleSubmit = () => {
         if (isPhoneNumberValid()) {
-            setIsDialogOpen(true)
+            getOtp({ phone: phoneNumber, role: "student" }).then(() => {
+                setIsDialogOpen(true)
+            });
         }
     }
 
@@ -138,9 +142,11 @@ const StudentSignIn = () => {
                                             </Button>
                                         </> :
                                         <OTPInput
+                                            role="student"
                                             navigateTo="/student/signup"
                                             phoneNumber={phoneNumber}
                                             isDrawer={false}
+                                            onChangePhoneNumber={() => setIsDialogOpen(false)}
                                         />
                                 }
                             </Stack>

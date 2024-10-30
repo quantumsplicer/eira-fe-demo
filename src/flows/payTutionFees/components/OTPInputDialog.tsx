@@ -121,7 +121,7 @@ const OTPInputDialog = ({
     setIsOtpInvalid(false);
     setActiveIndex(0);
 
-    getOtp({ phone: phoneNumber });
+    getOtp({ phone: phoneNumber, role: "student" });
   };
 
   useEffect(() => {

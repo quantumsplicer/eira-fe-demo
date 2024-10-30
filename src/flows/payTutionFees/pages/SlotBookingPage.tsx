@@ -34,6 +34,7 @@ const SlotBookingPage = () => {
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
   const activePaymentAmount = localStorage.getItem("activePaymentAmount");
   const activePaymentPayeeUserId = localStorage.getItem("activePaymentPayeeUserId");
+  const [errorMessage, setErrorMessage] = useState<string|null>(null);
 
   const [createSession, { isLoading: createSessionIsLoading }] = useCreateSessionMutation();
   const { data: userDetails } = useGetUserDetailsQuery();
@@ -56,6 +57,7 @@ const SlotBookingPage = () => {
   };
 
   const handleSubmit = () => {
+    setErrorMessage(null);
     const activeFlow = localStorage.getItem("activeFlow");
     localStorage.removeItem("activeFlow");
 
@@ -77,11 +79,17 @@ const SlotBookingPage = () => {
         navigate("/pay/review");
       })
       .catch(err => {
-        console.log(err);
+        console.log(err)
+        if (err.status === 400) {
+          setErrorMessage(err.data.message);
+        } else {
+          setErrorMessage("Something went wrong. Please try again!")
+        }
       })
   };
 
   useEffect(() => {
+    setErrorMessage(null);
     setIsButtonDisabled(true);
     if (
       sessionTitle &&
@@ -95,7 +103,7 @@ const SlotBookingPage = () => {
       localStorage.setItem("activePaymentSessionDate", String(selectedDate));
       localStorage.setItem("activePaymentSessionTime", `${String(startTime)} - ${String(endTime)}`)
     }
-  }, [today, nextHour, sessionTitle, selectedDate, startTime, endTime]);
+  }, [sessionTitle, selectedDate, startTime, endTime]);
 
   useEffect(() => {
     if (!activePaymentAmount || !activePaymentPayeeUserId) {
@@ -227,22 +235,33 @@ const SlotBookingPage = () => {
                   },
                 }}
               />
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  padding: 1.5,
-                  borderRadius: 20,
-                  mt: notPhoneScreen ? 3 : 25,
-                  width: "100%",
-                  minWidth: "320px",
-                  maxWidth: "400px",
-                }}
-                onClick={handleSubmit}
-                disabled={isButtonDisabled}
+              <Box
+                mt={notPhoneScreen ? 3 : 25}
+                width= "100%"
+                minWidth= "320px"
+                maxWidth= "400px"
               >
-                Proceed to pay
-              </Button>
+                {
+                  errorMessage &&
+                  <Typography fontSize={14} color="red" textAlign={"center"} mb={3}>
+                    {errorMessage}
+                  </Typography>
+                }
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    padding: 1.5,
+                    borderRadius: 20,
+                    mt: errorMessage ? 0 : 5.8,
+                    width:"100%"
+                  }}
+                  onClick={handleSubmit}
+                  disabled={isButtonDisabled}
+                >
+                  Proceed to pay
+                </Button>
+              </Box>
             </Stack>
           </Stack>
         </Box>
