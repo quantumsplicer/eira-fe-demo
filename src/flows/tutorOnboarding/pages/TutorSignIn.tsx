@@ -9,8 +9,6 @@ import { useGetOtpMutation } from "../../../APIs/definitions/auth";
 import { LoadingButton } from "@mui/lab";
 import { useLazyGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setOnboardingStep } from "../../../stores/slices/onboardingInfoSlice";
 import { useOnboarding } from "../../../customHooks/useOnboarding";
 
 const TutorSignIn: React.FC = () => {
@@ -22,20 +20,6 @@ const TutorSignIn: React.FC = () => {
 
   const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
   const { determineOnboardingStep } = useOnboarding();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const handleOnboarding = async () => {
-      const accessToken = localStorage.getItem("access-token");
-      if (accessToken) {
-        const { navigateTo, onboardingStep } = await determineOnboardingStep();
-        dispatch(setOnboardingStep(onboardingStep));
-        navigate(navigateTo);
-      }
-    };
-
-    handleOnboarding();
-  }, []);
 
   const isPhoneNumberValid = (): boolean => {
     const regex = /^[6-9]\d{9}$/;
@@ -46,6 +30,7 @@ const TutorSignIn: React.FC = () => {
     if (isPhoneNumberValid()) {
       getOtp({
         phone: phoneNumber,
+        role: "teacher"
       })
         .unwrap()
         .then((res) => {
@@ -57,9 +42,14 @@ const TutorSignIn: React.FC = () => {
   };
 
   const handlePostOtpVerification = async () => {
-    const { navigateTo, onboardingStep } = await determineOnboardingStep();
-    dispatch(setOnboardingStep(onboardingStep));
-    navigate(navigateTo);
+    const navigateTo = localStorage.getItem("tutorOnboardingNavigation");
+    if (navigateTo) {
+      navigate(navigateTo);
+    } else {
+      const { navigateTo, onboardingStep } = await determineOnboardingStep();
+      localStorage.setItem("tutorOnboardingStep", onboardingStep.toString());
+      navigate(navigateTo);
+    }
   };
 
   return (
@@ -126,9 +116,11 @@ const TutorSignIn: React.FC = () => {
               </>
             ) : (
               <OTPInput
+                role="teacher"
                 onVerified={handlePostOtpVerification}
                 phoneNumber={phoneNumber}
                 isDrawer={false}
+                onChangePhoneNumber={() => setIsDialogOpen(false)}
               />
             )}
             {notPhoneScreen && (

@@ -44,6 +44,7 @@ const CompletePaymentDialog = ({
 
   const activePaymentAmount = localStorage.getItem("activePaymentAmount");
   const activePaymentTutorName = localStorage.getItem("activePaymentTutorName");
+  const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
 
   const { data: tutorData } = useGetUserDetailsByPhoneQuery(
     tutorDetails?.phoneNumber,
@@ -243,9 +244,17 @@ const CompletePaymentDialog = ({
                   >
                     Account Holder:
                   </Typography>
-                  <Typography sx={{ fontSize: 15 }} fontWeight={600}>
-                    {activePaymentTutorName}
-                  </Typography>
+                  <Stack direction="column">
+                    <Typography sx={{ fontSize: 15 }} fontWeight={600}>
+                      {activePaymentTutorName}
+                    </Typography>
+                    {
+                      activePaymentTutorId &&
+                      <Typography sx={{ fontSize: 15, alignSelf: "flex-end" }} fontWeight={600}>
+                        {`+91 ${activePaymentTutorId}`}
+                      </Typography>
+                    }
+                  </Stack>
                 </Stack>
                 {!tutorIsSubMerchant && (
                   <Stack direction="row" justifyContent="space-between">
@@ -257,12 +266,12 @@ const CompletePaymentDialog = ({
                       Tuition date and time:
                     </Typography>
                     <Stack alignItems={"flex-end"} direction="column">
-                      <Typography sx={{ fontSize: 12 }} fontWeight={600}>
+                      <Typography sx={{ fontSize: 15 }} fontWeight={600}>
                         {`${moment(`${sessionDetails.date}`).format(
                           "MMMM D, YYYY"
                         )}`}
                       </Typography>
-                      <Typography sx={{ fontSize: 12 }} fontWeight={600}>
+                      <Typography sx={{ fontSize: 15 }} fontWeight={600}>
                         {`${moment(`${sessionDetails.startTime}`).format(
                           "h:mm A z"
                         )} - ${moment(`${sessionDetails.endTime}`).format(

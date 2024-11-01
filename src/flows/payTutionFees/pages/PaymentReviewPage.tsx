@@ -45,21 +45,19 @@ const PaymentReviewPage = () => {
   const activePaymentTutorName = localStorage.getItem("activePaymentTutorName");
 
   const paymentDetails = {
-    "Payee Name": activePaymentTutorName ? activePaymentTutorName : "",
-    "Payee Phone": activePaymentTutorId ? `+91 ${activePaymentTutorId}` : "",
-    "Session Date": activePaymentSessionDate
-      ? moment(activePaymentSessionDate).format("MMMM D, YYYY")
-      : "",
-    "Session Time": activePaymentSessionTime
-      ? `${moment(activePaymentSessionTime.split("-")[0]).format(
-          "h:mm A z"
-        )} - ${moment(activePaymentSessionTime.split("-")[1]).format(
-          "h:mm A z"
-        )}`
-      : "",
+    ...(activePaymentTutorName ? { "Payee Name": activePaymentTutorName } : {}),
+    ...(activePaymentTutorId ? { "Payee Phone": `+91 ${activePaymentTutorId}` } : {}),
+    ...(activePaymentSessionDate ? { "Session Date": moment(activePaymentSessionDate).format("MMMM D, YYYY") } : {}),
+    ...(activePaymentSessionTime ? {
+      "Session Time": `${moment(activePaymentSessionTime.split("-")[0]).format(
+        "h:mm A z"
+      )} - ${moment(activePaymentSessionTime.split("-")[1]).format(
+        "h:mm A z"
+      )}`
+    } : {})
   };
 
-  const { makePayment } = usePayment();
+  const { makePayment, errorMessage } = usePayment();
 
   const handleSubmit = () => {
     makePayment();
@@ -219,22 +217,33 @@ const PaymentReviewPage = () => {
                   </Stack>
                 </Drawer>
               }
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  padding: 1.5,
-                  borderRadius: 20,
-                  height: 45,
-                  mt: 5,
-                  width: "100%",
-                  minWidth: "320px",
-                  maxWidth: "400px",
-                }}
-                onClick={handleSubmit}
+              <Box
+                mt={4}
+                width= "100%"
+                    minWidth= "320px"
+                    maxWidth= "400px"
               >
-                Proceed to pay
-              </Button>
+                {
+                  errorMessage &&
+                  <Typography fontSize={14} color={"red"} textAlign={"center"}>
+                    {errorMessage}
+                  </Typography>
+                }
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    padding: 1.5,
+                    borderRadius: 20,
+                    height: 45,
+                    width: "100%",
+                    mt: errorMessage ? 2 : 4.6,
+                  }}
+                  onClick={handleSubmit}
+                >
+                  Proceed to pay
+                </Button>
+              </Box>
             </Stack>
           </Stack>
         </Box>

@@ -6,6 +6,7 @@ import { isPanValid } from "../utils/helperFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../stores/configuration";
 import { setPayeeId } from "../stores/slices";
+import useGetOnboardingDetails from "../hooks/useGetOnboardingDetails";
 
 interface PersonalDetailsProps {
   onSuccess?: () => void;
@@ -64,7 +65,6 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           .then(res => {
             if (res) {
               setIsPanUnverified(false);
-              dispatch(setPayeeId(res.id));
               localStorage.setItem("activePaymentPayeeUserId", res.id);
               localStorage.setItem("activePaymentTutorName", res.first_name + " " + res.last_name);
               onSuccess && onSuccess();

@@ -9,8 +9,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
-import { useDispatch } from "react-redux";
-import { setOnboardingStep } from "../../../stores/slices/onboardingInfoSlice";
 import { useOnboarding } from "../../../customHooks/useOnboarding";
 
 const AadharVerifyRedirectPage = () => {
@@ -27,22 +25,19 @@ const AadharVerifyRedirectPage = () => {
       setIsSessionExpired(true);
       return;
     }
-
-    const handleOnboarding = async () => {
-      const { navigateTo, onboardingStep } = await determineOnboardingStep();
-      dispatch(setOnboardingStep(onboardingStep));
-      if (navigateTo === "/tutor/dashboard") {
-        localStorage.setItem("showDialog", "true");
-        navigate("/tutor/dashboard", {
-          state: { previousUrl: location.pathname },
-        });
-        return;
-      }
-      navigate(navigateTo);
-    };
-
     handleOnboarding();
   }, []);
+  
+  const handleOnboarding = async () => {
+      const { navigateTo, onboardingStep } = await determineOnboardingStep();
+      localStorage.setItem("tutorOnboardingStep", onboardingStep.toString());
+      if (navigateTo === "/tutor-id/dashboard") {
+          localStorage.setItem("showDialog", "true");
+          navigate('/tutor-id/dashboard', { state: { previousUrl: location.pathname } });
+          return;
+      }
+      navigate(navigateTo);
+  };
 
   const LoginButton = () => {
     return (

@@ -24,6 +24,8 @@ interface OTPInputProps {
   phoneNumber: string;
   onVerified?: () => void;
   isDrawer: boolean;
+  role: "teacher" | "student";
+  onChangePhoneNumber?: () => void;
 }
 
 const OTPInput = ({
@@ -32,7 +34,9 @@ const OTPInput = ({
   navigateTo,
   phoneNumber,
   onVerified,
-  isDrawer
+  isDrawer,
+  role,
+  onChangePhoneNumber
 }: OTPInputProps) => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
@@ -104,6 +108,9 @@ const OTPInput = ({
       phone: phoneNumber,
       otp,
       role: location.pathname.includes("student") ? "student" : "teacher",
+    })
+    .catch(err => {
+      console.log(err)
     });
     if (!result?.data?.token) {
       setIsOtpInvalid(true);
@@ -131,7 +138,7 @@ const OTPInput = ({
     setIsOtpInvalid(false);
     setActiveIndex(0);
 
-    getOtp({ phone: phoneNumber });
+    getOtp({ phone: phoneNumber, role: role });
     startResendOtpCountdown();
   };
 
@@ -250,6 +257,21 @@ const OTPInput = ({
           </Typography>
         }
       </Stack>
+      <Typography
+        onClick={onChangePhoneNumber && onChangePhoneNumber} 
+        fontSize={14}
+        color="#6285FF"
+        mt={resendOtpCountdown > 0 ? 1 : 4.7}
+        sx={{
+          borderBottomWidth: "1px",
+          borderBottomStyle: "solid",
+          borderBottomColor: "#6285FF",
+          cursor: "pointer"
+        }}
+        
+      >
+        Change phone number
+      </Typography>
       <Button
         variant="contained"
         onClick={handleSubmit}

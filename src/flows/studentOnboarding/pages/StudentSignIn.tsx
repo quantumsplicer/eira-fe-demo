@@ -8,6 +8,8 @@ import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
 import NoteBox from "../../../components/NoteBox";
 import OTPInput from "../../../components/OTPInput";
 import StudentSignInMobile from "./StudentSignInMobile";
+import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
+import { useGetOtpMutation } from "../../../APIs/definitions/auth";
 
 const StudentSignIn = () => {
     const activeFlow = localStorage.getItem("activeFlow");
@@ -15,11 +17,15 @@ const StudentSignIn = () => {
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
+    const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
 
     const notes = [
         "Please make sure that you have the bank account details of the payee accessible.",
         "Please make sure that the person receiving money is onbaorded on Eiraor you have the necessary details to onboard them."
     ]
+
+    const { checkCurrentStudentOnboardingState } =
+    useGetOnboardingDetails();
 
     const isPhoneNumberValid = (): boolean => {
         const regex = /^[6-9]\d{9}$/;
@@ -28,9 +34,15 @@ const StudentSignIn = () => {
 
     const handleSubmit = () => {
         if (isPhoneNumberValid()) {
-            setIsDialogOpen(true)
+            getOtp({ phone: phoneNumber, role: "student" }).then(() => {
+                setIsDialogOpen(true)
+            });
         }
     }
+
+    useEffect(() => {
+        checkCurrentStudentOnboardingState();
+    }, []);
     
     return (
         notPhoneScreen ?
@@ -130,9 +142,11 @@ const StudentSignIn = () => {
                                             </Button>
                                         </> :
                                         <OTPInput
+                                            role="student"
                                             navigateTo="/student/signup"
                                             phoneNumber={phoneNumber}
                                             isDrawer={false}
+                                            onChangePhoneNumber={() => setIsDialogOpen(false)}
                                         />
                                 }
                             </Stack>

@@ -39,9 +39,6 @@ import StatusDrawer from "../../../components/StatusDrawer";
 import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useLogout } from "../../../utils/logout";
-import { useDispatch } from "react-redux";
-import { useOnboarding } from "../../../customHooks/useOnboarding";
-import { setOnboardingStep } from "../../../stores/slices/onboardingInfoSlice";
 
 const PAYMENT_HISTORY_PAGE = "Payment History Page";
 const SESSION_HISTORY_PAGE = "Session History Page";
@@ -79,8 +76,6 @@ const TutorDashboard: React.FC = () => {
   const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
 
   const [isSessionExpired, setIsSessionExpired] = useState<boolean>(false);
-  const { determineOnboardingStep } = useOnboarding();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = useLogout();
 
@@ -142,21 +137,11 @@ const TutorDashboard: React.FC = () => {
   };
 
   useEffect(() => {
+    localStorage.removeItem("activeFlow");
     const token = localStorage.getItem("access-token");
     if (!token) {
       setIsSessionExpired(true);
-      return;
     }
-
-    const handleOnboarding = async () => {
-      const { navigateTo, onboardingStep } = await determineOnboardingStep();
-      dispatch(setOnboardingStep(onboardingStep));
-      if (onboardingStep !== 0) {
-        navigate(navigateTo);
-      }
-    };
-
-    handleOnboarding();
   }, []);
 
   const LoginButton = () => {

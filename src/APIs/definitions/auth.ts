@@ -2,6 +2,7 @@ import { ApiResponse, postgresApi } from "..";
 
 export interface GetOtpBody {
   phone: string;
+  role: "teacher" | "student";
 }
 
 export interface ValidateOtpBody {
@@ -31,15 +32,20 @@ export const authApi = postgresApi.injectEndpoints({
         body,
       }),
       onQueryStarted: async (body, { queryFulfilled }) => {
-        const { data } = await queryFulfilled;
 
-        // Set up the user type
-        body?.role == "student"
-          ? localStorage.setItem("studentLogin", "true")
-          : localStorage.setItem("tutorLogin", "true");
+        try {
+          const { data } = await queryFulfilled;
 
-        // Save the token
-        localStorage.setItem("access-token", data?.token);
+          // Set up the user type
+          body?.role == "student"
+            ? localStorage.setItem("studentLogin", "true")
+            : localStorage.setItem("tutorLogin", "true");
+
+          // Save the token
+          localStorage.setItem("access-token", data?.token);
+        } catch (err) {
+          console.log(err)
+        }
       },
     }),
   }),

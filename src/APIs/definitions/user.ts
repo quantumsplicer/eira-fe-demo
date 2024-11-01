@@ -42,11 +42,11 @@ export const userApi = postgresApi.injectEndpoints({
       }),
     }),
 
-    getUserByUserName: builder.query<UserDetails, string>({
-      query: (userName) => ({
-        url: `user/search-action`,
+    getUserByUserName: builder.query<UserDetails[], string>({
+      query: (username) => ({
+        url: `user/search`,
         method: "GET",
-        params: { userName },
+        params: { username },
       }),
     }),
 
@@ -70,4 +70,5 @@ export const {
   useLazyGetUserDetailsByPhoneQuery,
   useGetUserByUserNameQuery,
   useRegisterTutorByStudentMutation,
+  useLazyGetUserByUserNameQuery
 } = userApi;

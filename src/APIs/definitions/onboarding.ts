@@ -19,10 +19,11 @@ export interface onboardApiResponse {
 
 export const onboardingApi = postgresApi.injectEndpoints({
     endpoints: (builder) => ({
-        onboardUser: builder.mutation<onboardApiResponse, void>({
-            query: () => ({
+        onboardUser: builder.mutation<onboardApiResponse, onboardApiBody>({
+            query: (body) => ({
                 url: `payments/pg/onboarding/`,
-                method: "POST"
+                method: "POST",
+                body
             })
         }),
 
@@ -32,4 +33,4 @@ export const onboardingApi = postgresApi.injectEndpoints({
     })
 })
 
-export const { useOnboardUserMutation, useGetOnboardingStatusQuery } = onboardingApi;
+export const { useOnboardUserMutation, useGetOnboardingStatusQuery, useLazyGetOnboardingStatusQuery } = onboardingApi;

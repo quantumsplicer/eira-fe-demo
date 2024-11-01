@@ -11,8 +11,12 @@ import { useGetOnboardingStatusQuery } from "../../../APIs/definitions/onboardin
 import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import { UserDetails } from "../../../APIs/definitions/user";
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+
+const currentLimit = 5000;
 
 const CurrentLimitCard: React.FC = () => {
+  const navigate = useNavigate();
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const formatter = new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -163,7 +167,14 @@ const CurrentLimitCard: React.FC = () => {
               : "Complete KYC to increase limit to ₹50,000"}
           </Typography>
           <Button
+            onClick={() => {
+              localStorage.setItem("activeFlow", "tutorKyc");
+              navigate("/tutor/kyc")
+            }}
             variant="contained"
+            onClick={() => {
+              navigate("/tutor/kyc")
+            }}
             sx={
               !isPhoneScreen
                 ? {

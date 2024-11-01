@@ -56,7 +56,7 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
   const getGst = (): string => {
     if (activePaymentAmount) {
       const fees = (activePaymentAmount * baseRate) / 100;
-      const gst = (18 * fees) / 100;
+      const gst = parseFloat(((18 * fees) / 100).toFixed(2));
       return formatAmount(gst);
     }
     return "-";
@@ -66,7 +66,7 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
     if (activePaymentAmount) {
       const fees = (activePaymentAmount * baseRate) / 100;
       const gst = (18 * fees) / 100;
-      return formatAmount(Math.ceil(fees + gst + activePaymentAmount));
+      return formatAmount(parseFloat((fees + gst + activePaymentAmount).toFixed(2)));
     }
     return "-";
   };

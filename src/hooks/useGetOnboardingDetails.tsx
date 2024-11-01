@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   useGetUserDetailsQuery,
+  useLazyGetUserByUserNameQuery,
   useLazyGetUserDetailsQuery,
 } from "../APIs/definitions/user";
 import { useEffect, useState } from "react";
@@ -21,6 +22,10 @@ const useGetOnboardingDetails = () => {
     { data: studentData, isLoading: studentDataIsLoading },
   ] = useLazyGetUserDetailsQuery();
 
+  const [
+    getTutorDetials
+  ] = useLazyGetUserByUserNameQuery();
+
   const [getPaymentLinkInfo] = useLazyGetPaymentInfoFromLinkQuery();
 
   const navigateToCurrentOnboardingStep = async () => {
@@ -34,6 +39,28 @@ const useGetOnboardingDetails = () => {
           navigate("/pay/payment-details");
           break;
         case "StaticLinkFlow":
+          const tutorUsername = localStorage.getItem("activeFlowUrl")?.split("/").pop();
+          if (tutorUsername) {
+            await getTutorDetials(tutorUsername)
+            .unwrap()
+            .then(res => {
+              const tutor = res[0]
+              localStorage.setItem(
+                "activePaymentTutorId",
+                tutor?.phone
+              )
+              localStorage.setItem(
+                "activePaymentTutorName",
+                `${tutor?.first_name} ${tutor?.last_name}`
+              )
+              localStorage.setItem(
+                "activePaymentPayeeUserId",
+                tutor?.id
+              )
+              navigate(`/static-link/${tutorUsername}`)
+            })
+            .catch(err => console.log(err))
+          }
           break;
         case "DynamicLinkFlow":
           try {
@@ -50,6 +77,14 @@ const useGetOnboardingDetails = () => {
               "activePaymentTutorId",
               paymentLinkInfo?.payee_phone
             );
+            localStorage.setItem(
+              "activePaymentTutorName",
+              paymentLinkInfo?.payee_name
+            )
+            localStorage.setItem(
+              "activePaymentPayeeUserId",
+              paymentLinkInfo?.payee
+            )
 
             navigate("/pay/review");
           } catch {
@@ -74,17 +109,16 @@ const useGetOnboardingDetails = () => {
     setCheckProcessIsLoading(true);
     try {
       await getUserDetails().unwrap();
-      console.log("jgjhvv");
       if (studentDataIsLoading) return;
 
       const token = localStorage.getItem("access-token");
-      console.log(token);
+
       // Check if the user is already logged in or not
       if (!token) navigate("/student/login");
 
       // Check if the user is a student or not
       const isStudent = localStorage.getItem("studentLogin") === "true";
-      console.log(isStudent);
+
       if (!isStudent) {
         setCheckProcessIsLoading(false);
         return;
