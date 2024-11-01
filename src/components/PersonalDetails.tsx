@@ -53,6 +53,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
 
   const handleSubmitClick = () => {
     if (firstName && lastName && isPanValid(pan)) {
+      localStorage.setItem("onboardingUsername", `${firstName} ${lastName}`);
       
       if (tutorPhoneNumber || activePaymentTutorId) {
         registerTutor({

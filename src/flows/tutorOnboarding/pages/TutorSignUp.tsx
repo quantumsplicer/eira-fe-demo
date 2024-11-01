@@ -21,6 +21,7 @@ const TutorSignUp: React.FC = () => {
   >(null);
   const tutorOnboardingStep = localStorage.getItem("tutorOnboardingStep");
   const [isSessionExpired, setIsSessionExpired] = useState<boolean>(false);
+  const onboardingUsername = localStorage.getItem("onboardingUsername");
   const navigate = useNavigate();
 
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
@@ -31,7 +32,7 @@ const TutorSignUp: React.FC = () => {
   ];
 
   const step2Notes = [
-    "Please ensure that account holder's name is same as the name entered before",
+    onboardingUsername ? `Please enter account details associated with ${onboardingUsername}` : "Please ensure that account holder's name is same as the name entered before",
   ];
 
   useEffect(() => {
