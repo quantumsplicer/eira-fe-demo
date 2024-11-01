@@ -24,11 +24,11 @@ import {
   IconButton,
   Stack,
   useMediaQuery,
-  Fab
+  Fab,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import PaymentHistoryPage from "../subpages/PaymentHistoryPage";
-import MakePaymentPage from "../subpages/MakePaymentPage";
+import MakePaymentPage from "../subpages/HomePage";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import SortSharpIcon from "@mui/icons-material/SortSharp";
 import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
@@ -36,10 +36,11 @@ import { useLogout } from "../../../utils/logout";
 import PaymentBannerCard from "../components/PaymentBannerCard";
 import PaymentHistoryTable from "../components/PaymentHistoryTable";
 import PaymentFlow from "../components/PaymentFlow";
+import HomePage from "../subpages/HomePage";
 import { useNavigate } from "react-router-dom";
 
 const PAYMENT_HISTORY_PAGE = "payment-history-page";
-const MAKE_PAYMENT_PAGE = "make-payment-page";
+const HOME_PAGE = "home-page";
 const PROFILE_PAGE = "profile-page";
 
 const drawerWidth = 240;
@@ -59,7 +60,7 @@ const StudentDashboard: React.FC = () => {
 
   const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  const [subpage, setSubpage] = useState(MAKE_PAYMENT_PAGE);
+  const [subpage, setSubpage] = useState(HOME_PAGE);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
@@ -68,10 +69,10 @@ const StudentDashboard: React.FC = () => {
   const displaySubpage = (subpage: string) => {
     if (subpage === PAYMENT_HISTORY_PAGE) {
       return <PaymentHistoryPage />;
-    } else if (subpage === MAKE_PAYMENT_PAGE) {
-      return <MakePaymentPage />;
+    } else if (subpage === HOME_PAGE) {
+      return <HomePage />;
     } else if (subpage === PROFILE_PAGE) {
-      return <MakePaymentPage />;
+      return <HomePage />;
     }
   };
   const handleLogout = useLogout();
@@ -103,7 +104,7 @@ const StudentDashboard: React.FC = () => {
       navigate("/student/login");
     }
   }, [])
-      
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
@@ -239,10 +240,13 @@ const StudentDashboard: React.FC = () => {
                   <List>
                     {[
                       {
-                        title: "Payments History",
+                        title: "Home Page",
+                        subpage: HOME_PAGE,
+                      },
+                      {
+                        title: "Payment History",
                         subpage: PAYMENT_HISTORY_PAGE,
                       },
-                      { title: "Make Payment", subpage: MAKE_PAYMENT_PAGE },
                     ].map((entry, index) => (
                       <ListItem
                         key={entry.title}
@@ -363,7 +367,7 @@ const StudentDashboard: React.FC = () => {
           </Fab>
         </Box>
       )}
-       {isPaymentFlowActive && (
+      {isPaymentFlowActive && (
         <PaymentFlow
           open={isPaymentFlowActive}
           onClose={handleClosePaymentFlow}

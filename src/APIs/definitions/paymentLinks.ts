@@ -29,7 +29,7 @@ export interface PaymentDetails {
     id: string;
     amount: number;
     status: string;
-  }
+  };
   latest_payment_id: string;
   payment_time: string;
   payee_name: string;
@@ -44,7 +44,6 @@ export const paymentLinksApi = postgresApi.injectEndpoints({
         url: `payments/payment-link/`,
         method: "GET",
         headers: {
-          Authorization: `Token ${localStorage.getItem("access-token")}`,
           "Content-Type": "application/json",
           "ngrok-skip-browser-warning": "latest",
         },

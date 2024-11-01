@@ -54,36 +54,17 @@ const CreateSessionDialog = ({
     control,
   } = useForm<SessionDetails>({
     defaultValues: {
-      sessionTitle: "",
-      date: "",
-      startTime: "",
-      endTime: "",
-      description: "",
+      sessionTitle: sessionDetails?.sessionTitle,
+      date: sessionDetails?.date,
+      startTime: sessionDetails?.startTime,
+      endTime: sessionDetails?.endTime,
+      description: sessionDetails?.description,
     },
   });
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  const resetForm = () => {
-    control._reset({
-      sessionTitle: "",
-      date: null,
-      startTime: null,
-      endTime: null,
-      description: "",
-    });
-  };
   const handleFormSubmit: SubmitHandler<SessionDetails> = (data) => {
     onSubmit(data);
   };
-  useEffect(() => {
-    if (!open) {
-      resetForm();
-    }
-  }, [open]);
-
-  useEffect(() => {
-    console.log("These are errors");
-    console.log(errors);
-  }, [errors]);
   return (
     <Dialog
       open={open}
@@ -232,157 +213,150 @@ const CreateSessionDialog = ({
                 )}
               />
 
-              <FormControl fullWidth sx={{ mb: 2 }}>
-                {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
-                <Stack direction="row" spacing={3}>
-                  <Controller
-                    name="date"
-                    control={control}
-                    rules={{ required: "Date is required" }}
-                    render={({ field }) => (
-                      <DatePicker
-                        label="Add date"
-                        value={field?.value}
-                        onChange={(newValue) => field?.onChange(newValue)}
-                        slots={{
-                          textField: (params: TextFieldProps) => (
-                            <TextField
-                              {...params}
-                              size="small" // Reduce the input size
-                              error={errors.date !== undefined ? true : false}
-                              helperText={errors.date ? "Required" : ""}
-                              sx={{
-                                mb: 0,
-                                "& .MuiInputLabel-root": {
-                                  transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                                },
-                                "& .MuiInputBase-root": {
-                                  marginTop: "16px", // Add space between label and input box
-                                },
-                                "&:MuiInputBase-input": {
-                                  fontSize: 12,
-                                },
-                                "& legend": {
-                                  width: 0,
-                                },
-                              }}
-                            />
-                          ),
-                        }}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="startTime"
-                    control={control}
-                    rules={{ required: "Date is required" }}
-                    render={({ field }) => (
-                      <TimePicker
-                        label="Start Time"
-                        value={field?.value}
-                        onChange={(newValue) => field?.onChange(newValue)}
-                        slots={{
-                          textField: (params: TextFieldProps) => (
-                            <TextField
-                              {...params}
-                              size="small"
-                              error={
-                                errors.startTime !== undefined ? true : false
-                              }
-                              helperText={errors.startTime ? "Required" : ""}
-                              sx={{
-                                mb: 0,
-                                "& .MuiInputLabel-root": {
-                                  transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                                },
-                                "& .MuiInputBase-root": {
-                                  marginTop: "16px", // Add space between label and input box
-                                },
-                                "&:MuiInputBase-input": {
-                                  fontSize: 12,
-                                },
-                                "& legend": {
-                                  width: 0,
-                                },
-                              }}
-                            />
-                          ),
-                        }}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="endTime"
-                    control={control}
-                    rules={{ required: "Date is required" }}
-                    render={({ field }) => (
-                      <TimePicker
-                        label="End Time"
-                        value={field?.value}
-                        onChange={(newValue) => field?.onChange(newValue)}
-                        slots={{
-                          textField: (params: TextFieldProps) => (
-                            <TextField
-                              {...params}
-                              size="small" // Reduce the input size
-                              error={
-                                errors.endTime !== undefined ? true : false
-                              }
-                              helperText={errors.endTime ? "Required" : ""}
-                              sx={{
-                                mb: 0,
-                                "& .MuiInputLabel-root": {
-                                  transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                                },
-                                "& .MuiInputBase-root": {
-                                  marginTop: "16px", // Add space between label and input box
-                                },
-                                "&:MuiInputBase-input": {
-                                  fontSize: 12,
-                                },
-                                "& legend": {
-                                  width: 0,
-                                },
-                              }}
-                            />
-                          ),
-                        }}
-                      />
-                    )}
-                  />
-                </Stack>
-                {/* </LocalizationProvider> */}
-              </FormControl>
-              <FormControl fullWidth sx={{ mb: 2 }}>
+              <Stack direction="row" spacing={3}>
                 <Controller
-                  name="description"
+                  name="date"
                   control={control}
+                  rules={{ required: "Date is required" }}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="Description (optional)"
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        mb: 0,
-                        "& .MuiInputLabel-root": {
-                          transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                        },
-                        "& .MuiInputBase-root": {
-                          marginTop: "16px", // Add space between label and input box
-                        },
-                        "&:MuiInputBase-input": {
-                          fontSize: 12,
-                        },
-                        "& legend": {
-                          width: 0,
-                        },
+                    <DatePicker
+                      label="Add date"
+                      value={field?.value}
+                      onChange={(newValue) => field?.onChange(newValue)}
+                      slots={{
+                        textField: (params: TextFieldProps) => (
+                          <TextField
+                            {...params}
+                            size="small" // Reduce the input size
+                            error={errors.date !== undefined ? true : false}
+                            helperText={errors.date ? "Required" : ""}
+                            sx={{
+                              mb: 0,
+                              "& .MuiInputLabel-root": {
+                                transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                              },
+                              "& .MuiInputBase-root": {
+                                marginTop: "16px", // Add space between label and input box
+                              },
+                              "&:MuiInputBase-input": {
+                                fontSize: 12,
+                              },
+                              "& legend": {
+                                width: 0,
+                              },
+                            }}
+                          />
+                        ),
                       }}
                     />
                   )}
                 />
-              </FormControl>
+                <Controller
+                  name="startTime"
+                  control={control}
+                  rules={{ required: "Date is required" }}
+                  render={({ field }) => (
+                    <TimePicker
+                      label="Start Time"
+                      value={field?.value}
+                      onChange={(newValue) => field?.onChange(newValue)}
+                      slots={{
+                        textField: (params: TextFieldProps) => (
+                          <TextField
+                            {...params}
+                            size="small"
+                            error={
+                              errors.startTime !== undefined ? true : false
+                            }
+                            helperText={errors.startTime ? "Required" : ""}
+                            sx={{
+                              mb: 0,
+                              "& .MuiInputLabel-root": {
+                                transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                              },
+                              "& .MuiInputBase-root": {
+                                marginTop: "16px", // Add space between label and input box
+                              },
+                              "&:MuiInputBase-input": {
+                                fontSize: 12,
+                              },
+                              "& legend": {
+                                width: 0,
+                              },
+                            }}
+                          />
+                        ),
+                      }}
+                    />
+                  )}
+                />
+                <Controller
+                  name="endTime"
+                  control={control}
+                  rules={{ required: "Date is required" }}
+                  render={({ field }) => (
+                    <TimePicker
+                      label="End Time"
+                      value={field?.value}
+                      onChange={(newValue) => field?.onChange(newValue)}
+                      slots={{
+                        textField: (params: TextFieldProps) => (
+                          <TextField
+                            {...params}
+                            size="small" // Reduce the input size
+                            error={errors.endTime !== undefined ? true : false}
+                            helperText={errors.endTime ? "Required" : ""}
+                            sx={{
+                              mb: 0,
+                              "& .MuiInputLabel-root": {
+                                transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                              },
+                              "& .MuiInputBase-root": {
+                                marginTop: "16px", // Add space between label and input box
+                              },
+                              "&:MuiInputBase-input": {
+                                fontSize: 12,
+                              },
+                              "& legend": {
+                                width: 0,
+                              },
+                            }}
+                          />
+                        ),
+                      }}
+                    />
+                  )}
+                />
+              </Stack>
+
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    label="Description (optional)"
+                    variant="outlined"
+                    size="small"
+                    sx={{
+                      mb: 0,
+                      "& .MuiInputLabel-root": {
+                        transform: "translate(0, -6px) scale(0.8)", // Move the label above
+                      },
+                      "& .MuiInputBase-root": {
+                        marginTop: "16px", // Add space between label and input box
+                      },
+                      "&:MuiInputBase-input": {
+                        fontSize: 12,
+                      },
+                      "& legend": {
+                        width: 0,
+                      },
+                    }}
+                  />
+                )}
+              />
             </Stack>
             <Box>
               <Button

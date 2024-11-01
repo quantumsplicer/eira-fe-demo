@@ -21,7 +21,13 @@ import StatusTag from "../../tutorDashboard/components/StatusTag";
 import { Virtuoso } from "react-virtuoso";
 import PaymentInfo from "../../../components/PaymentInfo";
 import CloseIcon from "@mui/icons-material/Close";
+import { useGetTransactionsListQuery } from "../../../APIs/definitions/transactionsList";
+import PaymentFlow from "./PaymentFlow";
+import { PaymentDetails, TutorDetails } from "../interfaces";
+import { Transaction } from "../../tutorDashboard/interfaces";
+
 const lightTheme = createTheme({ palette: { mode: "light" } });
+
 interface Person {
   title: string;
   tutorPhoneNumber: string;
@@ -146,26 +152,13 @@ const data: Person[] = [
 ];
 
 interface PaymentHistoryTableMobileProps {
-  name: string;
-  phoneNumber: string;
-  amount: number;
-  status: string;
+  transactionDetails: Transaction;
 }
 
 const PaymentHistoryTableMobile = ({
-  name,
-  phoneNumber,
-  amount,
-  status,
+  transactionDetails,
 }: PaymentHistoryTableMobileProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const paymentDetails = {
-    "Transaction ID": "1234567890",
-    "Account Number": "1234567890",
-    "Account Holder": "John Doe",
-    "Transaction date & time": "12/05/2024 10:30 AM",
-    "Session date & time": "12/05/2024 10:30 AM",
-  };
   return (
     <Button
       sx={{
@@ -175,6 +168,11 @@ const PaymentHistoryTableMobile = ({
         p: 2,
         marginBottom: 2,
         width: "100%",
+        textTransform: "none",
+        color: "inherit",
+        "&:hover": {
+          backgroundColor: "rgba(0, 0, 0, 0.04)",
+        },
       }}
       onClick={() => setIsDrawerOpen(!isDrawerOpen)}
     >
@@ -191,18 +189,20 @@ const PaymentHistoryTableMobile = ({
             }}
           />
           <Stack>
-            <Typography fontSize={18}>{name}</Typography>
+            <Typography fontSize={18}>
+              {transactionDetails.student_name}
+            </Typography>
             <Typography fontSize={14} color="#C3C3C3">
-              {phoneNumber}
+              {transactionDetails.student_phone}
             </Typography>
           </Stack>
         </Stack>
         <Stack pr={2}>
           <Typography fontSize={19} fontWeight={500} textAlign="right">
-            ₹ {amount}
+            ₹ {transactionDetails.amount}
           </Typography>
           <Typography fontSize={14} color="#C3C3C3" textAlign="right">
-            {status}
+            {transactionDetails.status}
           </Typography>
         </Stack>
       </Stack>
@@ -222,15 +222,17 @@ const PaymentHistoryTableMobile = ({
         }}
         anchor="bottom"
       >
-        <Box sx={{ position: "absolute", top: 16, left: 16 }}>
+        <Box sx={{ position: "absolute", top: 16, right: 16 }}>
           <IconButton onClick={() => setIsDrawerOpen(false)}>
             <CloseIcon />
           </IconButton>
         </Box>
         <PaymentInfo
-          amount={amount.toString()}
-          name={name}
-          paymentDetails={paymentDetails}
+          amount={transactionDetails.amount.toString()}
+          name={transactionDetails.student_name}
+          paymentDetails={
+            transactionDetails as unknown as Record<string, string>
+          }
           type="success"
         />
       </Drawer>
@@ -240,6 +242,7 @@ const PaymentHistoryTableMobile = ({
 
 const PaymentHistoryTable: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
+  const { data: transactionDetails } = useGetTransactionsListQuery();
   const theme = useTheme();
   const baseBackgroundColor =
     theme.palette.mode === "dark"
@@ -335,6 +338,13 @@ const PaymentHistoryTable: React.FC = () => {
       },
     }),
   });
+  const tutorDetails: TutorDetails = {
+    firstName: "",
+    lastName: "",
+    panNumber: "",
+    phoneNumber: "",
+  };
+  const [paymentFlowActive, setPaymentFlowActive] = useState(false);
   return (
     <>
       <ThemeProvider theme={lightTheme}>
@@ -367,19 +377,79 @@ const PaymentHistoryTable: React.FC = () => {
             </Stack>
             {!isPhoneScreen ? (
               <MaterialReactTable table={table} />
-            ) : (
+            ) : transactionDetails?.results &&
+              transactionDetails?.results.length > 0 ? (
               <Virtuoso
                 style={{ height: 740 }}
-                data={data}
+                data={transactionDetails?.results}
                 itemContent={(_, user) => (
-                  <PaymentHistoryTableMobile
-                    name={user.title}
-                    phoneNumber={user.tutorPhoneNumber}
-                    status={user.paymentStatus}
-                    amount={user.amount}
-                  />
+                  <PaymentHistoryTableMobile transactionDetails={user} />
                 )}
               />
+            ) : (
+              <>
+                <Box
+                  sx={{
+                    minHeight: "30vh",
+                    height: "fullheight",
+                    backgroundColor: "#ebedf0",
+                    borderRadius: 4,
+                  }}
+                >
+                  <Stack
+                    justifyContent="space-evenly"
+                    alignItems="center"
+                    sx={{
+                      height: "30vh",
+                    }}
+                  >
+                    <Typography
+                      fontSize="1.1rem"
+                      color="#b8bbbf"
+                      textAlign="center"
+                    >
+                      Payments made by you will appear here
+                    </Typography>
+                    <Stack direction="column" spacing={2}>
+                      <Typography
+                        fontSize={"0.7rem"}
+                        color="#b8bbbf"
+                        sx={{ fontStyle: "italic" }}
+                        textAlign="center"
+                      >
+                        Pay via credit right now !
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        onClick={() => setPaymentFlowActive(true)}
+                        sx={{
+                          backgroundColor: "#507FFD",
+                          borderRadius: 2,
+                          fontSize: "0.7rem",
+                          width: "12rem",
+                          fontWeight: "bold",
+                          height: 40,
+                          paddingLeft: 1,
+                          paddingRight: 1,
+                          textTransform: "none",
+                          alignSelf: "center",
+                        }}
+                      >
+                        Make a Payment
+                      </Button>
+                    </Stack>
+                  </Stack>
+                </Box>
+                {/* <SendPaymentLinkFlow
+                isActive={paymentLinkFlowActive}
+                          onClose={() => setPaymentLinkFlowActive(false)}
+                /> */}
+                <PaymentFlow
+                  open={paymentFlowActive}
+                  onClose={() => setPaymentFlowActive(false)}
+                  tutorDetailsProp={tutorDetails}
+                />
+              </>
             )}
           </Stack>
         </Box>

@@ -1,20 +1,22 @@
 import { Typography, Stack, Button, Box, useMediaQuery } from "@mui/material";
 import React, { useState } from "react";
 import Aadhaar from "../../../assets/images/svg/Aadhaar.svg";
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { useNavigate } from "react-router-dom";
 import { useOnboardUserMutation } from "../../../APIs/definitions/onboarding";
 import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 
 interface AadhaarVerifyInfoProps {
-    showHeading: boolean;
+  showHeading: boolean;
 }
 
 const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
+  const navigate = useNavigate();
+  const notPhoneScreen = useMediaQuery("(min-width:850px)");
+  const [aadhaarVerificationFailed, setAadhaarVerificationFailed] = useState<
+    boolean | null
+  >(null);
 
-    const navigate = useNavigate();
-    const notPhoneScreen = useMediaQuery('(min-width:850px)');
-    const [aadhaarVerificationFailed, setAadhaarVerificationFailed] = useState<boolean | null>(null);
 
     const [onboardUser, { isLoading }] = useOnboardUserMutation();
     const { data: userDetails } = useGetUserDetailsQuery();
@@ -48,14 +50,15 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
                 </Typography>
             }
             <Typography mt={2} color={"#6F6F6F"}>
-                Please keep your Aadhaar egistered phone number with you for verification
+                Please keep your Aadhaar registered phone number with you for verification
             </Typography>
             <Typography mt={1} color={"#6F6F6F"}>
                 Verify Aadhaar now to increase your payment acceptance limit to <span style={{color: "#000", fontWeight: "bold", fontSize: "15px"}}>₹50,000</span>
             </Typography>
-            <Typography mt={1} color="#6F6F6F">
-                Limit without Aadhaar Verification - <span style={{color: "#000", fontWeight: "bold", fontSize: "15px"}}>₹5,000</span>
+            <Typography fontSize={12} color="#6F6F6F">
+              +91-98731 89338 OR +91-95104 63209
             </Typography>
+
             <img
                 src={Aadhaar}
                 style={{

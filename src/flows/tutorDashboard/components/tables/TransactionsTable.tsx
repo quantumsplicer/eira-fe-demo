@@ -1,5 +1,12 @@
-import React, { useMemo, useState } from "react";
-import { Box, Divider, Stack, Typography, useMediaQuery } from "@mui/material";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  Box,
+  Button,
+  Divider,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import {
   createMRTColumnHelper,
   MaterialReactTable,
@@ -12,7 +19,9 @@ import StatusTag from "../StatusTag";
 import { Virtuoso } from "react-virtuoso";
 import { Transaction } from "../../interfaces";
 import { useGetTransactionsListQuery } from "../../../../APIs/definitions/transactionsList";
-
+import SendPaymentLinkFlow from "../flows/SendPaymentLinkFlow";
+import { useGetUserDetailsQuery } from "../../../../APIs/definitions/user";
+import { UserDetails } from "../../../../APIs/definitions/user";
 interface TransactionCellMobileProps {
   name: string;
   phoneNumber: string;
@@ -66,7 +75,12 @@ const TransactionCellMobile = ({
     </Box>
   );
 };
-const TransactionsTable: React.FC = () => {
+interface TransactionsTableProps {
+  paymentLinkCreated: boolean;
+}
+const TransactionsTable: React.FC<TransactionsTableProps> = ({
+  paymentLinkCreated,
+}) => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
 
   const theme = useTheme();
@@ -113,6 +127,7 @@ const TransactionsTable: React.FC = () => {
   ];
   const { data, isLoading, isSuccess, isError, error } =
     useGetTransactionsListQuery();
+
   const table = useMaterialReactTable({
     columns,
     data: data?.results || [],
@@ -167,6 +182,7 @@ const TransactionsTable: React.FC = () => {
       },
     }),
   });
+  const [paymentLinkFlowActive, setPaymentLinkFlowActive] = useState(false);
   return !isPhoneScreen ? (
     <MaterialReactTable table={table} />
   ) : data?.results && data?.results.length > 0 ? (
@@ -183,17 +199,69 @@ const TransactionsTable: React.FC = () => {
       )}
     />
   ) : (
-    <Box
-      sx={{
-        minHeight: "30vh",
-        height: "fullheight",
-        backgroundColor: "grey",
-        opacity: 0.2,
-        borderRadius: 5,
-      }}
-    >
-      <Typography>No transactions found</Typography>
-    </Box>
+    <>
+      {" "}
+      <Box
+        sx={{
+          minHeight: "30vh",
+          height: "fullheight",
+          backgroundColor: "#ebedf0",
+          borderRadius: 4,
+        }}
+      >
+        <Stack
+          justifyContent="space-evenly"
+          alignItems="center"
+          sx={{
+            height: "30vh",
+          }}
+        >
+          {paymentLinkCreated ? (
+            <Typography fontSize="1.2rem" color="#b8bbbf" textAlign="center">
+              Transactions made through your payment link will appear here
+            </Typography>
+          ) : (
+            <Typography variant="h6" color="#b8bbbf">
+              No transactions found
+            </Typography>
+          )}
+          <Stack direction="column" spacing={2}>
+            <Typography
+              fontSize={"0.7rem"}
+              color="#b8bbbf"
+              sx={{ fontStyle: "italic" }}
+              textAlign="center"
+            >
+              {paymentLinkCreated
+                ? "Create a new payment link"
+                : "Create a payment link now to start receiving payments!"}
+            </Typography>
+            <Button
+              variant="contained"
+              onClick={() => setPaymentLinkFlowActive(true)}
+              sx={{
+                backgroundColor: "#507FFD",
+                borderRadius: 2,
+                fontSize: "0.7rem",
+                width: "12rem",
+                fontWeight: "bold",
+                height: 40,
+                paddingLeft: 1,
+                paddingRight: 1,
+                textTransform: "none",
+                alignSelf: "center",
+              }}
+            >
+              Create a Payment Link
+            </Button>
+          </Stack>
+        </Stack>
+      </Box>
+      <SendPaymentLinkFlow
+        isActive={paymentLinkFlowActive}
+        onClose={() => setPaymentLinkFlowActive(false)}
+      />
+    </>
   );
 };
 

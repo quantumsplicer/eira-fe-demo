@@ -55,7 +55,7 @@ const PaymentBannerCard: React.FC = () => {
   const handleClosePaymentFlow = () => {
     setIsPaymentFlowActive(false);
   };
-  
+
   const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
     firstName: "",
     lastName: "",
@@ -93,7 +93,7 @@ const PaymentBannerCard: React.FC = () => {
               p: 2,
               backgroundColor: "white",
               width: "100%",
-              height: "70vw",
+              height: "98vw",
             }
       }
     >
@@ -114,6 +114,7 @@ const PaymentBannerCard: React.FC = () => {
       >
         <Stack
           direction={!isPhoneScreen ? "row" : "column"}
+          spacing={!isPhoneScreen ? 0 : 4}
           sx={
             !isPhoneScreen
               ? {
@@ -141,39 +142,28 @@ const PaymentBannerCard: React.FC = () => {
                 : {
                     justifyContent: "space-evenly",
                     height: "100%",
+                    paddingTop: 4,
                   }
             }
           >
-            <Button
-              variant="contained"
-              onClick={handleOpenPaymentFlow}
-              sx={
-                !isPhoneScreen
-                  ? {
-                      backgroundColor: "#507FFD",
-                      borderRadius: 3,
-                      fontSize: 20,
-                      fontWeight: 600,
-                      height: 90,
-                      paddingLeft: 8,
-                      paddingRight: 8,
-                      textTransform: "none",
-                    }
-                  : {
-                      backgroundColor: "#507FFD",
-                      borderRadius: 5,
-                      fontSize: 10,
-                      fontWeight: 600,
-                      height: 40,
-                      paddingLeft: 0,
-                      paddingRight: 0,
-                      textTransform: "none",
-                      width: "80%",
-                    }
-              }
-            >
-              {isPhoneScreen ? "Make a payment" : "Make a new Payment"}
-            </Button>
+            {!isPhoneScreen && (
+              <Button
+                variant="contained"
+                onClick={handleOpenPaymentFlow}
+                sx={{
+                  backgroundColor: "#507FFD",
+                  borderRadius: 3,
+                  fontSize: 20,
+                  fontWeight: 600,
+                  height: 90,
+                  paddingLeft: 8,
+                  paddingRight: 8,
+                  textTransform: "none",
+                }}
+              >
+                Make a new Payment
+              </Button>
+            )}
             <Stack
               direction="row"
               spacing={!isPhoneScreen ? 1 : 0}
@@ -183,10 +173,10 @@ const PaymentBannerCard: React.FC = () => {
                 sx={
                   !isPhoneScreen
                     ? { fontSize: 20, fontWeight: 500 }
-                    : { fontSize: 12, fontWeight: 500, width: "100%" }
+                    : { fontSize: "1.4rem", fontWeight: 500, width: "70%" }
                 }
               >
-                Make a payment through Credit Card <strong> @ just 1%</strong>
+                Pay Tution Fees through Credit Card <strong> @ just 1%</strong>
               </Typography>
             </Stack>
           </Stack>
