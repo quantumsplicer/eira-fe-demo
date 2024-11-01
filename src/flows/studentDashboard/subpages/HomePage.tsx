@@ -27,14 +27,14 @@ const HomePage: React.FC = () => {
             sx={{ width: "100%", pt: 4 }}
             autoPlay={false}
             swipe={true} // Allow swiping
-            animation="fade"
+            animation="slide"
             indicatorContainerProps={{
               style: {
                 marginTop: "-0.3rem",
                 backgroundColor: "white",
               },
             }}
-            index={1}
+            index={0}
             navButtonsAlwaysVisible={false}
           >
             <Box

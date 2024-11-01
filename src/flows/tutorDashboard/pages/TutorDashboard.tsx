@@ -418,10 +418,7 @@ const TutorDashboard: React.FC = () => {
                       { title: "Invoices", subpage: "disabled" },
                       { title: "Marketing", subpage: "disabled" },
                     ].map((entry, index) => (
-                      <ListItem
-                        key={entry.title}
-                        sx={{ width: "100%", pl: "0", pr: "0" }}
-                      >
+                      <ListItem key={entry.title} sx={{ width: "100%", p: 0 }}>
                         <ListItemButton
                           onClick={() => {
                             handleSubpageChange(entry.subpage);
@@ -449,31 +446,17 @@ const TutorDashboard: React.FC = () => {
                             },
                           }}
                         >
-                          <Stack
-                            direction="row"
-                            spacing={1}
-                            alignItems="center"
-                            justifyContent="center"
-                          >
-                            <ListItemIcon sx={{ alignSelf: "center" }}>
-                              {iconsArray[index]}
-                            </ListItemIcon>
-                            <Typography
-                              color="black"
-                              fontSize={14}
-                              pt={1.4}
-                              fontWeight={600}
-                              sx={{ alignSelf: "center" }}
-                            >
-                              {entry.title}
-                            </Typography>
-                          </Stack>
+                          <ListItemIcon>{iconsArray[index]}</ListItemIcon>
+                          <Typography fontSize={18} py={1.4} fontWeight={600}>
+                            {entry.title}
+                          </Typography>
                         </ListItemButton>
                       </ListItem>
                     ))}
                   </List>
                 </Stack>
-                <Stack justifyContent="center" p={4}>
+
+                <Stack justifyContent="center" py={4}>
                   <Button
                     variant="contained"
                     onClick={() => {
@@ -491,16 +474,18 @@ const TutorDashboard: React.FC = () => {
                       },
                     }}
                   >
-                    <LogoutIcon color="error" fontSize="large" />
-                    <Typography
-                      fontSize={18}
-                      fontWeight={600}
-                      color="error"
-                      textTransform="none"
-                      pl={1}
-                    >
-                      Logout
-                    </Typography>
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                      <LogoutIcon color="error" fontSize="small" />
+                      <Typography
+                        fontSize={18}
+                        fontWeight={600}
+                        color="error"
+                        textTransform="none"
+                        pl={1}
+                      >
+                        Logout
+                      </Typography>
+                    </Stack>
                   </Button>
                 </Stack>
               </Stack>

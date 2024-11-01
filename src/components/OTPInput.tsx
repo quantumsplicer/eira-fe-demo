@@ -36,7 +36,7 @@ const OTPInput = ({
   onVerified,
   isDrawer,
   role,
-  onChangePhoneNumber
+  onChangePhoneNumber,
 }: OTPInputProps) => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
@@ -44,7 +44,7 @@ const OTPInput = ({
   const otpInputsRef = useRef<Array<React.RefObject<HTMLInputElement>>>([]);
   const [isOtpInvalid, setIsOtpInvalid] = useState<boolean>(false);
   const location = useLocation();
-  const notPhoneScreen = useMediaQuery('(min-width:850px)');
+  const notPhoneScreen = useMediaQuery("(min-width:850px)");
   const [resendOtpCountdown, setResendOtpCountdown] = useState<number>(0);
 
   const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
@@ -108,24 +108,28 @@ const OTPInput = ({
       phone: phoneNumber,
       otp,
       role: location.pathname.includes("student") ? "student" : "teacher",
-    })
-    .catch(err => {
-      console.log(err)
+    }).catch((err) => {
+      console.log(err);
     });
     if (!result?.data?.token) {
       setIsOtpInvalid(true);
       return;
     }
 
-    if(onVerified) {
+    if (onVerified) {
       onVerified();
     }
 
-    localStorage.setItem("phoneNumber", phoneNumber)
-    if (location.pathname.includes("student") || location.pathname.includes("pay-tuition-fees")) {
+    localStorage.setItem("phoneNumber", phoneNumber);
+    if (
+      location.pathname.includes("student") ||
+      location.pathname.includes("pay-tuition-fees")
+    ) {
       localStorage.setItem("studentLogin", "true");
+      localStorage.removeItem("tutorLogin");
     } else if (location.pathname.includes("tutor")) {
       localStorage.setItem("tutorLogin", "true");
+      localStorage.removeItem("studentLogin");
     }
     navigateTo && navigate(navigateTo);
   };
@@ -150,13 +154,13 @@ const OTPInput = ({
       if (remainingTime > 0) {
         remainingTime -= 1000;
         setResendOtpCountdown(remainingTime / 1000);
-        
+
         if (remainingTime === 0) {
           clearInterval(timer);
         }
       }
     }, 1000);
-  }
+  };
 
   useEffect(() => {
     otpInputsRef.current = Array.from({ length: OPT_LENGTH }).map(() =>
@@ -179,14 +183,8 @@ const OTPInput = ({
   }, [activeIndex]);
 
   return (
-    <Stack
-      alignItems={"center"}
-    >
-      <Typography
-        fontWeight={"500"}
-        variant="h6"
-        mt={2}
-      >
+    <Stack alignItems={"center"}>
+      <Typography fontWeight={"500"} variant="h6" mt={2}>
         Verify Phone Number
       </Typography>
       <Typography
@@ -197,9 +195,7 @@ const OTPInput = ({
       >
         Enter OTP for phone number verification
       </Typography>
-      <Box
-        sx={{ display: "flex", justifyContent: "center", gap: 1, pt: 2 }}
-      >
+      <Box sx={{ display: "flex", justifyContent: "center", gap: 1, pt: 2 }}>
         {Array.from({ length: OPT_LENGTH }).map((_, index) => (
           <TextField
             key={index}
@@ -229,10 +225,7 @@ const OTPInput = ({
           Incorrect OTP. Please retry.
         </Typography>
       )}
-      <Stack
-        mt={2}
-        alignItems={"center"}
-      >
+      <Stack mt={2} alignItems={"center"}>
         <Typography
           onClick={resendOtp}
           fontSize={14}
@@ -247,18 +240,14 @@ const OTPInput = ({
         >
           Resend OTP
         </Typography>
-        {
-          resendOtpCountdown > 0 && 
-          <Typography
-            fontSize={14}
-            mt={1}
-          >
+        {resendOtpCountdown > 0 && (
+          <Typography fontSize={14} mt={1}>
             in {resendOtpCountdown} seconds
           </Typography>
-        }
+        )}
       </Stack>
       <Typography
-        onClick={onChangePhoneNumber && onChangePhoneNumber} 
+        onClick={onChangePhoneNumber && onChangePhoneNumber}
         fontSize={14}
         color="#6285FF"
         mt={resendOtpCountdown > 0 ? 1 : 4.7}
@@ -266,9 +255,8 @@ const OTPInput = ({
           borderBottomWidth: "1px",
           borderBottomStyle: "solid",
           borderBottomColor: "#6285FF",
-          cursor: "pointer"
+          cursor: "pointer",
         }}
-        
       >
         Change phone number
       </Typography>
@@ -278,9 +266,9 @@ const OTPInput = ({
         disabled={otp.length !== 4}
         fullWidth
         sx={{
-          width: '100%',
-          minWidth: '320px',
-          maxWidth: '400px',
+          width: "100%",
+          minWidth: "320px",
+          maxWidth: "400px",
           marginTop: notPhoneScreen || isDrawer ? 10 : 30,
           height: 45,
           borderRadius: 20,

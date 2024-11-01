@@ -13,6 +13,13 @@ const TutorOnboardingContainer = () => {
         }
 
         const checkOnboardingStatus = async () => {
+            const isStudentLogin = localStorage.getItem("studentLogin");
+            if (isStudentLogin) {
+                localStorage.clear();
+                localStorage.setItem("tutorLogin", "true");
+                navigate("/tutor/login")
+            }
+            
             const { navigateTo, onboardingStep } = await determineOnboardingStep();
             const accessToken = localStorage.getItem("access-token");
             if (accessToken) {

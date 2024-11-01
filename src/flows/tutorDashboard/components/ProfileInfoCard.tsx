@@ -8,7 +8,9 @@ import { useGetOnboardingStatusQuery } from "../../../APIs/definitions/onboardin
 const ProfileInfoCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
-  const { error: isOnboardingStatusError } = useGetOnboardingStatusQuery(userDetails ? userDetails.id : "");
+  const { error: isOnboardingStatusError } = useGetOnboardingStatusQuery(
+    userDetails ? userDetails.id : ""
+  );
   return (
     <Box
       sx={
@@ -51,8 +53,14 @@ const ProfileInfoCard: React.FC = () => {
           </Typography>
           <Typography>+91{userDetails?.phone}</Typography>
         </Stack>
+        
         <Stack sx={{ width: "80%" }} spacing={2}>
-          <Stack direction="row" display="flex" justifyContent="space-between" alignItems={"center"}>
+          <Stack
+            direction="row"
+            display="flex"
+            justifyContent="space-between"
+            alignItems={"center"}
+          >
             <Typography color="#7E7E7E" fontWeight={630}>
               Pan:
             </Typography>
@@ -60,13 +68,24 @@ const ProfileInfoCard: React.FC = () => {
               {userDetails?.pan}
             </Typography>
           </Stack>
-          <Stack direction="row" display="flex" justifyContent="space-between" alignItems={"center"}>
+          
+          <Stack
+            direction="row"
+            display="flex"
+            justifyContent="space-between"
+            alignItems={"center"}
+          >
             <Typography color="#7E7E7E" fontWeight={630}>
               Account Verified:
             </Typography>
             <StatusTag cellValue="No" />
           </Stack>
-          <Stack direction="row" display="flex" justifyContent="space-between" alignItems="center">
+          <Stack
+            direction="row"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <Typography color="#7E7E7E" fontWeight={630}>
               Account Holder:
             </Typography>
@@ -74,7 +93,12 @@ const ProfileInfoCard: React.FC = () => {
               {userDetails?.first_name + " " + userDetails?.last_name}
             </Typography>
           </Stack>
-          <Stack direction="row" display="flex" justifyContent="space-between" alignItems="center">
+          <Stack
+            direction="row"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <Typography color="#7E7E7E" fontWeight={630}>
               Aadhaar Verified:
             </Typography>

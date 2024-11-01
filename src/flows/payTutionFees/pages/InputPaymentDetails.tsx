@@ -16,10 +16,19 @@ import EiraBack from "../../../assets/images/svg/EiraBack.svg";
 import { useCheckInvitationAcceptanceQuery } from "../../../APIs/definitions/invitations";
 import SafeLogo from "../../../components/SafeLogo";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
-import { useLazyGetUserDetailsByPhoneQuery, useLazyGetUserDetailsQuery, UserDetails } from "../../../APIs/definitions/user";
+import {
+  useLazyGetUserDetailsByPhoneQuery,
+  useLazyGetUserDetailsQuery,
+  UserDetails,
+} from "../../../APIs/definitions/user";
 import { LoadingButton } from "@mui/lab";
 import { useDispatch } from "react-redux";
-import { setAmount, setPayeeId, setTutorPhoneNumber } from "../../../stores/slices";
+import {
+  setAmount,
+  setPayeeId,
+  setTutorPhoneNumber,
+} from "../../../stores/slices";
+import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
 
 const InputPaymentDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -39,9 +48,10 @@ const InputPaymentDetails: React.FC = () => {
     { data: studentData, isLoading: studentDataIsLoading },
   ] = useLazyGetUserDetailsQuery();
 
-  const [
-    getTutorDetials
-  ] = useLazyGetUserDetailsByPhoneQuery();
+  const [getTutorDetials] = useLazyGetUserDetailsByPhoneQuery();
+
+  const { checkCurrentStudentOnboardingState } =
+    useGetOnboardingDetails();
 
   const noteBoxHeading = "Things to keep in mind:";
   const notes = [
@@ -61,7 +71,7 @@ const InputPaymentDetails: React.FC = () => {
   const handlePhoneNumberChange = (phone: string) => {
     localStorage.setItem("activePaymentTutorId", phone);
     setPhoneNumber(phone);
-  }
+  };
 
   const isPhoneNumberValid = (): boolean => {
     const regex = /^[6-9]\d{9}$/;
@@ -75,28 +85,36 @@ const InputPaymentDetails: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    setIsPayeeStudent(false)
-    if (!inputAmount || Number(inputAmount) === 0 || !isPhoneNumberValid()) return;
+    setIsPayeeStudent(false);
+    if (!inputAmount || Number(inputAmount) === 0 || !isPhoneNumberValid())
+      return;
 
     try {
       let isTutorOnboarded: boolean = false;
       let isPayeeStudent;
       await getTutorDetials(phoneNumber)
-      .unwrap()
-      .then(res => {
-        const tutor = res[0]
-        if (tutor?.role === "student") {
-          setIsPayeeStudent(true);
-          isPayeeStudent = true;
-          return;
-        }
-        isTutorOnboarded = !!(tutor?.first_name && tutor?.last_name && tutor?.pan);
-        if (isTutorOnboarded) {
-          dispatch(setPayeeId(tutor?.id));
-          localStorage.setItem("activePaymentPayeeUserId", tutor?.id);
-          localStorage.setItem("activePaymentTutorName", tutor?.first_name + " " + tutor?.last_name);
-        }
-      })
+        .unwrap()
+        .then((res) => {
+          const tutor = res[0];
+          if (tutor?.role === "student") {
+            setIsPayeeStudent(true);
+            isPayeeStudent = true;
+            return;
+          }
+          isTutorOnboarded = !!(
+            tutor?.first_name &&
+            tutor?.last_name &&
+            tutor?.pan
+          );
+          if (isTutorOnboarded) {
+            dispatch(setPayeeId(tutor?.id));
+            localStorage.setItem("activePaymentPayeeUserId", tutor?.id);
+            localStorage.setItem(
+              "activePaymentTutorName",
+              tutor?.first_name + " " + tutor?.last_name
+            );
+          }
+        });
       // const tutor = await getUserDetails().unwrap();
 
       // const isTutorOnboarded = !!(tutor?.first_name && tutor?.last_name && tutor?.pan);
@@ -121,6 +139,10 @@ const InputPaymentDetails: React.FC = () => {
       setIsButtonDisabled(false);
     }
   }, [inputAmount, phoneNumber]);
+
+  useEffect(() => {
+    checkCurrentStudentOnboardingState();
+  }, []);
 
   return (
     <Box
@@ -218,9 +240,9 @@ const InputPaymentDetails: React.FC = () => {
                 }}
               />
               <Stack
-                width='100%'
-                minWidth='320px'
-                maxWidth='400px'
+                width="100%"
+                minWidth="320px"
+                maxWidth="400px"
                 mb={isPayeeStudent ? 0 : 1.5}
               >
                 <PhoneNumberInputField
@@ -229,17 +251,11 @@ const InputPaymentDetails: React.FC = () => {
                   phone={phoneNumber}
                   setPhoneNumber={handlePhoneNumberChange}
                 />
-                {
-                  isPayeeStudent &&
-                  <Typography
-                    color={"red"}
-                    ml={1}
-                    mt={-1}
-                    fontSize={14}
-                  >
+                {isPayeeStudent && (
+                  <Typography color={"red"} ml={1} mt={-1} fontSize={14}>
                     This user is registered as a student.
                   </Typography>
-                }
+                )}
               </Stack>
               {!notPhoneScreen && (
                 <Box

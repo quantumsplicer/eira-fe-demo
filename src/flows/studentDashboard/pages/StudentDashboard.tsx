@@ -103,7 +103,7 @@ const StudentDashboard: React.FC = () => {
     if (!localStorage.getItem("access-token")) {
       navigate("/student/login");
     }
-  }, [])
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -231,12 +231,12 @@ const StudentDashboard: React.FC = () => {
                         boxShadow: 5,
                       }}
                     />
-                    <Typography fontSize={16} fontWeight={600}>
-                      {userDetails?.first_name}
+                    <Typography fontSize={20} fontWeight={600}>
+                      {userDetails?.first_name} {userDetails?.last_name}
                     </Typography>
                   </Stack>
                 </Stack>
-                <Box sx={{ overflow: "auto" }}>
+                <Box sx={{ overflow: "auto", mt: 4 }}>
                   <List>
                     {[
                       {
@@ -248,10 +248,7 @@ const StudentDashboard: React.FC = () => {
                         subpage: PAYMENT_HISTORY_PAGE,
                       },
                     ].map((entry, index) => (
-                      <ListItem
-                        key={entry.title}
-                        sx={{ width: "100%", pl: "0", pr: "0" }}
-                      >
+                      <ListItem key={entry.title} sx={{ width: "100%", p: 0 }}>
                         <ListItemButton
                           onClick={() => {
                             handleSubpageChange(entry.subpage);
@@ -280,12 +277,7 @@ const StudentDashboard: React.FC = () => {
                           }}
                         >
                           <ListItemIcon>{iconsArray[index]}</ListItemIcon>
-                          <Typography
-                            color="black"
-                            fontSize={14}
-                            pt={1.4}
-                            fontWeight={600}
-                          >
+                          <Typography fontSize={18} py={1.4} fontWeight={600}>
                             {entry.title}
                           </Typography>
                         </ListItemButton>
@@ -296,7 +288,8 @@ const StudentDashboard: React.FC = () => {
                 </Box>
               </Stack>
             </Stack>
-            <Stack justifyContent="center" p={4}>
+
+            <Stack justifyContent="center" py={4}>
               <Button
                 variant="contained"
                 onClick={() => {
@@ -314,16 +307,18 @@ const StudentDashboard: React.FC = () => {
                   },
                 }}
               >
-                <LogoutIcon color="error" fontSize="large" />
-                <Typography
-                  fontSize={18}
-                  fontWeight={600}
-                  color="error"
-                  textTransform="none"
-                  pl={1}
-                >
-                  Logout
-                </Typography>
+                <Stack direction="row" alignItems="center" spacing={2}>
+                  <LogoutIcon color="error" fontSize="small" />
+                  <Typography
+                    fontSize={18}
+                    fontWeight={600}
+                    color="error"
+                    textTransform="none"
+                    pl={1}
+                  >
+                    Logout
+                  </Typography>
+                </Stack>
               </Button>
             </Stack>
           </Drawer>

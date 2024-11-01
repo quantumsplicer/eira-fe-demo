@@ -110,8 +110,10 @@ const OTPInputDialog = ({
     localStorage.setItem("phoneNumber", phoneNumber);
     if (location.pathname.includes("student")) {
       localStorage.setItem("studentLogin", "true");
+      localStorage.removeItem("tutorLogin");
     } else if (location.pathname.includes("tutor")) {
       localStorage.setItem("tutorLogin", "true");
+      localStorage.removeItem("studentLogin");
     }
     navigate(navigateTo);
   };

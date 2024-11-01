@@ -16,7 +16,6 @@ const AadharVerifyRedirectPage = () => {
   const { determineOnboardingStep } = useOnboarding();
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const location = useLocation();
 
   useEffect(() => {

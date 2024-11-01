@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../stores/configuration";
 import { setPaymentSessionId } from "../../../stores/slices";
 import { useCreateSessionMutation } from "../../../APIs/definitions/session";
+import { useGetOnboardingStatusQuery } from "../../../APIs/definitions/onboarding";
 
 const SlotBookingPage = () => {
   const navigate = useNavigate();
@@ -38,6 +39,13 @@ const SlotBookingPage = () => {
 
   const [createSession, { isLoading: createSessionIsLoading }] = useCreateSessionMutation();
   const { data: userDetails } = useGetUserDetailsQuery();
+
+  const { data: tutorOnboardingStatus } = useGetOnboardingStatusQuery(
+    activePaymentPayeeUserId as string,
+    {
+      skip: !activePaymentPayeeUserId,
+    }
+  );
 
   const today = dayjs();
   const tomorrow = dayjs().add(1, "day");

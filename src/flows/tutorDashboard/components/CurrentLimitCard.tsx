@@ -172,9 +172,6 @@ const CurrentLimitCard: React.FC = () => {
               navigate("/tutor/kyc")
             }}
             variant="contained"
-            onClick={() => {
-              navigate("/tutor/kyc")
-            }}
             sx={
               !isPhoneScreen
                 ? {
