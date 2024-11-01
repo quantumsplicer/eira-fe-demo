@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
-import { useDispatch } from "react-redux";
-import { setOnboardingStep } from "../../../stores/slices/onboardingInfoSlice";
 import { useOnboarding } from "../../../customHooks/useOnboarding";
 
 const AadharVerifyRedirectPage = () => {
@@ -13,7 +11,6 @@ const AadharVerifyRedirectPage = () => {
     const { determineOnboardingStep } = useOnboarding();
     const notPhoneScreen = useMediaQuery("(min-width:850px)");
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const location = useLocation();
 
     useEffect(() => {
@@ -25,7 +22,7 @@ const AadharVerifyRedirectPage = () => {
 
         const handleOnboarding = async () => {
             const { navigateTo, onboardingStep } = await determineOnboardingStep();
-            dispatch(setOnboardingStep(onboardingStep));
+            localStorage.setItem("tutorOnboardingStep", onboardingStep.toString());
             if (navigateTo === "/tutor-id/dashboard") {
                 localStorage.setItem("showDialog", "true");
                 navigate('/tutor-id/dashboard', { state: { previousUrl: location.pathname } });

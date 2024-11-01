@@ -8,7 +8,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { NavigateFunction } from "react-router-dom";
 
-const BASE_URL = "http://34.93.136.100/";
+const BASE_URL = "https://api.eira.club/";
 const PROD_SITE_URL = "https://eira.club/";
 const DEV_SITE_URL = "http://localhost:3000/";
 

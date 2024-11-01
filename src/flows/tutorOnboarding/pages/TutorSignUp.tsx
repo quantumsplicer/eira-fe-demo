@@ -12,10 +12,6 @@ import EiraBack from "../../../assets/images/svg/EiraBack.svg";
 import SafeLogo from "../../../components/SafeLogo";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../stores/configuration";
-import { setOnboardingStep } from "../../../stores/slices/onboardingInfoSlice";
-import { useOnboarding } from "../../../customHooks/useOnboarding";
 
 const TutorSignUp: React.FC = () => {
   const [signUpStep, setSignUpStep] = useState<number>(1);
@@ -23,11 +19,9 @@ const TutorSignUp: React.FC = () => {
   const [aadhaarVerificationFailed, setAadhaarVerificationFailed] = useState<
     boolean | null
   >(null);
-  const dispatch = useDispatch();
-  const onboardingStep = useSelector((state: RootState) => state.onboardingInfo.onbaordingStep);
+  const tutorOnboardingStep = localStorage.getItem("tutorOnboardingStep");
   const [isSessionExpired, setIsSessionExpired] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { determineOnboardingStep } = useOnboarding();
 
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
 
@@ -47,23 +41,9 @@ const TutorSignUp: React.FC = () => {
       return;
     }
 
-    if (onboardingStep !== 0) {
-      setSignUpStep(onboardingStep);
-      dispatch(setOnboardingStep(0));
-      return;
+    if (tutorOnboardingStep && tutorOnboardingStep !== "0") {
+      setSignUpStep(Number(tutorOnboardingStep));
     }
-
-    const handleOnboarding =  async () => {
-      const {navigateTo, onboardingStep} = await determineOnboardingStep();
-      dispatch(setOnboardingStep(onboardingStep));
-      if (onboardingStep === 0) {
-        navigate(navigateTo);
-      } else {
-        setSignUpStep(onboardingStep);
-      }
-    }
-
-    handleOnboarding();
   }, [])
 
   const LoginButton = () => {

@@ -1,5 +1,5 @@
 import { Box, Button, Drawer, Stack, Typography, useMediaQuery } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
 import SafeLogo from "../../../components/SafeLogo";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
@@ -7,11 +7,32 @@ import SouthIcon from '@mui/icons-material/South';
 import { useNavigate } from "react-router-dom";
 import Amount from "../../../components/Amount";
 import CustomProgressIndicator from "../../../components/CustomProgressIndicator";
+import { useOnboarding } from "../../../customHooks/useOnboarding";
 
 const KycLogin = () => {
 
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
+    const [nextStep, setNextStep] = useState<number>(2);
     const navigate = useNavigate();
+
+    const handleProceedClick = () => {
+        const token = localStorage.getItem("access-token");
+        if (!token) {
+            navigate("/tutor/login");
+        } else {
+            navigate("/tutor/personal-details");
+        }
+    }
+
+    useEffect(() => {
+        const token = localStorage.getItem("access-token");
+        if (token) {
+            const onboardingStep = localStorage.getItem("tutorOnboardingStep");
+            if (onboardingStep) {
+                setNextStep(Number.parseInt(onboardingStep));
+            }
+        }
+      }, []);
 
     return (
         <Box
@@ -78,6 +99,7 @@ const KycLogin = () => {
                             <Typography
                                 textAlign={"center"}
                                 variant="h5"
+                                mt={5}
                             >
                                 Complete your KYC to get <Amount amount={15000} /> settled in your account
                             </Typography>
@@ -89,21 +111,7 @@ const KycLogin = () => {
                             >
                                 Login to continue with your KYC
                             </Typography>
-                            <CustomProgressIndicator />
-                            <Stack
-                                direction={"row"}
-                                mt={notPhoneScreen ? 10 : 25}
-                                mb={5}
-                            >
-                                <Typography
-                                    fontWeight={"500"}
-                                    fontSize={18}
-                                    mr={1}
-                                >
-                                    Login Now
-                                </Typography>
-                                <SouthIcon />
-                            </Stack>
+                            <CustomProgressIndicator nextStep={nextStep} />
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -111,12 +119,12 @@ const KycLogin = () => {
                                     padding: 1.5,
                                     borderRadius: 20,
                                     height: 45,
-                                    mt: 5,
+                                    mt: notPhoneScreen ? 15 : 35,
                                     width: '100%',
                                     minWidth: '320px',
                                     maxWidth: '400px',
                                 }}
-                                onClick={() => navigate('/tutor/login')}
+                                onClick={handleProceedClick}
                             >
                                 Proceed
                             </Button>
