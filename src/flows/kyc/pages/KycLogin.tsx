@@ -101,7 +101,7 @@ const KycLogin = () => {
                                 variant="h5"
                                 mt={5}
                             >
-                                Complete your KYC to get <Amount amount={15000} /> settled in your account
+                                Complete your KYC to start receiving money
                             </Typography>
                             <Typography
                                 variant="subtitle1"

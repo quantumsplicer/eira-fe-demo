@@ -46,23 +46,6 @@ export const useOnboarding = () => {
     return bankAccountDetails;
   };
 
-  const fetchAadhaarVerificationStatus = async (userId: string | undefined): Promise<boolean> => {
-    let isUserAadhaarVerified = false;
-    if (userId) {
-      await getOnboardingStatus(userId)
-        .unwrap()
-        .then(res => {
-          isUserAadhaarVerified = true;
-        })
-        .catch(err => {
-          if (err.satus === 404) {
-            isUserAadhaarVerified = false;
-          }
-        })
-    }
-    return isUserAadhaarVerified;
-  }
-
   const determineOnboardingStep = async (): Promise<{
     navigateTo: string;
     onboardingStep: number;
@@ -72,11 +55,11 @@ export const useOnboarding = () => {
     const userDetails = await fetchUserDetails();
     const bankAccountDetails = await fetchBankAccountDetails();
     const activeFlow = localStorage.getItem("activeFlow");
-    let isUserAadhaarVerified;
+    const isUserAadhaarVerified = userDetails?.pg_onboarding_status && 
+      userDetails?.pg_onboarding_status.length > 0 && 
+      userDetails.pg_onboarding_status[0].status !== "EMAIL_VERIFIED" && 
+      userDetails.pg_onboarding_status[0].status !== "MIN_KYC_PENDING";
 
-    if (activeFlow === "tutorKyc") {
-      isUserAadhaarVerified = await fetchAadhaarVerificationStatus(userDetails?.id);
-    }
     setCheckProcessIsLoading(false);
 
     if (!userDetails?.pan) {

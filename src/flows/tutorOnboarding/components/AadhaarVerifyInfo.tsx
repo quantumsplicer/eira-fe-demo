@@ -1,4 +1,5 @@
-import { Typography, Stack, Button, Box, useMediaQuery } from "@mui/material";
+import { Typography, Stack, Button, Box, useMediaQuery, CircularProgress } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import React, { useState } from "react";
 import Aadhaar from "../../../assets/images/svg/Aadhaar.svg";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
@@ -29,7 +30,7 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
             .then(res => {
                 console.log(res)
                 if (res.onboarding_link) {
-                    // navigate(res.onboarding_link);
+                    window.location.href = res.onboarding_link;
                 } else {
                     setAadhaarVerificationFailed(true);
                 }
@@ -86,8 +87,9 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
                     </Stack>
                 </Box>
             }
-            <Button
+            {/* <Button
                 variant="contained"
+                disabled={isLoading}
                 sx={{
                     width: '100%',
                     minWidth: '320px',
@@ -98,8 +100,38 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
                 }}
                 onClick={handleVerifyClick}
             >
-                {aadhaarVerificationFailed ? "Verify Again" : "Verify"}
-            </Button>
+                {
+                    isLoading ? "Verifying" :
+                        (aadhaarVerificationFailed ? "Verify Again" : "Verify")
+                }
+            </Button> */}
+            <LoadingButton
+                disabled={isLoading}
+                onClick={handleVerifyClick}
+                variant="contained"
+                color="primary"
+                sx={{
+                    width: "100%",
+                    minWidth: "320px",
+                    maxWidth: "400px",
+                    padding: 1.5,
+                    borderRadius: 20,
+                    marginTop: aadhaarVerificationFailed ? 2 : 17,
+                    height: 45,
+                }}
+            >
+                {isLoading ? (
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                        Verifying
+                        <CircularProgress
+                            size={14}
+                            sx={{ marginLeft: 1, color: "#6f6f6f" }}
+                        />
+                    </Box>
+                ) : (
+                    aadhaarVerificationFailed ? "Verify Again" : "Verify"
+                )}
+            </LoadingButton>
             <Button
                 variant="outlined"
                 sx={{

@@ -41,7 +41,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const invalidRegex = /[^A-Za-z0-9]/g;
-    const sanitizedValue = event.target.value.replace(invalidRegex, "").slice(0,10);
+    const sanitizedValue = event.target.value.replace(invalidRegex, "").slice(0,10).toUpperCase();
     setPan(sanitizedValue);
   };
 
@@ -53,6 +53,9 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
 
   const handleSubmitClick = () => {
     if (firstName && lastName && isPanValid(pan)) {
+      localStorage.setItem("firstName", firstName);
+      localStorage.setItem("lastName", lastName);
+      localStorage.setItem("pan", pan);
       localStorage.setItem("onboardingUsername", `${firstName} ${lastName}`);
       
       if (tutorPhoneNumber || activePaymentTutorId) {
@@ -104,6 +107,15 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
       setIsButtonDisabled(false);
     }
   }, [firstName, lastName, pan]);
+
+  useEffect(() => {
+    const autoFillDetails = localStorage.getItem("autoFillDetails") === "true";
+    if (autoFillDetails && localStorage.getItem("firstName") && localStorage.getItem("lastName") && localStorage.getItem("pan")) {
+      setFirstName(localStorage.getItem("firstName") as string);
+      setLastName(localStorage.getItem("lastName") as string);
+      setPan(localStorage.getItem("pan") as string);
+    }
+  } ,[])
 
   return (
     <>

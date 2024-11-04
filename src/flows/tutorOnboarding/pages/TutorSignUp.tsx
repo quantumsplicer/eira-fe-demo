@@ -12,8 +12,10 @@ import EiraBack from "../../../assets/images/svg/EiraBack.svg";
 import SafeLogo from "../../../components/SafeLogo";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const TutorSignUp: React.FC = () => {
+  const activeFlow = localStorage.getItem("activeFlow");
   const [signUpStep, setSignUpStep] = useState<number>(1);
   const [isAccountVerifying, setIsAccountVerifying] = useState<boolean>(false);
   const [aadhaarVerificationFailed, setAadhaarVerificationFailed] = useState<
@@ -111,6 +113,13 @@ const TutorSignUp: React.FC = () => {
           boxShadow={notPhoneScreen ? "2px -2px 14px 2px #00000021" : "none"}
         >
           <Stack direction={"column"}>
+            {
+              signUpStep === 2 && activeFlow !== "tutorKyc" &&
+              <ArrowBackIosIcon onClick={() => {
+                localStorage.setItem("autoFillDetails", "true");
+                setSignUpStep(signUpStep-1)
+              }} />
+            }
             <img
               src={EiraLogo}
               style={{

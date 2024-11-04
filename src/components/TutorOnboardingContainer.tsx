@@ -44,7 +44,7 @@ const TutorOnboardingContainer = () => {
         }
         
         checkOnboardingStatus();
-    }, [])
+    }, [window.location.pathname])
 
     if (checkProcessIsLoading) return <Loading />;
 

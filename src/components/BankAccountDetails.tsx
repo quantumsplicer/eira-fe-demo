@@ -49,7 +49,7 @@ const BankAccountDetails = ({ onSuccess }: BankAccountDetailsProps) => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const invalidRegex = /[^A-Za-z0-9]/g;
-    const sanitizedValue = event.target.value.replace(invalidRegex, "").slice(0,11);
+    const sanitizedValue = event.target.value.replace(invalidRegex, "").slice(0,11).toUpperCase();
     setIfsc(sanitizedValue);
   };
 

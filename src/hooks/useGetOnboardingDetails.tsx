@@ -3,6 +3,7 @@ import {
   useGetUserDetailsQuery,
   useLazyGetUserByUserNameQuery,
   useLazyGetUserDetailsQuery,
+  useLazyUserSearchByIdQuery,
 } from "../APIs/definitions/user";
 import { useEffect, useState } from "react";
 import { useLazyGetPaymentInfoFromLinkQuery } from "../APIs/definitions/paymentLinks";
@@ -23,8 +24,12 @@ const useGetOnboardingDetails = () => {
   ] = useLazyGetUserDetailsQuery();
 
   const [
-    getTutorDetials
+    getTutorDetails
   ] = useLazyGetUserByUserNameQuery();
+
+  const [
+    getTutorDetailsById
+  ] = useLazyUserSearchByIdQuery();
 
   const [getPaymentLinkInfo] = useLazyGetPaymentInfoFromLinkQuery();
 
@@ -39,9 +44,10 @@ const useGetOnboardingDetails = () => {
           navigate("/pay/payment-details");
           break;
         case "StaticLinkFlow":
+          localStorage.setItem("isTutorEiraOnboarded", "true");
           const tutorUsername = localStorage.getItem("activeFlowUrl")?.split("/").pop();
           if (tutorUsername) {
-            await getTutorDetials(tutorUsername)
+            await getTutorDetails(tutorUsername)
             .unwrap()
             .then(res => {
               const tutor = res[0]
@@ -63,11 +69,12 @@ const useGetOnboardingDetails = () => {
           }
           break;
         case "DynamicLinkFlow":
+          localStorage.setItem("isTutorEiraOnboarded", "true");
           try {
             const activeFlowUrl = localStorage.getItem("activeFlowUrl");
             const paymentLinkInfo = await getPaymentLinkInfo(
               activeFlowUrl?.split("/").at(-1) as string
-            ).unwrap();
+            ).unwrap().then().catch();
 
             localStorage.setItem(
               "activePaymentAmount",
@@ -86,7 +93,19 @@ const useGetOnboardingDetails = () => {
               paymentLinkInfo?.payee
             )
 
-            navigate("/pay/review");
+            let isTutorPgOnboarded = false;
+            if (paymentLinkInfo?.payee) {
+              getTutorDetailsById(paymentLinkInfo.payee)
+                .unwrap()
+                .then(res => {
+                  isTutorPgOnboarded = res.pg_onboarding_status && 
+                    res.pg_onboarding_status.length > 0 &&
+                    (res.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" || res.pg_onboarding_status[0].status === "ACTIVE");
+                })
+                .catch()
+            }
+            
+            isTutorPgOnboarded ? navigate("/pay/review") : navigate("/pay/create-session");
           } catch {
             navigate("/page-not-found");
             console.error("Error fetching payment link info");

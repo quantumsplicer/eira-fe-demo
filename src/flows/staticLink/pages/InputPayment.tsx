@@ -6,6 +6,7 @@ import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { useNavigate, useParams } from "react-router-dom";
 import SafeLogo from "../../../components/SafeLogo";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
+import { useLazyGetUserByUserNameQuery } from "../../../APIs/definitions/user";
 
 const InputPayment = () => {
 
@@ -14,6 +15,8 @@ const InputPayment = () => {
     const navigate = useNavigate();
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
     const staticLinkPayeeName = localStorage.getItem("staticLinkPayeeName");
+
+    const [getTutorDetails] = useLazyGetUserByUserNameQuery();
 
     const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const invalidRegex = /[^0-9]/
@@ -30,10 +33,24 @@ const InputPayment = () => {
         }
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const isStudentSignedIn = localStorage.getItem("studentLogin") === "true"
+        let isTutorPgOnboarded = false;
+        const links = window.location.pathname.split("/");
+        const tutorUsername = links[links.length -1] === "" ? links[links.length-2] :  links[links.length -1];
+
+        await getTutorDetails(tutorUsername)
+            .unwrap()
+            .then(res => {
+                const tutor = res[0];
+                isTutorPgOnboarded = tutor?.pg_onboarding_status &&
+                    tutor.pg_onboarding_status?.length > 0 && 
+                    (tutor.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" || tutor.pg_onboarding_status[0].status === "ACTIVE");
+            })
+            .catch()
+
         if (isStudentSignedIn) {
-            navigate("/pay/create-session");
+            isTutorPgOnboarded ? navigate("/pay/review") : navigate("/pay/create-session");
         } else {
             navigate("/student/login");
         }

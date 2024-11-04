@@ -17,6 +17,7 @@ const TutorSignIn: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
   const { determineOnboardingStep } = useOnboarding();
@@ -28,6 +29,7 @@ const TutorSignIn: React.FC = () => {
 
   const handleSubmit = () => {
     if (isPhoneNumberValid()) {
+      setErrorMessage(null);
       getOtp({
         phone: phoneNumber,
         role: "teacher"
@@ -37,7 +39,11 @@ const TutorSignIn: React.FC = () => {
           console.log(res);
           setIsDialogOpen(true);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          err.data.message === "The user role and input role does not match." ?
+            setErrorMessage("This user is already registered as a student") :
+            setErrorMessage("Something went wrong. Please try again!")
+        });
     }
   };
 
@@ -96,23 +102,33 @@ const TutorSignIn: React.FC = () => {
                   onSubmit={handleSubmit}
                   autoFocus={true}
                 />
-                <Button
-                  disabled={phoneNumber.length !== 10 || !isPhoneNumberValid()}
-                  onClick={handleSubmit}
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    width: "100%",
-                    minWidth: "320px",
-                    maxWidth: "400px",
-                    padding: 1.5,
-                    borderRadius: 20,
-                    marginTop: notPhoneScreen ? 5 : 30,
-                    height: 45,
-                  }}
+                <Box
+                  mt={notPhoneScreen ? 5 : 30}
+                  width="100%"
+                  minWidth="320px"
+                  maxWidth="400px"
                 >
-                  Verify
-                </Button>
+                  {
+                    errorMessage &&
+                    <Typography fontSize={14} color="red" textAlign={"center"} mb={2}>
+                      {errorMessage}
+                    </Typography>
+                  }
+                  <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                      marginTop: errorMessage ? 0 : 4.6,
+                      width: "100%",
+                      padding: 1.5,
+                      borderRadius: 20,
+                      height: 45,
+                    }}
+                  >
+                    Verify
+                  </Button>
+                </Box>
               </>
             ) : (
               <OTPInput

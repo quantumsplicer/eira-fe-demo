@@ -107,7 +107,7 @@ const OTPInput = ({
     const result = await validateOtp({
       phone: phoneNumber,
       otp,
-      role: location.pathname.includes("student") ? "student" : "teacher",
+      role: location.pathname.includes("tutor") ? "teacher" : "student",
     }).catch((err) => {
       console.log(err);
     });
