@@ -13,9 +13,12 @@ import {
 } from "@mui/material";
 
 interface BankAccount {
-  accountNumber: string;
-  ifscCode: string;
-  isPrimary: boolean;
+  account_number: string;
+  account_number_trimmed: string;
+  id: string;
+  ifsc: string;
+  is_primary: boolean;
+  name_on_bank: string;
 }
 
 interface BankAccountsListProps {
@@ -25,18 +28,23 @@ interface BankAccountsListProps {
 const BankAccountsList: React.FC<BankAccountsListProps> = ({ accounts }) => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [selectedAccount, setSelectedAccount] = useState<string | undefined>(
-    accounts.find((account) => account.isPrimary)?.accountNumber
+    accounts.find((account) => account.is_primary)?.account_number
   );
 
-  const handleSelectAccount = (accountNumber: string) => {
-    setSelectedAccount(accountNumber);
+  const handleSelectAccount = (account_number: string) => {
+    setSelectedAccount(account_number);
   };
+
+  const getMaskedAccountNumber = (accountNumber:  string) => {
+    const maskedPart = accountNumber.slice(0, -4).replace(/./g, '*');
+    return maskedPart + accountNumber.slice(-4);
+  }
 
   return (
     <Box>
       <List>
         {accounts.map((account) => (
-          <React.Fragment key={account.accountNumber}>
+          <React.Fragment key={account.account_number}>
             <ListItem
               sx={
                 !isPhoneScreen
@@ -60,10 +68,10 @@ const BankAccountsList: React.FC<BankAccountsListProps> = ({ accounts }) => {
               <Box>
                 <Stack spacing={1}>
                   <Typography fontSize={18} fontWeight={550}>
-                    {account.accountNumber}
+                    {getMaskedAccountNumber(account.account_number)}
                   </Typography>
                   <Typography color="#898989" fontWeight={500}>
-                    {account.ifscCode}
+                    {account.ifsc}
                   </Typography>
                 </Stack>
               </Box>
@@ -72,10 +80,10 @@ const BankAccountsList: React.FC<BankAccountsListProps> = ({ accounts }) => {
               ) : (
                 <RadioGroup
                   value={selectedAccount}
-                  onChange={() => handleSelectAccount(account.accountNumber)}
+                  onChange={() => handleSelectAccount(account.account_number)}
                 >
                   <FormControlLabel
-                    value={account.accountNumber}
+                    value={account.account_number}
                     control={<Radio />}
                     label=""
                     sx={{ margin: 0 }}
