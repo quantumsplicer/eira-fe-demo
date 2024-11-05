@@ -31,6 +31,7 @@ import TutorTermsOfUse from "../flows/tutorWebsite/pages/TutorTerms";
 import RefundPolicy from "../flows/tutorWebsite/pages/RefundPolicy";
 import ContactPolicy from "../flows/tutorWebsite/pages/ContactPolicy";
 import TutorOnboardingContainer from "../components/TutorOnboardingContainer";
+import BaseRedirect from "../components/BaseRedirect";
 
 const AppRoutes = () => {
   return (
@@ -81,8 +82,8 @@ const AppRoutes = () => {
         <Route path="kyc" element={<KycLogin />} />
         <Route path="dashboard" element={<TutorDashboard />} />
       </Route>
-t
-      <Route path="*" element={<PageNotFound />} />
+
+      <Route path="" element={<BaseRedirect />} />
       <Route path="page-not-found" element={<PageNotFound />} />
       <Route path="/:tutorUserName" element={<TutorWebsite />} />
       <Route
@@ -94,6 +95,8 @@ t
         path="/:tutorUserName/contact-policy"
         element={<ContactPolicy />}
       />
+
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 };

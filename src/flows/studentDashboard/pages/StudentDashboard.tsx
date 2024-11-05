@@ -38,6 +38,8 @@ import PaymentHistoryTable from "../components/PaymentHistoryTable";
 import PaymentFlow from "../components/PaymentFlow";
 import HomePage from "../subpages/HomePage";
 import { useNavigate } from "react-router-dom";
+import { useInstallPWA } from "../../../hooks/useInstallPWA";
+import PWAInstallDrawer from "../../../components/PWAInstallDrawer";
 
 const PAYMENT_HISTORY_PAGE = "payment-history-page";
 const HOME_PAGE = "home-page";
@@ -57,11 +59,14 @@ const StudentDashboard: React.FC = () => {
       fontFamily: "Montserrat", // Set the default font family
     },
   });
+  const [prompt, promptToInstall] = useInstallPWA();
+  console.log("prompt", !!prompt);
 
   const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [subpage, setSubpage] = useState(HOME_PAGE);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isPWAInstallPromptOpen, setIsPWAInstallPromptOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
   const navigate = useNavigate();
@@ -98,6 +103,10 @@ const StudentDashboard: React.FC = () => {
   const handleClosePaymentFlow = () => {
     setIsPaymentFlowActive(false);
   };
+
+  useEffect(() => {
+    setIsPWAInstallPromptOpen(!!prompt);
+  }, [prompt])
 
   useEffect(() => {
     if (!localStorage.getItem("access-token")) {
@@ -356,7 +365,7 @@ const StudentDashboard: React.FC = () => {
               backgroundColor: "#507FFD",
               color: "white",
             }}
-            onClick={() => setIsPaymentFlowActive(true)}
+            onClick={() => promptToInstall()}
           >
             Make a Payment
           </Fab>
@@ -372,6 +381,25 @@ const StudentDashboard: React.FC = () => {
             panNumber: "",
             phoneNumber: "",
           }}
+        />
+      )}
+      {isPWAInstallPromptOpen && (
+        <PWAInstallDrawer
+          open={isPWAInstallPromptOpen}
+          onClose={() => setIsPWAInstallPromptOpen(false)}
+          CustomDrawerButton={
+            <Button
+              onClick={() => promptToInstall()}
+              variant="contained"
+              sx={{
+                width: "320px",
+                height: 45,
+                borderRadius: 20,
+              }}
+            >
+              Save Eira
+            </Button>
+          }
         />
       )}
     </ThemeProvider>
