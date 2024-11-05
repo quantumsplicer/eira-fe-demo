@@ -1,6 +1,7 @@
 {
   "name": "eira-fe",
   "version": "0.1.0",
+  "homepage": ".",
   "private": true,
   "dependencies": {
     "@cashfreepayments/cashfree-js": "^1.0.5",
