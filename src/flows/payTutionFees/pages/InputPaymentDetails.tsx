@@ -91,6 +91,7 @@ const InputPaymentDetails: React.FC = () => {
 
     try {
       let isTutorAlreadyExisting: boolean = false;
+      let isTutorEiraOnboarded: boolean = false;
       let isTutorPgOnboarded: boolean = false;
       let isPayeeStudent;
       await getTutorDetials(phoneNumber)
@@ -107,6 +108,7 @@ const InputPaymentDetails: React.FC = () => {
             tutor?.last_name &&
             tutor?.pan
           );
+          isTutorEiraOnboarded = tutor?.onboarding_status === "completed";
           isTutorPgOnboarded = tutor?.pg_onboarding_status &&
             tutor.pg_onboarding_status.length > 0 &&
             (tutor.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" || tutor.pg_onboarding_status[0].status === "ACTIVE");
@@ -125,7 +127,7 @@ const InputPaymentDetails: React.FC = () => {
         localStorage.setItem("isTutorEiraOnboarded", "true");
         navigate("/pay/review");
       } else if (isTutorAlreadyExisting) {
-        localStorage.setItem("isTutorEiraOnboarded", "true");
+        localStorage.setItem("isTutorEiraOnboarded", String(isTutorEiraOnboarded));
         navigate("/pay/create-session");
       } else {
         localStorage.setItem("isTutorEiraOnboarded", "false");
