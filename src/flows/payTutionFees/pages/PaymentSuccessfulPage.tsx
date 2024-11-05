@@ -47,6 +47,7 @@ const PaymentSuccessfulPage = () => {
     localStorage.removeItem("activePaymentTutorName");
     localStorage.removeItem("activePaymentSessionDate");
     localStorage.removeItem("activePaymentSessionTime");
+    localStorage.removeItem("isTutorEiraOnboarded");
   }, [])
 
   return (

@@ -29,7 +29,7 @@ import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import moment from "moment";
 
 const PaymentReviewPage = () => {
-  const [isTutorOnboarded, setIsTutorOnboarded] = useState<boolean>(false);
+  const isTutorEiraOnboarded = localStorage.getItem("isTutorEiraOnboarded") === "true";
   const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
@@ -131,8 +131,8 @@ const PaymentReviewPage = () => {
                 width: 80,
               }}
             />
-            <Stack alignItems={"center"} mt={isTutorOnboarded ? 22 : 5}>
-              {!isTutorOnboarded && (
+            <Stack alignItems={"center"} mt={isTutorEiraOnboarded ? 22 : 5}>
+              {!isTutorEiraOnboarded && (
                 <Alert
                   variant="filled"
                   severity="info"

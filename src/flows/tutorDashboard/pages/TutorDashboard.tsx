@@ -138,6 +138,7 @@ const TutorDashboard: React.FC = () => {
 
   useEffect(() => {
     localStorage.removeItem("activeFlow");
+    localStorage.removeItem("autoFillDetails");
     const token = localStorage.getItem("access-token");
     if (!token) {
       setIsSessionExpired(true);

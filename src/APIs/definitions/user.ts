@@ -1,5 +1,10 @@
 import { postgresApi } from "..";
 
+export interface pgOnboardingDetails {
+  pg_name: string;
+  status: string;
+}
+
 export interface UserDetails {
   id: string;
   first_name: string;
@@ -13,6 +18,7 @@ export interface UserDetails {
   report_fetch_timestamp: string;
   onboarding_status: string;
   onboarding_failure_reason: string;
+  pg_onboarding_status: pgOnboardingDetails[];
 }
 
 export const userApi = postgresApi.injectEndpoints({
@@ -59,6 +65,10 @@ export const userApi = postgresApi.injectEndpoints({
         }),
       }
     ),
+
+    userSearchById: builder.query<UserDetails, string>({
+      query: (userId) => `user/${userId}`
+    })
   }),
 });
 
@@ -70,5 +80,6 @@ export const {
   useLazyGetUserDetailsByPhoneQuery,
   useGetUserByUserNameQuery,
   useRegisterTutorByStudentMutation,
-  useLazyGetUserByUserNameQuery
+  useLazyGetUserByUserNameQuery,
+  useLazyUserSearchByIdQuery
 } = userApi;

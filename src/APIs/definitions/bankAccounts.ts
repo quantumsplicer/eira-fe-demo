@@ -2,7 +2,11 @@ import { ApiResponse, postgresApi } from "..";
 
 export interface Account {
   account_number: string;
+  account_number_trimmed: string;
+  id: string;
   ifsc: string;
+  is_primary: boolean;
+  name_on_bank: string;
 }
 
 export const bankAccountsApi = postgresApi.injectEndpoints({

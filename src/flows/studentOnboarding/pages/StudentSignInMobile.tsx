@@ -28,6 +28,7 @@ const StudentSignInMobile = () => {
     useState<boolean>(false);
   const [isExistingUser, setIsExistingUser] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { navigateToCurrentOnboardingStep, checkProcessIsLoading } =
     useGetOnboardingDetails();
@@ -36,8 +37,17 @@ const StudentSignInMobile = () => {
 
   const handleSubmit = () => {
     if (isPhoneNumberValid(phone)) {
-      getOtp({ phone: phone, role: "student" }).then(() => {
+      setErrorMessage(null);
+      getOtp({ phone: phone, role: "student" })
+      .unwrap()
+      .then(() => {
         setIsDrawerOpen(true);
+      })
+      .catch(err => {
+        console.log(err)
+        err.data.message === "The user role and input role does not match." ?
+          setErrorMessage("This user is already registered as a teacher") :
+          setErrorMessage("Something went wrong. Please try again!")
       });
     }
   };
@@ -175,24 +185,35 @@ const StudentSignInMobile = () => {
           onSubmit={handleSubmit}
           autoFocus={true}
         />
-        <LoadingButton
-          loading={getOtpIsLoading}
-          disabled={phone.length !== 10 || !isPhoneNumberValid(phone)}
-          onClick={handleSubmit}
-          variant="contained"
-          color="primary"
-          sx={{
-            width: "100%",
-            minWidth: "320px",
-            maxWidth: "400px",
-            padding: 1.5,
-            borderRadius: 20,
-            marginTop: 3,
-            height: 45,
-          }}
+        <Box
+          mt={5}
+          width={"100%"}
+          minWidth={"320px"}
+          maxWidth={"400px"}
         >
-          Submit
-        </LoadingButton>
+          {
+            errorMessage &&
+            <Typography fontSize={14} color="red" textAlign={"center"} mb={2}>
+              {errorMessage}
+            </Typography>
+          }
+          <LoadingButton
+            loading={getOtpIsLoading}
+            disabled={phone.length !== 10 || !isPhoneNumberValid(phone)}
+            onClick={handleSubmit}
+            variant="contained"
+            color="primary"
+            sx={{
+              width: "100%",
+              padding: 1.5,
+              borderRadius: 20,
+              height: 45,
+              mt: errorMessage ? 0 : 4.6
+            }}
+          >
+            Submit
+          </LoadingButton>
+        </Box>
         {isDrawerOpen ? (
           isOtpVerificationDone ? (
             <StatusDrawer

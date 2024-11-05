@@ -32,8 +32,11 @@ const PayFeesContainer: React.FC = () => {
       localStorage.setItem("activeFlow", "payTuitionFeesFlow");
     else if (window.location.pathname.includes("payment-link"))
       localStorage.setItem("activeFlow", "DynamicLinkFlow");
-    else if (window.location.pathname.includes("static-link"))
+    else if (window.location.pathname.includes("static-link")) {
       localStorage.setItem("activeFlow", "StaticLinkFlow");
+      const staticLinkPayeeName = window.location.pathname.split('-')[1].split('/').pop();
+      staticLinkPayeeName && localStorage.setItem("staticLinkPayeeName", staticLinkPayeeName.charAt(0).toUpperCase() + staticLinkPayeeName.slice(1).toLowerCase());
+    }
     else localStorage.setItem("activeFlow", "defaultFlow");
 
     localStorage.setItem("activeFlowUrl", window.location.pathname);

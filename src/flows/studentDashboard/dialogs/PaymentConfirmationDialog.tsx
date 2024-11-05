@@ -208,6 +208,7 @@ const PaymentConfirmationDialog = ({
             <Stack justifyContent="center" alignItems="center">
               <Typography
                 align="center"
+                fontWeight={600}
                 sx={{
                   cursor: 'pointer',
                   textDecoration: 'underline',

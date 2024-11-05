@@ -27,10 +27,14 @@ const CurrentLimitCard: React.FC = () => {
   const { data: userDetails } = useGetUserDetailsQuery();
 
   const currentLimit = useMemo(() => {
-    return userDetails?.onboarding_status === "approved" ? 50000 : 5000;
+    return userDetails?.pg_onboarding_status && 
+      userDetails.pg_onboarding_status.length &&
+      (userDetails.pg_onboarding_status[0].status === "MIN_KYC_AAPPROVED" || userDetails.pg_onboarding_status[0].status === "ACTIVE")
+      ? 50000 : 5000;
   }, [userDetails]);
   const onboardingStatus = useMemo(() => {
-    return userDetails?.onboarding_status;
+    return userDetails?.pg_onboarding_status?.length &&
+      (userDetails.pg_onboarding_status[0].status === "MIN_KYC_AAPPROVED" || userDetails.pg_onboarding_status[0].status === "ACTIVE")
   }, [userDetails]);
   return (
     <Box
@@ -162,7 +166,7 @@ const CurrentLimitCard: React.FC = () => {
             align="center"
             sx={!isPhoneScreen ? {} : { width: "100%", textAlign: "center" }}
           >
-            {onboardingStatus === "approved"
+            {onboardingStatus
               ? "Congratulations! Your limit has been increased to ₹50,000"
               : "Complete KYC to increase limit to ₹50,000"}
           </Typography>
@@ -194,7 +198,7 @@ const CurrentLimitCard: React.FC = () => {
                   }
             }
           >
-            {onboardingStatus === "approved"
+            {onboardingStatus
               ? "You've already completed your KYC"
               : "Complete KYC"}
           </Button>

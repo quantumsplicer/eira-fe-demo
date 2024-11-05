@@ -3,14 +3,17 @@ import Box from "@mui/material/Box";
 import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
 import StatusTag from "./StatusTag";
 import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
-import { useGetOnboardingStatusQuery } from "../../../APIs/definitions/onboarding";
 
 const ProfileInfoCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
-  const { error: isOnboardingStatusError } = useGetOnboardingStatusQuery(
-    userDetails ? userDetails.id : ""
-  );
+
+  const isAadharVerified = () => {
+    return userDetails?.pg_onboarding_status && 
+      userDetails.pg_onboarding_status.length > 0 && 
+      (userDetails.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" || userDetails.pg_onboarding_status[0].status === "ACTIVE")
+  }
+
   return (
     <Box
       sx={
@@ -102,7 +105,7 @@ const ProfileInfoCard: React.FC = () => {
             <Typography color="#7E7E7E" fontWeight={630}>
               Aadhaar Verified:
             </Typography>
-            <StatusTag cellValue={isOnboardingStatusError ? "No" : "Yes"} />
+            <StatusTag cellValue={isAadharVerified() ? "Yes" : "No"} />
           </Stack>
         </Stack>
       </Stack>

@@ -90,7 +90,9 @@ const InputPaymentDetails: React.FC = () => {
       return;
 
     try {
-      let isTutorOnboarded: boolean = false;
+      let isTutorAlreadyExisting: boolean = false;
+      let isTutorEiraOnboarded: boolean = false;
+      let isTutorPgOnboarded: boolean = false;
       let isPayeeStudent;
       await getTutorDetials(phoneNumber)
         .unwrap()
@@ -101,12 +103,17 @@ const InputPaymentDetails: React.FC = () => {
             isPayeeStudent = true;
             return;
           }
-          isTutorOnboarded = !!(
+          isTutorAlreadyExisting = !!(
             tutor?.first_name &&
             tutor?.last_name &&
             tutor?.pan
           );
-          if (isTutorOnboarded) {
+          isTutorEiraOnboarded = tutor?.onboarding_status === "completed";
+          isTutorPgOnboarded = tutor?.pg_onboarding_status &&
+            tutor.pg_onboarding_status.length > 0 &&
+            (tutor.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" || tutor.pg_onboarding_status[0].status === "ACTIVE");
+          
+          if (isTutorAlreadyExisting) {
             dispatch(setPayeeId(tutor?.id));
             localStorage.setItem("activePaymentPayeeUserId", tutor?.id);
             localStorage.setItem(
@@ -115,14 +122,16 @@ const InputPaymentDetails: React.FC = () => {
             );
           }
         });
-      // const tutor = await getUserDetails().unwrap();
 
-      // const isTutorOnboarded = !!(tutor?.first_name && tutor?.last_name && tutor?.pan);
-
-      if (!isTutorOnboarded) {
-        navigate("/pay/tutor-details");
-      } else {
+      if (isTutorPgOnboarded) {
+        localStorage.setItem("isTutorEiraOnboarded", "true");
+        navigate("/pay/review");
+      } else if (isTutorAlreadyExisting) {
+        localStorage.setItem("isTutorEiraOnboarded", String(isTutorEiraOnboarded));
         navigate("/pay/create-session");
+      } else {
+        localStorage.setItem("isTutorEiraOnboarded", "false");
+        navigate("/pay/tutor-details");
       }
     } catch (error) {
       console.error(error);
@@ -290,7 +299,7 @@ const InputPaymentDetails: React.FC = () => {
                 onClick={handleSubmit}
                 disabled={isButtonDisabled}
               >
-                Book a slot
+                Proceed
               </LoadingButton>
             </Stack>
           </Stack>

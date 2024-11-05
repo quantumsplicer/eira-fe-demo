@@ -12,8 +12,10 @@ import EiraBack from "../../../assets/images/svg/EiraBack.svg";
 import SafeLogo from "../../../components/SafeLogo";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const TutorSignUp: React.FC = () => {
+  const activeFlow = localStorage.getItem("activeFlow");
   const [signUpStep, setSignUpStep] = useState<number>(1);
   const [isAccountVerifying, setIsAccountVerifying] = useState<boolean>(false);
   const [aadhaarVerificationFailed, setAadhaarVerificationFailed] = useState<
@@ -21,6 +23,7 @@ const TutorSignUp: React.FC = () => {
   >(null);
   const tutorOnboardingStep = localStorage.getItem("tutorOnboardingStep");
   const [isSessionExpired, setIsSessionExpired] = useState<boolean>(false);
+  const onboardingUsername = localStorage.getItem("onboardingUsername");
   const navigate = useNavigate();
 
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
@@ -31,7 +34,7 @@ const TutorSignUp: React.FC = () => {
   ];
 
   const step2Notes = [
-    "Please ensure that account holder's name is same as the name entered before",
+    onboardingUsername ? `Please enter account details associated with ${onboardingUsername}` : "Please ensure that account holder's name is same as the name entered before",
   ];
 
   useEffect(() => {
@@ -110,6 +113,13 @@ const TutorSignUp: React.FC = () => {
           boxShadow={notPhoneScreen ? "2px -2px 14px 2px #00000021" : "none"}
         >
           <Stack direction={"column"}>
+            {
+              signUpStep === 2 && activeFlow !== "tutorKyc" &&
+              <ArrowBackIosIcon onClick={() => {
+                localStorage.setItem("autoFillDetails", "true");
+                setSignUpStep(signUpStep-1)
+              }} />
+            }
             <img
               src={EiraLogo}
               style={{
