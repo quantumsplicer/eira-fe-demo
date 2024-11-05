@@ -74,7 +74,6 @@ const AppRoutes = () => {
       </Route>
       <Route path="student/login" element={<StudentSignIn />} />
       <Route path="student/signup" element={<StudentSignUp />} />
-      <Route path="tutor/kyc" element={<KycLogin />} />
 
       <Route path="tutor/" element={<TutorOnboardingContainer />}>
         <Route path="login" element={<TutorSignIn />} />

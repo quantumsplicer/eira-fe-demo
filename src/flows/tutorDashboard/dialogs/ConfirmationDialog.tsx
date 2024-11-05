@@ -84,9 +84,19 @@ const ConfirmationDialog = ({
                   }}
                 />
               </Box>
-              <Link href="#" sx={{ color: "grey", fontSize: 18 }}>
-                Create another
-              </Link>
+              <Typography
+                onClick={handleOnClose}
+                fontSize={18}
+                color={"gray"}
+                fontWeight={600}
+                sx={{
+                  borderBottomWidth: "1px",
+                  borderBottomStyle: "solid",
+                  borderBottomColor: "gray"
+                }}
+              >
+                Go to Dashboard
+              </Typography>
             </Stack>
           </DialogContent>
         </Dialog>
@@ -129,9 +139,19 @@ const ConfirmationDialog = ({
                 }}
               />
             </Box>
-            <Link href="#" sx={{ color: "grey", fontSize: 18 }}>
-              Create another
-            </Link>
+            <Typography
+                onClick={handleOnClose}
+                fontSize={18}
+                color={"gray"}
+                fontWeight={600}
+                sx={{
+                  borderBottomWidth: "1px",
+                  borderBottomStyle: "solid",
+                  borderBottomColor: "gray"
+                }}
+              >
+                Go to Dashboard
+              </Typography>
           </Stack>
         </Drawer>
       )}

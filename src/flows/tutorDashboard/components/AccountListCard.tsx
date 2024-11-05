@@ -4,6 +4,7 @@ import { Stack, Typography, useMediaQuery } from "@mui/material";
 import BankAccountsList from "./BankAccountsList";
 import { useState } from "react";
 import AddBankAccountDialog from "../dialogs/AddBankAccountDialog";
+import { useGetAccountsQuery } from "../../../APIs/definitions/bankAccounts";
 
 interface BankAccount {
   accountNumber: string;
@@ -11,12 +12,10 @@ interface BankAccount {
   isPrimary: boolean;
 }
 
-const accountsData: BankAccount[] = [
-  { accountNumber: "*******7890", ifscCode: "IFSC001", isPrimary: true },
-];
 const AccountsListCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [activeDialog, setActiveDialog] = useState<string>("None");
+  const { data: bankAccounts } = useGetAccountsQuery();
 
   return (
     <Box
@@ -76,7 +75,7 @@ const AccountsListCard: React.FC = () => {
             )}
           </Stack>
           <Stack pl={!isPhoneScreen ? 0.5 : 0}>
-            <BankAccountsList accounts={accountsData} />
+            <BankAccountsList accounts={bankAccounts ? bankAccounts : []} />
           </Stack>
         </Stack>
         <Stack direction="row" sx={{ justifyContent: "flex-end" }} spacing={4}>

@@ -27,6 +27,7 @@ const PaymentConfirmation = ({ name, paymentDetails, amount }: PaymentConfirmati
                 onClick={() => {
                     navigate("/student/dashboard");
                 }}
+                fontWeight={600}
                 mt={3}
                 sx={{
                     borderBottom: "1px solid #757575",

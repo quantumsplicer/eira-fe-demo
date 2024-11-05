@@ -24,15 +24,16 @@ const AadharVerifyRedirectPage = () => {
       setIsSessionExpired(true);
       return;
     }
+    localStorage.removeItem("activeFlow");
     handleOnboarding();
   }, []);
   
   const handleOnboarding = async () => {
       const { navigateTo, onboardingStep } = await determineOnboardingStep();
       localStorage.setItem("tutorOnboardingStep", onboardingStep.toString());
-      if (navigateTo === "/tutor-id/dashboard") {
+      if (navigateTo === "/tutor/dashboard") {
           localStorage.setItem("showDialog", "true");
-          navigate('/tutor-id/dashboard', { state: { previousUrl: location.pathname } });
+          navigate('/tutor/dashboard', { state: { previousUrl: location.pathname } });
           return;
       }
       navigate(navigateTo);
