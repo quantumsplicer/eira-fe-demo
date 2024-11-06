@@ -50,7 +50,7 @@ export const userApi = postgresApi.injectEndpoints({
 
     getUserByUserName: builder.query<UserDetails[], string>({
       query: (username) => ({
-        url: `user/search`,
+        url: `user/search-action`,
         method: "GET",
         params: { username },
       }),

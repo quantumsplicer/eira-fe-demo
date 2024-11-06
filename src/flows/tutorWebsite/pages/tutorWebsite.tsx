@@ -34,7 +34,7 @@ const TutorWebsite = () => {
 
   useEffect(() => {
     if (userDetailsIsLoading) return;
-    console.log(getUserDetails);
+
     if (!getUserDetails) {
       navigate("/page-not-found");
     }
@@ -55,7 +55,7 @@ const TutorWebsite = () => {
         }}
       >
         <Avatar
-          alt="Surya Rathi"
+          alt={getUserDetails?.[0]?.first_name + " " + getUserDetails?.[0]?.last_name}
           sx={{
             width: isPhoneScreen ? 100 : 150,
             height: isPhoneScreen ? 100 : 150,
@@ -66,7 +66,7 @@ const TutorWebsite = () => {
             variant={isPhoneScreen ? "h4" : "h3"}
             sx={{ fontWeight: "bold", color: "#232437", textAlign: "center" }}
           >
-            Surya Rathi
+            {getUserDetails?.[0]?.first_name + " " + getUserDetails?.[0]?.last_name}
           </Typography>
           <Stack
             mt={3}
@@ -78,7 +78,7 @@ const TutorWebsite = () => {
                 <strong>Phone number:</strong>
               </Typography>
               <Typography variant="body1" textAlign={"right"}>
-                ***** *4720
+                {getUserDetails?.[0]?.phone}
               </Typography>
             </Stack>
             <Stack justifyContent="space-between" direction="row">
@@ -87,7 +87,7 @@ const TutorWebsite = () => {
               </Typography>
               <Stack alignItems={"flex-end"}>
                 <Typography variant="body1" textAlign={"right"}>
-                  Surya Rathi
+                  {getUserDetails?.[0]?.first_name + " " + getUserDetails?.[0]?.last_name}
                 </Typography>
                 <Typography variant="body1" textAlign={"right"}>
                   is a verified Eira teacher
@@ -99,17 +99,17 @@ const TutorWebsite = () => {
                 <strong>Subjects taught:</strong>
               </Typography>
               <Typography variant="body1" textAlign={"right"}>
-                Physics - class 8 to 10
+                -
               </Typography>
             </Stack>
-            <Stack justifyContent="space-between" direction="row">
+            {/* <Stack justifyContent="space-between" direction="row">
               <Typography variant="body1" textAlign={"left"}>
                 <strong>Address:</strong>
               </Typography>
               <Typography variant="body1" textAlign={"right"}>
-                Karnal, Haryana
+                {getUserDetails?.[0]?.address ?? "-"}
               </Typography>
-            </Stack>
+            </Stack> */}
             <Typography
               textAlign={isPhoneScreen ? "center" : "left"}
               variant="body2"
