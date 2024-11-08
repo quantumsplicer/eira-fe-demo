@@ -28,128 +28,128 @@ import { Transaction } from "../../tutorDashboard/interfaces";
 
 const lightTheme = createTheme({ palette: { mode: "light" } });
 
-interface Person {
-  title: string;
-  tutorPhoneNumber: string;
-  timeOfSession: string;
-  repeat: string;
-  amount: number;
-  paymentStatus: string;
-}
-const data: Person[] = [
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-  {
-    title: "Math's Class",
-    tutorPhoneNumber: "+919997945005",
-    timeOfSession: "5:53pm on 13/05/2024",
-    repeat: "Daily",
-    amount: 2000,
-    paymentStatus: "Pending",
-  },
-];
+// interface Person {
+//   title: string;
+//   tutorPhoneNumber: string;
+//   timeOfSession: string;
+//   repeat: string;
+//   amount: number;
+//   paymentStatus: string;
+// }
+// const data: Person[] = [
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+//   {
+//     title: "Math's Class",
+//     tutorPhoneNumber: "+919997945005",
+//     timeOfSession: "5:53pm on 13/05/2024",
+//     repeat: "Daily",
+//     amount: 2000,
+//     paymentStatus: "Pending",
+//   },
+// ];
 
 interface PaymentHistoryTableMobileProps {
   transactionDetails: Transaction;
@@ -249,30 +249,26 @@ const PaymentHistoryTable: React.FC = () => {
       ? "rgba(100, 100, 100 , 1)"
       : "rgba(250, 250, 250, 1)";
 
-  const columnHelper = createMRTColumnHelper<Person>();
+  const columnHelper = createMRTColumnHelper<Transaction>();
   const columns = [
-    columnHelper.accessor("title", {
-      header: "Title",
-      id: "title",
+    columnHelper.accessor("id", {
+      header: "ID",
+      id: "id",
       enableHiding: false,
     }),
-    columnHelper.accessor("tutorPhoneNumber", {
+    columnHelper.accessor("student_phone", {
       header: "Tutor's Phone Number",
       enableHiding: false,
     }),
-    columnHelper.accessor("timeOfSession", {
+    columnHelper.accessor("created", {
       header: "Date & Time of Session",
-      enableHiding: false,
-    }),
-    columnHelper.accessor("repeat", {
-      header: "Repeat",
       enableHiding: false,
     }),
     columnHelper.accessor("amount", {
       header: "Amount",
       enableHiding: false,
     }),
-    columnHelper.accessor("paymentStatus", {
+    columnHelper.accessor("status", {
       header: "Payment Status",
       enableHiding: false,
       Cell: ({ cell }) => <StatusTag cellValue={cell.getValue<string>()} />,
@@ -281,7 +277,7 @@ const PaymentHistoryTable: React.FC = () => {
 
   const table = useMaterialReactTable({
     columns,
-    data, //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
+    data: transactionDetails?.results || [], //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
     enableToolbarInternalActions: false,
     enableTopToolbar: false,
     enableColumnActions: false,
@@ -293,8 +289,6 @@ const PaymentHistoryTable: React.FC = () => {
       density: "spacious",
     },
     defaultColumn: {
-      //allow columns to get larger than default
-
       size: 40, //make columns wider by default
     },
     muiTableBodyCellProps: () => ({

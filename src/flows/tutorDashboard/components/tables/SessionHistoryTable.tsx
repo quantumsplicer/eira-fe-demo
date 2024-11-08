@@ -177,7 +177,7 @@ const lightTheme = createTheme({ palette: { mode: "light" } });
 //     status: "Completed",
 //   },
 // ];
-const data: SessionDetails[] = [];
+
 interface SessionMobileCellProps {
   session: SessionDetails;
   onClick: () => void;
@@ -232,24 +232,27 @@ const SessionMobileCell = ({ session, onClick }: SessionMobileCellProps) => {
   );
 };
 
-const SessionHistoryTable: React.FC = () => {
+interface SessionHistoryTableProps {
+  data: any[];
+}
+
+const SessionHistoryTable: React.FC<SessionHistoryTableProps> = ({ data }) => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
+  const [sessionLinkFlowActive, setSessionLinkFlowActive] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [activeDrawerSessionDetails, setActiveDrawerSessionDetails] =
     useState<SessionDetails | null>(null);
+
   const handleOnClick = (session: SessionDetails) => {
     return () => {
       setIsDrawerOpen(true);
       setActiveDrawerSessionDetails(session);
     };
   };
-  const heading = "Session Successfully created";
-  const subHeading =
-    "link for your session has been successfully sent to your attendees via email";
   const handleOnClickCreateSessionLink = () => {
     setSessionLinkFlowActive(true);
   };
-  const [sessionLinkFlowActive, setSessionLinkFlowActive] = useState(false);
+
   const columnHelper = createMRTColumnHelper<SessionDetails>();
   const theme = useTheme();
   const baseBackgroundColor =
@@ -274,15 +277,10 @@ const SessionHistoryTable: React.FC = () => {
       header: "End Time",
       enableHiding: false,
     }),
-    // columnHelper.accessor("status", {
-    //   header: "Status",
-    //   enableHiding: false,
-    //   Cell: ({ cell }) => <StatusTag cellValue={cell.getValue<string>()} />,
-    // }),
   ];
   const table = useMaterialReactTable({
     columns,
-    data, //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
+    data: data || [],
     enableToolbarInternalActions: false,
     enableTopToolbar: false,
     enableColumnActions: false,
@@ -626,16 +624,16 @@ const SessionHistoryTable: React.FC = () => {
                     </Stack>
                   </Stack>
                 </Box>
-                {sessionLinkFlowActive && (
-                  <SendSessionLinkFlow
-                    isActive={sessionLinkFlowActive}
-                    onClose={() => setSessionLinkFlowActive(false)}
-                  />
-                )}
               </>
             )}
           </Stack>
         </Box>
+        {sessionLinkFlowActive && (
+          <SendSessionLinkFlow
+            isActive={sessionLinkFlowActive}
+            onClose={() => setSessionLinkFlowActive(false)}
+          />
+        )}
       </ThemeProvider>
     </>
   );

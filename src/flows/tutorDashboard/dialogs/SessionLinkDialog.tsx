@@ -23,6 +23,7 @@ import { Dayjs } from "dayjs";
 import CloseIcon from "@mui/icons-material/Close";
 import { SessionDetails } from "../../../APIs/definitions/session";
 import { useGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
+import { useRegisterStudentByTutorMutation } from "../../../APIs/definitions/user";
 interface SessionLinkDialogProps {
   open: boolean;
   onSubmit: (data: any) => void;
@@ -35,7 +36,7 @@ type Inputs = {
   selectedDate: Dayjs | null;
   startTime: Dayjs | null;
   endTime: Dayjs | null;
-  attendees: string[];
+  attendeePhoneNumber: string;
   description: string;
 };
 const SessionLinkDialog = ({
@@ -58,12 +59,12 @@ const SessionLinkDialog = ({
       selectedDate: null,
       startTime: null,
       endTime: null,
-      attendees: [],
+      attendeePhoneNumber: "",
     },
+    mode: "onChange",
   });
 
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  const [attendeeInput, setAttendeeInput] = useState("");
 
   const handleOnClose = () => {
     onClose();
@@ -72,25 +73,6 @@ const SessionLinkDialog = ({
     onSubmit(data);
   };
 
-  const handleAddAttendee = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Enter" && attendeeInput.trim()) {
-      event.preventDefault();
-
-      const currentAttendees = getValues("attendees") || [];
-      // Avoid adding duplicates
-      if (!currentAttendees.includes(attendeeInput.trim())) {
-        setValue("attendees", [...currentAttendees, attendeeInput.trim()]);
-        setAttendeeInput("");
-      }
-    }
-  };
-
-  const handleDeleteAttendee = (attendeeToDelete: string) => () => {
-    setValue(
-      "attendees",
-      getValues("attendees").filter((attendee) => attendee !== attendeeToDelete)
-    );
-  };
   return (
     <Dialog
       open={open}
@@ -197,7 +179,6 @@ const SessionLinkDialog = ({
               )}
             />
 
-            {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
             <Stack direction="row" spacing={3}>
               <Controller
                 name="selectedDate"
@@ -313,31 +294,76 @@ const SessionLinkDialog = ({
                 )}
               />
             </Stack>
-            {/* </LocalizationProvider> */}
             <Controller
-              name="attendees"
+              name="attendeePhoneNumber"
               control={control}
-              render={({ field }) => (
-                <>
-                  <TextField
-                    size="small"
-                    fullWidth
-                    variant="outlined"
-                    label="Add new attendee"
-                    value={attendeeInput}
-                    onChange={(e) => setAttendeeInput(e.target.value)}
-                    onKeyDown={handleAddAttendee}
-                  />
-                  <Stack direction="row" flexWrap="wrap" gap={0.5}>
-                    {field.value.map((attendee) => (
-                      <Chip
-                        key={attendee}
-                        label={attendee}
-                        onDelete={handleDeleteAttendee(attendee)}
-                      />
-                    ))}
-                  </Stack>
-                </>
+              rules={{
+                required: "This field is required",
+                maxLength: {
+                  value: 10,
+                  message: "Phone number must be 10 digits long",
+                },
+                minLength: {
+                  value: 10,
+                  message: "Phone number must be 10 digits long",
+                },
+                pattern: {
+                  value: /^[6-9]\d{9}$/,
+                  message: "Invalid Number",
+                },
+              }}
+              render={({
+                field: { onChange, onBlur, value, name, ref },
+                fieldState: { invalid, isTouched, isDirty, error },
+              }) => (
+                <TextField
+                  value={value}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  label="Receiver's Phone Number"
+                  fullWidth
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  error={!!errors.attendeePhoneNumber}
+                  helperText={
+                    <Typography
+                      sx={{ fontSize: 10, color: "red" }}
+                      component="span"
+                    >
+                      {errors.attendeePhoneNumber
+                        ? errors.attendeePhoneNumber.message
+                        : ""}
+                    </Typography>
+                  }
+                  sx={{
+                    mb: 0,
+                    "& .MuiInputLabel-root": {
+                      transform: "translate(0, -10px) scale(0.8)", // Move the label above
+                    },
+                    "& .MuiInputBase-root": {
+                      marginTop: "16px", // Add space between label and input box
+                    },
+                    "&:MuiInputBase-input": {
+                      fontSize: 12,
+                    },
+                    "& legend": {
+                      width: 0,
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <Stack direction={"row"} spacing={1} sx={{ mr: 1 }}>
+                        <img
+                          src="https://flagcdn.com/w320/in.png"
+                          alt="India Flag"
+                          style={{ width: 24, height: 18, marginRight: 8 }}
+                        />
+                        <Typography fontSize={14}>+91</Typography>
+                      </Stack>
+                    ),
+                  }}
+                />
               )}
             />
             <Controller
@@ -358,7 +384,7 @@ const SessionLinkDialog = ({
             <Button
               variant="contained"
               fullWidth
-              // disabled={!isValid}
+              disabled={!isValid}
               onClick={handleSubmit(handleOnSubmit)}
               sx={{
                 backgroundColor: "#507FFD",

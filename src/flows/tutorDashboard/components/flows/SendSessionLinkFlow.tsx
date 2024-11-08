@@ -6,6 +6,7 @@ import {
   useGetSessionListQuery,
 } from "../../../../APIs/definitions/session";
 import { SessionDetails } from "../../../../APIs/definitions/session";
+import { useRegisterStudentByTutorMutation } from "../../../../APIs/definitions/user";
 
 interface SendSessionLinkFlowProps {
   isActive: boolean;
@@ -18,12 +19,13 @@ const SendSessionLinkFlow: React.FC<SendSessionLinkFlowProps> = ({
 }) => {
   const [createSessionLink, { isLoading, isSuccess, isError, error }] =
     useCreateSessionMutation();
-
+  const [registerStudent, { isLoading: registerStudentIsLoading }] =
+    useRegisterStudentByTutorMutation();
   const [openSessionLinkDialog, setOpenSessionLinkDialog] =
     useState<boolean>(true);
   const [openConfirmationDialog, setOpenConfirmationDialog] =
     useState<boolean>(false);
-  const [sessionDetails, setSessionDetails] = useState<SessionDetails>();
+
   const handleOnSuccessSessionLinkDialog = () => {};
 
   const handleOnFailureSessionLinkDialog = () => {};
@@ -34,26 +36,32 @@ const SendSessionLinkFlow: React.FC<SendSessionLinkFlowProps> = ({
     onClose();
   };
 
-  const handleOnSubmitSessionLinkDialog = (data: any) => {
-    createSessionLink({
-      student_id: data.attendees[0],
-      starttime: data.startTime,
-      endtime: data.endTime,
-      title: data.sessionTitle,
-      subject: "blank_subject",
-      teacher_id: localStorage.getItem("userId") || "",
-      amount: 0,
+  const handleOnSubmitSessionLinkDialog = async (data: any) => {
+    const { attendeePhoneNumber, ...sessionData } = data;
+
+    registerStudent({
+      phone: attendeePhoneNumber,
     })
       .unwrap()
-      .then((response) => {
-        console.log("Session link created:", response);
-        setOpenConfirmationDialog(true);
-      })
-      .catch((err) => {
-        console.error("Error creating session link:", err);
+      .then((res) => {
+        if (res) {
+          const userId = res.id;
+          createSessionLink({
+            subject: "",
+            teacher_id: localStorage.getItem("userId") || "",
+            student_id: userId,
+            amount: 0,
+            starttime: sessionData.selectedDate,
+            endtime: sessionData.selectedDate,
+            title: sessionData.sessionTitle,
+          })
+            .unwrap()
+            .then((sessionRes) => {
+              setOpenSessionLinkDialog(false);
+              setOpenConfirmationDialog(true);
+            });
+        }
       });
-
-    setOpenSessionLinkDialog(false);
   };
 
   const handleOnCloseConfirmationDialog = () => {
@@ -63,8 +71,8 @@ const SendSessionLinkFlow: React.FC<SendSessionLinkFlowProps> = ({
   };
 
   useEffect(() => {
-    setOpenSessionLinkDialog(isActive);
-  }, [isActive]);
+    console.log("session link flow");
+  }, []);
 
   return (
     <>
@@ -78,8 +86,12 @@ const SendSessionLinkFlow: React.FC<SendSessionLinkFlowProps> = ({
       <ConfirmationDialog
         open={openConfirmationDialog && isActive}
         onClose={handleOnCloseConfirmationDialog}
-        heading="Session Link Created"
-        subHeading="Your session link has been successfully created and sent to the student(s)."
+        heading={isSuccess ? "Session Link Created" : "Error"}
+        subHeading={
+          isSuccess
+            ? "Your session link has been successfully created and sent to the student(s)."
+            : "Something went wrong"
+        }
       />
     </>
   );

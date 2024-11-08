@@ -161,9 +161,9 @@ const PaymentDetailsDialog = ({
                 </Stack>
               )}
               <Stack
-                height={isPhoneScreen ? "50%" : "45%"}
+                height={isPhoneScreen ? "50%" : "30%"}
                 justifyContent="space-between"
-                spacing={isPhoneScreen ? 4 : 0}
+                spacing={isPhoneScreen ? 4 : 4}
                 width="85%"
                 alignSelf="center"
               >

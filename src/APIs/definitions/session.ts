@@ -19,7 +19,7 @@ export const sessionApi = postgresApi.injectEndpoints({
         body,
       }),
     }),
-    getSessionList: builder.query<ApiResponse, SessionDetails[]>({
+    getSessionList: builder.query<SessionDetails[], void>({
       query: () => ({
         url: `schedules/`,
         method: "GET",

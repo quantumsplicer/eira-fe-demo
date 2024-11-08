@@ -2,10 +2,15 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import { Divider, Stack, Typography, useMediaQuery } from "@mui/material";
 import { useGetUserMetricsQuery } from "../../../APIs/definitions/userMetrics";
+import { useEffect, useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
 
 const UnsettledAmountCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const userMetricsData = useGetUserMetricsQuery();
+  const [nextSettlementDate, setNextSettlementDate] = useState<Dayjs | null>(
+    null
+  );
   console.log("User metrics data");
   console.log(userMetricsData);
 
@@ -14,7 +19,14 @@ const UnsettledAmountCard: React.FC = () => {
     currency: "INR",
     maximumFractionDigits: 0,
   });
-
+  useEffect(() => {
+    const today = dayjs();
+    if (today.hour() < 17) {
+      setNextSettlementDate(today);
+    } else {
+      setNextSettlementDate(today.add(1, "day"));
+    }
+  }, []);
   return (
     <Box
       sx={
@@ -119,7 +131,7 @@ const UnsettledAmountCard: React.FC = () => {
                 fontWeight="bold"
                 color="#898989"
               >
-                13th May 2024, 5:00pm
+                {nextSettlementDate?.format("DD MMM YYYY, h:mm A")}
               </Typography>
             </Stack>
           </Stack>

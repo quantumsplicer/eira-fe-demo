@@ -9,8 +9,9 @@ const PaymentHistoryPage: React.FC = () => {
   return (
     <Stack
       spacing={!isPhoneScreen ? 5 : 1}
-      pl={!isPhoneScreen ? 10 : 0}
-      pr={!isPhoneScreen ? 10 : 0}
+      pl={!isPhoneScreen ? 5 : 0}
+      pr={!isPhoneScreen ? 5 : 0}
+      height={!isPhoneScreen ? "88vh" : "auto"}
     >
       {!isPhoneScreen ? <h1>Payments History</h1> : <></>}
       <PaymentHistoryTable />
