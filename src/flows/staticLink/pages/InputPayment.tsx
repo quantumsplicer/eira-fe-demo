@@ -10,11 +10,11 @@ import { useLazyGetUserByUserNameQuery } from "../../../APIs/definitions/user";
 
 const InputPayment = () => {
 
-    const { phoneNumber } = useParams();
     const [amount, setAmount] = useState("");
     const navigate = useNavigate();
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
-    const staticLinkPayeeName = localStorage.getItem("staticLinkPayeeName");
+    const activePaymentTutorName = localStorage.getItem("activePaymentTutorName");
+    const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
 
     const [getTutorDetails] = useLazyGetUserByUserNameQuery();
 
@@ -93,11 +93,9 @@ const InputPayment = () => {
                         }}
                     >
                         <PaymentBreakupInfo
-                            name="Suneel Satpal"
-                            phone={`+91 ${phoneNumber}`}
+                            name={activePaymentTutorName ? activePaymentTutorName : ""}
+                            phone={activePaymentTutorId ? `+91 ${activePaymentTutorId}` : ""}
                             amount={Number(amount)}
-                            settlementDate="7th October"
-                            settlementTime="5:00 pm"
                         />
                     </Box>
                 }
@@ -133,8 +131,8 @@ const InputPayment = () => {
                                 sx={{ fontSize: 14, mb: 4, mt: 2, textAlign: "center" }}
                             >
                                 {
-                                    staticLinkPayeeName ?
-                                    `Enter a valid amount to pay to ${staticLinkPayeeName}` :
+                                    activePaymentTutorName ?
+                                    `Enter a valid amount to pay to ${activePaymentTutorName}` :
                                     `Enter a valid amount to pay`
                                 }
                             </Typography>

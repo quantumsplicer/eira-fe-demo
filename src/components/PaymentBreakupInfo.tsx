@@ -6,11 +6,9 @@ interface PaymentBreakupInfoProps {
     name: string;
     phone: string;
     amount: number;
-    settlementDate: string;
-    settlementTime: string;
 }
 
-const PaymentBreakupInfo = ({name, phone, amount, settlementDate, settlementTime}: PaymentBreakupInfoProps) => {
+const PaymentBreakupInfo = ({name, phone, amount}: PaymentBreakupInfoProps) => {
     return (
         <Box>
             <Stack
@@ -56,8 +54,6 @@ const PaymentBreakupInfo = ({name, phone, amount, settlementDate, settlementTime
                 >
                     <AmountBreakupCard
                         amount={amount}
-                        settlementDate={settlementDate}
-                        settlementTime={settlementTime}
                     />
                 </Box>
             </Stack>

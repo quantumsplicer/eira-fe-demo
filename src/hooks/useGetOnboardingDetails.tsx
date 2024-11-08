@@ -45,8 +45,9 @@ const useGetOnboardingDetails = () => {
           break;
         case "StaticLinkFlow":
           localStorage.setItem("isTutorEiraOnboarded", "true");
-          const tutorUsername = localStorage.getItem("activeFlowUrl")?.split("/").pop();
-          if (tutorUsername) {
+          const urlStrings = localStorage.getItem("activeFlowUrl")?.split("/");
+          if (urlStrings) {
+            const tutorUsername = urlStrings[urlStrings.length-1] !== "" ? urlStrings[urlStrings.length-1] : urlStrings[urlStrings.length-2]
             await getTutorDetails(tutorUsername)
             .unwrap()
             .then(res => {

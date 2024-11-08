@@ -25,6 +25,11 @@ const InputTutorDetails: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const activePaymentTutorName = localStorage.getItem("activePaymentTutorName");
+    const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
+    const activePaymentAmount = localStorage.getItem("activePaymentAmount");
+    const isTutorEiraOnboarded = localStorage.getItem("isTutorEiraOnboarded") === "true";
+
     const [
         getTutorDetials
       ] = useLazyGetUserDetailsByPhoneQuery();
@@ -87,11 +92,9 @@ const InputTutorDetails: React.FC = () => {
                         }}
                     >
                         <PaymentBreakupInfo
-                            name="Suneel Satpal"
-                            phone="+91 93892 50148"
-                            amount={5000}
-                            settlementDate="7th October"
-                            settlementTime="5:00 pm"
+                            name={activePaymentTutorName ?? ""}
+                            phone={activePaymentTutorId ? `+91 ${activePaymentTutorId}` : ""}
+                            amount={activePaymentAmount ? Number(activePaymentAmount) : 0}
                         />
                     </Box>
                 }
@@ -116,27 +119,29 @@ const InputTutorDetails: React.FC = () => {
                         />
                         <Stack
                             alignItems={"center"}
-                            mt={5}
+                            mt={isTutorEiraOnboarded ? 18 : 3}
                         >
-                            <Alert
-                                variant="filled"
-                                severity="info"
-                                icon={<InfoOutlinedIcon sx={{ color: '#DCA566', margin: "auto 0px" }} />}
-                                sx={{
-                                    backgroundColor: "rgba(251, 203, 168, 0.25)",
-                                    color: "#CE7C4E",
-                                    borderRadius: 5,
-                                    marginBottom: 5,
-                                    padding: 2
-                                }}
-                            >
-                                <Typography sx={{ fontSize: 11 }}>
-                                    Looks like the tutor is not onboarded!
-                                </Typography>
-                                <Typography sx={{ fontSize: 11 }}>
-                                    Onboard them with us now to make the payment
-                                </Typography>
-                            </Alert>
+                            {!isTutorEiraOnboarded && (
+                                <Alert
+                                    variant="filled"
+                                    severity="info"
+                                    icon={<InfoOutlinedIcon sx={{ color: '#DCA566', margin: "auto 0px" }} />}
+                                    sx={{
+                                        backgroundColor: "rgba(251, 203, 168, 0.25)",
+                                        color: "#CE7C4E",
+                                        borderRadius: 5,
+                                        marginBottom: 5,
+                                        padding: 2
+                                    }}
+                                >
+                                    <Typography sx={{ fontSize: 11 }}>
+                                        Looks like the tutor is not onboarded!
+                                    </Typography>
+                                    <Typography sx={{ fontSize: 11 }}>
+                                        Onboard them with us now to make the payment
+                                    </Typography>
+                                </Alert>
+                            )}
                             <Typography
                                 variant="h5"
                                 sx={{ fontSize: 20, fontWeight: "bold" }}

@@ -16,12 +16,17 @@ const StudentSignIn = () => {
 
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
     const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
 
+    const activePaymentTutorName = localStorage.getItem("activePaymentTutorName");
+    const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
+    const activePaymentAmount = localStorage.getItem("activePaymentAmount");
+
     const notes = [
         "Please make sure that you have the bank account details of the payee accessible.",
-        "Please make sure that the person receiving money is onbaorded on Eiraor you have the necessary details to onboard them."
+        "Please make sure that the person receiving money is onbaorded on Eira or you have the necessary details to onboard them."
     ]
 
     const { checkCurrentStudentOnboardingState } =
@@ -34,9 +39,17 @@ const StudentSignIn = () => {
 
     const handleSubmit = () => {
         if (isPhoneNumberValid()) {
-            getOtp({ phone: phoneNumber, role: "student" }).then(() => {
+            setErrorMessage(null);
+            getOtp({ phone: phoneNumber, role: "student" })
+            .unwrap()
+            .then(() => {
                 setIsDialogOpen(true)
-            });
+            })
+            .catch(err => {
+                err.data.message === "The user role and input role does not match." ?
+                    setErrorMessage("This user is already registered as a teacher") :
+                    setErrorMessage("Something went wrong. Please try again!")
+            })
         }
     }
 
@@ -75,11 +88,9 @@ const StudentSignIn = () => {
                             }}
                         >
                             <PaymentBreakupInfo
-                                name="Suneel Satpal"
-                                phone="+91 93892 50148"
-                                amount={5000}
-                                settlementDate="7th October"
-                                settlementTime="5:00 pm"
+                                name={activePaymentTutorName ?? ""}
+                                phone={activePaymentTutorId ? `+91 ${activePaymentTutorId}` : ""}
+                                amount={Number(activePaymentAmount)}
                             />
                         </Box>
                     }
@@ -130,16 +141,31 @@ const StudentSignIn = () => {
                                                 onSubmit={handleSubmit}
                                                 autoFocus={true}
                                             />
-                                            <Button
-                                                disabled={phoneNumber.length !== 10 || !isPhoneNumberValid()}
-                                                onClick={handleSubmit}
-                                                fullWidth
-                                                variant="contained"
-                                                color="primary"
-                                                sx={{ padding: 1.5, borderRadius: 20, marginTop: 5, height: 45 }}
+                                            <Box
+                                                mt={5}
+                                                width={"100%"}
                                             >
-                                                Verify
-                                            </Button>
+                                                {errorMessage && (
+                                                    <Typography fontSize={14} color="red" textAlign={"center"} mb={2}>
+                                                        {errorMessage}
+                                                    </Typography>
+                                                )}
+                                                <Button
+                                                    disabled={phoneNumber.length !== 10 || !isPhoneNumberValid()}
+                                                    onClick={handleSubmit}
+                                                    fullWidth
+                                                    variant="contained"
+                                                    color="primary"
+                                                    sx={{
+                                                        padding: 1.5,
+                                                        borderRadius: 20,
+                                                        height: 45,
+                                                        mt: errorMessage ? 0 : 4.6
+                                                    }}
+                                                >
+                                                    Verify
+                                                </Button>
+                                            </Box>
                                         </> :
                                         <OTPInput
                                             role="student"

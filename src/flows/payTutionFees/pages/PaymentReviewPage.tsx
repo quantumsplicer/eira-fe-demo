@@ -106,11 +106,9 @@ const PaymentReviewPage = () => {
               phone={
                 activePaymentTutorId
                   ? `+91 ${activePaymentTutorId}`
-                  : "+91 93892 50148"
+                  : ""
               }
               amount={Number(activePaymentAmount)}
-              settlementDate={getNextWorkingDay()}
-              settlementTime="5:00 pm"
             />
           </Box>
         )}
@@ -131,7 +129,7 @@ const PaymentReviewPage = () => {
                 width: 80,
               }}
             />
-            <Stack alignItems={"center"} mt={isTutorEiraOnboarded ? 22 : 5}>
+            <Stack alignItems={"center"} mt={isTutorEiraOnboarded ? 18 : 5}>
               {!isTutorEiraOnboarded && (
                 <Alert
                   variant="filled"
