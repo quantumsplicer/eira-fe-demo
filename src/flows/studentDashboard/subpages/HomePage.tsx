@@ -2,18 +2,23 @@ import React from "react";
 import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
 import PaymentBannerCard from "../components/PaymentBannerCard";
 import Carousel from "react-material-ui-carousel";
+import RecentPaymentsCard from "../components/RecentPaymentsCard";
+import PromoBannerComponent from "../components/PromoBannerComponent";
 
 const HomePage: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
 
   return (
     <Stack
-      spacing={!isPhoneScreen ? 5 : 1}
-      pl={!isPhoneScreen ? 10 : 0}
-      pr={!isPhoneScreen ? 10 : 0}
+      spacing={!isPhoneScreen ? 14 : 1}
+      pl={!isPhoneScreen ? 5 : 0}
+      pr={!isPhoneScreen ? 5 : 0}
     >
-      {!isPhoneScreen ? <h1>Make Payment</h1> : <></>}
-      <PaymentBannerCard />
+      {!isPhoneScreen ? <h1>Home Page</h1> : <></>}
+      <Stack direction="row" spacing={2} justifyContent="space-between">
+        <RecentPaymentsCard />
+        <PaymentBannerCard />
+      </Stack>
       {isPhoneScreen && (
         <Box
           sx={{
@@ -60,6 +65,7 @@ const HomePage: React.FC = () => {
           </Carousel>
         </Box>
       )}
+      {!isPhoneScreen && <PromoBannerComponent />}
     </Stack>
   );
 };

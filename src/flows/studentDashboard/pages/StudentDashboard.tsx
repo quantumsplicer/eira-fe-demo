@@ -106,7 +106,7 @@ const StudentDashboard: React.FC = () => {
 
   useEffect(() => {
     setIsPWAInstallPromptOpen(!!prompt);
-  }, [prompt])
+  }, [prompt]);
 
   useEffect(() => {
     if (!localStorage.getItem("access-token")) {
@@ -332,7 +332,113 @@ const StudentDashboard: React.FC = () => {
             </Stack>
           </Drawer>
         ) : (
-          <></>
+          <Drawer
+            variant="permanent"
+            sx={{
+              width: "13%",
+              minWidth: "200px",
+              flexShrink: 0,
+              [`& .MuiDrawer-paper`]: {
+                minWidth: "200px",
+                width: "13%",
+                boxSizing: "border-box",
+                backgroundColor: "white",
+              },
+            }}
+          >
+            <Toolbar />
+            <Box sx={{ overflow: "auto" }} height="100%">
+              <List>
+                {[
+                  { title: "Home Page", subpage: HOME_PAGE },
+                  { title: "Payment History", subpage: PAYMENT_HISTORY_PAGE },
+                ].map((entry, index) => (
+                  <ListItem
+                    key={entry.title}
+                    sx={{ width: "100%", pl: "0", pr: "0" }}
+                  >
+                    <ListItemButton
+                      onClick={() => {
+                        handleSubpageChange(entry.subpage);
+                      }}
+                      disabled={index === 3 || index === 4 ? true : false}
+                      sx={{
+                        backgroundColor:
+                          subpage === entry.subpage ? "#EBF1FF" : "white",
+                        color: subpage === entry.subpage ? "#507FFD" : "black",
+                        pl: 3,
+                        "& *":
+                          subpage === entry.subpage
+                            ? {
+                                color: "#507FFD",
+                                fontWeight: "bold",
+                              }
+                            : { color: "black" },
+
+                        "&:hover": {
+                          backgroundColor: "#EBF1FF",
+                          "& *": {
+                            color: "#507FFD",
+                            fontWeight: "bold",
+                          },
+                        },
+                      }}
+                    >
+                      <ListItemIcon>{iconsArray[index]}</ListItemIcon>
+                      <Typography
+                        color="black"
+                        fontSize={14}
+                        pt={1.4}
+                        fontWeight={600}
+                      >
+                        {entry.title}
+                      </Typography>
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+              <Divider />
+              <Stack
+                justifyContent="center"
+                py={4}
+                width="100%"
+                position="absolute"
+                bottom={0}
+              >
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                  sx={{
+                    backgroundColor: "white",
+                    width: "100%",
+                    boxShadow: 0,
+                    borderRadius: 0,
+                    "&:hover": {
+                      backgroundColor: "white",
+                    },
+                    "&:active": {
+                      backgroundColor: "white",
+                    },
+                  }}
+                >
+                  <Stack direction="row" alignItems="center" spacing={2}>
+                    <LogoutIcon color="error" fontSize="small" />
+                    <Typography
+                      fontSize={18}
+                      fontWeight={600}
+                      color="error"
+                      textTransform="none"
+                      pl={1}
+                    >
+                      Logout
+                    </Typography>
+                  </Stack>
+                </Button>
+              </Stack>
+            </Box>
+          </Drawer>
         )}
         <Box
           component="main"

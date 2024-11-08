@@ -83,11 +83,12 @@ const PaymentBannerCard: React.FC = () => {
       sx={
         !isPhoneScreen
           ? {
-              p: 4,
+              p: 6,
               borderRadius: 2,
               backgroundColor: "white",
               boxShadow: 6,
-              width: "100%",
+              width: "18vw",
+              height: "100%",
             }
           : {
               p: 2,
@@ -153,11 +154,11 @@ const PaymentBannerCard: React.FC = () => {
                 sx={{
                   backgroundColor: "#507FFD",
                   borderRadius: 3,
-                  fontSize: 20,
+                  fontSize: "1rem",
                   fontWeight: 600,
-                  height: 90,
-                  paddingLeft: 8,
-                  paddingRight: 8,
+                  height: 60,
+                  paddingLeft: 4,
+                  paddingRight: 4,
                   textTransform: "none",
                 }}
               >
@@ -172,7 +173,7 @@ const PaymentBannerCard: React.FC = () => {
               <Typography
                 sx={
                   !isPhoneScreen
-                    ? { fontSize: 20, fontWeight: 500 }
+                    ? { fontSize: "1.2rem", fontWeight: 500 }
                     : { fontSize: "1.4rem", fontWeight: 500, width: "70%" }
                 }
               >
@@ -207,27 +208,6 @@ const PaymentBannerCard: React.FC = () => {
             <></>
           )}
         </Stack>
-        {!isPhoneScreen ? (
-          <Box>
-            <img
-              src={PaymentLinkBannerArt}
-              alt="art"
-              style={
-                !isPhoneScreen
-                  ? {
-                      width: "250px",
-                      height: "250x",
-                    }
-                  : {
-                      width: "250px",
-                      height: "250x",
-                    }
-              }
-            />
-          </Box>
-        ) : (
-          <></>
-        )}
       </Stack>
       {isPaymentFlowActive && (
         <PaymentFlow
