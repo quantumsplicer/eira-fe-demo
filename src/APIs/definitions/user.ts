@@ -26,9 +26,11 @@ export const userApi = postgresApi.injectEndpoints({
     getUserDetails: builder.query<UserDetails, void>({
       query: () => `user/me`,
       onQueryStarted: async (_, { queryFulfilled }) => {
+        try {
         const { data } = await queryFulfilled;
 
         data?.id && localStorage.setItem("userId", data.id);
+        } catch(err) {}
       },
     }),
 
@@ -50,7 +52,7 @@ export const userApi = postgresApi.injectEndpoints({
 
     getUserByUserName: builder.query<UserDetails[], string>({
       query: (username) => ({
-        url: `user/search-action`,
+        url: `user/search`,
         method: "GET",
         params: { username },
       }),

@@ -35,6 +35,8 @@ const SlotBookingPage = () => {
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
   const activePaymentAmount = localStorage.getItem("activePaymentAmount");
   const activePaymentPayeeUserId = localStorage.getItem("activePaymentPayeeUserId");
+  const activePaymentTutorName = localStorage.getItem("activePaymentTutorName");
+  const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
   const [errorMessage, setErrorMessage] = useState<string|null>(null);
 
   const [createSession, { isLoading: createSessionIsLoading }] = useCreateSessionMutation();
@@ -148,11 +150,9 @@ const SlotBookingPage = () => {
             }}
           >
             <PaymentBreakupInfo
-              name="Suneel Satpal"
-              phone="+91 93892 50148"
-              amount={5000}
-              settlementDate="7th October"
-              settlementTime="5:00 pm"
+              name={activePaymentTutorName ?? ""}
+              phone={activePaymentTutorId ? `+91 ${activePaymentTutorId}` : ""}
+              amount={Number(activePaymentAmount)}
             />
           </Box>
         )}

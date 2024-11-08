@@ -60,8 +60,6 @@ const StudentSignUp = () => {
                 name="Suneel Satpal"
                 phone="+91 93892 50148"
                 amount={5000}
-                settlementDate="7th October"
-                settlementTime="5:00 pm"
               />
             </Box>
           )}
