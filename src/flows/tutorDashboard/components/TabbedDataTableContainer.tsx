@@ -13,6 +13,7 @@ import TransactionsTable from "./tables/TransactionsTable";
 import PaymentLinksTable from "./tables/PaymentLinksTable";
 import SendPaymentLinkFlow from "./flows/SendPaymentLinkFlow";
 import { useGetPaymentLinksQuery } from "../../../APIs/definitions/paymentLinks";
+import { Loading } from "../../../components/Loading";
 const lightTheme = createTheme({ palette: { mode: "light" } });
 
 interface TabPanelProps {
@@ -173,7 +174,7 @@ const TabbedDataTableContainer: React.FC = () => {
               <TransactionsTable paymentLinkCreated={paymentLinkCreated} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-              <PaymentLinksTable data={data} />
+              {isLoading ? <Loading /> : <PaymentLinksTable data={data} />}
             </CustomTabPanel>
           </Stack>
         </Box>

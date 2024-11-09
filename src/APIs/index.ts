@@ -12,10 +12,9 @@ const BASE_URL = "https://api.eira.club/";
 const PROD_SITE_URL = "https://eira.club/";
 const DEV_SITE_URL = "http://localhost:3000/";
 
-
 export interface ApiResponse {
   message?: string;
-  status?: number ;
+  status?: number;
 }
 const baseQueryWithAuth = fetchBaseQuery({
   baseUrl: `${BASE_URL}v1/`,
@@ -38,7 +37,10 @@ const baseQueryWithErrorHandling = async (
   const accessToken = localStorage.getItem("access-token");
 
   // Check if the status code is 401 or 403
-  if ((result?.error?.status === 401 || result?.error?.status === 403) && accessToken) {
+  if (
+    (result?.error?.status === 401 || result?.error?.status === 403) &&
+    accessToken
+  ) {
     // Clear the token from local storage
     localStorage.removeItem("access-token");
     window.location.reload();
@@ -51,6 +53,6 @@ const baseQueryWithErrorHandling = async (
 export const postgresApi = createApi({
   reducerPath: "postgresApi",
   baseQuery: baseQueryWithErrorHandling,
-  tagTypes: ["invitations"],
+  tagTypes: ["invitations", "PaymentLinks"],
   endpoints: () => ({}),
 });

@@ -27,6 +27,7 @@ import { useGetUserDetailsByPhoneQuery } from "../../../../APIs/definitions/user
 import Amount from "../../../../components/Amount";
 import tickMark from "../../../../assets/images/png/tick-mark.png";
 import exclamationMark from "../../../../assets/images/svg/ExclamationMark.svg";
+import moment from "moment";
 
 interface PaymentLinkCellMobileProps {
   paymentLinkDetails: PaymentLinkDetails;
@@ -206,6 +207,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
     useState<PaymentLinkDetails | null>(null);
   const [paymentLinkFlowActive, setPaymentLinkFlowActive] = useState(false);
   const handleOnClick = (paymentLinkDetails: PaymentLinkDetails) => {
+    console.log(paymentLinkDetails);
     return () => {
       setIsDrawerOpen(true);
       setActiveDrawerPaymentLinkDetails(paymentLinkDetails);
@@ -281,7 +283,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                 {activeDrawerPaymentLinkDetails?.receiver_phone}
               </Typography>
             </Stack>
-            {activeDrawerPaymentLinkDetails?.status === "active" ? (
+            {activeDrawerPaymentLinkDetails?.status === "ACTIVE" ? (
               <img
                 src={tickMark}
                 style={{
@@ -300,27 +302,31 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                 }}
               />
             )}
-            {activeDrawerPaymentLinkDetails?.status === "active" ? (
+            {activeDrawerPaymentLinkDetails?.status === "ACTIVE" ? (
               <Box mt={3} alignSelf={"center"}>
                 <Typography
                   color={"#7e7e7e"}
                   component={"span"}
                   fontWeight={"bold"}
                 >
-                  {`expires on `}
+                  {`Expires on `}
                 </Typography>
                 <Typography component={"span"} fontWeight={"bold"}>
-                  {activeDrawerPaymentLinkDetails.expiry_timestamp}
+                  {moment(
+                    activeDrawerPaymentLinkDetails.expiry_timestamp
+                  ).format("MMMM D, YYYY")}
                 </Typography>
                 <Typography
                   component={"span"}
                   color={"#7e7e7e"}
                   fontWeight={"bold"}
                 >
-                  {` at`}
+                  {` at `}
                 </Typography>
                 <Typography component={"span"} fontWeight={"bold"}>
-                  {activeDrawerPaymentLinkDetails.expiry_timestamp}
+                  {moment(
+                    activeDrawerPaymentLinkDetails.expiry_timestamp
+                  ).format("h:mm a")}
                 </Typography>
               </Box>
             ) : (
@@ -341,7 +347,9 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                   </Typography>
                   <Stack alignItems={"flex-end"}>
                     <Typography>
-                      {activeDrawerPaymentLinkDetails?.created}
+                      {moment(activeDrawerPaymentLinkDetails?.created).format(
+                        "MMMM D, YYYY h:mm a"
+                      )}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -355,24 +363,28 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                   </Typography>
                   <Stack alignItems={"flex-end"}>
                     <Typography>
-                      {activeDrawerPaymentLinkDetails?.expiry_timestamp}
+                      {moment(
+                        activeDrawerPaymentLinkDetails?.expiry_timestamp
+                      ).format("MMMM D, YYYY h:mm a")}
                     </Typography>
                   </Stack>
                 </Stack>
-                <Stack
-                  justifyContent={"space-between"}
-                  direction={"row"}
-                  mb={2}
-                >
-                  <Typography width={"50%"} color={"#7e7e7e"}>
-                    Payer
-                  </Typography>
-                  <Stack alignItems={"flex-end"}>
-                    <Typography>
-                      {activeDrawerPaymentLinkDetails?.payer}
+                {activeDrawerPaymentLinkDetails?.payer && (
+                  <Stack
+                    justifyContent={"space-between"}
+                    direction={"row"}
+                    mb={2}
+                  >
+                    <Typography width={"50%"} color={"#7e7e7e"}>
+                      Payer
                     </Typography>
+                    <Stack alignItems={"flex-end"}>
+                      <Typography>
+                        {activeDrawerPaymentLinkDetails?.payer}
+                      </Typography>
+                    </Stack>
                   </Stack>
-                </Stack>
+                )}
               </Stack>
             </Box>
           </Stack>

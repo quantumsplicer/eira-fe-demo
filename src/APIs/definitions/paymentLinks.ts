@@ -48,6 +48,7 @@ export const paymentLinksApi = postgresApi.injectEndpoints({
           "ngrok-skip-browser-warning": "latest",
         },
       }),
+      providesTags: ["PaymentLinks"],
     }),
 
     createPaymentLink: builder.mutation<
@@ -63,6 +64,7 @@ export const paymentLinksApi = postgresApi.injectEndpoints({
           "Content-Type": "application/json",
         },
       }),
+      invalidatesTags: ["PaymentLinks"],
     }),
 
     createOrder: builder.mutation<
