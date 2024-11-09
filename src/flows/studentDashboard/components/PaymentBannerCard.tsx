@@ -12,6 +12,8 @@ import Button from "@mui/material/Button";
 import PaymentLinkBannerArt from "../../../assets/images/svg/PaymentLinkBannerArt.svg";
 import { TutorDetails } from "../interfaces";
 import PaymentFlow from "./PaymentFlow";
+import { useGetTransactionsListQuery } from "../../../APIs/definitions/transactionsList";
+import { Transaction } from "../../tutorDashboard/interfaces";
 
 interface AvatarWithDetailsProps {
   name: string;
@@ -25,7 +27,7 @@ const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
   onClick,
 }) => {
   return (
-    <Stack spacing={1} width="100%" alignItems="center">
+    <Stack spacing={1} alignItems="center">
       <Avatar
         alt={name}
         sx={{
@@ -36,7 +38,9 @@ const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
         }}
         onClick={onClick}
       >
-        {name[0]}
+        <Typography fontSize={36}>
+          {name?.[0].replace(" ", "") ? name?.[0] : "U"}
+        </Typography>
       </Avatar>
       <Stack alignItems="center">
         <Typography sx={{ fontSize: 11, fontWeight: 500 }}>{name}</Typography>
@@ -51,6 +55,7 @@ const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
 const PaymentBannerCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
+  const { data: transactionDetails } = useGetTransactionsListQuery();
 
   const handleClosePaymentFlow = () => {
     setIsPaymentFlowActive(false);
@@ -62,6 +67,7 @@ const PaymentBannerCard: React.FC = () => {
     panNumber: "",
     phoneNumber: "",
   });
+  const [recentPayments, setRecentPayments] = useState<TutorDetails[]>([]);
 
   const handleTutorDetails = (details: TutorDetails) => {
     setTutorDetails(details);
@@ -77,6 +83,22 @@ const PaymentBannerCard: React.FC = () => {
     });
     setIsPaymentFlowActive(true);
   };
+
+  useEffect(() => {
+    transactionDetails?.results.forEach((transaction: Transaction) => {
+      console.log(transaction);
+      setRecentPayments((prev) => [
+        ...prev,
+        {
+          firstName: "",
+          lastName: "",
+          phoneNumber: transaction.tutor_phone as string,
+          panNumber: "",
+          amount: transaction.amount,
+        },
+      ]);
+    });
+  }, [transactionDetails]);
 
   return (
     <Box
@@ -188,20 +210,36 @@ const PaymentBannerCard: React.FC = () => {
               </Typography>
               <Stack
                 direction="row"
-                spacing={2}
-                justifyContent="space-evenly"
+                spacing={4}
+                justifyContent="flex-start"
                 sx={{ width: "100%" }}
               >
-                {avatarsWithDetails.slice(0, 3).map((avatar, index) => (
-                  <AvatarWithDetails
-                    key={index}
-                    name={`${avatar.firstName} ${avatar.lastName}`}
-                    phoneNumber={avatar.phoneNumber}
-                    onClick={() => {
-                      handleTutorDetails(avatar);
+                {recentPayments?.length === 0 ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "120px",
+                      width: "100%",
                     }}
-                  />
-                ))}
+                  >
+                    <Typography fontStyle={"italic"} color={"grey"}>
+                      No recent payments
+                    </Typography>
+                  </Box>
+                ) : (
+                  recentPayments?.slice(0, 3).map((avatar, index) => (
+                    <AvatarWithDetails
+                      key={index}
+                      name={`${avatar.firstName} ${avatar.lastName}`}
+                      phoneNumber={avatar.phoneNumber}
+                      onClick={() => {
+                        handleTutorDetails(avatar);
+                      }}
+                    />
+                  ))
+                )}
               </Stack>
             </Stack>
           ) : (

@@ -86,8 +86,8 @@ const PaymentInfo = ({
           {name}
         </Typography>
       </Stack>
-      {type === "success" ? (
-        paymentStatus?.order?.status === "PAID" ? (
+      {type === "success" && !paymentStatusIsLoading ? (
+        paymentStatus?.order?.status == "PAID" ? (
           <img
             src={tickMark}
             style={{
@@ -107,7 +107,7 @@ const PaymentInfo = ({
           />
         )
       ) : null}
-      {type === "success" ? (
+      {type === "success" && !paymentStatusIsLoading ? (
         paymentStatus?.order?.status === "PAID" ? (
           <Box mt={3} alignSelf={"center"}>
             <Typography

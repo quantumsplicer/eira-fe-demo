@@ -190,10 +190,10 @@ const PaymentHistoryTableMobile = ({
           />
           <Stack>
             <Typography fontSize={18}>
-              {transactionDetails.student_name}
+              {transactionDetails.tutor_name}
             </Typography>
             <Typography fontSize={14} color="#C3C3C3">
-              {transactionDetails.student_phone}
+              {transactionDetails.tutor_phone}
             </Typography>
           </Stack>
         </Stack>
@@ -229,7 +229,7 @@ const PaymentHistoryTableMobile = ({
         </Box>
         <PaymentInfo
           amount={transactionDetails.amount.toString()}
-          name={transactionDetails.student_name}
+          name={transactionDetails.student_name as string}
           paymentDetails={
             transactionDetails as unknown as Record<string, string>
           }
@@ -369,6 +369,7 @@ const PaymentHistoryTable: React.FC = () => {
                 </Typography>
               </Box>
             </Stack>
+
             {!isPhoneScreen ? (
               <MaterialReactTable table={table} />
             ) : transactionDetails?.results &&

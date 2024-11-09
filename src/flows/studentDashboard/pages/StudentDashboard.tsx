@@ -199,6 +199,7 @@ const StudentDashboard: React.FC = () => {
             </Stack>
           </Toolbar>
         </AppBar>
+
         {isPhoneScreen ? (
           <Drawer
             variant="temporary"
@@ -440,6 +441,7 @@ const StudentDashboard: React.FC = () => {
             </Box>
           </Drawer>
         )}
+
         <Box
           component="main"
           sx={
@@ -471,12 +473,13 @@ const StudentDashboard: React.FC = () => {
               backgroundColor: "#507FFD",
               color: "white",
             }}
-            onClick={() => promptToInstall()}
+            onClick={() => setIsPaymentFlowActive(true)}
           >
             Make a Payment
           </Fab>
         </Box>
       )}
+
       {isPaymentFlowActive && (
         <PaymentFlow
           open={isPaymentFlowActive}
@@ -489,6 +492,7 @@ const StudentDashboard: React.FC = () => {
           }}
         />
       )}
+      
       {isPWAInstallPromptOpen && (
         <PWAInstallDrawer
           open={isPWAInstallPromptOpen}

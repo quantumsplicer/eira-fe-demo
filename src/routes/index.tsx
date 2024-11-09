@@ -78,7 +78,7 @@ const AppRoutes = () => {
       <Route path="tutor/" element={<TutorOnboardingContainer />}>
         <Route path="login" element={<TutorSignIn />} />
         <Route path="personal-details" element={<TutorSignUp />} />
-        <Route path="kyc" element={<KycLogin />} />
+        <Route path="complete-kyc" element={<KycLogin />} />
         <Route path="dashboard" element={<TutorDashboard />} />
       </Route>
 

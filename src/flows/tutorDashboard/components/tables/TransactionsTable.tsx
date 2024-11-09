@@ -191,8 +191,8 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
       data={data?.results || []}
       itemContent={(_, user) => (
         <TransactionCellMobile
-          name={user.student_name}
-          phoneNumber={user.student_phone}
+          name={user.student_name as string}
+          phoneNumber={user.student_phone as string}
           status={user.settlement_status}
           amount={user.amount}
         />

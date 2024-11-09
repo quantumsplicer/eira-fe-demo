@@ -44,7 +44,9 @@ const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
         }}
         onClick={onClick}
       >
-        {name[0]}
+        <Typography fontSize={36}>
+          {name?.[0].replace(" ", "") ? name?.[0] : "U"}
+        </Typography>
       </Avatar>
       <Stack
         alignItems="center"
@@ -73,6 +75,7 @@ const RecentPaymentsCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
   const { data: transactionDetails } = useGetTransactionsListQuery();
+
   const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
     firstName: "",
     lastName: "",
@@ -99,20 +102,22 @@ const RecentPaymentsCard: React.FC = () => {
     });
     setIsPaymentFlowActive(true);
   };
+
   useEffect(() => {
     transactionDetails?.results.forEach((transaction) => {
       setRecentPayments((prev) => [
         ...prev,
         {
-          firstName: transaction.student_name,
-          lastName: transaction.student_name,
-          phoneNumber: transaction.student_phone,
+          firstName: "",
+          lastName: "",
+          phoneNumber: transaction.tutor_phone as string,
           panNumber: "",
           amount: transaction.amount,
         },
       ]);
     });
   }, [transactionDetails]);
+
   return (
     <Box
       sx={

@@ -11,8 +11,10 @@ export interface Transaction {
   settlement_status: string;
   payment_mode: string;
   status: string;
-  student_phone: string;
-  student_name: string;
+  tutor_phone?: string;
+  tutor_name?: string;
+  student_phone?: string;
+  student_name?: string;
 }
 
 export interface TransactionsResponse {
