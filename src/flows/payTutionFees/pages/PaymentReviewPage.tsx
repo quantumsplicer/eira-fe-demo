@@ -27,9 +27,11 @@ import { getNextWorkingDay } from "../../../utils/helperFunctions";
 import { useCreateOrderMutation } from "../../../APIs/definitions/paymentLinks";
 import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import moment from "moment";
+import GetHelp from "../../../components/GetHelp";
 
 const PaymentReviewPage = () => {
-  const isTutorEiraOnboarded = localStorage.getItem("isTutorEiraOnboarded") === "true";
+  const isTutorEiraOnboarded =
+    localStorage.getItem("isTutorEiraOnboarded") === "true";
   const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
@@ -46,15 +48,25 @@ const PaymentReviewPage = () => {
 
   const paymentDetails = {
     ...(activePaymentTutorName ? { "Payee Name": activePaymentTutorName } : {}),
-    ...(activePaymentTutorId ? { "Payee Phone": `+91 ${activePaymentTutorId}` } : {}),
-    ...(activePaymentSessionDate ? { "Session Date": moment(activePaymentSessionDate).format("MMMM D, YYYY") } : {}),
-    ...(activePaymentSessionTime ? {
-      "Session Time": `${moment(activePaymentSessionTime.split("-")[0]).format(
-        "h:mm A z"
-      )} - ${moment(activePaymentSessionTime.split("-")[1]).format(
-        "h:mm A z"
-      )}`
-    } : {})
+    ...(activePaymentTutorId
+      ? { "Payee Phone": `+91 ${activePaymentTutorId}` }
+      : {}),
+    ...(activePaymentSessionDate
+      ? {
+          "Session Date": moment(activePaymentSessionDate).format(
+            "MMMM D, YYYY"
+          ),
+        }
+      : {}),
+    ...(activePaymentSessionTime
+      ? {
+          "Session Time": `${moment(
+            activePaymentSessionTime.split("-")[0]
+          ).format("h:mm A z")} - ${moment(
+            activePaymentSessionTime.split("-")[1]
+          ).format("h:mm A z")}`,
+        }
+      : {}),
   };
 
   const { makePayment, errorMessage } = usePayment();
@@ -103,11 +115,7 @@ const PaymentReviewPage = () => {
           >
             <PaymentBreakupInfo
               name={activePaymentTutorName ? activePaymentTutorName : ""}
-              phone={
-                activePaymentTutorId
-                  ? `+91 ${activePaymentTutorId}`
-                  : ""
-              }
+              phone={activePaymentTutorId ? `+91 ${activePaymentTutorId}` : ""}
               amount={Number(activePaymentAmount)}
             />
           </Box>
@@ -215,18 +223,18 @@ const PaymentReviewPage = () => {
                   </Stack>
                 </Drawer>
               }
-              <Box
-                mt={4}
-                width= "100%"
-                    minWidth= "320px"
-                    maxWidth= "400px"
-              >
-                {
-                  errorMessage &&
+
+              <Box width="100%" minWidth="320px" maxWidth="400px">
+                {errorMessage && (
                   <Typography fontSize={14} color={"red"} textAlign={"center"}>
                     {errorMessage}
                   </Typography>
-                }
+                )}
+
+                <Box sx={{ mt: 3 }}>
+                  <GetHelp />
+                </Box>
+
                 <Button
                   variant="contained"
                   color="primary"
@@ -235,7 +243,6 @@ const PaymentReviewPage = () => {
                     borderRadius: 20,
                     height: 45,
                     width: "100%",
-                    mt: errorMessage ? 2 : 4.6,
                   }}
                   onClick={handleSubmit}
                 >

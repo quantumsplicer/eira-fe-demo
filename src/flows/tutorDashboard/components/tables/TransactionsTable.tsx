@@ -23,67 +23,91 @@ import SendPaymentLinkFlow from "../flows/SendPaymentLinkFlow";
 import { useGetUserDetailsQuery } from "../../../../APIs/definitions/user";
 import { UserDetails } from "../../../../APIs/definitions/user";
 import moment from "moment";
+import { PaymentItemDrawer } from "../../../studentDashboard/components/PaymentItemDrawer";
+import { Loading } from "../../../../components/Loading";
 
 interface TransactionCellMobileProps {
-  name: string;
-  phoneNumber: string;
-  amount: number;
-  status: string;
+  transaction: Transaction;
 }
-const TransactionCellMobile = ({
-  name,
-  phoneNumber,
-  amount,
-  status,
-}: TransactionCellMobileProps) => {
+
+const TransactionCellMobile = ({ transaction }: TransactionCellMobileProps) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  
   return (
-    <Box
-      sx={{
-        border: "0.2px solid",
-        borderRadius: 4,
-        borderColor: "#C3C3C3",
-        p: 2,
-        marginBottom: 2,
-      }}
-    >
-      <Stack direction="row" justifyContent="space-between">
-        <Stack direction="row" spacing={2}>
-          <Divider
-            orientation="vertical"
-            flexItem
-            sx={{
-              height: "95%",
-              alignSelf: "center",
-              borderWidth: 2.5,
-              borderColor: "#2AC426",
-            }}
-          />
-          <Stack>
-            <Typography fontSize={18}>{name}</Typography>
-            <Typography fontSize={14} color="#C3C3C3">
-              {phoneNumber}
+    <>
+      <Box
+        sx={{
+          border: "0.2px solid",
+          borderRadius: 4,
+          borderColor: "#C3C3C3",
+          p: 2,
+          marginBottom: 2,
+          "&: hover": {
+            cursor: "pointer",
+            backgroundColor: "#f0f0f0",
+          },
+        }}
+        onClick={() => setIsDrawerOpen(true)}
+      >
+        <Stack direction="row" justifyContent="space-between">
+          <Stack direction="row" spacing={2}>
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{
+                height: "95%",
+                alignSelf: "center",
+                borderWidth: 2.5,
+                borderColor: "#2AC426",
+              }}
+            />
+            <Stack>
+              <Typography fontSize={18}>
+                {
+                  ((transaction?.student_first_name as string) +
+                    " " +
+                    transaction?.student_last_name) as string
+                }
+              </Typography>
+              <Typography fontSize={14} color="#C3C3C3">
+                {transaction?.student_phone}
+              </Typography>
+            </Stack>
+          </Stack>
+          <Stack pr={2}>
+            <Typography fontSize={19} fontWeight={500} textAlign="right">
+              ₹ {transaction?.amount}
+            </Typography>
+            <Typography fontSize={14} color="#C3C3C3" textAlign="right">
+              {transaction?.status}
             </Typography>
           </Stack>
         </Stack>
-        <Stack pr={2}>
-          <Typography fontSize={19} fontWeight={500} textAlign="right">
-            ₹ {amount}
-          </Typography>
-          <Typography fontSize={14} color="#C3C3C3" textAlign="right">
-            {status}
-          </Typography>
-        </Stack>
-      </Stack>
-    </Box>
+      </Box>
+
+      {isDrawerOpen && (
+        <PaymentItemDrawer
+          open={isDrawerOpen}
+          onClose={() => {
+            console.log("Asdfasdf");
+            setIsDrawerOpen(false);
+          }}
+          transaction={transaction}
+        />
+      )}
+    </>
   );
 };
+
 interface TransactionsTableProps {
   paymentLinkCreated: boolean;
 }
+
 const TransactionsTable: React.FC<TransactionsTableProps> = ({
   paymentLinkCreated,
 }) => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const theme = useTheme();
   const baseBackgroundColor =
@@ -102,12 +126,23 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
         </Typography>
       ),
     }),
-    columnHelper.accessor("student_name", {
-      header: "Student Name",
-      enableHiding: false,
-    }),
     columnHelper.accessor("student_phone", {
       header: "Student's Phone Number",
+      enableHiding: false,
+    }),
+    columnHelper.accessor(
+      (row) => row?.student_first_name + " " + row?.student_last_name,
+      {
+        header: "Student Name",
+        enableHiding: false,
+      }
+    ),
+    columnHelper.accessor("created", {
+      header: "Date of Payment Received",
+      enableHiding: false,
+    }),
+    columnHelper.accessor("settlement_timestamp", {
+      header: "Date and Time of Settlement",
       enableHiding: false,
     }),
     columnHelper.accessor("amount", {
@@ -134,7 +169,9 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
     }),
   ];
   const { data, isLoading, isSuccess, isError, error } =
-    useGetTransactionsListQuery();
+    useGetTransactionsListQuery({
+      limit: 1000,
+    });
 
   const table = useMaterialReactTable({
     columns,
@@ -190,20 +227,19 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
       },
     }),
   });
+
   const [paymentLinkFlowActive, setPaymentLinkFlowActive] = useState(false);
+
+  if (isLoading) return <Loading />;
+  console.log(data);
   return !isPhoneScreen ? (
     <MaterialReactTable table={table} />
   ) : data?.results && data?.results.length > 0 ? (
     <Virtuoso
       style={{ minHeight: "30vh", height: "fullheight" }}
       data={data?.results || []}
-      itemContent={(_, user) => (
-        <TransactionCellMobile
-          name={user.student_name as string}
-          phoneNumber={user.student_phone as string}
-          status={user.settlement_status}
-          amount={user.amount}
-        />
+      itemContent={(_, transaction) => (
+        <TransactionCellMobile transaction={transaction} />
       )}
     />
   ) : (

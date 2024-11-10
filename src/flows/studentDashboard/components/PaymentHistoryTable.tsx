@@ -25,131 +25,9 @@ import { useGetTransactionsListQuery } from "../../../APIs/definitions/transacti
 import PaymentFlow from "./PaymentFlow";
 import { PaymentDetails, TutorDetails } from "../interfaces";
 import { Transaction } from "../../tutorDashboard/interfaces";
+import { PaymentItemDrawer } from "./PaymentItemDrawer";
 
 const lightTheme = createTheme({ palette: { mode: "light" } });
-
-// interface Person {
-//   title: string;
-//   tutorPhoneNumber: string;
-//   timeOfSession: string;
-//   repeat: string;
-//   amount: number;
-//   paymentStatus: string;
-// }
-// const data: Person[] = [
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-//   {
-//     title: "Math's Class",
-//     tutorPhoneNumber: "+919997945005",
-//     timeOfSession: "5:53pm on 13/05/2024",
-//     repeat: "Daily",
-//     amount: 2000,
-//     paymentStatus: "Pending",
-//   },
-// ];
 
 interface PaymentHistoryTableMobileProps {
   transactionDetails: Transaction;
@@ -190,7 +68,7 @@ const PaymentHistoryTableMobile = ({
           />
           <Stack>
             <Typography fontSize={18}>
-              {transactionDetails.tutor_name}
+              {transactionDetails.tutor_first_name + " " + transactionDetails.tutor_last_name}
             </Typography>
             <Typography fontSize={14} color="#C3C3C3">
               {transactionDetails.tutor_phone}
@@ -206,43 +84,24 @@ const PaymentHistoryTableMobile = ({
           </Typography>
         </Stack>
       </Stack>
-      <Drawer
-        open={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        sx={{
-          width: "100%",
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            padding: 5,
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            width: "100%",
-            boxSizing: "border-box",
-          },
-        }}
-        anchor="bottom"
-      >
-        <Box sx={{ position: "absolute", top: 16, right: 16 }}>
-          <IconButton onClick={() => setIsDrawerOpen(false)}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-        <PaymentInfo
-          amount={transactionDetails.amount.toString()}
-          name={transactionDetails.student_name as string}
-          paymentDetails={
-            transactionDetails as unknown as Record<string, string>
-          }
-          type="success"
+
+      {isDrawerOpen && (
+        <PaymentItemDrawer
+          open={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          transaction={transactionDetails}
         />
-      </Drawer>
+      )}
     </Button>
   );
 };
 
 const PaymentHistoryTable: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  const { data: transactionDetails } = useGetTransactionsListQuery();
+  const { data: transactionDetails } = useGetTransactionsListQuery({
+    limit: 1000,
+  });
+
   const theme = useTheme();
   const baseBackgroundColor =
     theme.palette.mode === "dark"

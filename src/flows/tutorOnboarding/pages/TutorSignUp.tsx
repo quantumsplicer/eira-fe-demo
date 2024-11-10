@@ -17,10 +17,6 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 const TutorSignUp: React.FC = () => {
   const activeFlow = localStorage.getItem("activeFlow");
   const [signUpStep, setSignUpStep] = useState<number>(1);
-  const [isAccountVerifying, setIsAccountVerifying] = useState<boolean>(false);
-  const [aadhaarVerificationFailed, setAadhaarVerificationFailed] = useState<
-    boolean | null
-  >(null);
   const tutorOnboardingStep = localStorage.getItem("tutorOnboardingStep");
   const [isSessionExpired, setIsSessionExpired] = useState<boolean>(false);
   const onboardingUsername = localStorage.getItem("onboardingUsername");

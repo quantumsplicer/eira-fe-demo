@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../stores/configuration";
 import { setPayeeId } from "../stores/slices";
 import useGetOnboardingDetails from "../hooks/useGetOnboardingDetails";
+import GetHelp from "./GetHelp";
 
 interface PersonalDetailsProps {
   onSuccess?: () => void;
@@ -234,6 +235,11 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           },
         }}
       />
+
+      <Box sx={{ marginTop: notPhoneScreen ? 2 : 4 }}>
+        <GetHelp />
+      </Box>
+
       <LoadingButton
         disabled={isButtonDisabled || updateTutorIsLoading}
         onClick={handleSubmitClick}
@@ -245,7 +251,6 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           maxWidth: "400px",
           padding: 1.5,
           borderRadius: 20,
-          marginTop: notPhoneScreen ? 4 : 18,
           height: 45,
         }}
       >

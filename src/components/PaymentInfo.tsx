@@ -10,10 +10,12 @@ import {
   useLazyGetPaymentStatusQuery,
 } from "../APIs/definitions/paymentLinks";
 import { getNextWorkingDay } from "../utils/helperFunctions";
+import { Transaction } from "../flows/tutorDashboard/interfaces";
 
 interface PaymentInfoProps {
   amount: string;
   name: string;
+  transactionItem?: Transaction;
   paymentDetails: Record<string, string>;
   type: string;
 }
@@ -29,12 +31,15 @@ const formattedInfo = {
 const PaymentInfo = ({
   amount,
   name,
+  transactionItem,
   paymentDetails,
   type,
 }: PaymentInfoProps) => {
   const orderId = localStorage.getItem("order_id");
   const { data: paymentStatus, isLoading: paymentStatusIsLoading } =
-    useGetPaymentStatusQuery(orderId as string);
+    useGetPaymentStatusQuery(orderId as string, {
+      skip: !orderId,
+    });
 
   const formattedPaymentDetails = useMemo(() => {
     const paymentDetailsKeys = Object.keys(paymentDetails);
@@ -86,8 +91,10 @@ const PaymentInfo = ({
           {name}
         </Typography>
       </Stack>
+
       {type === "success" && !paymentStatusIsLoading ? (
-        paymentStatus?.order?.status == "PAID" ? (
+        paymentStatus?.order?.status == "PAID" ||
+        transactionItem?.status == "SUCCESS" ? (
           <img
             src={tickMark}
             style={{
@@ -107,7 +114,25 @@ const PaymentInfo = ({
           />
         )
       ) : null}
-      {type === "success" && !paymentStatusIsLoading ? (
+
+      {transactionItem?.status === "SUCCESS" && (
+        <Box mt={3} alignSelf={"center"}>
+          <Typography color={"#7e7e7e"} component={"span"} fontWeight={"bold"}>
+            {`Settlement on `}
+          </Typography>
+          <Typography component={"span"} fontWeight={"bold"}>
+            {getNextWorkingDay()} {/* Change this to incorporate the settlement date sent from the transaction object */}
+          </Typography>
+          <Typography component={"span"} color={"#7e7e7e"} fontWeight={"bold"}>
+            {` at`}
+          </Typography>
+          <Typography component={"span"} fontWeight={"bold"}>
+            {` 5:00pm`}
+          </Typography>
+        </Box>
+      )}
+
+      {type === "success" && !paymentStatusIsLoading && !transactionItem ? (
         paymentStatus?.order?.status === "PAID" ? (
           <Box mt={3} alignSelf={"center"}>
             <Typography
@@ -137,6 +162,7 @@ const PaymentInfo = ({
           </Box>
         )
       ) : null}
+
       {type === "review" && (
         <Typography
           variant="subtitle1"
@@ -145,6 +171,7 @@ const PaymentInfo = ({
           Confirm payment details and make payment
         </Typography>
       )}
+
       <Box width="100%" minWidth="320px" maxWidth="400px" mt={5}>
         <Stack>
           {Object.keys(formattedPaymentDetails).map((key, index) => {

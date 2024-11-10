@@ -23,11 +23,22 @@ import { useGetTransactionsListQuery } from "../../../APIs/definitions/transacti
 import { Transaction } from "../../tutorDashboard/interfaces";
 import { useGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
 
+interface AvatarWithDetailsProps {
+  name: string;
+  phoneNumber: string;
+  amount: number;
+  onClick: () => void;
+}
+
 interface TransactionAndTutorDetails extends Transaction {
   tutorDetails: TutorDetails;
 }
 const RecentPaymentRow: React.FC<Transaction> = (rowData) => {
   const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
+
+  const { data: transactionDetails } = useGetTransactionsListQuery({
+    limit: 1000,
+  });
 
   const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
     firstName: "",
@@ -47,9 +58,11 @@ const RecentPaymentRow: React.FC<Transaction> = (rowData) => {
     });
     setIsPaymentFlowActive(true);
   };
+
   const handleClosePaymentFlow = () => {
     setIsPaymentFlowActive(false);
   };
+  
   return (
     <>
       <TableRow
@@ -91,9 +104,40 @@ const RecentPaymentRow: React.FC<Transaction> = (rowData) => {
     </>
   );
 };
+
 const RecentPaymentsCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const { data: transactionDetails } = useGetTransactionsListQuery();
+
+  useEffect(() => {
+    if (transactionDetails?.results) {
+      // Create a Set to track unique phone numbers
+      const uniqueTransactions = new Set<string>();
+
+      // Filter distinct transactions based on `tutor_phone`
+      const distinctPayments = transactionDetails.results.filter(
+        (transaction: Transaction) => {
+          if (!uniqueTransactions.has(transaction.tutor_phone as string)) {
+            uniqueTransactions.add(transaction.tutor_phone as string);
+            return true; // Include this transaction
+          }
+          return false; // Skip if already included
+        }
+      );
+
+      // Map the distinct transactions to the desired format
+      const newPayments = distinctPayments.map((transaction: Transaction) => ({
+        firstName: transaction?.tutor_first_name as string ?? "",
+        lastName: transaction?.tutor_last_name as string ?? "",
+        phoneNumber: transaction.tutor_phone as string,
+        panNumber: "",
+        amount: transaction.amount,
+      }));
+
+      // Update `recentPayments` state with distinct transactions
+      setRecentPayments(newPayments);
+    }
+  }, [transactionDetails]);
 
   return (
     <Box
