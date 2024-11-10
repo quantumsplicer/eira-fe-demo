@@ -8,7 +8,7 @@ import store from "./stores/configuration";
 
 const App: React.FC = () => {
   return (
-    <Box sx={{ marginTop: -3 }}>
+    <Box>
       <Provider store={store}>
         <CssBaseline />
         <AppRoutes />

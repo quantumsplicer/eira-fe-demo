@@ -61,7 +61,7 @@ const StudentSignIn = () => {
           setIsDialogOpen(true);
         })
         .catch((err) => {
-          err.data.message === "The user role and input role does not match."
+          err?.data?.message === "The user role and input role does not match."
             ? setErrorMessage("This user is already registered as a teacher")
             : setErrorMessage("Something went wrong. Please try again!");
         });
@@ -81,20 +81,21 @@ const StudentSignIn = () => {
 
   return notPhoneScreen ? (
     <Box
-      pt={7}
+      pt={5}
+      pb={5}
       sx={{
         backgroundImage: `url(${EiraBack})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundAttachment: 'fixed',
         minHeight: "100vh",
-        minWidth: "100vw",
+        width: "100vw",
       }}
     >
       <Stack
         direction={"row"}
         alignItems={"center"}
         justifyContent={"center"}
-        mr={-10}
       >
         {(activeFlow === "staticFlow" || activeFlow === "dynamicFlow") && (
           <Box
