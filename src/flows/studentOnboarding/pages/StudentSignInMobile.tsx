@@ -3,6 +3,7 @@ import {
   Button,
   CircularProgress,
   Drawer,
+  Link,
   Stack,
   Typography,
 } from "@mui/material";
@@ -20,6 +21,9 @@ import { isPhoneNumberValid } from "../../../utils/helperFunctions";
 import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
 import { LoadingButton } from "@mui/lab";
 import { Loading } from "../../../components/Loading";
+import GetHelp from "../../../components/GetHelp";
+import { useLazyGetUserDetailsQuery } from "../../../APIs/definitions/user";
+import { useLazyGetOnboardingStatusQuery } from "../../../APIs/definitions/onboarding";
 
 const StudentSignInMobile = () => {
   const [phone, setPhone] = useState<string>("");
@@ -35,25 +39,35 @@ const StudentSignInMobile = () => {
 
   const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
 
+  const [getOnboardingStatus] = useLazyGetOnboardingStatusQuery();
+
   const handleSubmit = () => {
     if (isPhoneNumberValid(phone)) {
       setErrorMessage(null);
       getOtp({ phone: phone, role: "student" })
-      .unwrap()
-      .then(() => {
-        setIsDrawerOpen(true);
-      })
-      .catch(err => {
-        console.log(err)
-        err.data.message === "The user role and input role does not match." ?
-          setErrorMessage("This user is already registered as a teacher") :
-          setErrorMessage("Something went wrong. Please try again!")
-      });
+        .unwrap()
+        .then(async (otpData) => {
+          setIsDrawerOpen(true);
+        })
+        .catch((err) => {
+          console.log(err);
+          err.data.message === "The user role and input role does not match."
+            ? setErrorMessage("This user is already registered as a teacher")
+            : setErrorMessage("Something went wrong. Please try again!");
+        });
     }
   };
 
   const handleContinueClick = () => {
     navigateToCurrentOnboardingStep();
+  };
+
+  const OnOtpVerification = async () => {
+    // await getOnboardingStatus({}).then((data) => {
+    //   data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
+    //   setIsOtpVerificationDone(true);
+    // });
+      setIsOtpVerificationDone(true);
   };
 
   const ContinueButton = () => {
@@ -102,7 +116,7 @@ const StudentSignInMobile = () => {
         <img
           src={EiraLogo}
           style={{
-            marginTop: 35,
+            marginTop: 30,
             alignSelf: "flex-start",
             width: 120,
           }}
@@ -114,8 +128,7 @@ const StudentSignInMobile = () => {
             maxWidth="400px"
             variant="h4"
             textAlign={"center"}
-            mt={10}
-            // fontWeight={"500"}
+            mt={4}
           >
             {`Easy Credit Card and UPI Education Payments with `}
             <Typography display={"inline"} color={"#507FFD"} fontSize={32}>
@@ -126,7 +139,7 @@ const StudentSignInMobile = () => {
         <Typography
           width={"80%"}
           textAlign={"center"}
-          mt={7}
+          mt={4}
           fontSize={20}
           color={"#6f6f6f"}
         >
@@ -155,7 +168,7 @@ const StudentSignInMobile = () => {
               fontSize: 20,
             }}
           >
-             OR UPI for free
+            OR UPI for free
           </span>
         </Typography>
         {/* <Typography mt={2} fontSize={20} color={"#6f6f6f"}>
@@ -185,18 +198,30 @@ const StudentSignInMobile = () => {
           onSubmit={handleSubmit}
           autoFocus={true}
         />
-        <Box
-          mt={5}
-          width={"100%"}
-          minWidth={"320px"}
-          maxWidth={"400px"}
-        >
-          {
-            errorMessage &&
-            <Typography fontSize={14} color="red" textAlign={"center"} mb={2}>
-              {errorMessage}
-            </Typography>
-          }
+        <Box mt={2} width={"100%"} minWidth={"320px"} maxWidth={"400px"}>
+          {errorMessage && (
+            <>
+              <Typography fontSize={14} color="red" textAlign={"center"} mb={1}>
+                {errorMessage}
+              </Typography>
+              <Typography
+                variant="body1"
+                fontSize={14}
+                color="primary"
+                textAlign={"center"}
+                mb={2}
+              >
+                <Link
+                  href={"/tutor/login"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{ textDecoration: "none", fontWeight: "bold" }}
+                >
+                  Login as a teacher instead?
+                </Link>
+              </Typography>
+            </>
+          )}
           <LoadingButton
             loading={getOtpIsLoading}
             disabled={phone.length !== 10 || !isPhoneNumberValid(phone)}
@@ -208,12 +233,12 @@ const StudentSignInMobile = () => {
               padding: 1.5,
               borderRadius: 20,
               height: 45,
-              mt: errorMessage ? 0 : 4.6
             }}
           >
             Submit
           </LoadingButton>
         </Box>
+
         {isDrawerOpen ? (
           isOtpVerificationDone ? (
             <StatusDrawer
@@ -233,16 +258,16 @@ const StudentSignInMobile = () => {
           ) : (
             <>
               <Box
-                  sx={{
-                      position: 'fixed',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      backgroundColor: 'rgba(0, 0, 0, 0.3)', // Adjust opacity as needed
-                      zIndex: 9999, // Higher than most background elements
-                  }}
-                  aria-hidden="true"
+                sx={{
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: "rgba(0, 0, 0, 0.3)", // Adjust opacity as needed
+                  zIndex: 9999, // Higher than most background elements
+                }}
+                aria-hidden="true"
               />
               <Drawer
                 open={isDrawerOpen}
@@ -267,7 +292,7 @@ const StudentSignInMobile = () => {
                   <OTPInput
                     role="student"
                     phoneNumber={phone}
-                    onVerified={() => setIsOtpVerificationDone(true)}
+                    onVerified={OnOtpVerification}
                     isDrawer={true}
                     onChangePhoneNumber={() => setIsDrawerOpen(false)}
                   />
@@ -276,6 +301,8 @@ const StudentSignInMobile = () => {
             </>
           )
         ) : null}
+
+        <GetHelp />
       </Stack>
     </Box>
   );

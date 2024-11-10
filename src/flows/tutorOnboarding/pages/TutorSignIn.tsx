@@ -10,6 +10,7 @@ import { LoadingButton } from "@mui/lab";
 import { useLazyGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import { useNavigate } from "react-router-dom";
 import { useOnboarding } from "../../../customHooks/useOnboarding";
+import GetHelp from "../../../components/GetHelp";
 
 const TutorSignIn: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -83,7 +84,7 @@ const TutorSignIn: React.FC = () => {
               marginTop: notPhoneScreen ? 0 : 90,
             }}
           />
-          <Stack alignItems={"center"} mt={15}>
+          <Stack alignItems={"center"} mt={5}>
             {!isDialogOpen ? (
               <>
                 <Typography fontWeight={"bold"} variant="h6">
@@ -114,6 +115,9 @@ const TutorSignIn: React.FC = () => {
                       {errorMessage}
                     </Typography>
                   }
+
+                  <GetHelp />
+
                   <Button
                     onClick={handleSubmit}
                     variant="contained"

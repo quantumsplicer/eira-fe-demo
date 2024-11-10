@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Box, CircularProgress, TextField, useMediaQuery } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { useRegisterTutorByStudentMutation, useUpdateUserDetailsMutation } from "../APIs/definitions/user";
+import {
+  useRegisterTutorByStudentMutation,
+  useUpdateUserDetailsMutation,
+} from "../APIs/definitions/user";
 import { isPanValid } from "../utils/helperFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../stores/configuration";
 import { setPayeeId } from "../stores/slices";
 import useGetOnboardingDetails from "../hooks/useGetOnboardingDetails";
+import GetHelp from "./GetHelp";
 
 interface PersonalDetailsProps {
   onSuccess?: () => void;
@@ -19,7 +23,9 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const [isPanUnverified, setIsPanUnverified] = useState<boolean>(false);
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
-  const tutorPhoneNumber = useSelector((state: RootState) => state.onGoingPayment.tutorPhoneNumber);
+  const tutorPhoneNumber = useSelector(
+    (state: RootState) => state.onGoingPayment.tutorPhoneNumber
+  );
   const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
   const dispatch = useDispatch();
 
@@ -41,7 +47,10 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const invalidRegex = /[^A-Za-z0-9]/g;
-    const sanitizedValue = event.target.value.replace(invalidRegex, "").slice(0,10).toUpperCase();
+    const sanitizedValue = event.target.value
+      .replace(invalidRegex, "")
+      .slice(0, 10)
+      .toUpperCase();
     setPan(sanitizedValue);
   };
 
@@ -57,20 +66,23 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
       localStorage.setItem("lastName", lastName);
       localStorage.setItem("pan", pan);
       localStorage.setItem("onboardingUsername", `${firstName} ${lastName}`);
-      
+
       if (tutorPhoneNumber || activePaymentTutorId) {
         registerTutor({
           first_name: firstName,
           last_name: lastName,
           pan: pan,
-          phone: activePaymentTutorId ? activePaymentTutorId : tutorPhoneNumber
+          phone: activePaymentTutorId ? activePaymentTutorId : tutorPhoneNumber,
         })
           .unwrap()
-          .then(res => {
+          .then((res) => {
             if (res) {
               setIsPanUnverified(false);
               localStorage.setItem("activePaymentPayeeUserId", res.id);
-              localStorage.setItem("activePaymentTutorName", res.first_name + " " + res.last_name);
+              localStorage.setItem(
+                "activePaymentTutorName",
+                res.first_name + " " + res.last_name
+              );
               onSuccess && onSuccess();
             } else {
               setIsPanUnverified(true);
@@ -78,7 +90,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           })
           .catch(() => {
             setIsPanUnverified(true);
-          })
+          });
       } else {
         updateTutor({
           first_name: firstName,
@@ -110,12 +122,17 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
 
   useEffect(() => {
     const autoFillDetails = localStorage.getItem("autoFillDetails") === "true";
-    if (autoFillDetails && localStorage.getItem("firstName") && localStorage.getItem("lastName") && localStorage.getItem("pan")) {
+    if (
+      autoFillDetails &&
+      localStorage.getItem("firstName") &&
+      localStorage.getItem("lastName") &&
+      localStorage.getItem("pan")
+    ) {
       setFirstName(localStorage.getItem("firstName") as string);
       setLastName(localStorage.getItem("lastName") as string);
       setPan(localStorage.getItem("pan") as string);
     }
-  } ,[])
+  }, []);
 
   return (
     <>
@@ -210,6 +227,11 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           },
         }}
       />
+
+      <Box sx={{ marginTop: notPhoneScreen ? 2 : 4 }}>
+        <GetHelp />
+      </Box>
+
       <LoadingButton
         disabled={isButtonDisabled || updateTutorIsLoading}
         onClick={handleSubmitClick}
@@ -221,7 +243,6 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           maxWidth: "400px",
           padding: 1.5,
           borderRadius: 20,
-          marginTop: notPhoneScreen ? 4 : 18,
           height: 45,
         }}
       >

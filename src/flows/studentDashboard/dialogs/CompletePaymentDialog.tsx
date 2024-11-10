@@ -21,6 +21,7 @@ import { PaymentDetails, SessionDetails, TutorDetails } from "../interfaces";
 import { useGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
 import { useGetOnboardingStatusQuery } from "../../../APIs/definitions/onboarding";
 import moment from "moment";
+import GetHelp from "../../../components/GetHelp";
 
 interface CompletePaymentDialogProps {
   open: boolean;
@@ -226,7 +227,7 @@ const CompletePaymentDialog = ({
                   align="center"
                   lineHeight={1.2}
                 >
-                  Confirm payment detials and make payment
+                  Confirm payment details and make payment
                 </Typography>
               </Stack>
               <Stack
@@ -282,11 +283,13 @@ const CompletePaymentDialog = ({
                   </Stack>
                 )}
               </Stack>
+
               {!isPhoneScreen ? (
                 <></>
               ) : (
                 <AmountBreakupCard amount={paymentDetails.amount} />
               )}
+
               <Box>
                 <Button
                   variant="contained"
@@ -304,6 +307,8 @@ const CompletePaymentDialog = ({
                   Proceed to Pay
                 </Button>
               </Box>
+
+              <GetHelp />
             </Stack>
           </Stack>
         </Stack>

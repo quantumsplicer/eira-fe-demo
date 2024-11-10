@@ -55,7 +55,9 @@ const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
 const PaymentBannerCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
-  const { data: transactionDetails } = useGetTransactionsListQuery();
+  const { data: transactionDetails } = useGetTransactionsListQuery({
+    limit: 1000,
+  });
 
   const handleClosePaymentFlow = () => {
     setIsPaymentFlowActive(false);
@@ -85,19 +87,33 @@ const PaymentBannerCard: React.FC = () => {
   };
 
   useEffect(() => {
-    transactionDetails?.results.forEach((transaction: Transaction) => {
-      console.log(transaction);
-      setRecentPayments((prev) => [
-        ...prev,
-        {
-          firstName: "",
-          lastName: "",
-          phoneNumber: transaction.tutor_phone as string,
-          panNumber: "",
-          amount: transaction.amount,
-        },
-      ]);
-    });
+    if (transactionDetails?.results) {
+      // Create a Set to track unique phone numbers
+      const uniqueTransactions = new Set<string>();
+
+      // Filter distinct transactions based on `tutor_phone`
+      const distinctPayments = transactionDetails.results.filter(
+        (transaction: Transaction) => {
+          if (!uniqueTransactions.has(transaction.tutor_phone as string)) {
+            uniqueTransactions.add(transaction.tutor_phone as string);
+            return true; // Include this transaction
+          }
+          return false; // Skip if already included
+        }
+      );
+
+      // Map the distinct transactions to the desired format
+      const newPayments = distinctPayments.map((transaction: Transaction) => ({
+        firstName: transaction?.tutor_first_name as string ?? "",
+        lastName: transaction?.tutor_last_name as string ?? "",
+        phoneNumber: transaction.tutor_phone as string,
+        panNumber: "",
+        amount: transaction.amount,
+      }));
+
+      // Update `recentPayments` state with distinct transactions
+      setRecentPayments(newPayments);
+    }
   }, [transactionDetails]);
 
   return (

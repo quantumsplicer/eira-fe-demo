@@ -1,44 +1,45 @@
-import * as React from "react";
-import { useState, useMemo, useEffect } from "react";
+import MarketingIcon from "@mui/icons-material/CampaignOutlined";
+import HomeIcon from "@mui/icons-material/HomeOutlined";
+import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined";
+import LogoutIcon from "@mui/icons-material/Logout";
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import InvoiceIcon from "@mui/icons-material/ReceiptOutlined";
+import SessionHistoryIcon from "@mui/icons-material/RestoreOutlined";
+import SortSharpIcon from "@mui/icons-material/SortSharp";
 import {
-  Stack,
-  Box,
-  Drawer,
   AppBar,
-  CssBaseline,
-  Toolbar,
-  List,
-  Typography,
+  Avatar,
+  Box,
+  Button,
   Divider,
+  Drawer,
+  IconButton,
+  List,
   ListItem,
   ListItemButton,
   ListItemIcon,
-  IconButton,
-  Avatar,
+  Stack,
+  Toolbar,
+  Typography,
   useMediaQuery,
-  Button,
 } from "@mui/material";
-import HomeIcon from "@mui/icons-material/HomeOutlined";
-import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined";
-import MarketingIcon from "@mui/icons-material/CampaignOutlined";
-import InvoiceIcon from "@mui/icons-material/ReceiptOutlined";
-import SortSharpIcon from "@mui/icons-material/SortSharp";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import * as React from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
+import StatusDrawer from "../../../components/StatusDrawer";
+import StatusDialog from "../../../dialogs/StatusDialog";
+import { useLogout } from "../../../utils/logout";
 import PaymentHistory from "../subpages/PaymentHistory";
-import SessionHistoryIcon from "@mui/icons-material/RestoreOutlined";
-import SessionHistory from "../subpages/SessionHistory";
 import PaymentLinkPage from "../subpages/PaymentLinkPage";
 import ProfilePage from "../subpages/ProfilePage";
-import { isAssertEntry } from "typescript";
-import PaymentLinkDialog from "../dialogs/PaymentLinkDialog";
-import { useLocation, useNavigate } from "react-router-dom";
-import StatusDialog from "../../../dialogs/StatusDialog";
-import StatusDrawer from "../../../components/StatusDrawer";
-import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { useLogout } from "../../../utils/logout";
+import SessionHistory from "../subpages/SessionHistory";
+import { WHATSAPP_LINK } from "../../../components/GetHelp";
+import { useInstallPWA } from "../../../hooks/useInstallPWA";
+import PWAInstallDrawer from "../../../components/PWAInstallDrawer";
 
 const PAYMENT_HISTORY_PAGE = "Payment History Page";
 const SESSION_HISTORY_PAGE = "Session History Page";
@@ -46,10 +47,21 @@ const PAYMENT_LINK_PAGE = "Payment Link Page";
 const PROFILE_PAGE = "Profile Page";
 const CREATE_PAYMENT_LINK_MOBILE_DIALOG = "Create Payment Link Mobile";
 const drawerWidth = 220;
+
+const NAV_OPTIONS = [
+  { title: "Payments", subpage: PAYMENT_HISTORY_PAGE },
+  { title: "Your Payment Link", subpage: PAYMENT_LINK_PAGE },
+  { title: "Session History", subpage: SESSION_HISTORY_PAGE },
+  { title: "Invoices", subpage: "disabled" },
+  { title: "Marketing", subpage: "disabled" },
+  { title: "Help", link: WHATSAPP_LINK },
+];
+
 const TutorDashboard: React.FC = () => {
   const subpageMap = useMemo(() => {
     return;
   }, []);
+
   const iconsArray = useMemo(() => {
     return [
       <HomeIcon key="home" />,
@@ -57,6 +69,7 @@ const TutorDashboard: React.FC = () => {
       <SessionHistoryIcon key="history" />,
       <InvoiceIcon key="invoice" />,
       <MarketingIcon key="marketing" />,
+      <QuestionMarkIcon key="help" />
     ];
   }, []);
 
@@ -65,14 +78,18 @@ const TutorDashboard: React.FC = () => {
       fontFamily: "Montserrat",
     },
   });
+
+  const [prompt, promptToInstall] = useInstallPWA();
+
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [subpage, setSubpage] = useState<string>(PAYMENT_HISTORY_PAGE);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const previousUrl = location.state?.previousUrl;
   const [showDialog, setShowDialog] = useState<boolean>(false);
+  const [isPWAInstallPromptOpen, setIsPWAInstallPromptOpen] = useState(false);
 
-  const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
+  const { data: userDetails } = useGetUserDetailsQuery();
 
   const [isSessionExpired, setIsSessionExpired] = useState<boolean>(false);
 
@@ -104,6 +121,15 @@ const TutorDashboard: React.FC = () => {
       return <ProfilePage />;
     }
   };
+
+  const handleClickNavOption = (entry: any) => {
+    entry?.subpage && handleSubpageChange(entry?.subpage as string);
+    entry?.link && window.open(entry.link, "_blank");
+  };
+
+  useEffect(() => {
+    setIsPWAInstallPromptOpen(!!prompt);
+  }, [prompt]);
 
   useEffect(() => {
     const showAlert = localStorage.getItem("showDialog") === "true";
@@ -282,7 +308,8 @@ const TutorDashboard: React.FC = () => {
               </Stack>
             </Toolbar>
           </AppBar>
-
+          
+          {/* Side drawer */}
           {!isPhoneScreen ? (
             <Drawer
               variant="permanent"
@@ -301,30 +328,22 @@ const TutorDashboard: React.FC = () => {
               <Toolbar />
               <Box sx={{ overflow: "auto" }} height="100%">
                 <List>
-                  {[
-                    { title: "Payments", subpage: PAYMENT_HISTORY_PAGE },
-                    { title: "Your Payment Link", subpage: PAYMENT_LINK_PAGE },
-                    { title: "Session History", subpage: SESSION_HISTORY_PAGE },
-                    { title: "Invoices", subpage: "disabled" },
-                    { title: "Marketing", subpage: "disabled" },
-                  ].map((entry, index) => (
+                  {NAV_OPTIONS.map((entry, index) => (
                     <ListItem
                       key={entry.title}
                       sx={{ width: "100%", pl: "0", pr: "0" }}
                     >
                       <ListItemButton
-                        onClick={() => {
-                          handleSubpageChange(entry.subpage);
-                        }}
+                        onClick={() => {handleClickNavOption(entry)}}
                         disabled={index === 3 || index === 4 ? true : false}
                         sx={{
                           backgroundColor:
-                            subpage === entry.subpage ? "#EBF1FF" : "white",
+                            entry?.subpage && subpage === entry.subpage ? "#EBF1FF" : "white",
                           color:
-                            subpage === entry.subpage ? "#507FFD" : "black",
+                            entry?.subpage && subpage === entry.subpage ? "#507FFD" : "black",
                           pl: 3,
                           "& *":
-                            subpage === entry.subpage
+                            entry?.subpage && subpage === entry.subpage
                               ? {
                                   color: "#507FFD",
                                   fontWeight: "bold",
@@ -440,33 +459,19 @@ const TutorDashboard: React.FC = () => {
                     </Typography>
                   </Stack>
                   <List>
-                    {[
-                      { title: "Payments", subpage: PAYMENT_HISTORY_PAGE },
-                      {
-                        title: "Your Payment Link",
-                        subpage: PAYMENT_LINK_PAGE,
-                      },
-                      {
-                        title: "Session History",
-                        subpage: SESSION_HISTORY_PAGE,
-                      },
-                      { title: "Invoices", subpage: "disabled" },
-                      { title: "Marketing", subpage: "disabled" },
-                    ].map((entry, index) => (
+                    {NAV_OPTIONS.map((entry, index) => (
                       <ListItem key={entry.title} sx={{ width: "100%", p: 0 }}>
                         <ListItemButton
-                          onClick={() => {
-                            handleSubpageChange(entry.subpage);
-                          }}
+                          onClick={() => {handleClickNavOption(entry)}}
                           disabled={index === 3 || index === 4 ? true : false}
                           sx={{
                             backgroundColor:
-                              subpage === entry.subpage ? "#EBF1FF" : "white",
+                              entry.subpage && subpage === entry.subpage ? "#EBF1FF" : "white",
                             color:
-                              subpage === entry.subpage ? "#507FFD" : "black",
+                              entry.subpage && subpage === entry.subpage ? "#507FFD" : "black",
                             pl: 3,
                             "& *":
-                              subpage === entry.subpage
+                              entry.subpage && subpage === entry.subpage
                                 ? {
                                     color: "#507FFD",
                                     fontWeight: "bold",
@@ -549,6 +554,7 @@ const TutorDashboard: React.FC = () => {
             {!isPhoneScreen ? <Toolbar /> : <></>}
             {displaySubpage()}
           </Box>
+          
           {isPhoneScreen && showDialog ? (
             <StatusDrawer
               open={showDialog}
@@ -593,6 +599,27 @@ const TutorDashboard: React.FC = () => {
           CustomDialogButton={ScheduleClassButton}
         />
       )}
+
+      {isPWAInstallPromptOpen && (
+        <PWAInstallDrawer
+          open={isPWAInstallPromptOpen}
+          onClose={() => setIsPWAInstallPromptOpen(false)}
+          CustomDrawerButton={
+            <Button
+              onClick={() => promptToInstall()}
+              variant="contained"
+              sx={{
+                width: "320px",
+                height: 45,
+                borderRadius: 20,
+              }}
+            >
+              Save Eira
+            </Button>
+          }
+        />
+      )}
+
     </ThemeProvider>
   );
 };

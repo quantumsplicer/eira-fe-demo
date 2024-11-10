@@ -12,9 +12,11 @@ export interface Transaction {
   payment_mode: string;
   status: string;
   tutor_phone?: string;
-  tutor_name?: string;
+  tutor_first_name?: string;
+  tutor_last_name?: string;
   student_phone?: string;
-  student_name?: string;
+  student_first_name?: string;
+  student_last_name?: string;
 }
 
 export interface TransactionsResponse {

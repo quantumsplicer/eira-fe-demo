@@ -68,7 +68,7 @@ const PaymentHistoryTableMobile = ({
           />
           <Stack>
             <Typography fontSize={18}>
-              {transactionDetails.tutor_name}
+              {transactionDetails.tutor_first_name + " " + transactionDetails.tutor_last_name}
             </Typography>
             <Typography fontSize={14} color="#C3C3C3">
               {transactionDetails.tutor_phone}
@@ -98,7 +98,10 @@ const PaymentHistoryTableMobile = ({
 
 const PaymentHistoryTable: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  const { data: transactionDetails } = useGetTransactionsListQuery();
+  const { data: transactionDetails } = useGetTransactionsListQuery({
+    limit: 1000,
+  });
+
   const theme = useTheme();
   const baseBackgroundColor =
     theme.palette.mode === "dark"

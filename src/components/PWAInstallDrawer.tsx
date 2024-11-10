@@ -1,7 +1,15 @@
 import React, { ReactElement } from "react";
-import { Typography, Stack, Drawer, Box, IconButton } from "@mui/material";
+import {
+  Typography,
+  Stack,
+  Drawer,
+  Box,
+  IconButton,
+  Dialog,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import EiraLogo from "../assets/images/png/eira-logo-graphic.png";
-import InfoIcon from "@mui/icons-material/Info";
 import Close from "@mui/icons-material/Close";
 
 interface PWAInstallDrawerProps {
@@ -10,12 +18,59 @@ interface PWAInstallDrawerProps {
   CustomDrawerButton: ReactElement;
 }
 
-const PWAInstallDrawer = ({
+export const PWAInstallDrawer = ({
   open,
   onClose,
   CustomDrawerButton,
 }: PWAInstallDrawerProps) => {
-  return (
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const Content = (
+    <Stack
+      p={5}
+      justifyContent={"center"}
+      alignItems={"center"}
+      position="relative"
+      sx={{
+        width: isMobile ? "100%" : "400px",
+        margin: isMobile ? "0" : "auto",
+      }}
+    >
+      {/* Close Button */}
+      <IconButton
+        onClick={onClose}
+        sx={{
+          alignSelf: "flex-end",
+          position: "absolute",
+          top: 5,
+          right: 10,
+        }}
+      >
+        <Close />
+      </IconButton>
+
+      <Typography variant="h5" mb={3} textAlign={"center"}>
+        Save Eira to homescreen
+      </Typography>
+      <Typography variant="subtitle2" textAlign={"center"}>
+        Make payment easier and add Eira to your homescreen
+      </Typography>
+      <img
+        src={EiraLogo}
+        style={{
+          marginTop: "30px",
+          marginBottom: "30px",
+          width: 80,
+        }}
+        alt="Eira Logo"
+      />
+
+      {CustomDrawerButton}
+    </Stack>
+  );
+
+  return isMobile ? (
     <>
       {open && (
         <Box
@@ -26,7 +81,7 @@ const PWAInstallDrawer = ({
             right: 0,
             bottom: 0,
             backgroundColor: "rgba(0, 0, 0, 0.3)", // Adjust opacity as needed
-            zIndex: 9999, // Higher than most background elements
+            zIndex: 1300, // Higher than most background elements
           }}
           aria-hidden="true"
         />
@@ -49,47 +104,24 @@ const PWAInstallDrawer = ({
         variant={"persistent"}
         anchor="bottom"
       >
-        <Stack
-          p={5}
-          justifyContent={"center"}
-          alignItems={"center"}
-          position="relative"
-        >
-          {/* Close Button */}
-          <IconButton
-            onClick={onClose}
-            sx={{
-              alignSelf: "flex-end",
-              position: "absolute",
-              top: 5,
-              right: 10,
-              //   zIndex: 10001,
-              //   pb: 2
-            }}
-          >
-            <Close />
-          </IconButton>
-
-          <Typography variant="h5" mb={3}>
-            Save Eira to homescreen
-          </Typography>
-          <Typography variant="subtitle2" textAlign={"center"}>
-            Make payment easier and add Eira to your homescreen
-          </Typography>
-          <img
-            src={EiraLogo}
-            style={{
-              marginTop: "30px",
-              marginBottom: "30px",
-              width: 80,
-            }}
-            alt="Eira Logo"
-          />
-
-          {CustomDrawerButton}
-        </Stack>
+        {Content}
       </Drawer>
     </>
+  ) : (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 5,
+          p: 2,
+        },
+      }}
+    >
+      {Content}
+    </Dialog>
   );
 };
 

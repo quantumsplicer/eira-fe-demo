@@ -29,57 +29,70 @@ interface TransactionCellMobileProps {
 }
 const TransactionCellMobile = ({ transaction }: TransactionCellMobileProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+  
   return (
-    <Box
-      sx={{
-        border: "0.2px solid",
-        borderRadius: 4,
-        borderColor: "#C3C3C3",
-        p: 2,
-        marginBottom: 2,
-      }}
-      onClick={() => setIsDrawerOpen(true)}
-    >
-      <Stack direction="row" justifyContent="space-between">
-        <Stack direction="row" spacing={2}>
-          <Divider
-            orientation="vertical"
-            flexItem
-            sx={{
-              height: "95%",
-              alignSelf: "center",
-              borderWidth: 2.5,
-              borderColor: "#2AC426",
-            }}
-          />
-          <Stack>
-            <Typography fontSize={18}>{transaction?.student_name}</Typography>
-            <Typography fontSize={14} color="#C3C3C3">
-              {transaction?.student_phone}
+    <>
+      <Box
+        sx={{
+          border: "0.2px solid",
+          borderRadius: 4,
+          borderColor: "#C3C3C3",
+          p: 2,
+          marginBottom: 2,
+          "&: hover": {
+            cursor: "pointer",
+            backgroundColor: "#f0f0f0",
+          },
+        }}
+        onClick={() => setIsDrawerOpen(true)}
+      >
+        <Stack direction="row" justifyContent="space-between">
+          <Stack direction="row" spacing={2}>
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{
+                height: "95%",
+                alignSelf: "center",
+                borderWidth: 2.5,
+                borderColor: "#2AC426",
+              }}
+            />
+            <Stack>
+              <Typography fontSize={18}>
+                {
+                  ((transaction?.student_first_name as string) +
+                    " " +
+                    transaction?.student_last_name) as string
+                }
+              </Typography>
+              <Typography fontSize={14} color="#C3C3C3">
+                {transaction?.student_phone}
+              </Typography>
+            </Stack>
+          </Stack>
+          <Stack pr={2}>
+            <Typography fontSize={19} fontWeight={500} textAlign="right">
+              ₹ {transaction?.amount}
+            </Typography>
+            <Typography fontSize={14} color="#C3C3C3" textAlign="right">
+              {transaction?.status}
             </Typography>
           </Stack>
         </Stack>
-        <Stack pr={2}>
-          <Typography fontSize={19} fontWeight={500} textAlign="right">
-            ₹ {transaction?.amount}
-          </Typography>
-          <Typography fontSize={14} color="#C3C3C3" textAlign="right">
-            {transaction?.status}
-          </Typography>
-        </Stack>
-      </Stack>
+      </Box>
 
       {isDrawerOpen && (
         <PaymentItemDrawer
           open={isDrawerOpen}
           onClose={() => {
-            setIsDrawerOpen(true);
+            console.log("Asdfasdf");
+            setIsDrawerOpen(false);
           }}
           transaction={transaction}
         />
       )}
-    </Box>
+    </>
   );
 };
 
@@ -109,10 +122,13 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
       header: "Student's Phone Number",
       enableHiding: false,
     }),
-    columnHelper.accessor("student_name", {
-      header: "Student Name",
-      enableHiding: false,
-    }),
+    columnHelper.accessor(
+      (row) => row?.student_first_name + " " + row?.student_last_name,
+      {
+        header: "Student Name",
+        enableHiding: false,
+      }
+    ),
     columnHelper.accessor("created", {
       header: "Date of Payment Received",
       enableHiding: false,
@@ -136,7 +152,9 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
     }),
   ];
   const { data, isLoading, isSuccess, isError, error } =
-    useGetTransactionsListQuery();
+    useGetTransactionsListQuery({
+      limit: 1000,
+    });
 
   const table = useMaterialReactTable({
     columns,
@@ -194,9 +212,9 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
   });
 
   const [paymentLinkFlowActive, setPaymentLinkFlowActive] = useState(false);
-  
+
   if (isLoading) return <Loading />;
-  console.log(data)
+  console.log(data);
   return !isPhoneScreen ? (
     <MaterialReactTable table={table} />
   ) : data?.results && data?.results.length > 0 ? (
