@@ -82,13 +82,9 @@ const TutorDashboard: React.FC = () => {
   const handleDrawerClose = () => {
     setMobileOpen(false);
   };
-
-  const handleDrawerTransitionEnd = () => {};
-
   const handleDrawerToggle = () => {
     setMobileOpen(true);
   };
-
   const handleSubpageChange = (subpage: string) => {
     setSubpage(subpage);
     handleDrawerClose();
@@ -305,8 +301,8 @@ const TutorDashboard: React.FC = () => {
                     { title: "Payments", subpage: PAYMENT_HISTORY_PAGE },
                     { title: "Your Payment Link", subpage: PAYMENT_LINK_PAGE },
                     { title: "Session History", subpage: SESSION_HISTORY_PAGE },
-                    { title: "Invoices", subpage: "disabled" },
-                    { title: "Marketing", subpage: "disabled" },
+                    { title: "Invoices (Coming Soon)", subpage: "disabled" },
+                    { title: "Marketing (Coming Soon)", subpage: "disabled" },
                   ].map((entry, index) => (
                     <ListItem
                       key={entry.title}
@@ -340,11 +336,15 @@ const TutorDashboard: React.FC = () => {
                           },
                         }}
                       >
-                        <ListItemIcon>{iconsArray[index]}</ListItemIcon>
+                        <ListItemIcon sx={{ alignSelf: "center" }}>
+                          {iconsArray[index]}
+                        </ListItemIcon>
                         <Typography
-                          color="black"
+                          sx={{
+                            color:
+                              subpage === entry.subpage ? "#507FFD" : "black",
+                          }}
                           fontSize={14}
-                          pt={1.4}
                           fontWeight={600}
                         >
                           {entry.title}
@@ -400,7 +400,6 @@ const TutorDashboard: React.FC = () => {
               variant="temporary"
               anchor="right"
               open={mobileOpen}
-              onTransitionEnd={handleDrawerTransitionEnd}
               onClose={handleDrawerClose}
               ModalProps={{
                 keepMounted: true, // Better open performance on mobile.
@@ -450,8 +449,8 @@ const TutorDashboard: React.FC = () => {
                         title: "Session History",
                         subpage: SESSION_HISTORY_PAGE,
                       },
-                      { title: "Invoices", subpage: "disabled" },
-                      { title: "Marketing", subpage: "disabled" },
+                      { title: "Invoices (coming soon)", subpage: "disabled" },
+                      { title: "Marketing (coming soon)", subpage: "disabled" },
                     ].map((entry, index) => (
                       <ListItem key={entry.title} sx={{ width: "100%", p: 0 }}>
                         <ListItemButton

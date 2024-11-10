@@ -47,7 +47,9 @@ const PaymentLinkDialog = ({
     watch,
     control,
     formState: { errors, isValid },
-  } = useForm<PaymentLinkInput>();
+  } = useForm<PaymentLinkInput>({
+    mode: "onChange",
+  });
 
   const handleOnClose = () => {
     onClose();
@@ -157,6 +159,11 @@ const PaymentLinkDialog = ({
                 pattern: {
                   value: /^[6-9]\d{9}$/,
                   message: "Invalid Number",
+                },
+                validate: {
+                  notForbidden: (value) =>
+                    value !== localStorage.getItem("phoneNumber") ||
+                    "Cannot create payment link for your own number",
                 },
               }}
               render={({ field }) => (

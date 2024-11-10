@@ -4,77 +4,30 @@ import Box from "@mui/material/Box";
 import {
   Avatar,
   Divider,
+  Paper,
+  TableRow,
   Stack,
+  Table,
+  TableCell,
+  TableContainer,
+  TableHead,
   Typography,
   useMediaQuery,
+  TableBody,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import PaymentLinkBannerArt from "../../../assets/images/svg/PaymentLinkBannerArt.svg";
 import { TutorDetails } from "../interfaces";
 import PaymentFlow from "./PaymentFlow";
 import { useGetTransactionsListQuery } from "../../../APIs/definitions/transactionsList";
-interface AvatarWithDetailsProps {
-  name: string;
-  phoneNumber: string;
-  amount: number;
-  onClick: () => void;
+import { Transaction } from "../../tutorDashboard/interfaces";
+import { useGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
+
+interface TransactionAndTutorDetails extends Transaction {
+  tutorDetails: TutorDetails;
 }
-
-const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
-  name,
-  phoneNumber,
-  amount,
-  onClick,
-}) => {
-  return (
-    <Stack
-      spacing={1}
-      width="100%"
-      alignItems="center"
-      direction="row"
-      justifyContent="space-between"
-    >
-      <Avatar
-        alt={name}
-        sx={{
-          width: "35px",
-          height: "35px",
-          bgcolor: "#507FFD",
-          fontSize: "20px",
-        }}
-        onClick={onClick}
-      >
-        <Typography fontSize={36}>
-          {name?.[0].replace(" ", "") ? name?.[0] : "U"}
-        </Typography>
-      </Avatar>
-      <Stack
-        alignItems="center"
-        direction="row"
-        width="100%"
-        justifyContent="space-around"
-      >
-        <Typography sx={{ fontSize: "1.1rem", fontWeight: 500 }}>
-          {name}
-        </Typography>
-        <Typography sx={{ fontSize: "1rem", fontWeight: 500 }}>
-          {phoneNumber}
-        </Typography>
-        <Typography sx={{ fontSize: "1rem", fontWeight: 500 }}>
-          {amount.toLocaleString("en-IN", {
-            style: "currency",
-            currency: "INR",
-          })}
-        </Typography>
-      </Stack>
-    </Stack>
-  );
-};
-
-const RecentPaymentsCard: React.FC = () => {
-  const isPhoneScreen = useMediaQuery("(max-width:600px)");
+const RecentPaymentRow: React.FC<Transaction> = (rowData) => {
   const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
-  const { data: transactionDetails } = useGetTransactionsListQuery();
 
   const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
     firstName: "",
@@ -82,41 +35,65 @@ const RecentPaymentsCard: React.FC = () => {
     panNumber: "",
     phoneNumber: "",
   });
-  const [recentPayments, setRecentPayments] = useState<TutorDetails[]>([]);
-
+  const { data: tutorData } = useGetUserDetailsByPhoneQuery(
+    rowData.tutor_phone ?? ""
+  );
+  const handleOnClick = () => {
+    setTutorDetails({
+      firstName: tutorData?.[0]?.first_name ?? "",
+      lastName: tutorData?.[0]?.last_name ?? "",
+      panNumber: tutorData?.[0]?.pan ?? "",
+      phoneNumber: tutorData?.[0]?.phone ?? "",
+    });
+    setIsPaymentFlowActive(true);
+  };
   const handleClosePaymentFlow = () => {
     setIsPaymentFlowActive(false);
   };
-
-  const handleTutorDetails = (details: TutorDetails) => {
-    setTutorDetails(details);
-    setIsPaymentFlowActive(true);
-  };
-
-  const handleOpenPaymentFlow = () => {
-    setTutorDetails({
-      firstName: "",
-      lastName: "",
-      panNumber: "",
-      phoneNumber: "",
-    });
-    setIsPaymentFlowActive(true);
-  };
-
-  useEffect(() => {
-    transactionDetails?.results.forEach((transaction) => {
-      setRecentPayments((prev) => [
-        ...prev,
-        {
-          firstName: "",
-          lastName: "",
-          phoneNumber: transaction.tutor_phone as string,
-          panNumber: "",
-          amount: transaction.amount,
-        },
-      ]);
-    });
-  }, [transactionDetails]);
+  return (
+    <>
+      <TableRow
+        key={rowData.id}
+        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+      >
+        <TableCell>
+          <Avatar
+            sx={{
+              width: "35px",
+              height: "35px",
+              bgcolor: "#507FFD",
+              fontSize: "10px",
+            }}
+          >
+            <Typography fontSize={20}>
+              {tutorData?.[0]?.first_name?.[0]}
+            </Typography>
+          </Avatar>
+        </TableCell>
+        <TableCell align="right">
+          {tutorData?.[0]?.first_name} {tutorData?.[0]?.last_name}
+        </TableCell>
+        <TableCell align="right">{rowData.tutor_phone}</TableCell>
+        <TableCell align="right">{rowData.amount}</TableCell>
+        <TableCell align="right">
+          <Button variant="contained" color="primary" onClick={handleOnClick}>
+            Pay Again
+          </Button>
+        </TableCell>
+      </TableRow>
+      {isPaymentFlowActive && (
+        <PaymentFlow
+          open={isPaymentFlowActive}
+          onClose={handleClosePaymentFlow}
+          tutorDetailsProp={tutorDetails}
+        />
+      )}
+    </>
+  );
+};
+const RecentPaymentsCard: React.FC = () => {
+  const isPhoneScreen = useMediaQuery("(max-width:600px)");
+  const { data: transactionDetails } = useGetTransactionsListQuery();
 
   return (
     <Box
@@ -142,99 +119,28 @@ const RecentPaymentsCard: React.FC = () => {
           </Typography>
         </Stack>
         <Stack spacing={3}>
-          <Stack
-            spacing={1}
-            width="100%"
-            alignItems="center"
-            direction="row"
-            justifyContent="space-between"
-          >
-            <Avatar
-              sx={{
-                width: "35px",
-                height: "35px",
-                bgcolor: "white",
-                fontSize: "20px",
-              }}
-            ></Avatar>
-            <Stack
-              alignItems="center"
-              direction="row"
-              width="100%"
-              justifyContent="space-around"
-            >
-              <Typography
-                sx={{ fontSize: "1.1rem", fontWeight: 600, color: "gray" }}
-              >
-                Name
-              </Typography>
-              <Typography
-                sx={{ fontSize: "1rem", fontWeight: 600, color: "gray" }}
-              >
-                Phone Number
-              </Typography>
-              <Typography
-                sx={{ fontSize: "1rem", fontWeight: 600, color: "gray" }}
-              >
-                Amount
-              </Typography>
-            </Stack>
-          </Stack>
-          <Stack spacing={2} width="100%">
-            {recentPayments.slice(0, 3).map((avatar, index) => (
-              <AvatarWithDetails
-                key={index}
-                name={`${avatar.firstName} ${avatar.lastName}`}
-                phoneNumber={avatar.phoneNumber}
-                amount={2000}
-                onClick={() => {
-                  handleTutorDetails(avatar);
-                }}
-              />
-            ))}
-          </Stack>
+          <TableContainer component={Paper} sx={{ boxShadow: 0 }}>
+            <Table sx={{ minWidth: 650 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell></TableCell>
+                  <TableCell align="right">Name</TableCell>
+                  <TableCell align="right">Phone Number</TableCell>
+                  <TableCell align="right">Amount</TableCell>
+                  <TableCell align="right">Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {transactionDetails?.results.slice(0, 3).map((row) => (
+                  <RecentPaymentRow key={row.id} {...row} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Stack>
       </Stack>
-      {isPaymentFlowActive && (
-        <PaymentFlow
-          open={isPaymentFlowActive}
-          onClose={handleClosePaymentFlow}
-          tutorDetailsProp={tutorDetails}
-        />
-      )}
     </Box>
   );
 };
-const avatarsWithDetails: TutorDetails[] = [
-  {
-    firstName: "John",
-    lastName: "Dorito",
-    panNumber: "1234567890",
-    phoneNumber: "9997945005",
-  },
-  {
-    firstName: "Sugarcane",
-    lastName: "Smith",
-    panNumber: "1234567890",
-    phoneNumber: "9411819909",
-  },
-  {
-    firstName: "Alice",
-    lastName: "Johnson",
-    panNumber: "1234567890",
-    phoneNumber: "9412061914",
-  },
-  {
-    firstName: "Bob",
-    lastName: "Williams",
-    panNumber: "1234567890",
-    phoneNumber: "9997945005",
-  },
-  {
-    firstName: "Eva",
-    lastName: "Brown",
-    panNumber: "1234567890",
-    phoneNumber: "9997945005",
-  },
-];
+
 export default RecentPaymentsCard;

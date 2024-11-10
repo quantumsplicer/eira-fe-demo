@@ -27,14 +27,19 @@ const CurrentLimitCard: React.FC = () => {
   const { data: userDetails } = useGetUserDetailsQuery();
 
   const currentLimit = useMemo(() => {
-    return userDetails?.pg_onboarding_status && 
+    return userDetails?.pg_onboarding_status &&
       userDetails.pg_onboarding_status.length &&
-      (userDetails.pg_onboarding_status[0].status === "MIN_KYC_AAPPROVED" || userDetails.pg_onboarding_status[0].status === "ACTIVE")
-      ? 50000 : 5000;
+      (userDetails.pg_onboarding_status[0].status === "MIN_KYC_AAPPROVED" ||
+        userDetails.pg_onboarding_status[0].status === "ACTIVE")
+      ? 50000
+      : 5000;
   }, [userDetails]);
   const onboardingStatus = useMemo(() => {
-    return userDetails?.pg_onboarding_status?.length &&
-      (userDetails.pg_onboarding_status[0].status === "MIN_KYC_AAPPROVED" || userDetails.pg_onboarding_status[0].status === "ACTIVE")
+    return (
+      userDetails?.pg_onboarding_status?.length &&
+      (userDetails.pg_onboarding_status[0].status === "MIN_KYC_AAPPROVED" ||
+        userDetails.pg_onboarding_status[0].status === "ACTIVE")
+    );
   }, [userDetails]);
   return (
     <Box
@@ -173,7 +178,7 @@ const CurrentLimitCard: React.FC = () => {
           <Button
             onClick={() => {
               localStorage.setItem("activeFlow", "tutorKyc");
-              navigate("/tutor/kyc")
+              navigate("/tutor/complete-kyc");
             }}
             variant="contained"
             sx={
