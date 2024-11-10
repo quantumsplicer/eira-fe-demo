@@ -13,6 +13,7 @@ export interface ValidateOtpBody {
 
 export interface ValidateOtpResponse extends ApiResponse {
   token: string;
+  id?: string;
 }
 
 export const authApi = postgresApi.injectEndpoints({
@@ -32,7 +33,6 @@ export const authApi = postgresApi.injectEndpoints({
         body,
       }),
       onQueryStarted: async (body, { queryFulfilled }) => {
-
         try {
           const { data } = await queryFulfilled;
 

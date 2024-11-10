@@ -22,7 +22,7 @@ import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
 import { LoadingButton } from "@mui/lab";
 import { Loading } from "../../../components/Loading";
 import GetHelp from "../../../components/GetHelp";
-import { useLazyGetUserDetailsQuery } from "../../../APIs/definitions/user";
+import { useLazyGetUserDetailsByIdQuery, useLazyGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import { useLazyGetOnboardingStatusQuery } from "../../../APIs/definitions/onboarding";
 
 const StudentSignInMobile = () => {
@@ -39,7 +39,7 @@ const StudentSignInMobile = () => {
 
   const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
 
-  const [getOnboardingStatus] = useLazyGetOnboardingStatusQuery();
+  const [getUserDetailsbyId] = useLazyGetUserDetailsByIdQuery();
 
   const handleSubmit = () => {
     if (isPhoneNumberValid(phone)) {
@@ -62,12 +62,12 @@ const StudentSignInMobile = () => {
     navigateToCurrentOnboardingStep();
   };
 
-  const OnOtpVerification = async () => {
-    // await getOnboardingStatus({}).then((data) => {
-    //   data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
-    //   setIsOtpVerificationDone(true);
-    // });
+  const OnOtpVerification = async (id: string) => {
+    console.log("herererere")
+    await getUserDetailsbyId(id).then((data) => {
+      data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
       setIsOtpVerificationDone(true);
+    });
   };
 
   const ContinueButton = () => {

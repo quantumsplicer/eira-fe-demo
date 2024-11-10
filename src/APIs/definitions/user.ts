@@ -27,10 +27,10 @@ export const userApi = postgresApi.injectEndpoints({
       query: () => `user/me`,
       onQueryStarted: async (_, { queryFulfilled }) => {
         try {
-        const { data } = await queryFulfilled;
+          const { data } = await queryFulfilled;
 
-        data?.id && localStorage.setItem("userId", data.id);
-        } catch(err) {}
+          data?.id && localStorage.setItem("userId", data.id);
+        } catch (err) {}
       },
     }),
 
@@ -48,6 +48,10 @@ export const userApi = postgresApi.injectEndpoints({
         method: "GET",
         params: { phone },
       }),
+    }),
+
+    getUserDetailsById: builder.query<UserDetails, string>({
+      query: (id) => `user/${id}`,
     }),
 
     getUserByUserName: builder.query<UserDetails[], string>({
@@ -89,6 +93,8 @@ export const {
   useUpdateUserDetailsMutation,
   useGetUserDetailsByPhoneQuery,
   useLazyGetUserDetailsByPhoneQuery,
+  useGetUserDetailsByIdQuery,
+  useLazyGetUserDetailsByIdQuery,
   useGetUserByUserNameQuery,
   useRegisterTutorByStudentMutation,
   useLazyGetUserByUserNameQuery,

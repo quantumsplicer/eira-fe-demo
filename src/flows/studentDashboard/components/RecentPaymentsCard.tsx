@@ -45,7 +45,7 @@ const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
         }}
         onClick={onClick}
       >
-        <Typography fontSize={36}>
+        <Typography fontSize={24}>
           {name?.[0].replace(" ", "") ? name?.[0] : "U"}
         </Typography>
       </Avatar>

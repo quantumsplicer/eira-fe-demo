@@ -22,7 +22,7 @@ interface OTPInputProps {
   onClose?: () => void;
   navigateTo?: string;
   phoneNumber: string;
-  onVerified?: () => void;
+  onVerified?: (result: any) => void;
   isDrawer: boolean;
   role: "teacher" | "student";
   onChangePhoneNumber?: () => void;
@@ -117,7 +117,7 @@ const OTPInput = ({
     }
 
     if (onVerified) {
-      onVerified();
+      onVerified(result?.data?.id);
     }
 
     localStorage.setItem("phoneNumber", phoneNumber);
