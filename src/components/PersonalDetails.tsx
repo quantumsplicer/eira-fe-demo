@@ -34,12 +34,20 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
   const [registerTutor, { isLoading: registerTutorIsLoading }] =
     useRegisterTutorByStudentMutation();
 
-  const handleNameInput = (
+  const handleFirstNameInput = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     setName: (value: string) => void
   ) => {
     const invalidRegex = /[^A-Za-z]/g;
-    const sanitizedValue = event.target.value.replace(invalidRegex, "");
+    const sanitizedValue = event.target.value;
+    setName(sanitizedValue);
+  };
+  const handleLastNameInput = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    setName: (value: string) => void
+  ) => {
+    const invalidRegex = /[^A-Za-z]/g;
+    const sanitizedValue = event.target.value;
     setName(sanitizedValue);
   };
 
@@ -141,7 +149,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         disabled={updateTutorIsLoading}
         required
         value={firstName}
-        onChange={(e) => handleNameInput(e, setFirstName)}
+        onChange={(e) => handleFirstNameInput(e, setFirstName)}
         onKeyDown={(event) => handleKeyDown(event)}
         label="First Name (as per PAN)"
         variant="outlined"
@@ -168,7 +176,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         disabled={updateTutorIsLoading}
         required
         value={lastName}
-        onChange={(e) => handleNameInput(e, setLastName)}
+        onChange={(e) => handleLastNameInput(e, setLastName)}
         onKeyDown={(event) => handleKeyDown(event)}
         label="Last Name (as per PAN)"
         variant="outlined"

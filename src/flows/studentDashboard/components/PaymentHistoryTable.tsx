@@ -68,7 +68,9 @@ const PaymentHistoryTableMobile = ({
           />
           <Stack>
             <Typography fontSize={18}>
-              {transactionDetails.tutor_first_name + " " + transactionDetails.tutor_last_name}
+              {transactionDetails.tutor_first_name +
+                " " +
+                transactionDetails.tutor_last_name}
             </Typography>
             <Typography fontSize={14} color="#C3C3C3">
               {transactionDetails.tutor_phone}
@@ -110,23 +112,47 @@ const PaymentHistoryTable: React.FC = () => {
 
   const columnHelper = createMRTColumnHelper<Transaction>();
   const columns = [
-    columnHelper.accessor("id", {
-      header: "ID",
-      id: "id",
-      enableHiding: false,
-    }),
-    columnHelper.accessor("student_phone", {
-      header: "Tutor's Phone Number",
-      enableHiding: false,
-    }),
     columnHelper.accessor("created", {
-      header: "Date & Time of Session",
+      header: "Created",
+      id: "created",
+      enableHiding: false,
+      Cell: ({ cell }) => {
+        return (
+          <Typography>
+            {new Date(cell.getValue<string>()).toLocaleDateString("en-GB", {
+              year: "2-digit",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "numeric",
+              minute: "numeric",
+              hour12: true,
+            })}
+          </Typography>
+        );
+      },
+    }),
+    columnHelper.accessor(
+      (row) => row?.tutor_first_name + " " + row?.tutor_last_name,
+      {
+        header: "Tutor's Name",
+        enableHiding: false,
+      }
+    ),
+    columnHelper.accessor("tutor_phone", {
+      header: "Tutor's Phone Number",
       enableHiding: false,
     }),
     columnHelper.accessor("amount", {
       header: "Amount",
       enableHiding: false,
+      Cell: ({ cell }) => <Typography>₹ {cell.getValue<number>()}</Typography>,
     }),
+    columnHelper.accessor("settlement_status", {
+      header: "Settlement Status",
+      enableHiding: false,
+      Cell: ({ cell }) => <StatusTag cellValue={cell.getValue<string>()} />,
+    }),
+
     columnHelper.accessor("status", {
       header: "Payment Status",
       enableHiding: false,
@@ -184,10 +210,9 @@ const PaymentHistoryTable: React.FC = () => {
       }),
     },
     muiTableHeadRowProps: () => ({
-      //conditionally style pinned columns
       sx: {
         backgroundColor: "#c0c4c4",
-        fontSize: 10,
+        fontSize: 12,
       },
     }),
   });

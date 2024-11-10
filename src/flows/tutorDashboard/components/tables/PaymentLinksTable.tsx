@@ -45,10 +45,6 @@ const PaymentLinkCellMobile = ({
   paymentLinkDetails,
   onClick,
 }: PaymentLinkCellMobileProps) => {
-  const { data: userDetails } = useGetUserDetailsByPhoneQuery(
-    paymentLinkDetails.receiver_phone
-  );
-
   return (
     <Button
       sx={{
@@ -69,22 +65,6 @@ const PaymentLinkCellMobile = ({
       <Stack direction="row" justifyContent="space-between" width="100%">
         <Stack direction="row" spacing={2}>
           <Stack>
-            <Typography
-              fontSize={18}
-              textAlign="left"
-              sx={{
-                fontStyle:
-                  userDetails?.[0]?.first_name === "" &&
-                  userDetails?.[0]?.last_name === ""
-                    ? "italic"
-                    : "normal",
-              }}
-            >
-              {userDetails?.[0]?.first_name === "" &&
-              userDetails?.[0]?.last_name === ""
-                ? "null"
-                : `${userDetails?.[0]?.first_name} ${userDetails?.[0]?.last_name}`}
-            </Typography>
             <Typography fontSize={14} color="#C3C3C3" textAlign="left">
               {paymentLinkDetails.receiver_phone}
             </Typography>
@@ -115,8 +95,8 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
 
   const columnHelper = createMRTColumnHelper<PaymentLinkDetails>();
   const columns = [
-    columnHelper.accessor("id", {
-      header: "ID",
+    columnHelper.accessor("payer", {
+      header: "Student Name",
       enableHiding: false,
     }),
     columnHelper.accessor("receiver_phone", {
@@ -126,14 +106,27 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
     columnHelper.accessor("amount", {
       header: "Amount",
       enableHiding: false,
+      Cell: ({ cell }) => (
+        <Amount amount={cell.getValue<number>()} fontSize={15} />
+      ),
     }),
     columnHelper.accessor("created", {
-      header: "Date of Creation",
+      header: "Created On",
       enableHiding: false,
+      Cell: ({ cell }) => (
+        <Typography>
+          {moment(cell.getValue<string>()).format("MMMM D, YYYY h:mm a")}
+        </Typography>
+      ),
     }),
     columnHelper.accessor("expiry_timestamp", {
       header: "Expires On",
       enableHiding: false,
+      Cell: ({ cell }) => (
+        <Typography>
+          {moment(cell.getValue<string>()).format("MMMM D, YYYY h:mm a")}
+        </Typography>
+      ),
     }),
     columnHelper.accessor("status", {
       header: "Status",
@@ -163,7 +156,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
     muiTableBodyCellProps: () => ({
       //conditionally style pinned columns
       sx: {
-        fontSize: 12,
+        fontSize: 15,
       },
     }),
     muiTableHeadCellProps: () => ({
@@ -285,6 +278,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
             </Stack>
             {activeDrawerPaymentLinkDetails?.status === "ACTIVE" ? (
               <img
+                alt="tick"
                 src={tickMark}
                 style={{
                   marginTop: "30px",
@@ -294,6 +288,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
               />
             ) : (
               <img
+                alt="exclamation"
                 src={exclamationMark}
                 style={{
                   marginTop: "30px",

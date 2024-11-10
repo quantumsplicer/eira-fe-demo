@@ -10,7 +10,7 @@ const ProfilePage: React.FC = () => {
     <Stack
       spacing={!isPhoneScreen ? 2 : 0}
       sx={!isPhoneScreen ? {} : { pt: 3.5 }}
-      height={isPhoneScreen ? "100vh" : "70vh"}
+      height={isPhoneScreen ? "100vh" : "80vh"}
     >
       {!isPhoneScreen ? <h1>Profile</h1> : <></>}
       <Stack

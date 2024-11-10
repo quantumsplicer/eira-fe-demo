@@ -12,6 +12,10 @@ export interface TutorDetails {
   phoneNumber: string;
 }
 
+export interface RecentTransactionTutor extends TutorDetails{
+  amount: number;
+}
+
 export interface SessionDetails {
   sessionTitle: string;
   description: string;
