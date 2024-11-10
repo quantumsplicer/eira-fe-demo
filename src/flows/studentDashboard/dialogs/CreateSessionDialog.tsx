@@ -168,7 +168,7 @@ const CreateSessionDialog = ({
                 align="center"
                 lineHeight={1.2}
               >
-                create session for your students
+                create session with your tutor
               </Typography>
             </Stack>
             <Stack

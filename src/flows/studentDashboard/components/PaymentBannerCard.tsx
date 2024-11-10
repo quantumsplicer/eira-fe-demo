@@ -14,18 +14,38 @@ import { TutorDetails } from "../interfaces";
 import PaymentFlow from "./PaymentFlow";
 import { useGetTransactionsListQuery } from "../../../APIs/definitions/transactionsList";
 import { Transaction } from "../../tutorDashboard/interfaces";
+import { useGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
 
 interface AvatarWithDetailsProps {
   name: string;
   phoneNumber: string;
-  onClick: () => void;
 }
 
 const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
   name,
   phoneNumber,
-  onClick,
 }) => {
+  const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
+    firstName: "",
+    lastName: "",
+    panNumber: "",
+    phoneNumber: "",
+  });
+  const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
+  const { data: tutorData } = useGetUserDetailsByPhoneQuery(phoneNumber);
+
+  const handleClick = () => {
+    setTutorDetails({
+      firstName: tutorData?.[0]?.first_name ?? "",
+      lastName: tutorData?.[0]?.last_name ?? "",
+      panNumber: tutorData?.[0]?.pan ?? "",
+      phoneNumber: tutorData?.[0]?.phone ?? "",
+    });
+    setIsPaymentFlowActive(true);
+  };
+  const handleClosePaymentFlow = () => {
+    setIsPaymentFlowActive(false);
+  };
   return (
     <Stack spacing={1} alignItems="center">
       <Avatar
@@ -36,7 +56,7 @@ const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
           bgcolor: "primary.main",
           fontSize: "40px",
         }}
-        onClick={onClick}
+        onClick={handleClick}
       >
         <Typography fontSize={36}>
           {name?.[0].replace(" ", "") ? name?.[0] : "U"}
@@ -48,6 +68,13 @@ const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
           {phoneNumber}
         </Typography>
       </Stack>
+      {isPaymentFlowActive && (
+        <PaymentFlow
+          open={isPaymentFlowActive}
+          onClose={handleClosePaymentFlow}
+          tutorDetailsProp={tutorDetails}
+        />
+      )}
     </Stack>
   );
 };
@@ -59,31 +86,18 @@ const PaymentBannerCard: React.FC = () => {
     limit: 1000,
   });
 
-  const handleClosePaymentFlow = () => {
-    setIsPaymentFlowActive(false);
-  };
-
   const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
     firstName: "",
     lastName: "",
     panNumber: "",
     phoneNumber: "",
   });
-  const [recentPayments, setRecentPayments] = useState<TutorDetails[]>([]);
-
-  const handleTutorDetails = (details: TutorDetails) => {
-    setTutorDetails(details);
+  const handleClick = () => {
     setIsPaymentFlowActive(true);
   };
 
-  const handleOpenPaymentFlow = () => {
-    setTutorDetails({
-      firstName: "",
-      lastName: "",
-      panNumber: "",
-      phoneNumber: "",
-    });
-    setIsPaymentFlowActive(true);
+  const handleClosePaymentFlow = () => {
+    setIsPaymentFlowActive(false);
   };
 
   useEffect(() => {
@@ -131,8 +145,9 @@ const PaymentBannerCard: React.FC = () => {
           : {
               p: 2,
               backgroundColor: "white",
-              width: "100%",
+              width: "100vw",
               height: "98vw",
+              alignSelf: "center",
             }
       }
     >
@@ -188,7 +203,7 @@ const PaymentBannerCard: React.FC = () => {
             {!isPhoneScreen && (
               <Button
                 variant="contained"
-                onClick={handleOpenPaymentFlow}
+                onClick={handleClick}
                 sx={{
                   backgroundColor: "#507FFD",
                   borderRadius: 3,
@@ -230,7 +245,7 @@ const PaymentBannerCard: React.FC = () => {
                 justifyContent="flex-start"
                 sx={{ width: "100%" }}
               >
-                {recentPayments?.length === 0 ? (
+                {transactionDetails?.results?.length === 0 ? (
                   <Box
                     sx={{
                       display: "flex",
@@ -245,16 +260,15 @@ const PaymentBannerCard: React.FC = () => {
                     </Typography>
                   </Box>
                 ) : (
-                  recentPayments?.slice(0, 3).map((avatar, index) => (
-                    <AvatarWithDetails
-                      key={index}
-                      name={`${avatar.firstName} ${avatar.lastName}`}
-                      phoneNumber={avatar.phoneNumber}
-                      onClick={() => {
-                        handleTutorDetails(avatar);
-                      }}
-                    />
-                  ))
+                  transactionDetails?.results
+                    ?.slice(0, 3)
+                    .map((transaction, index) => (
+                      <AvatarWithDetails
+                        key={index}
+                        name={`${transaction.tutor_name}`}
+                        phoneNumber={transaction.tutor_phone ?? ""}
+                      />
+                    ))
                 )}
               </Stack>
             </Stack>
@@ -273,36 +287,4 @@ const PaymentBannerCard: React.FC = () => {
     </Box>
   );
 };
-const avatarsWithDetails: TutorDetails[] = [
-  {
-    firstName: "John",
-    lastName: "Dorito",
-    panNumber: "1234567890",
-    phoneNumber: "9997945005",
-  },
-  {
-    firstName: "Sugarcane",
-    lastName: "Smith",
-    panNumber: "1234567890",
-    phoneNumber: "9411819909",
-  },
-  {
-    firstName: "Alice",
-    lastName: "Johnson",
-    panNumber: "1234567890",
-    phoneNumber: "9412061914",
-  },
-  {
-    firstName: "Bob",
-    lastName: "Williams",
-    panNumber: "1234567890",
-    phoneNumber: "9997945005",
-  },
-  {
-    firstName: "Eva",
-    lastName: "Brown",
-    panNumber: "1234567890",
-    phoneNumber: "9997945005",
-  },
-];
 export default PaymentBannerCard;

@@ -22,11 +22,14 @@ import { useGetTransactionsListQuery } from "../../../../APIs/definitions/transa
 import SendPaymentLinkFlow from "../flows/SendPaymentLinkFlow";
 import { useGetUserDetailsQuery } from "../../../../APIs/definitions/user";
 import { UserDetails } from "../../../../APIs/definitions/user";
+import moment from "moment";
 import { PaymentItemDrawer } from "../../../studentDashboard/components/PaymentItemDrawer";
 import { Loading } from "../../../../components/Loading";
+
 interface TransactionCellMobileProps {
   transaction: Transaction;
 }
+
 const TransactionCellMobile = ({ transaction }: TransactionCellMobileProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   
@@ -114,9 +117,14 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
 
   const columnHelper = createMRTColumnHelper<Transaction>();
   const columns = [
-    columnHelper.accessor("id", {
-      header: "Transaction ID",
+    columnHelper.accessor("created", {
+      header: "Created On",
       enableHiding: false,
+      Cell: ({ cell }) => (
+        <Typography>
+          {moment(cell.getValue<string>()).format("MMMM D, YYYY h:mm a")}
+        </Typography>
+      ),
     }),
     columnHelper.accessor("student_phone", {
       header: "Student's Phone Number",
@@ -150,6 +158,15 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
       enableHiding: false,
       Cell: ({ cell }) => <StatusTag cellValue={cell.getValue<string>()} />,
     }),
+    columnHelper.accessor("settlement_timestamp", {
+      header: "Settled On",
+      enableHiding: false,
+      Cell: ({ cell }) => (
+        <Typography>
+          {moment(cell.getValue<string>()).format("MMMM D, YYYY h:mm a")}
+        </Typography>
+      ),
+    }),
   ];
   const { data, isLoading, isSuccess, isError, error } =
     useGetTransactionsListQuery({
@@ -174,7 +191,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
     },
     muiTableBodyCellProps: () => ({
       sx: {
-        fontSize: 12,
+        fontSize: 15,
       },
     }),
     muiTableHeadCellProps: () => ({

@@ -12,6 +12,7 @@ const PaymentHistoryPage: React.FC = () => {
       pl={!isPhoneScreen ? 5 : 0}
       pr={!isPhoneScreen ? 5 : 0}
       height={!isPhoneScreen ? "88vh" : "auto"}
+      pt={!isPhoneScreen ? 3.5 : 0}
     >
       {!isPhoneScreen ? <h1>Payments History</h1> : <></>}
       <PaymentHistoryTable />

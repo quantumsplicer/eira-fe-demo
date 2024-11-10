@@ -269,6 +269,8 @@ const StudentDashboard: React.FC = () => {
                               subpage === entry.subpage ? "#EBF1FF" : "white",
                             color:
                               subpage === entry.subpage ? "#507FFD" : "black",
+                            alignItems: "center",
+                            alignContent: "center",
                             pl: 3,
                             "& *":
                               subpage === entry.subpage
@@ -286,8 +288,10 @@ const StudentDashboard: React.FC = () => {
                             },
                           }}
                         >
-                          <ListItemIcon>{iconsArray[index]}</ListItemIcon>
-                          <Typography fontSize={18} py={1.4} fontWeight={600}>
+                          <ListItemIcon sx={{ alignSelf: "self-start" }}>
+                            {iconsArray[index]}
+                          </ListItemIcon>
+                          <Typography fontSize={18} fontWeight={600}>
                             {entry.title}
                           </Typography>
                         </ListItemButton>
@@ -356,7 +360,15 @@ const StudentDashboard: React.FC = () => {
                 ].map((entry, index) => (
                   <ListItem
                     key={entry.title}
-                    sx={{ width: "100%", pl: "0", pr: "0" }}
+                    sx={{
+                      width: "100%",
+                      pt: 1,
+                      pb: 1,
+                      pl: 0,
+                      pr: 0,
+                      alignItems: "center",
+                      alignContent: "center",
+                    }}
                   >
                     <ListItemButton
                       onClick={() => {
@@ -368,6 +380,9 @@ const StudentDashboard: React.FC = () => {
                           subpage === entry.subpage ? "#EBF1FF" : "white",
                         color: subpage === entry.subpage ? "#507FFD" : "black",
                         pl: 3,
+                        pb: 2,
+                        alignItems: "center",
+                        alignContent: "center",
                         "& *":
                           subpage === entry.subpage
                             ? {
@@ -385,7 +400,9 @@ const StudentDashboard: React.FC = () => {
                         },
                       }}
                     >
-                      <ListItemIcon>{iconsArray[index]}</ListItemIcon>
+                      <ListItemIcon sx={{ alignSelf: "flex-end" }}>
+                        {iconsArray[index]}
+                      </ListItemIcon>
                       <Typography
                         color="black"
                         fontSize={14}
@@ -492,7 +509,7 @@ const StudentDashboard: React.FC = () => {
           }}
         />
       )}
-      
+
       {isPWAInstallPromptOpen && (
         <PWAInstallDrawer
           open={isPWAInstallPromptOpen}

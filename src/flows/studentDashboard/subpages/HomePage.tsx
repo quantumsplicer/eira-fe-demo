@@ -13,9 +13,14 @@ const HomePage: React.FC = () => {
       spacing={!isPhoneScreen ? 14 : 1}
       pl={!isPhoneScreen ? 5 : 0}
       pr={!isPhoneScreen ? 5 : 0}
+      pt={!isPhoneScreen ? 3.5 : 0}
     >
       {!isPhoneScreen ? <h1>Home Page</h1> : <></>}
-      <Stack direction="row" spacing={2} justifyContent="space-between">
+      <Stack
+        direction="row"
+        spacing={2}
+        justifyContent={!isPhoneScreen ? "space-between" : "center"}
+      >
         <RecentPaymentsCard />
         <PaymentBannerCard />
       </Stack>

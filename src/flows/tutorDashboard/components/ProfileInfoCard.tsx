@@ -9,10 +9,13 @@ const ProfileInfoCard: React.FC = () => {
   const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
 
   const isAadharVerified = () => {
-    return userDetails?.pg_onboarding_status && 
-      userDetails.pg_onboarding_status.length > 0 && 
-      (userDetails.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" || userDetails.pg_onboarding_status[0].status === "ACTIVE")
-  }
+    return (
+      userDetails?.pg_onboarding_status &&
+      userDetails.pg_onboarding_status.length > 0 &&
+      (userDetails.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" ||
+        userDetails.pg_onboarding_status[0].status === "ACTIVE")
+    );
+  };
 
   return (
     <Box
@@ -20,9 +23,10 @@ const ProfileInfoCard: React.FC = () => {
         !isPhoneScreen
           ? {
               pt: 6,
+              pb: 2,
               borderRadius: 2,
               width: "100%",
-              height: 340,
+              height: "40vh",
               backgroundColor: "white",
               boxShadow: 6,
             }
@@ -56,7 +60,7 @@ const ProfileInfoCard: React.FC = () => {
           </Typography>
           <Typography>+91{userDetails?.phone}</Typography>
         </Stack>
-        
+
         <Stack sx={{ width: "80%" }} spacing={2}>
           <Stack
             direction="row"
@@ -71,7 +75,7 @@ const ProfileInfoCard: React.FC = () => {
               {userDetails?.pan}
             </Typography>
           </Stack>
-          
+
           <Stack
             direction="row"
             display="flex"
@@ -81,7 +85,7 @@ const ProfileInfoCard: React.FC = () => {
             <Typography color="#7E7E7E" fontWeight={630}>
               Account Verified:
             </Typography>
-            <StatusTag cellValue="No" />
+            <StatusTag cellValue={userDetails?.onboarding_status ?? ""} />
           </Stack>
           <Stack
             direction="row"
