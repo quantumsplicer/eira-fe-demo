@@ -119,8 +119,8 @@ const PaymentBannerCard: React.FC = () => {
 
       // Map the distinct transactions to the desired format
       const newPayments = distinctPayments.map((transaction: Transaction) => ({
-        firstName: transaction?.tutor_first_name as string ?? "",
-        lastName: transaction?.tutor_last_name as string ?? "",
+        firstName: (transaction?.tutor_first_name as string) ?? "",
+        lastName: (transaction?.tutor_last_name as string) ?? "",
         phoneNumber: transaction.tutor_phone as string,
         panNumber: "",
         amount: transaction.amount,
@@ -208,11 +208,11 @@ const PaymentBannerCard: React.FC = () => {
                 sx={{
                   backgroundColor: "#507FFD",
                   borderRadius: 3,
-                  fontSize: "1rem",
+                  fontSize: { md: "0.6rem", lg: "1rem" },
                   fontWeight: 600,
                   height: 60,
-                  paddingLeft: 4,
-                  paddingRight: 4,
+                  paddingLeft: 2,
+                  paddingRight: 2,
                   textTransform: "none",
                 }}
               >
@@ -261,7 +261,8 @@ const PaymentBannerCard: React.FC = () => {
                     </Typography>
                   </Box>
                 ) : (
-                  recentPayments?.slice(0, 3)
+                  recentPayments
+                    ?.slice(0, 3)
                     .map((transaction, index) => (
                       <AvatarWithDetails
                         key={index}

@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
 import PaymentBannerCard from "../components/PaymentBannerCard";
 import Carousel from "react-material-ui-carousel";
 import RecentPaymentsCard from "../components/RecentPaymentsCard";
 import PromoBannerComponent from "../components/PromoBannerComponent";
+import DashboardBannerArt1 from "../../../assets/images/png/student-dashboard-banner-mobile-1.png";
+import DashboardBannerArt2 from "../../../assets/images/png/student-dashboard-banner-mobile-2.png";
+import PaymentFlow from "../components/PaymentFlow";
+import { TutorDetails } from "../interfaces";
+import { WHATSAPP_LINK } from "../../../components/GetHelp";
 
 const HomePage: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
+  const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
+  const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
+    firstName: "",
+    lastName: "",
+    panNumber: "",
+    phoneNumber: "",
+  });
 
   return (
     <Stack
@@ -15,22 +27,26 @@ const HomePage: React.FC = () => {
       pr={!isPhoneScreen ? 5 : 0}
       pt={!isPhoneScreen ? 3.5 : 0}
     >
-      {!isPhoneScreen && <h2>Home Page</h2>}
-      <Stack
-        direction="row"
-        spacing={2}
-        justifyContent={!isPhoneScreen ? "flex-start" : "center"}
-      >
-        <RecentPaymentsCard />
+      {!isPhoneScreen ? <h1>Home Page</h1> : <></>}
+      {!isPhoneScreen ? (
+        <Stack
+          direction="row"
+          spacing={4}
+          justifyContent={!isPhoneScreen ? "space-between" : "center"}
+        >
+          <RecentPaymentsCard />
+          <PaymentBannerCard />
+        </Stack>
+      ) : (
         <PaymentBannerCard />
-      </Stack>
+      )}
       {isPhoneScreen && (
         <Box
           sx={{
             p: 2,
             backgroundColor: "white",
             width: "100%",
-            height: "70vw",
+            height: "75vw",
           }}
         >
           <Carousel
@@ -40,7 +56,7 @@ const HomePage: React.FC = () => {
             animation="slide"
             indicatorContainerProps={{
               style: {
-                marginTop: "-0.3rem",
+                marginTop: "1rem",
                 backgroundColor: "white",
               },
             }}
@@ -48,29 +64,30 @@ const HomePage: React.FC = () => {
             navButtonsAlwaysVisible={false}
           >
             <Box
-              sx={{
-                p: 4,
-                width: "100%",
-                height: "20vh",
-                backgroundColor: "red",
-              }}
-            >
-              <Typography variant="h4">Hello this is banner 1</Typography>
-            </Box>
+              component="img"
+              src={DashboardBannerArt1}
+              height="30vw"
+              onClick={() => setIsPaymentFlowActive(true)}
+              sx={{ cursor: "pointer" }}
+            />
             <Box
-              sx={{
-                p: 4,
-                width: "100%",
-                height: "20vh",
-                backgroundColor: "blue",
-              }}
-            >
-              <Typography variant="h4">Hello this is banner 2</Typography>
-            </Box>
+              component="img"
+              src={DashboardBannerArt2}
+              height="30vw"
+              onClick={() => window.open(WHATSAPP_LINK, "_blank")}
+              sx={{ cursor: "pointer" }}
+            />
           </Carousel>
         </Box>
       )}
       {!isPhoneScreen && <PromoBannerComponent />}
+      {isPaymentFlowActive && (
+        <PaymentFlow
+          open={isPaymentFlowActive}
+          onClose={() => setIsPaymentFlowActive(false)}
+          tutorDetailsProp={tutorDetails}
+        />
+      )}
     </Stack>
   );
 };
