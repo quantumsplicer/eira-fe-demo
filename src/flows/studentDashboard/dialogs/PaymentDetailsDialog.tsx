@@ -250,6 +250,10 @@ const PaymentDetailsDialog = ({
                   rules={{
                     required: "Required",
                     min: { value: 1, message: "Amount must be greater than 0" },
+                    max: {
+                      value: 5000,
+                      message: "Amount must be less than 5000",
+                    },
                   }}
                   render={({ field }) => (
                     <TextField
