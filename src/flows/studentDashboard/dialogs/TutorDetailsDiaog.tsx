@@ -166,7 +166,7 @@ const TutorDetailsDialog = ({
             spacing={!isPhoneScreen ? 0 : 5}
             sx={
               !isPhoneScreen
-                ? { justifyContent: "space-between", width: "40%", pt: 10 }
+                ? { justifyContent: "space-between", width: "40%", pt: 6 }
                 : { width: "100%", height: "100%", pt: 3 }
             }
           >
@@ -185,10 +185,10 @@ const TutorDetailsDialog = ({
                   alignItems: "center",
                 }}
               >
-                <Typography sx={{ fontSize: 11 }}>
+                <Typography sx={{ fontSize: 9 }}>
                   Looks like the tutor is not onboarded!
                 </Typography>
-                <Typography sx={{ fontSize: 11 }}>
+                <Typography sx={{ fontSize: 9 }}>
                   Onboard them with us now to make the payment
                 </Typography>
               </Alert>
@@ -207,19 +207,14 @@ const TutorDetailsDialog = ({
                 <>
                   {" "}
                   <Stack>
-                    <Typography fontSize={23} fontWeight={600} align="center">
+                    <Typography fontSize={21} fontWeight={600} align="center">
                       Tutor Details
                     </Typography>
-                    <Typography
-                      fontSize={12}
-                      fontWeight={550}
-                      align="center"
-                      lineHeight={1.2}
-                    >
+                    <Typography fontSize={10} fontWeight={550} align="center">
                       Provide relevant details for their onboarding
                     </Typography>
                   </Stack>
-                  <Stack spacing={3}>
+                  <Stack spacing={2}>
                     <Controller
                       name="firstName"
                       control={control}
@@ -453,24 +448,28 @@ const TutorDetailsDialog = ({
                 // <AmountBreakupCard amount={paymentDetails.amount} />
                 <></>
               )}
-              {/* <Box>
-                <Button
-                  variant="contained"
-                  onClick={handleSubmit(handleFormSubmit)}
-                  fullWidth
-                  disabled={!isValid}
-                  sx={{
-                    backgroundColor: "#507FFD",
-                    borderRadius: 7,
-                    fontSize: 15,
-                    fontWeight: "bold",
-                    paddingLeft: 3,
-                    paddingRight: 3,
-                  }}
-                >
-                  Next
-                </Button>
-              </Box> */}
+              {!isPhoneScreen ? (
+                <Box>
+                  <Button
+                    variant="contained"
+                    onClick={handleSubmit(handleFormSubmit)}
+                    fullWidth
+                    disabled={!isValid}
+                    sx={{
+                      backgroundColor: "#507FFD",
+                      borderRadius: 7,
+                      fontSize: 15,
+                      fontWeight: "bold",
+                      paddingLeft: 3,
+                      paddingRight: 3,
+                    }}
+                  >
+                    Next
+                  </Button>
+                </Box>
+              ) : (
+                <></>
+              )}
             </Stack>
           </Stack>
         </Stack>

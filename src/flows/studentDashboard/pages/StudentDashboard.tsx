@@ -67,7 +67,6 @@ const StudentDashboard: React.FC = () => {
   const [subpage, setSubpage] = useState(HOME_PAGE);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isPWAInstallPromptOpen, setIsPWAInstallPromptOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
   const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
   const navigate = useNavigate();
 
@@ -86,18 +85,11 @@ const StudentDashboard: React.FC = () => {
     handleDrawerClose();
   };
   const handleDrawerClose = () => {
-    setIsClosing(true);
     setIsDrawerOpen(false);
   };
 
-  const handleDrawerTransitionEnd = () => {
-    setIsClosing(false);
-  };
-
-  const handleDrawerToggle = () => {
-    if (!isClosing) {
-      setIsDrawerOpen(!isDrawerOpen);
-    }
+  const handleDrawerOpen = () => {
+    setIsDrawerOpen(true);
   };
 
   const handleClosePaymentFlow = () => {
@@ -183,7 +175,7 @@ const StudentDashboard: React.FC = () => {
                     color="inherit"
                     aria-label="open drawer"
                     edge="start"
-                    onClick={handleDrawerToggle}
+                    onClick={handleDrawerOpen}
                     sx={{ mr: 2, display: { sm: "none" } }}
                   >
                     <SortSharpIcon
@@ -205,7 +197,6 @@ const StudentDashboard: React.FC = () => {
             variant="temporary"
             anchor="right"
             open={isDrawerOpen}
-            onTransitionEnd={handleDrawerTransitionEnd}
             onClose={handleDrawerClose}
             ModalProps={{
               keepMounted: true, // Better open performance on mobile.

@@ -112,11 +112,12 @@ const PaymentHistoryTable: React.FC = () => {
 
   const columnHelper = createMRTColumnHelper<Transaction>();
   const columns = [
-    columnHelper.accessor("created", {
-      header: "Created",
-      id: "created",
+    columnHelper.accessor("payment_timestamp", {
+      header: "Payment Date",
+      id: "payment_timestamp",
       enableHiding: false,
       Cell: ({ cell }) => {
+        console.log(cell.getValue<string>());
         return (
           <Typography>
             {new Date(cell.getValue<string>()).toLocaleDateString("en-GB", {

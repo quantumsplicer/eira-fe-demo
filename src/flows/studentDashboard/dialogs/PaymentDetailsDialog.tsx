@@ -155,7 +155,12 @@ const PaymentDetailsDialog = ({
                   >
                     You are making a payment to:
                   </Typography>
-                  <Typography fontSize={18} fontWeight={500} align="center">
+                  <Typography
+                    fontSize={18}
+                    fontWeight={500}
+                    align="center"
+                    pb={!isPhoneScreen ? 5 : 0}
+                  >
                     {tutorDetails.firstName} {tutorDetails.lastName}
                   </Typography>
                 </Stack>
