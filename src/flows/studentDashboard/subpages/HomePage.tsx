@@ -32,7 +32,7 @@ const HomePage: React.FC = () => {
         <Stack
           direction="row"
           spacing={4}
-          justifyContent={!isPhoneScreen ? "space-between" : "center"}
+          justifyContent={!isPhoneScreen ? "flex-start" : "center"}
         >
           <RecentPaymentsCard />
           <PaymentBannerCard />

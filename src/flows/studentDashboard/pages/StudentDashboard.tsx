@@ -276,6 +276,7 @@ const StudentDashboard: React.FC = () => {
                             alignItems: "center",
                             alignContent: "center",
                             pl: 3,
+                            py: 2,
                             "& *":
                               subpage === entry.subpage
                                 ? {
