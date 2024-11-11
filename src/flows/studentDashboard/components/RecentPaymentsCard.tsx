@@ -157,9 +157,9 @@ const RecentPaymentsCard: React.FC = () => {
             }
       }
     >
-      <Stack spacing={4}>
+      <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
-          <Typography sx={{ fontSize: "1.6rem", fontWeight: 600 }}>
+          <Typography sx={{ fontSize: "1rem", fontWeight: 600 }}>
             Recent Payments
           </Typography>
         </Stack>

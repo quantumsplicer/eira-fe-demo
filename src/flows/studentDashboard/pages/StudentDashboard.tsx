@@ -40,6 +40,8 @@ import HomePage from "../subpages/HomePage";
 import { useNavigate } from "react-router-dom";
 import { useInstallPWA } from "../../../hooks/useInstallPWA";
 import PWAInstallDrawer from "../../../components/PWAInstallDrawer";
+import { WHATSAPP_LINK } from "../../../components/GetHelp";
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 
 const PAYMENT_HISTORY_PAGE = "payment-history-page";
 const HOME_PAGE = "home-page";
@@ -47,10 +49,11 @@ const PROFILE_PAGE = "profile-page";
 
 const drawerWidth = 240;
 const iconsArray = [
-  <HomeIcon />,
-  <SessionHistoryIcon />,
-  <MarketingIcon />,
-  <InvoiceIcon />,
+  <HomeIcon fontSize={"small"} />,
+  <SessionHistoryIcon fontSize={"small"} />,
+  <QuestionMarkIcon key="help" fontSize="small" />,
+  <MarketingIcon fontSize={"small"} />,
+  <InvoiceIcon fontSize={"small"} />,
 ];
 
 const StudentDashboard: React.FC = () => {
@@ -200,6 +203,7 @@ const StudentDashboard: React.FC = () => {
           </Toolbar>
         </AppBar>
 
+        {/* Side nav bar */}
         {isPhoneScreen ? (
           <Drawer
             variant="temporary"
@@ -291,7 +295,7 @@ const StudentDashboard: React.FC = () => {
                           <ListItemIcon sx={{ alignSelf: "self-start" }}>
                             {iconsArray[index]}
                           </ListItemIcon>
-                          <Typography fontSize={18} fontWeight={600}>
+                          <Typography fontSize={16} fontWeight={600}>
                             {entry.title}
                           </Typography>
                         </ListItemButton>
@@ -324,7 +328,7 @@ const StudentDashboard: React.FC = () => {
                 <Stack direction="row" alignItems="center" spacing={2}>
                   <LogoutIcon color="error" fontSize="small" />
                   <Typography
-                    fontSize={18}
+                    fontSize={16}
                     fontWeight={600}
                     color="error"
                     textTransform="none"
@@ -357,22 +361,21 @@ const StudentDashboard: React.FC = () => {
                 {[
                   { title: "Home Page", subpage: HOME_PAGE },
                   { title: "Payment History", subpage: PAYMENT_HISTORY_PAGE },
+                  { title: "Help", link: WHATSAPP_LINK },
                 ].map((entry, index) => (
                   <ListItem
                     key={entry.title}
                     sx={{
                       width: "100%",
-                      pt: 1,
-                      pb: 1,
-                      pl: 0,
-                      pr: 0,
+                      p: 0,
                       alignItems: "center",
                       alignContent: "center",
                     }}
                   >
                     <ListItemButton
                       onClick={() => {
-                        handleSubpageChange(entry.subpage);
+                        entry?.link && window.open(entry.link, "_blank");
+                        entry?.subpage && handleSubpageChange(entry.subpage);
                       }}
                       disabled={index === 3 || index === 4 ? true : false}
                       sx={{
@@ -381,6 +384,7 @@ const StudentDashboard: React.FC = () => {
                         color: subpage === entry.subpage ? "#507FFD" : "black",
                         pl: 3,
                         pb: 2,
+                        display: "flex",
                         alignItems: "center",
                         alignContent: "center",
                         "& *":
@@ -400,7 +404,9 @@ const StudentDashboard: React.FC = () => {
                         },
                       }}
                     >
-                      <ListItemIcon sx={{ alignSelf: "flex-end" }}>
+                      <ListItemIcon
+                        sx={{ alignSelf: "flex-end", minWidth: 30 }}
+                      >
                         {iconsArray[index]}
                       </ListItemIcon>
                       <Typography
