@@ -155,13 +155,15 @@ const InputPaymentDetails: React.FC = () => {
 
   return (
     <Box
-      pt={7}
+      pt={5}
+      pb={5}
       sx={{
         backgroundImage: notPhoneScreen ? `url(${EiraBack})` : "",
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundAttachment: 'fixed',
         minHeight: "100vh",
-        minWidth: "100vw",
+        width: "100vw",
       }}
     >
       <Stack
@@ -169,11 +171,6 @@ const InputPaymentDetails: React.FC = () => {
         alignItems={"center"}
         justifyContent={"space-between"}
       >
-        {notPhoneScreen && (
-          <Box position={"absolute"} bottom={52} left={45}>
-            <SafeLogo />
-          </Box>
-        )}
         {notPhoneScreen && (
           <Typography
             ml={10}
@@ -184,6 +181,11 @@ const InputPaymentDetails: React.FC = () => {
           >
             Tuitions made accessible than ever before with Eira
           </Typography>
+        )}
+        {notPhoneScreen && (
+          <Box position={"relative"} top={350} right={620}>
+            <SafeLogo />
+          </Box>
         )}
         <Box
           mr={notPhoneScreen ? 5.5 : 0}
