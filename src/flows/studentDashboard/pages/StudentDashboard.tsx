@@ -463,7 +463,7 @@ const StudentDashboard: React.FC = () => {
           component="main"
           sx={
             !isPhoneScreen
-              ? { flexGrow: 1, p: 6, backgroundColor: "#F5F5F5" }
+              ? { flexGrow: 1, pt: 8, pl: 6, pr: 2, backgroundColor: "#F5F5F5" }
               : { flexGrow: 1, pt: 4, backgroundColor: "#F5F5F5" }
           }
         >
