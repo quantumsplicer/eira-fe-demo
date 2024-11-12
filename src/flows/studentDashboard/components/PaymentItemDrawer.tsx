@@ -38,7 +38,11 @@ export const PaymentItemDrawer = ({
       </Box>
       <PaymentInfo
         amount={transaction.amount.toString()}
-        name={transaction.tutor_first_name + " " + transaction.tutor_last_name}
+        name={
+          (transaction.tutor_first_name as string) +
+          " " +
+          (transaction.tutor_last_name as string)
+        }
         transactionItem={transaction}
         paymentDetails={transaction as unknown as Record<string, string>}
         type="success"

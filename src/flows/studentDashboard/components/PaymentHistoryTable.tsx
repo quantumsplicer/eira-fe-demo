@@ -117,7 +117,6 @@ const PaymentHistoryTable: React.FC = () => {
       id: "payment_timestamp",
       enableHiding: false,
       Cell: ({ cell }) => {
-        console.log(cell.getValue<string>());
         return (
           <Typography>
             {new Date(cell.getValue<string>()).toLocaleDateString("en-GB", {
