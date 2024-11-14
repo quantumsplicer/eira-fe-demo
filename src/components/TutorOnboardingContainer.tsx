@@ -8,9 +8,9 @@ const TutorOnboardingContainer = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (window.location.pathname.includes("/tutor/complete-kyc")) {
-      localStorage.setItem("activeFlow", "tutorKyc");
-    }
+    // if (window.location.pathname.includes("/tutor/complete-kyc")) {
+    //   localStorage.setItem("activeFlow", "tutorKyc");
+    // }
 
     const checkOnboardingStatus = async () => {
       const isStudentLogin = localStorage.getItem("studentLogin");
@@ -35,7 +35,7 @@ const TutorOnboardingContainer = () => {
           case "/tutor/complete-kyc":
             break;
           case "/tutor/dashboard":
-            if (onboardingStep !== 0 && onboardingStep !== 3)
+            if (onboardingStep !== 0)
               navigate(navigateTo);
             break;
           default:

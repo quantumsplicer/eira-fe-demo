@@ -4,7 +4,8 @@ import {
     Typography,
     Stack,
     Alert,
-    useMediaQuery
+    useMediaQuery,
+    Button
 } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { useNavigate } from "react-router-dom";
@@ -16,11 +17,14 @@ import SafeLogo from "../../../components/SafeLogo";
 import { useDispatch } from "react-redux";
 import { setTutorPhoneNumber } from "../../../stores/slices";
 import { useLazyGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
+import StatusDialog from "../../../dialogs/StatusDialog";
+import StatusDrawer from "../../../components/StatusDrawer";
 
 const InputTutorDetails: React.FC = () => {
 
     const [isPanUnverified, setIsPanUnverified] = useState<boolean>(false);
     const [isPanVerifying, setIsPanVerifying] = useState<boolean>(false);
+    const [showMessage, setShowMessage] = useState<boolean>(false);
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -28,11 +32,32 @@ const InputTutorDetails: React.FC = () => {
     const activePaymentTutorName = localStorage.getItem("activePaymentTutorName");
     const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
     const activePaymentAmount = localStorage.getItem("activePaymentAmount");
-    const isTutorEiraOnboarded = localStorage.getItem("isTutorEiraOnboarded") === "true";
+    // const isTutorEiraOnboarded = localStorage.getItem("isTutorEiraOnboarded") === "true";
 
     const [
         getTutorDetials
       ] = useLazyGetUserDetailsByPhoneQuery();
+
+    const goToDashboardButton = () => {
+        return (
+            <Button
+            variant="contained"
+            color="primary"
+            sx={{
+                padding: 1.5,
+                borderRadius: 20,
+                height: 45,
+                mt: 5,
+                width: "100%",
+                minWidth: "320px",
+                maxWidth: "400px",
+            }}
+            onClick={() => navigate("/student/dashboard")}
+            >
+            Go to Dashboard
+            </Button>
+        )
+    }
 
     useEffect(() => {
         const checkTutorOnboarding = async (tutorPhone: string) => {
@@ -121,29 +146,27 @@ const InputTutorDetails: React.FC = () => {
                         />
                         <Stack
                             alignItems={"center"}
-                            mt={isTutorEiraOnboarded ? 18 : 3}
+                            mt={3}
                         >
-                            {!isTutorEiraOnboarded && (
-                                <Alert
-                                    variant="filled"
-                                    severity="info"
-                                    icon={<InfoOutlinedIcon sx={{ color: '#DCA566', margin: "auto 0px" }} />}
-                                    sx={{
-                                        backgroundColor: "rgba(251, 203, 168, 0.25)",
-                                        color: "#CE7C4E",
-                                        borderRadius: 5,
-                                        marginBottom: 5,
-                                        padding: 2
-                                    }}
-                                >
-                                    <Typography sx={{ fontSize: 11 }}>
-                                        Looks like the tutor is not onboarded!
-                                    </Typography>
-                                    <Typography sx={{ fontSize: 11 }}>
-                                        Onboard them with us now to make the payment
-                                    </Typography>
-                                </Alert>
-                            )}
+                            <Alert
+                                variant="filled"
+                                severity="info"
+                                icon={<InfoOutlinedIcon sx={{ color: '#DCA566', margin: "auto 0px" }} />}
+                                sx={{
+                                    backgroundColor: "rgba(251, 203, 168, 0.25)",
+                                    color: "#CE7C4E",
+                                    borderRadius: 5,
+                                    marginBottom: 5,
+                                    padding: 2
+                                }}
+                            >
+                                <Typography sx={{ fontSize: 11 }}>
+                                    Looks like the tutor is not onboarded!
+                                </Typography>
+                                <Typography sx={{ fontSize: 11 }}>
+                                    Onboard them with us now to make the payment
+                                </Typography>
+                            </Alert>
                             <Typography
                                 variant="h5"
                                 sx={{ fontSize: 20, fontWeight: "bold" }}
@@ -157,12 +180,34 @@ const InputTutorDetails: React.FC = () => {
                                 Provide Tutor's personal details for their onboarding
                             </Typography>
                             <PersonalDetails
-                                onSuccess={() => navigate("/pay/create-session")}
+                                onSuccess={() => setShowMessage(true)}
                             />
                         </Stack>
                     </Stack>
                 </Box>
             </Stack>
+            {
+                showMessage ? 
+                (notPhoneScreen ?
+                    <StatusDialog 
+                        open={showMessage}
+                        onClose={() => setShowMessage(false)}
+                        type="info"
+                        headingMessage=""
+                        subHeadingMessage="KYC link is sent to your tutor. Tutor will be able to accept payments after completion of KYC"
+                        preventDialogClose={false}
+                        CustomDialogButton={goToDashboardButton}
+                    /> :
+                    <StatusDrawer 
+                        open={showMessage}
+                        type="info"
+                        headingMessage=""
+                        subHeadingMessage1="KYC link is sent to your tutor. Tutor will be able to accept payments after completion of KYC"
+                        preventDrawerClose={false}
+                        CustomDrawerButton={goToDashboardButton}
+                    />
+                ) : null
+            }
         </Box>
     );
 }

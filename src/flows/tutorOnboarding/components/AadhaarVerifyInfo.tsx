@@ -132,7 +132,7 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
                     aadhaarVerificationFailed ? "Verify Again" : "Verify"
                 )}
             </LoadingButton>
-            <Button
+            {/* <Button
                 variant="outlined"
                 sx={{
                     width: '100%',
@@ -145,7 +145,7 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
                 onClick={() => navigate('/tutor/dashboard')}
             >
                 Skip
-            </Button>
+            </Button> */}
         </Stack>
     )
 }

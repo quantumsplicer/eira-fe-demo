@@ -245,7 +245,7 @@ const StudentSignInMobile = () => {
               open={isDrawerOpen && isOtpVerificationDone}
               type="success"
               headingMessage={
-                isExistingUser ? "Welcome Back, Maanav" : "Login Successful"
+                isExistingUser ? "Welcome Back" : "Login Successful"
               }
               subHeadingMessage1={
                 isExistingUser

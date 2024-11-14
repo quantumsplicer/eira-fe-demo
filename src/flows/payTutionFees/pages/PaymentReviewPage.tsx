@@ -30,8 +30,8 @@ import moment from "moment";
 import GetHelp from "../../../components/GetHelp";
 
 const PaymentReviewPage = () => {
-  const isTutorEiraOnboarded =
-    localStorage.getItem("isTutorEiraOnboarded") === "true";
+  // const isTutorEiraOnboarded =
+  //   localStorage.getItem("isTutorEiraOnboarded") === "true";
   const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
@@ -139,8 +139,8 @@ const PaymentReviewPage = () => {
                 width: 80,
               }}
             />
-            <Stack alignItems={"center"} mt={isTutorEiraOnboarded ? 18 : 5}>
-              {!isTutorEiraOnboarded && (
+            <Stack alignItems={"center"} mt={18}>
+              {/* {!isTutorEiraOnboarded && (
                 <Alert
                   variant="filled"
                   severity="info"
@@ -164,7 +164,7 @@ const PaymentReviewPage = () => {
                     Ask them to complete KYC now to receive the payment
                   </Typography>
                 </Alert>
-              )}
+              )} */}
               <PaymentInfo
                 amount={activePaymentAmount as string}
                 name={activePaymentTutorName ? activePaymentTutorName : ""}
