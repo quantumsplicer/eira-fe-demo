@@ -57,13 +57,15 @@ const InputTutorDetails: React.FC = () => {
 
     return (
         <Box
-            pt={7}
+            pt={5}
+            pb={5}
             sx={{
                 backgroundImage: notPhoneScreen ? `url(${EiraBack})` : '',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
+                backgroundAttachment: 'fixed',
                 minHeight: '100vh',
-                minWidth: '100vw',
+                width: '100vw',
             }}
         >
             <Stack

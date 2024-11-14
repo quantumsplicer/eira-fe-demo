@@ -119,8 +119,8 @@ const PaymentBannerCard: React.FC = () => {
 
       // Map the distinct transactions to the desired format
       const newPayments = distinctPayments.map((transaction: Transaction) => ({
-        firstName: transaction?.tutor_first_name as string ?? "",
-        lastName: transaction?.tutor_last_name as string ?? "",
+        firstName: (transaction?.tutor_first_name as string) ?? "",
+        lastName: (transaction?.tutor_last_name as string) ?? "",
         phoneNumber: transaction.tutor_phone as string,
         panNumber: "",
         amount: transaction.amount,
@@ -136,7 +136,7 @@ const PaymentBannerCard: React.FC = () => {
       sx={
         !isPhoneScreen
           ? {
-              p: 6,
+              p: 4,
               borderRadius: 2,
               backgroundColor: "white",
               boxShadow: 6,
@@ -208,15 +208,15 @@ const PaymentBannerCard: React.FC = () => {
                 sx={{
                   backgroundColor: "#507FFD",
                   borderRadius: 3,
-                  fontSize: "1rem",
+                  fontSize: { md: "0.6rem", lg: "1rem" },
                   fontWeight: 600,
                   height: 60,
-                  paddingLeft: 4,
-                  paddingRight: 4,
+                  paddingLeft: 2,
+                  paddingRight: 2,
                   textTransform: "none",
                 }}
               >
-                Make a new Payment
+                <Typography fontSize={14} fontWeight={"bold"}>Make a new Payment</Typography>
               </Button>
             )}
             <Stack
@@ -227,7 +227,7 @@ const PaymentBannerCard: React.FC = () => {
               <Typography
                 sx={
                   !isPhoneScreen
-                    ? { fontSize: "1.2rem", fontWeight: 500 }
+                    ? { fontSize: "1rem", fontWeight: 500, textAlign: "center" }
                     : { fontSize: "1.4rem", fontWeight: 500, width: "70%" }
                 }
               >
@@ -235,7 +235,7 @@ const PaymentBannerCard: React.FC = () => {
               </Typography>
             </Stack>
           </Stack>
-          {isPhoneScreen ? (
+          {isPhoneScreen && (
             <Stack spacing={4} width="100%">
               <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
                 Recent Payments
@@ -261,7 +261,8 @@ const PaymentBannerCard: React.FC = () => {
                     </Typography>
                   </Box>
                 ) : (
-                  recentPayments?.slice(0, 3)
+                  recentPayments
+                    ?.slice(0, 3)
                     .map((transaction, index) => (
                       <AvatarWithDetails
                         key={index}
@@ -272,8 +273,6 @@ const PaymentBannerCard: React.FC = () => {
                 )}
               </Stack>
             </Stack>
-          ) : (
-            <></>
           )}
         </Stack>
       </Stack>
