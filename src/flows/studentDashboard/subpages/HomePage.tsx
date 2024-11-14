@@ -50,7 +50,7 @@ const HomePage: React.FC = () => {
           }}
         >
           <Carousel
-            sx={{ width: "100%", pt: 4 }}
+            sx={{ width: "100%", pt: 4, zIndex: 0 }}
             autoPlay={false}
             swipe={true} // Allow swiping
             animation="slide"
@@ -66,14 +66,14 @@ const HomePage: React.FC = () => {
             <Box
               component="img"
               src={DashboardBannerArt1}
-              height="30vw"
+              width={"100%"}
               onClick={() => setIsPaymentFlowActive(true)}
               sx={{ cursor: "pointer" }}
             />
             <Box
               component="img"
               src={DashboardBannerArt2}
-              height="30vw"
+              width={"100%"}
               onClick={() => window.open(WHATSAPP_LINK, "_blank")}
               sx={{ cursor: "pointer" }}
             />

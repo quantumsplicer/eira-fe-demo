@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Stack, Box, Typography, Button, useMediaQuery } from "@mui/material";
+import { Stack, Box, Typography, Button, useMediaQuery, FormGroup, FormControlLabel, Checkbox, Link } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
 import LoginBg from "../components/LoginBg";
@@ -19,6 +19,7 @@ const TutorSignIn: React.FC = () => {
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [checked, setChecked] = useState(false);
 
   const [getOtp, { isLoading: getOtpIsLoading }] = useGetOtpMutation();
   const { determineOnboardingStep } = useOnboarding();
@@ -33,7 +34,7 @@ const TutorSignIn: React.FC = () => {
       setErrorMessage(null);
       getOtp({
         phone: phoneNumber,
-        role: "teacher"
+        role: "teacher",
       })
         .unwrap()
         .then((res) => {
@@ -41,9 +42,9 @@ const TutorSignIn: React.FC = () => {
           setIsDialogOpen(true);
         })
         .catch((err) => {
-          err.data.message === "The user role and input role does not match." ?
-            setErrorMessage("This user is already registered as a student") :
-            setErrorMessage("Something went wrong. Please try again!")
+          err.data.message === "The user role and input role does not match."
+            ? setErrorMessage("This user is already registered as a student")
+            : setErrorMessage("Something went wrong. Please try again!");
         });
     }
   };
@@ -81,7 +82,7 @@ const TutorSignIn: React.FC = () => {
             style={{
               alignSelf: notPhoneScreen ? "flex-start" : "center",
               width: notPhoneScreen ? 80 : 130,
-              marginTop: notPhoneScreen ? 0 : 90,
+              marginTop: notPhoneScreen ? 0 : 50,
             }}
           />
           <Stack alignItems={"center"} mt={5}>
@@ -104,24 +105,50 @@ const TutorSignIn: React.FC = () => {
                   autoFocus={true}
                 />
                 <Box
-                  mt={notPhoneScreen ? 5 : 30}
+                  mt={notPhoneScreen ? 5 : 20}
                   width="100%"
                   minWidth="320px"
                   maxWidth="400px"
                 >
-                  {
-                    errorMessage &&
-                    <Typography fontSize={14} color="red" textAlign={"center"} mb={2}>
+                  {errorMessage && (
+                    <Typography
+                      fontSize={14}
+                      color="red"
+                      textAlign={"center"}
+                      mb={2}
+                    >
                       {errorMessage}
                     </Typography>
-                  }
+                  )}
 
                   <GetHelp />
+
+                  <FormGroup sx={{ mt: 4 }}>
+                    <FormControlLabel
+                      sx={{ml: 1}}
+                      control={
+                        <Checkbox
+                          checked={checked}
+                          onChange={() => {
+                            setChecked((checked) => !checked);
+                          }}
+                        />
+                      }
+                      label={
+                        <Typography sx={{ fontSize: 11 }} lineHeight={1.3}>
+                          I agree to all the{" "}
+                          <Link href="/terms">terms and conditions</Link> and{" "}
+                          <Link href="/privacy">privacy policy</Link>
+                        </Typography>
+                      }
+                    />
+                  </FormGroup>
 
                   <Button
                     onClick={handleSubmit}
                     variant="contained"
                     color="primary"
+                    disabled={!isPhoneNumberValid() || getOtpIsLoading || !checked}
                     sx={{
                       marginTop: errorMessage ? 0 : 4.6,
                       width: "100%",

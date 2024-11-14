@@ -132,6 +132,8 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
                     aadhaarVerificationFailed ? "Verify Again" : "Verify"
                 )}
             </LoadingButton>
+            
+            {/* Escrow account flow */}
             {/* <Button
                 variant="outlined"
                 sx={{
