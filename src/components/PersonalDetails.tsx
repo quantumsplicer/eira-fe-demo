@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Box, CircularProgress, TextField, useMediaQuery } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
+import {
+  Box,
+  CircularProgress,
+  TextField,
+  useMediaQuery
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useRegisterTutorByStudentMutation,
   useUpdateUserDetailsMutation,
 } from "../APIs/definitions/user";
-import { isPanValid } from "../utils/helperFunctions";
-import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../stores/configuration";
-import { setPayeeId } from "../stores/slices";
-import useGetOnboardingDetails from "../hooks/useGetOnboardingDetails";
+import { isPanValid } from "../utils/helperFunctions";
 import GetHelp from "./GetHelp";
 
 interface PersonalDetailsProps {
@@ -23,6 +26,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
   const [isPanUnverified, setIsPanUnverified] = useState<boolean>(false);
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
+
   const tutorPhoneNumber = useSelector(
     (state: RootState) => state.onGoingPayment.tutorPhoneNumber
   );
@@ -236,9 +240,6 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         }}
       />
 
-      <Box sx={{ marginTop: notPhoneScreen ? 2 : 4 }}>
-        <GetHelp />
-      </Box>
 
       <LoadingButton
         disabled={isButtonDisabled || updateTutorIsLoading}
@@ -250,6 +251,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           minWidth: "320px",
           maxWidth: "400px",
           padding: 1.5,
+          marginTop: notPhoneScreen ? 2 : 4,
           borderRadius: 20,
           height: 45,
         }}
@@ -266,6 +268,10 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           "Proceed"
         )}
       </LoadingButton>
+
+      <Box>
+        <GetHelp />
+      </Box>
     </>
   );
 };
