@@ -55,6 +55,15 @@ export const useOnboarding = () => {
     const userDetails = await fetchUserDetails();
     const bankAccountDetails = await fetchBankAccountDetails();
     const activeFlow = localStorage.getItem("activeFlow");
+    const isKycPending = userDetails?.pg_onboarding_status.length === 0 || 
+      (
+        userDetails?.pg_onboarding_status && 
+        userDetails?.pg_onboarding_status.length > 0 && 
+        (userDetails.pg_onboarding_status[0].status === "INITIATED" || userDetails.pg_onboarding_status[0].status === "EMAIL_VERIFIED" || userDetails.pg_onboarding_status[0].status === "MIN_KYC_PENDING")
+      );
+    const isKycSubmitted = userDetails?.pg_onboarding_status && 
+      userDetails?.pg_onboarding_status.length > 0 && 
+      userDetails.pg_onboarding_status[0].status === "SUBMITTED"
     const isUserAadhaarVerified = userDetails?.pg_onboarding_status && 
       userDetails?.pg_onboarding_status.length > 0 && 
       userDetails.pg_onboarding_status[0].status !== "EMAIL_VERIFIED" && 
@@ -81,10 +90,26 @@ export const useOnboarding = () => {
       };
     }
 
-    if (activeFlow === "tutorKyc" && !isUserAadhaarVerified) {
+    if (isKycPending) {
       return {
         navigateTo: "/tutor/personal-details",
         onboardingStep: 3,
+        checkProcessIsLoading
+      }
+    }
+
+    if (isKycSubmitted) {
+      return {
+        navigateTo: "/tutor/dashboard",
+        onboardingStep: 0,
+        checkProcessIsLoading
+      }
+    }
+
+    if (isUserAadhaarVerified) {
+      return {
+        navigateTo: "/tutor/personal-details",
+        onboardingStep: 0,
         checkProcessIsLoading
       }
     }
