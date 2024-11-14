@@ -155,7 +155,12 @@ const PaymentDetailsDialog = ({
                   >
                     You are making a payment to:
                   </Typography>
-                  <Typography fontSize={18} fontWeight={500} align="center">
+                  <Typography
+                    fontSize={18}
+                    fontWeight={500}
+                    align="center"
+                    pb={!isPhoneScreen ? 5 : 0}
+                  >
                     {tutorDetails.firstName} {tutorDetails.lastName}
                   </Typography>
                 </Stack>
@@ -245,6 +250,10 @@ const PaymentDetailsDialog = ({
                   rules={{
                     required: "Required",
                     min: { value: 1, message: "Amount must be greater than 0" },
+                    max: {
+                      value: 5000,
+                      message: "Amount must be less than 5000",
+                    },
                   }}
                   render={({ field }) => (
                     <TextField

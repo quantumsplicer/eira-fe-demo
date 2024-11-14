@@ -22,7 +22,7 @@ const HomePage: React.FC = () => {
 
   return (
     <Stack
-      spacing={!isPhoneScreen ? 4 : 1}
+      spacing={!isPhoneScreen ? 8 : 1}
       pl={!isPhoneScreen ? 5 : 0}
       pr={!isPhoneScreen ? 5 : 0}
       pt={!isPhoneScreen ? 3.5 : 0}
