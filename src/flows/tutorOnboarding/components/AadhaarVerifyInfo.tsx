@@ -54,7 +54,7 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
                 Please keep your Aadhaar registered phone number with you for verification
             </Typography>
             <Typography mt={1} color={"#6F6F6F"}>
-                Verify Aadhaar now to increase your payment acceptance limit to <span style={{color: "#000", fontWeight: "bold", fontSize: "15px"}}>₹50,000</span>
+                Verify Aadhaar now to get a payment acceptance limit of <span style={{color: "#000", fontWeight: "bold", fontSize: "15px"}}>₹50,000</span>
             </Typography>
             <Typography fontSize={12} color="#6F6F6F">
               +91-98731 89338 OR +91-95104 63209

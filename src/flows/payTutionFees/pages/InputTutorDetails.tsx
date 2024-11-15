@@ -21,18 +21,13 @@ import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
 
 const InputTutorDetails: React.FC = () => {
-
-    const [isPanUnverified, setIsPanUnverified] = useState<boolean>(false);
-    const [isPanVerifying, setIsPanVerifying] = useState<boolean>(false);
     const [showMessage, setShowMessage] = useState<boolean>(false);
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const activePaymentTutorName = localStorage.getItem("activePaymentTutorName");
     const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
     const activePaymentAmount = localStorage.getItem("activePaymentAmount");
-    // const isTutorEiraOnboarded = localStorage.getItem("isTutorEiraOnboarded") === "true";
 
     const [
         getTutorDetials
@@ -186,8 +181,7 @@ const InputTutorDetails: React.FC = () => {
                     </Stack>
                 </Box>
             </Stack>
-            {
-                showMessage ? 
+            {showMessage ? 
                 (notPhoneScreen ?
                     <StatusDialog 
                         open={showMessage}

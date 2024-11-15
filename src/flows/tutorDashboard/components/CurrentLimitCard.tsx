@@ -173,7 +173,7 @@ const CurrentLimitCard: React.FC = () => {
           >
             {onboardingStatus
               ? "Congratulations! Your limit has been increased to ₹50,000"
-              : "Complete KYC to increase limit to ₹50,000"}
+              : "Complete KYC to make a transaction of upto ₹50,000"}
           </Typography>
           <Button
             onClick={() => {

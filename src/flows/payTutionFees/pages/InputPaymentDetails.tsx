@@ -32,6 +32,8 @@ import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
 
+const ACTIVE_PG = "cashfree";
+
 const InputPaymentDetails: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -43,19 +45,9 @@ const InputPaymentDetails: React.FC = () => {
   const [showMessage, setShowMessage] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
-  const { data } = useCheckInvitationAcceptanceQuery(
-    "6f2c9af2-cbce-49d6-a147-27c40f1c33d4"
-  );
-
-  const [
-    getUserDetails,
-    { data: studentData, isLoading: studentDataIsLoading },
-  ] = useLazyGetUserDetailsQuery();
-
   const [getTutorDetials] = useLazyGetUserDetailsByPhoneQuery();
 
-  const { checkCurrentStudentOnboardingState } =
-    useGetOnboardingDetails();
+  const { checkCurrentStudentOnboardingState } = useGetOnboardingDetails();
 
   const noteBoxHeading = "Things to keep in mind:";
   const notes = [
@@ -94,7 +86,7 @@ const InputPaymentDetails: React.FC = () => {
       return;
 
     try {
-      let isTutorAlreadyExisting: boolean = false;
+      let tutorExists: boolean = false;
       let isTutorKycIncomplete: boolean = false;
       let isTutorPgOnboarded: boolean = false;
       let isTutorKycApprovalPending: boolean = false;
@@ -108,39 +100,41 @@ const InputPaymentDetails: React.FC = () => {
             isPayeeStudent = true;
             return;
           }
-          isTutorAlreadyExisting = !!(
-            tutor?.first_name &&
-            tutor?.last_name &&
-            tutor?.pan
-          );
-          isTutorKycApprovalPending = isTutorAlreadyExisting && 
-            tutor?.pg_onboarding_status && 
-            tutor.pg_onboarding_status.length > 0 && 
-            tutor.pg_onboarding_status[0].status === "SUBMITTED";
-          isTutorPgOnboarded = !isTutorKycIncomplete && !isTutorKycApprovalPending && tutor?.pg_onboarding_status && tutor.pg_onboarding_status.length > 0 &&
-            (tutor.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" || tutor.pg_onboarding_status[0].status === "ACTIVE");
-          
-          if (isTutorPgOnboarded) {
-            dispatch(setPayeeId(tutor?.id));
-            localStorage.setItem("activePaymentPayeeUserId", tutor?.id);
-            localStorage.setItem(
-              "activePaymentTutorName",
-              tutor?.first_name + " " + tutor?.last_name
-            );
+
+          tutorExists = !!(tutor?.first_name && tutor?.last_name && tutor?.pan);
+
+          if (!tutorExists) navigate("/pay/tutor-details");
+
+          const pgOnboardingStatus =
+            tutor?.pg_onboarding_status.length > 0
+              ? tutor?.pg_onboarding_status.find(
+                  (item) => item?.pg_name === ACTIVE_PG
+                )?.status
+              : "NONE";
+
+          switch (pgOnboardingStatus) {
+            case "NONE":
+            case "EMAIL_VERIFIED":
+            case "MIN_KYC_PENDING":
+              setShowMessage(true);
+              setMessage(
+                "KYC link is sent to your tutor. Tutor will be able to accept payments after completion of KYC"
+              );
+              break;
+            case "MIN_KYC_SUBMITTED":
+              setShowMessage(true);
+              setMessage(
+                "Your tutor's KYC is completed and your tutor will be able to accept payments in 2-3 business days"
+              );
+              break;
+            case "MIN_KYC_APPROVED":
+            case "ACTIVE":
+              navigate("/pay/review");
+              break;
+            default:
+              break;
           }
         });
-
-      if (isTutorPgOnboarded) {
-        navigate("/pay/review");
-      } else if (isTutorKycApprovalPending) {
-        setShowMessage(true);
-        setMessage("Your tutor's KYC is completed and your tutor will be able to accept payments in 2-3 business days");
-      } else if (isTutorAlreadyExisting) {
-        setShowMessage(true);
-        setMessage("KYC link is sent to your tutor. Tutor will be able to accept payments after completion of KYC");
-      } else {
-        navigate("/pay/tutor-details");
-      }
     } catch (error) {
       console.error(error);
     }
@@ -164,8 +158,8 @@ const InputPaymentDetails: React.FC = () => {
       >
         Go to Dashboard
       </Button>
-    )
-  }
+    );
+  };
 
   useEffect(() => {
     setIsButtonDisabled(true);
@@ -190,7 +184,7 @@ const InputPaymentDetails: React.FC = () => {
         backgroundImage: notPhoneScreen ? `url(${EiraBack})` : "",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: "fixed",
         minHeight: "100vh",
         width: "100vw",
       }}
@@ -318,7 +312,7 @@ const InputPaymentDetails: React.FC = () => {
               <LoadingButton
                 variant="contained"
                 color="primary"
-                loading={studentDataIsLoading}
+                // loading={}
                 sx={{
                   padding: 1.5,
                   borderRadius: 20,
@@ -336,28 +330,29 @@ const InputPaymentDetails: React.FC = () => {
           </Stack>
         </Box>
       </Stack>
-      {
-        showMessage ? 
-          (notPhoneScreen ?
-            <StatusDialog 
-              open={showMessage}
-              onClose={() => setShowMessage(false)}
-              type="info"
-              headingMessage=""
-              subHeadingMessage={message}
-              preventDialogClose={false}
-              CustomDialogButton={goToDashboardButton}
-            /> :
-            <StatusDrawer 
-              open={showMessage}
-              type="info"
-              headingMessage=""
-              subHeadingMessage1={message}
-              preventDrawerClose={false}
-              CustomDrawerButton={goToDashboardButton}
-            />
-          ) : null
-      }
+
+      {showMessage ? (
+        notPhoneScreen ? (
+          <StatusDialog
+            open={showMessage}
+            onClose={() => setShowMessage(false)}
+            type="info"
+            headingMessage=""
+            subHeadingMessage={message}
+            preventDialogClose={false}
+            CustomDialogButton={goToDashboardButton}
+          />
+        ) : (
+          <StatusDrawer
+            open={showMessage}
+            type="info"
+            headingMessage=""
+            subHeadingMessage1={message}
+            preventDrawerClose={false}
+            CustomDrawerButton={goToDashboardButton}
+          />
+        )
+      ) : null}
     </Box>
   );
 };

@@ -63,7 +63,7 @@ const AppRoutes = () => {
        * Dynamic Payment link route
        */}
       <Route path="payment-link/" element={<PayFeesContainer />}>
-        <Route path=":link-id" element={<StudentSignIn />} />
+        <Route index path="" element={<StudentSignIn />} />
       </Route>
 
       {/**

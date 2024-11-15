@@ -20,9 +20,11 @@ import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
 import { useGetOtpMutation } from "../../../APIs/definitions/auth";
 import { useLazyGetUserDetailsByIdQuery } from "../../../APIs/definitions/user";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { useParams } from "react-router-dom";
 
 const StudentSignIn = () => {
   const activeFlow = localStorage.getItem("activeFlow");
+  const params = useParams();
 
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);

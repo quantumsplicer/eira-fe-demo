@@ -72,9 +72,9 @@ const useGetOnboardingDetails = () => {
         case "DynamicLinkFlow":
           localStorage.setItem("isTutorEiraOnboarded", "true");
           try {
-            const activeFlowUrl = localStorage.getItem("activeFlowUrl");
+            const activeFlowQuery = localStorage.getItem("activeFlowQuery");
             const paymentLinkInfo = await getPaymentLinkInfo(
-              activeFlowUrl?.split("/").at(-1) as string
+              activeFlowQuery?.split("=").at(-1) as string
             ).unwrap().then().catch();
 
             localStorage.setItem(
