@@ -78,7 +78,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
       localStorage.setItem("lastName", lastName);
       localStorage.setItem("pan", pan);
       localStorage.setItem("onboardingUsername", `${firstName} ${lastName}`);
-
+      
       if (tutorPhoneNumber || activePaymentTutorId) {
         registerTutor({
           first_name: firstName,

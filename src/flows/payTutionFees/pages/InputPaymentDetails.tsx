@@ -32,7 +32,7 @@ import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
 
-const ACTIVE_PG = "cashfree";
+export const ACTIVE_PG = "cashfree";
 
 const InputPaymentDetails: React.FC = () => {
   const navigate = useNavigate();

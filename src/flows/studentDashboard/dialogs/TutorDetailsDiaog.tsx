@@ -23,6 +23,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
 import { PaymentDetails, TutorDetails } from "../interfaces";
 import PersonalDetails from "../../../components/PersonalDetails";
+
 interface TutorDetailsDialogProps {
   open: boolean;
   onClose: () => void;
@@ -31,6 +32,7 @@ interface TutorDetailsDialogProps {
   tutorDetails: TutorDetails;
   paymentDetails: PaymentDetails;
 }
+
 const Transition = forwardRef(function Transition(props: SlideProps, ref) {
   return (
     <Slide
@@ -439,14 +441,8 @@ const TutorDetailsDialog = ({
                       )}
                     />
                   </Stack> */}
-                  <PersonalDetails onSuccess={() => {}} />
+                  <PersonalDetails onSuccess={handleSubmit(handleFormSubmit)} />
                 </Stack>
-              )}
-              {!isPhoneScreen ? (
-                <></>
-              ) : (
-                // <AmountBreakupCard amount={paymentDetails.amount} />
-                <></>
               )}
               {!isPhoneScreen ? (
                 <Box>
