@@ -156,7 +156,7 @@ const useGetOnboardingDetails = () => {
     console.log("loading: ", studentDataIsLoading, studentData);
     setCheckProcessIsLoading(true);
     checkCurrentStudentOnboardingState();
-  }, [studentData, studentDataIsLoading]);
+  }, [studentData, studentDataIsLoading])
 
   return {
     navigateToCurrentOnboardingStep,
