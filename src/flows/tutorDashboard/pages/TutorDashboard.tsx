@@ -51,7 +51,6 @@ const drawerWidth = 220;
 const NAV_OPTIONS = [
   { title: "Payments", subpage: PAYMENT_HISTORY_PAGE },
   { title: "Your Payment Link", subpage: PAYMENT_LINK_PAGE },
-  { title: "Session History", subpage: SESSION_HISTORY_PAGE },
   { title: "Invoices", subpage: "disabled" },
   { title: "Marketing", subpage: "disabled" },
   { title: "Help", link: WHATSAPP_LINK },

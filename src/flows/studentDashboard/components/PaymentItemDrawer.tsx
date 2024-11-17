@@ -7,12 +7,14 @@ export interface PaymentItemDrawerProps {
   transaction: Transaction;
   open: boolean;
   onClose: () => void;
+  role?: "student" | "tutor";
 }
 
 export const PaymentItemDrawer = ({
   open,
   transaction,
   onClose,
+  role = "tutor",
 }: PaymentItemDrawerProps) => {
   return (
     <Drawer
@@ -39,9 +41,13 @@ export const PaymentItemDrawer = ({
       <PaymentInfo
         amount={transaction.amount.toString()}
         name={
-          (transaction.tutor_first_name as string) +
+          (role === "student"
+            ? transaction.student_first_name
+            : transaction.tutor_first_name) +
           " " +
-          (transaction.tutor_last_name as string)
+          (role === "student"
+            ? transaction.student_last_name
+            : transaction.tutor_last_name)
         }
         transactionItem={transaction}
         paymentDetails={transaction as unknown as Record<string, string>}
