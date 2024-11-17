@@ -216,12 +216,6 @@ const PaymentHistoryTable: React.FC = () => {
       },
     }),
   });
-  const tutorDetails: TutorDetails = {
-    firstName: "",
-    lastName: "",
-    panNumber: "",
-    phoneNumber: "",
-  };
   const [paymentFlowActive, setPaymentFlowActive] = useState(false);
   return (
     <>
@@ -319,14 +313,9 @@ const PaymentHistoryTable: React.FC = () => {
                     </Stack>
                   </Stack>
                 </Box>
-                {/* <SendPaymentLinkFlow
-                isActive={paymentLinkFlowActive}
-                          onClose={() => setPaymentLinkFlowActive(false)}
-                /> */}
                 <PaymentFlow
                   open={paymentFlowActive}
                   onClose={() => setPaymentFlowActive(false)}
-                  tutorDetailsProp={tutorDetails}
                 />
               </>
             )}

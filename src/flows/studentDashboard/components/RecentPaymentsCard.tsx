@@ -23,18 +23,6 @@ import { useGetTransactionsListQuery } from "../../../APIs/definitions/transacti
 import { Transaction } from "../../tutorDashboard/interfaces";
 import { useGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
 
-interface AvatarWithDetailsProps {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  amount: number;
-  onClick: () => void;
-}
-
-interface TransactionAndTutorDetails extends Transaction {
-  tutorDetails: TutorDetails;
-}
-
 const RecentPaymentRow: React.FC<RecentTransactionTutor> = (rowData) => {
   const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
 
@@ -93,7 +81,7 @@ const RecentPaymentRow: React.FC<RecentTransactionTutor> = (rowData) => {
         <PaymentFlow
           open={isPaymentFlowActive}
           onClose={handleClosePaymentFlow}
-          tutorDetailsProp={tutorDetails}
+          payAgainPhoneNumber={tutorDetails.phoneNumber}
         />
       )}
     </>

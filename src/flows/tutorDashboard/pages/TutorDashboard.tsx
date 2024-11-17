@@ -2,7 +2,7 @@ import MarketingIcon from "@mui/icons-material/CampaignOutlined";
 import HomeIcon from "@mui/icons-material/HomeOutlined";
 import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
-import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import InvoiceIcon from "@mui/icons-material/ReceiptOutlined";
 import SessionHistoryIcon from "@mui/icons-material/RestoreOutlined";
@@ -69,7 +69,7 @@ const TutorDashboard: React.FC = () => {
       <SessionHistoryIcon key="history" />,
       <InvoiceIcon key="invoice" />,
       <MarketingIcon key="marketing" />,
-      <QuestionMarkIcon key="help" />
+      <QuestionMarkIcon key="help" />,
     ];
   }, []);
 
@@ -88,9 +88,12 @@ const TutorDashboard: React.FC = () => {
   const previousUrl = location.state?.previousUrl;
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [isPWAInstallPromptOpen, setIsPWAInstallPromptOpen] = useState(false);
-
   const { data: userDetails } = useGetUserDetailsQuery();
-
+  const [isPgOnboardingPending, setIsPgOnboardingPending] = useState<boolean>(
+    !userDetails?.pg_onboarding_status?.find(
+      (status) => status.pg_name === "cashfree" && status.status === "ACTIVE"
+    )
+  );
   const [isSessionExpired, setIsSessionExpired] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -304,7 +307,7 @@ const TutorDashboard: React.FC = () => {
               </Stack>
             </Toolbar>
           </AppBar>
-          
+
           {/* Side drawer */}
           {!isPhoneScreen ? (
             <Drawer
@@ -330,13 +333,19 @@ const TutorDashboard: React.FC = () => {
                       sx={{ width: "100%", pl: "0", pr: "0" }}
                     >
                       <ListItemButton
-                        onClick={() => {handleClickNavOption(entry)}}
+                        onClick={() => {
+                          handleClickNavOption(entry);
+                        }}
                         disabled={index === 3 || index === 4 ? true : false}
                         sx={{
                           backgroundColor:
-                            entry?.subpage && subpage === entry.subpage ? "#EBF1FF" : "white",
+                            entry?.subpage && subpage === entry.subpage
+                              ? "#EBF1FF"
+                              : "white",
                           color:
-                            entry?.subpage && subpage === entry.subpage ? "#507FFD" : "black",
+                            entry?.subpage && subpage === entry.subpage
+                              ? "#507FFD"
+                              : "black",
                           pl: 3,
                           "& *":
                             entry?.subpage && subpage === entry.subpage
@@ -461,13 +470,19 @@ const TutorDashboard: React.FC = () => {
                     {NAV_OPTIONS.map((entry, index) => (
                       <ListItem key={entry.title} sx={{ width: "100%", p: 0 }}>
                         <ListItemButton
-                          onClick={() => {handleClickNavOption(entry)}}
+                          onClick={() => {
+                            handleClickNavOption(entry);
+                          }}
                           disabled={index === 3 || index === 4 ? true : false}
                           sx={{
                             backgroundColor:
-                              entry.subpage && subpage === entry.subpage ? "#EBF1FF" : "white",
+                              entry.subpage && subpage === entry.subpage
+                                ? "#EBF1FF"
+                                : "white",
                             color:
-                              entry.subpage && subpage === entry.subpage ? "#507FFD" : "black",
+                              entry.subpage && subpage === entry.subpage
+                                ? "#507FFD"
+                                : "black",
                             pl: 3,
                             "& *":
                               entry.subpage && subpage === entry.subpage
@@ -553,7 +568,7 @@ const TutorDashboard: React.FC = () => {
             {!isPhoneScreen ? <Toolbar /> : <></>}
             {displaySubpage()}
           </Box>
-          
+
           {isPhoneScreen && showDialog ? (
             <StatusDrawer
               open={showDialog}
@@ -618,7 +633,17 @@ const TutorDashboard: React.FC = () => {
           }
         />
       )}
-
+      {isPgOnboardingPending && (
+        <StatusDialog
+          open={isPgOnboardingPending}
+          onClose={() => {}}
+          type="failure"
+          headingMessage="Pending KYC verification!!"
+          subHeadingMessage="We'll notify you once your KYC is verified. You'll be able to accept payments after that."
+          preventDialogClose={false}
+          CustomDialogButton={ScheduleClassButton}
+        />
+      )}
     </ThemeProvider>
   );
 };

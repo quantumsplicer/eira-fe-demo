@@ -15,13 +15,16 @@ import PaymentDetailsDialog from "../dialogs/PaymentDetailsDialog";
 import CreateSessionDialog from "../dialogs/CreateSessionDialog";
 import PaymentConfirmationDialog from "../dialogs/PaymentConfirmationDialog";
 import { TutorDetails, SessionDetails, PaymentDetails } from "../interfaces";
-import { useLazyGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
+import {
+  useGetUserDetailsByPhoneQuery,
+  useLazyGetUserDetailsByPhoneQuery,
+} from "../../../APIs/definitions/user";
 import { usePayment } from "../../../hooks/usePayment";
 
 interface PaymentFlowProps {
   open: boolean;
   onClose: () => void;
-  tutorDetailsProp: TutorDetails;
+  payAgainPhoneNumber?: string;
 }
 enum DialogName {
   None = "None",
@@ -35,18 +38,20 @@ enum DialogName {
 const PaymentFlow: React.FC<PaymentFlowProps> = ({
   open,
   onClose,
-  tutorDetailsProp,
+  payAgainPhoneNumber,
 }) => {
   const [activeDialog, setActiveDialog] = useState<DialogName>(DialogName.None);
   const [isPayeeStudent, setIsPayeeStudent] = useState<boolean>(false);
   const [stepOnBack, setStepOnBack] = useState<DialogName>(DialogName.None);
+  const { data: tutorData } = useGetUserDetailsByPhoneQuery(
+    payAgainPhoneNumber ?? ""
+  );
   const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
-    firstName: tutorDetailsProp.firstName,
-    lastName: tutorDetailsProp.lastName,
-    panNumber: tutorDetailsProp.panNumber,
-    phoneNumber: tutorDetailsProp.phoneNumber,
+    firstName: tutorData?.[0]?.first_name ?? "",
+    lastName: tutorData?.[0]?.last_name ?? "",
+    panNumber: tutorData?.[0]?.pan ?? "",
+    phoneNumber: tutorData?.[0]?.phone ?? "",
   });
-
   const [sessionDetails, setSessionDetails] = useState<SessionDetails>({
     sessionTitle: "",
     description: "",
@@ -111,7 +116,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
           if (isTutorCashfreeRegistered) {
             setActiveDialog(DialogName.CompletePayment);
           } else {
-            setActiveDialog(DialogName.CreateSession);
+            setActiveDialog(DialogName.CompletePayment);
           }
           setStepOnBack(DialogName.PaymentDetails);
         });
@@ -122,7 +127,6 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
 
   useEffect(() => {
     console.log("Component rerendered because open is ", open);
-    console.log("In this render, tutor details are  ", tutorDetailsProp);
     if (open) {
       setActiveDialog(DialogName.PaymentDetails);
     } else {
@@ -151,7 +155,6 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
             localStorage.setItem("activePaymentTutorId", data?.phoneNumber);
             handleTutorExistenceCheck(data?.phoneNumber);
           }}
-          tutorDetails={tutorDetails}
           isPayeeStudent={isPayeeStudent}
           phoneNumberProp={tutorDetails.phoneNumber}
           submitButtonIsLoading={tutorDetailsIsLoading}
@@ -166,15 +169,13 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
           onClose={handleClose}
           onSubmit={(data) => {
             setTutorDetails(data);
-            setActiveDialog(DialogName.CreateSession);
+            setActiveDialog(DialogName.CompletePayment);
           }}
-          tutorDetails={tutorDetails}
-          paymentDetails={paymentDetails}
         />
       )}
       {/* {activeDialog === DialogName.CreateSession && ( */}
-      <CreateSessionDialog
-        open={activeDialog === DialogName.CreateSession && open}
+      {/* <CreateSessionDialog
+        open={activeDialog === DialogName.CreateSession && open && false}
         onClose={handleClose}
         onBack={() => {
           setActiveDialog(stepOnBack);
@@ -187,7 +188,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
         tutorDetails={tutorDetails}
         sessionDetails={sessionDetails}
         paymentDetails={paymentDetails}
-      />
+      /> */}
       {/* )} */}
       {activeDialog === DialogName.CompletePayment && (
         <CompletePaymentDialog
@@ -200,9 +201,6 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
             setActiveDialog(stepOnBack);
             setStepOnBack(DialogName.PaymentDetails);
           }}
-          tutorDetails={tutorDetails}
-          sessionDetails={sessionDetails}
-          paymentDetails={paymentDetails}
         />
       )}
       {/* {activeDialog === DialogName.PaymentConfirmation && (
