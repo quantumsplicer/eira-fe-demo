@@ -32,7 +32,7 @@ interface TransactionCellMobileProps {
 
 const TransactionCellMobile = ({ transaction }: TransactionCellMobileProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  
+
   return (
     <>
       <Box
@@ -93,6 +93,7 @@ const TransactionCellMobile = ({ transaction }: TransactionCellMobileProps) => {
             setIsDrawerOpen(false);
           }}
           transaction={transaction}
+          role="student"
         />
       )}
     </>

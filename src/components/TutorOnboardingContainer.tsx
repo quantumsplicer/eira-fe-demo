@@ -35,8 +35,7 @@ const TutorOnboardingContainer = () => {
           case "/tutor/complete-kyc":
             break;
           case "/tutor/dashboard":
-            if (onboardingStep !== 0)
-              navigate(navigateTo);
+            if (onboardingStep !== 0) navigate(navigateTo);
             break;
           default:
             break;

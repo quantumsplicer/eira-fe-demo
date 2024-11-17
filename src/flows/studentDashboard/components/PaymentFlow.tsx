@@ -49,6 +49,9 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
   const [stepOnBack, setStepOnBack] = useState<DialogName>(DialogName.None);
   const [showMessage, setShowMessage] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
+  const { data: tutorData } = useGetUserDetailsByPhoneQuery(
+    payAgainPhoneNumber ?? ""
+  );
   const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
     firstName: tutorData?.[0]?.first_name ?? "",
     lastName: tutorData?.[0]?.last_name ?? "",
@@ -69,10 +72,6 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
   });
 
   const { makePayment } = usePayment();
-  
-  const { data: tutorData } = useGetUserDetailsByPhoneQuery(
-    payAgainPhoneNumber ?? ""
-  );
 
   const [getTutorDetials, { isLoading: tutorDetailsIsLoading }] =
     useLazyGetUserDetailsByPhoneQuery();

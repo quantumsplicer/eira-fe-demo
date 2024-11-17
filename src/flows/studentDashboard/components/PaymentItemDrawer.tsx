@@ -2,6 +2,7 @@ import { Box, Drawer, IconButton } from "@mui/material";
 import { Transaction } from "../../tutorDashboard/interfaces";
 import CloseIcon from "@mui/icons-material/Close";
 import PaymentInfo from "../../../components/PaymentInfo";
+import PaymentInfoReceived from "../../../components/PaymentInfoReceived";
 
 export interface PaymentItemDrawerProps {
   transaction: Transaction;
@@ -38,21 +39,32 @@ export const PaymentItemDrawer = ({
           <CloseIcon />
         </IconButton>
       </Box>
-      <PaymentInfo
-        amount={transaction.amount.toString()}
-        name={
-          (role === "student"
-            ? transaction.student_first_name
-            : transaction.tutor_first_name) +
-          " " +
-          (role === "student"
-            ? transaction.student_last_name
-            : transaction.tutor_last_name)
-        }
-        transactionItem={transaction}
-        paymentDetails={transaction as unknown as Record<string, string>}
-        type="success"
-      />
+      {role === "student" ? (
+        <PaymentInfoReceived
+          amount={transaction.amount.toString()}
+          name={
+            (role === "student"
+              ? transaction.student_first_name
+              : transaction.tutor_first_name) +
+            " " +
+            (role === "student"
+              ? transaction.student_last_name
+              : transaction.tutor_last_name)
+          }
+          transactionItem={transaction}
+          type="success"
+        />
+      ) : (
+        <PaymentInfo
+          amount={transaction.amount.toString()}
+          name={
+            transaction.tutor_first_name + " " + transaction.tutor_last_name
+          }
+          transactionItem={transaction}
+          paymentDetails={transaction as unknown as Record<string, string>}
+          type="success"
+        />
+      )}
     </Drawer>
   );
 };
