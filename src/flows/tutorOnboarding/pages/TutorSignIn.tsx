@@ -137,8 +137,8 @@ const TutorSignIn: React.FC = () => {
                       label={
                         <Typography sx={{ fontSize: 11 }} lineHeight={1.3}>
                           I agree to all the{" "}
-                          <Link href="/terms">terms and conditions</Link> and{" "}
-                          <Link href="/privacy">privacy policy</Link>
+                          <Link href="https://www.eira.club/privacy-policy">terms and conditions</Link> and{" "}
+                          <Link href="https://www.eira.club/privacy-policy">privacy policy</Link>
                         </Typography>
                       }
                     />

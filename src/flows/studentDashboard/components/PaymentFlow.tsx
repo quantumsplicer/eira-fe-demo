@@ -20,6 +20,9 @@ import {
   useLazyGetUserDetailsByPhoneQuery,
 } from "../../../APIs/definitions/user";
 import { usePayment } from "../../../hooks/usePayment";
+import { ACTIVE_PG } from "../../payTutionFees/pages/InputPaymentDetails";
+import StatusDialog from "../../../dialogs/StatusDialog";
+import StatusDrawer from "../../../components/StatusDrawer";
 
 interface PaymentFlowProps {
   open: boolean;
@@ -40,12 +43,12 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
   onClose,
   payAgainPhoneNumber,
 }) => {
+  const notPhoneScreen = useMediaQuery("(min-width:850px)");
   const [activeDialog, setActiveDialog] = useState<DialogName>(DialogName.None);
   const [isPayeeStudent, setIsPayeeStudent] = useState<boolean>(false);
   const [stepOnBack, setStepOnBack] = useState<DialogName>(DialogName.None);
-  const { data: tutorData } = useGetUserDetailsByPhoneQuery(
-    payAgainPhoneNumber ?? ""
-  );
+  const [showMessage, setShowMessage] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
   const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
     firstName: tutorData?.[0]?.first_name ?? "",
     lastName: tutorData?.[0]?.last_name ?? "",
@@ -66,6 +69,10 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
   });
 
   const { makePayment } = usePayment();
+  
+  const { data: tutorData } = useGetUserDetailsByPhoneQuery(
+    payAgainPhoneNumber ?? ""
+  );
 
   const [getTutorDetials, { isLoading: tutorDetailsIsLoading }] =
     useLazyGetUserDetailsByPhoneQuery();
@@ -77,7 +84,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
 
   const handleTutorExistenceCheck = async (tutorphoneNumber: string) => {
     try {
-      let isTutorOnboarded: boolean = false;
+      let tutorExists: boolean = false;
       let isPayeeStudent;
       await getTutorDetials(tutorphoneNumber)
         .unwrap()
@@ -89,40 +96,91 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
             return;
           }
 
-          isTutorOnboarded = !!(
-            tutor?.first_name &&
-            tutor?.last_name &&
-            tutor?.pan
-          );
+          tutorExists = !!(tutor?.first_name && tutor?.last_name && tutor?.pan);
 
-          console.log(isTutorOnboarded);
-
-          if (!isTutorOnboarded) {
+          if (!tutorExists) {
             setActiveDialog(DialogName.TutorDetails);
             setStepOnBack(DialogName.PaymentDetails);
             return;
           }
 
-          localStorage.setItem("activePaymentPayeeUserId", tutor?.id);
-          localStorage.setItem(
-            "activePaymentTutorName",
-            tutor?.first_name + " " + tutor?.last_name
-          );
+          const pgOnboardingStatus =
+            tutor?.pg_onboarding_status.length > 0
+              ? tutor?.pg_onboarding_status.find(
+                  (item) => item?.pg_name === ACTIVE_PG
+                )?.status
+              : "NONE";
 
-          const isTutorCashfreeRegistered = !!(
-            tutor?.onboarding_status === "COMPLETE"
-          );
-
-          if (isTutorCashfreeRegistered) {
-            setActiveDialog(DialogName.CompletePayment);
-          } else {
-            setActiveDialog(DialogName.CompletePayment);
+          switch (pgOnboardingStatus) {
+            case "NONE":
+            case "EMAIL_VERIFIED":
+            case "MIN_KYC_PENDING":
+              setShowMessage(true);
+              setMessage(
+                "KYC link is sent to your tutor. Tutor will be able to accept payments after completion of KYC"
+              );
+              break;
+            case "MIN_KYC_SUBMITTED":
+              setShowMessage(true);
+              setMessage(
+                "Your tutor's KYC is completed and your tutor will be able to accept payments in 2-3 business days"
+              );
+              break;
+            case "MIN_KYC_APPROVED":
+            case "ACTIVE":
+              localStorage.setItem("activePaymentPayeeUserId", tutor?.id);
+              localStorage.setItem(
+                "activePaymentTutorName",
+                tutor?.first_name + " " + tutor?.last_name
+              );
+              setActiveDialog(DialogName.CompletePayment);
+              setStepOnBack(DialogName.PaymentDetails);
+              break;
+            default:
+              break;
           }
-          setStepOnBack(DialogName.PaymentDetails);
+
+          // localStorage.setItem("activePaymentPayeeUserId", tutor?.id);
+          // localStorage.setItem(
+          //   "activePaymentTutorName",
+          //   tutor?.first_name + " " + tutor?.last_name
+          // );
+
+          // const isTutorCashfreeRegistered = !!(
+          //   tutor?.onboarding_status === "COMPLETE"
+          // );
+
+          // if (isTutorCashfreeRegistered) {
+          //   setActiveDialog(DialogName.CompletePayment);
+          // } else {
+          //   setActiveDialog(DialogName.CreateSession);
+          // }
+          // setStepOnBack(DialogName.PaymentDetails);
         });
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const goToDashboardButton = () => {
+    return (
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{
+          padding: 1.5,
+          borderRadius: 20,
+          height: 45,
+          mt: 5,
+          width: "100%",
+          minWidth: "320px",
+          maxWidth: "400px",
+        }}
+        onClick={onClose}
+      >
+        Go to Dashboard
+      </Button>
+    );
   };
 
   useEffect(() => {
@@ -169,7 +227,11 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
           onClose={handleClose}
           onSubmit={(data) => {
             setTutorDetails(data);
-            setActiveDialog(DialogName.CompletePayment);
+            setShowMessage(true);
+            setMessage(
+              "KYC link is sent to your tutor. Tutor will be able to accept payments after completion of KYC"
+            );
+            // setActiveDialog(DialogName.CreateSession);
           }}
         />
       )}
@@ -203,6 +265,29 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
           }}
         />
       )}
+
+      {showMessage ? (
+        notPhoneScreen ? (
+          <StatusDialog
+            open={showMessage}
+            onClose={() => setShowMessage(false)}
+            type="info"
+            headingMessage=""
+            subHeadingMessage={message}
+            preventDialogClose={false}
+            CustomDialogButton={goToDashboardButton}
+          />
+        ) : (
+          <StatusDrawer
+            open={showMessage}
+            type="info"
+            headingMessage=""
+            subHeadingMessage1={message}
+            preventDrawerClose={false}
+            CustomDrawerButton={goToDashboardButton}
+          />
+        )
+      ) : null}
       {/* {activeDialog === DialogName.PaymentConfirmation && (
         <PaymentConfirmationDialog
           open={activeDialog === DialogName.PaymentConfirmation && open}

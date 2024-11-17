@@ -151,10 +151,12 @@ const useGetOnboardingDetails = () => {
   };
 
   useEffect(() => {
+    if (studentDataIsLoading) return;
+
     console.log("loading: ", studentDataIsLoading, studentData);
     setCheckProcessIsLoading(true);
     checkCurrentStudentOnboardingState();
-  }, [studentData, studentDataIsLoading]);
+  }, [studentData, studentDataIsLoading])
 
   return {
     navigateToCurrentOnboardingStep,
