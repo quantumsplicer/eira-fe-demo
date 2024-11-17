@@ -11,19 +11,10 @@ import {
 import Button from "@mui/material/Button";
 import DashboardBannerArt1 from "../../../assets/images/png/student-dashboard-banner-1.png";
 import DashboardBannerArt2 from "../../../assets/images/png/student-dashboard-banner-2.png";
-import { TutorDetails } from "../interfaces";
-import PaymentFlow from "./PaymentFlow";
 import { WHATSAPP_LINK } from "../../../components/GetHelp";
 
 const PromoBannerComponent: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
-  const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
-    firstName: "",
-    lastName: "",
-    panNumber: "",
-    phoneNumber: "",
-  });
 
   return (
     <Stack spacing={6} direction="column" width="100%" pb={10}>
@@ -31,7 +22,7 @@ const PromoBannerComponent: React.FC = () => {
         component="img"
         src={DashboardBannerArt1}
         width="95%"
-        onClick={() => setIsPaymentFlowActive(true)}
+        onClick={() => window.open(WHATSAPP_LINK, "_blank")}
         sx={{ cursor: "pointer" }}
       />
       <Box
@@ -41,13 +32,6 @@ const PromoBannerComponent: React.FC = () => {
         onClick={() => window.open(WHATSAPP_LINK, "_blank")}
         sx={{ cursor: "pointer" }}
       />
-      {isPaymentFlowActive && (
-        <PaymentFlow
-          open={isPaymentFlowActive}
-          onClose={() => setIsPaymentFlowActive(false)}
-          tutorDetailsProp={tutorDetails}
-        />
-      )}
     </Stack>
   );
 };

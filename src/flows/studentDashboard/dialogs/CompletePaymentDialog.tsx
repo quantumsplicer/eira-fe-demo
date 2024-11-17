@@ -28,29 +28,26 @@ interface CompletePaymentDialogProps {
   onClose: () => void;
   onSubmit: () => void;
   onBack: () => void;
-  paymentDetails: PaymentDetails;
-  tutorDetails: TutorDetails;
-  sessionDetails: SessionDetails;
 }
 const CompletePaymentDialog = ({
   open,
   onClose,
   onSubmit,
   onBack,
-  paymentDetails,
-  tutorDetails,
-  sessionDetails,
 }: CompletePaymentDialogProps) => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
 
   const activePaymentAmount = localStorage.getItem("activePaymentAmount");
   const activePaymentTutorName = localStorage.getItem("activePaymentTutorName");
   const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
+  const activePaymentTutorPhoneNumber = localStorage.getItem(
+    "activePaymentTutorPhoneNumber"
+  );
 
   const { data: tutorData } = useGetUserDetailsByPhoneQuery(
-    tutorDetails?.phoneNumber,
+    activePaymentTutorPhoneNumber ?? "",
     {
-      skip: !tutorDetails?.phoneNumber,
+      skip: !activePaymentTutorPhoneNumber,
     }
   );
 
@@ -130,7 +127,7 @@ const CompletePaymentDialog = ({
                       {activePaymentTutorName}
                     </Typography>
                     <Typography fontSize={15} lineHeight={1.2}>
-                      {tutorDetails.phoneNumber}
+                      {activePaymentTutorPhoneNumber}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -196,7 +193,7 @@ const CompletePaymentDialog = ({
                       align="center"
                       color="#969696"
                     >
-                      paying
+                      Paying
                     </Typography>
                     <Typography
                       fontSize={23}
@@ -217,7 +214,8 @@ const CompletePaymentDialog = ({
                       to
                     </Typography>
                     <Typography fontSize={23} fontWeight={650} lineHeight={1.2}>
-                      {activePaymentTutorName}
+                      {activePaymentTutorName ||
+                        `+91 ${activePaymentTutorPhoneNumber}`}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -249,15 +247,17 @@ const CompletePaymentDialog = ({
                     <Typography sx={{ fontSize: 15 }} fontWeight={600}>
                       {activePaymentTutorName}
                     </Typography>
-                    {
-                      activePaymentTutorId &&
-                      <Typography sx={{ fontSize: 15, alignSelf: "flex-end" }} fontWeight={600}>
+                    {activePaymentTutorId && (
+                      <Typography
+                        sx={{ fontSize: 15, alignSelf: "flex-end" }}
+                        fontWeight={600}
+                      >
                         {`+91 ${activePaymentTutorId}`}
                       </Typography>
-                    }
+                    )}
                   </Stack>
                 </Stack>
-                {!tutorIsSubMerchant && (
+                {false && !tutorIsSubMerchant && (
                   <Stack direction="row" justifyContent="space-between">
                     <Typography
                       sx={{ fontSize: 15 }}
@@ -268,16 +268,12 @@ const CompletePaymentDialog = ({
                     </Typography>
                     <Stack alignItems={"flex-end"} direction="column">
                       <Typography sx={{ fontSize: 15 }} fontWeight={600}>
-                        {`${moment(`${sessionDetails.date}`).format(
-                          "MMMM D, YYYY"
-                        )}`}
+                        {`${moment(`${""}`).format("MMMM D, YYYY")}`}
                       </Typography>
                       <Typography sx={{ fontSize: 15 }} fontWeight={600}>
-                        {`${moment(`${sessionDetails.startTime}`).format(
-                          "h:mm A z"
-                        )} - ${moment(`${sessionDetails.endTime}`).format(
-                          "h:mm A z"
-                        )}`}
+                        {`${moment(`${""}`).format("h:mm A z")} - ${moment(
+                          `${""}`
+                        ).format("h:mm A z")}`}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -287,7 +283,7 @@ const CompletePaymentDialog = ({
               {!isPhoneScreen ? (
                 <></>
               ) : (
-                <AmountBreakupCard amount={paymentDetails.amount} />
+                <AmountBreakupCard amount={Number(activePaymentAmount)} />
               )}
 
               <Box>

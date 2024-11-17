@@ -29,8 +29,6 @@ interface TutorDetailsDialogProps {
   onClose: () => void;
   onSubmit: (value: TutorDetails) => void;
   onBack: () => void;
-  tutorDetails: TutorDetails;
-  paymentDetails: PaymentDetails;
 }
 
 const Transition = forwardRef(function Transition(props: SlideProps, ref) {
@@ -50,8 +48,6 @@ const TutorDetailsDialog = ({
   onClose,
   onSubmit,
   onBack,
-  tutorDetails,
-  paymentDetails,
 }: TutorDetailsDialogProps) => {
   const {
     handleSubmit,
@@ -60,12 +56,15 @@ const TutorDetailsDialog = ({
     formState: { errors, isValid },
   } = useForm<TutorDetails>({
     mode: "onChange",
-    defaultValues: tutorDetails,
   });
   const handleFormSubmit: SubmitHandler<TutorDetails> = (data) => {
     onSubmit(data);
   };
-
+  const tutorName = localStorage.getItem("activePaymentTutorName");
+  const tutorPhoneNumber = localStorage.getItem(
+    "activePaymentTutorPhoneNumber"
+  );
+  const amount = localStorage.getItem("activePaymentAmount");
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   return (
     <Dialog
@@ -136,10 +135,10 @@ const TutorDetailsDialog = ({
                   </Typography>
                   <Stack>
                     <Typography fontSize={22} fontWeight={650}>
-                      {tutorDetails.firstName} {tutorDetails.lastName}
+                      {tutorName}
                     </Typography>
                     <Typography fontSize={15} lineHeight={1.2}>
-                      {tutorDetails.phoneNumber}
+                      {tutorPhoneNumber}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -147,9 +146,7 @@ const TutorDetailsDialog = ({
                 <></>
               )}
               <Box>
-                <AmountBreakupCard
-                  amount={paymentDetails.amount}
-                ></AmountBreakupCard>
+                <AmountBreakupCard amount={Number(amount)}></AmountBreakupCard>
               </Box>
             </Stack>
           ) : (
@@ -165,7 +162,7 @@ const TutorDetailsDialog = ({
             <></>
           )}
           <Stack
-            spacing={!isPhoneScreen ? 0 : 5}
+            spacing={!isPhoneScreen ? 2 : 5}
             sx={
               !isPhoneScreen
                 ? { justifyContent: "space-between", width: "40%", pt: 6 }
@@ -205,267 +202,22 @@ const TutorDetailsDialog = ({
                     }
               }
             >
-              {!isPhoneScreen ? (
-                <>
-                  {" "}
-                  <Stack>
-                    <Typography fontSize={21} fontWeight={600} align="center">
-                      Tutor Details
-                    </Typography>
-                    <Typography fontSize={10} fontWeight={550} align="center">
-                      Provide relevant details for their onboarding
-                    </Typography>
-                  </Stack>
-                  <Stack spacing={2}>
-                    <Controller
-                      name="firstName"
-                      control={control}
-                      rules={{ required: "First Name is required" }}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          fullWidth
-                          label="First Name"
-                          variant="outlined"
-                          size="small"
-                          error={!!errors.firstName}
-                          helperText={
-                            errors.firstName ? errors.firstName.message : ""
-                          }
-                          sx={{
-                            mb: 0,
-                            "& .MuiInputLabel-root": {
-                              transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                            },
-                            "& .MuiInputBase-root": {
-                              marginTop: "16px", // Add space between label and input box
-                            },
-                            "&:MuiInputBase-input": {
-                              fontSize: 10,
-                            },
-                            "& legend": {
-                              width: 0,
-                            },
-                          }}
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="lastName"
-                      control={control}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          fullWidth
-                          label="Last Name"
-                          variant="outlined"
-                          size="small"
-                          sx={{
-                            mb: 0,
-                            "& .MuiInputLabel-root": {
-                              transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                            },
-                            "& .MuiInputBase-root": {
-                              marginTop: "16px", // Add space between label and input box
-                            },
-                            "&:MuiInputBase-input": {
-                              fontSize: 10,
-                            },
-                            "& legend": {
-                              width: 0,
-                            },
-                          }}
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="panNumber"
-                      control={control}
-                      rules={{
-                        required: "This field is required",
-                        pattern: {
-                          value: /^[A-Z]{5}[0-9]{4}[A-Z]$/,
-                          message: "Invalid Pan",
-                        },
-                      }}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          fullWidth
-                          label="Pan"
-                          variant="outlined"
-                          size="small"
-                          error={!!errors.panNumber}
-                          helperText={
-                            errors.panNumber ? errors.panNumber.message : ""
-                          }
-                          sx={{
-                            mb: 0,
-                            "& .MuiInputLabel-root": {
-                              transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                            },
-                            "& .MuiInputBase-root": {
-                              marginTop: "16px", // Add space between label and input box
-                            },
-                            "&:MuiInputBase-input": {
-                              fontSize: 10,
-                            },
-                            "& legend": {
-                              width: 0,
-                            },
-                          }}
-                        />
-                      )}
-                    />
-                  </Stack>
-                </>
-              ) : (
-                <Stack spacing={6}>
-                  <Stack>
-                    <Typography fontSize={23} fontWeight={600} align="center">
-                      Tutor Details
-                    </Typography>
-                    <Typography
-                      fontSize={12}
-                      fontWeight={550}
-                      align="center"
-                      lineHeight={1.2}
-                    >
-                      Provide relevant details for their onboarding
-                    </Typography>
-                  </Stack>
-                  {/* <Stack
-                    spacing={!isPhoneScreen ? 5 : 3}
-                    width="95%"
-                    alignSelf="center"
-                    alignItems="center"
+              <Stack spacing={6}>
+                <Stack>
+                  <Typography fontSize={23} fontWeight={600} align="center">
+                    Tutor Details
+                  </Typography>
+                  <Typography
+                    fontSize={12}
+                    fontWeight={550}
+                    align="center"
+                    lineHeight={1.2}
                   >
-                    <Controller
-                      name="firstName"
-                      control={control}
-                      rules={{ required: "First Name is required" }}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          fullWidth
-                          label="First Name"
-                          variant="outlined"
-                          size="small"
-                          error={!!errors.firstName}
-                          helperText={
-                            errors.firstName ? errors.firstName.message : ""
-                          }
-                          sx={{
-                            mb: 0,
-                            "& .MuiInputLabel-root": {
-                              transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                            },
-                            "& .MuiInputBase-root": {
-                              marginTop: "16px", // Add space between label and input box
-                            },
-                            "&:MuiInputBase-input": {
-                              fontSize: 10,
-                            },
-                            "& legend": {
-                              width: 0,
-                            },
-                          }}
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="lastName"
-                      control={control}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          fullWidth
-                          label="Last Name"
-                          variant="outlined"
-                          size="small"
-                          sx={{
-                            mb: 0,
-                            "& .MuiInputLabel-root": {
-                              transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                            },
-                            "& .MuiInputBase-root": {
-                              marginTop: "16px", // Add space between label and input box
-                            },
-                            "&:MuiInputBase-input": {
-                              fontSize: 10,
-                            },
-                            "& legend": {
-                              width: 0,
-                            },
-                          }}
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="panNumber"
-                      control={control}
-                      rules={{
-                        required: "This field is required",
-                        pattern: {
-                          value: /^[A-Z]{5}[0-9]{4}[A-Z]$/,
-                          message: "Invalid Pan",
-                        },
-                      }}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          fullWidth
-                          label="Pan"
-                          variant="outlined"
-                          size="small"
-                          error={!!errors.panNumber}
-                          helperText={
-                            errors.panNumber ? errors.panNumber.message : ""
-                          }
-                          sx={{
-                            mb: 0,
-                            "& .MuiInputLabel-root": {
-                              transform: "translate(0, -6px) scale(0.8)", // Move the label above
-                            },
-                            "& .MuiInputBase-root": {
-                              marginTop: "16px", // Add space between label and input box
-                            },
-                            "&:MuiInputBase-input": {
-                              fontSize: 10,
-                            },
-                            "& legend": {
-                              width: 0,
-                            },
-                          }}
-                        />
-                      )}
-                    />
-                  </Stack> */}
-                  <PersonalDetails onSuccess={handleSubmit(handleFormSubmit)} />
+                    Provide relevant details for their onboarding
+                  </Typography>
                 </Stack>
-              )}
-              {!isPhoneScreen ? (
-                <Box>
-                  <Button
-                    variant="contained"
-                    onClick={handleSubmit(handleFormSubmit)}
-                    fullWidth
-                    disabled={!isValid}
-                    sx={{
-                      backgroundColor: "#507FFD",
-                      borderRadius: 7,
-                      fontSize: 15,
-                      fontWeight: "bold",
-                      paddingLeft: 3,
-                      paddingRight: 3,
-                    }}
-                  >
-                    Next
-                  </Button>
-                </Box>
-              ) : (
-                <></>
-              )}
+                <PersonalDetails onSuccess={handleSubmit(handleFormSubmit)} />
+              </Stack>
             </Stack>
           </Stack>
         </Stack>

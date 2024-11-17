@@ -25,22 +25,10 @@ const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
   name,
   phoneNumber,
 }) => {
-  const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
-    firstName: "",
-    lastName: "",
-    panNumber: "",
-    phoneNumber: "",
-  });
   const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
   const { data: tutorData } = useGetUserDetailsByPhoneQuery(phoneNumber);
 
   const handleClick = () => {
-    setTutorDetails({
-      firstName: tutorData?.[0]?.first_name ?? "",
-      lastName: tutorData?.[0]?.last_name ?? "",
-      panNumber: tutorData?.[0]?.pan ?? "",
-      phoneNumber: tutorData?.[0]?.phone ?? "",
-    });
     setIsPaymentFlowActive(true);
   };
   const handleClosePaymentFlow = () => {
@@ -72,7 +60,7 @@ const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
         <PaymentFlow
           open={isPaymentFlowActive}
           onClose={handleClosePaymentFlow}
-          tutorDetailsProp={tutorDetails}
+          payAgainPhoneNumber={phoneNumber}
         />
       )}
     </Stack>
@@ -86,17 +74,9 @@ const PaymentBannerCard: React.FC = () => {
     limit: 1000,
   });
   const [recentPayments, setRecentPayments] = useState<TutorDetails[]>([]);
-
-  const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
-    firstName: "",
-    lastName: "",
-    panNumber: "",
-    phoneNumber: "",
-  });
   const handleClick = () => {
     setIsPaymentFlowActive(true);
   };
-
   const handleClosePaymentFlow = () => {
     setIsPaymentFlowActive(false);
   };
@@ -216,7 +196,9 @@ const PaymentBannerCard: React.FC = () => {
                   textTransform: "none",
                 }}
               >
-                <Typography fontSize={14} fontWeight={"bold"}>Make a new Payment</Typography>
+                <Typography fontSize={14} fontWeight={"bold"}>
+                  Make a new Payment
+                </Typography>
               </Button>
             )}
             <Stack
@@ -280,7 +262,6 @@ const PaymentBannerCard: React.FC = () => {
         <PaymentFlow
           open={isPaymentFlowActive}
           onClose={handleClosePaymentFlow}
-          tutorDetailsProp={tutorDetails}
         />
       )}
     </Box>

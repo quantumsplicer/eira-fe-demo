@@ -13,12 +13,6 @@ import { WHATSAPP_LINK } from "../../../components/GetHelp";
 const HomePage: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
-  const [tutorDetails, setTutorDetails] = useState<TutorDetails>({
-    firstName: "",
-    lastName: "",
-    panNumber: "",
-    phoneNumber: "",
-  });
 
   return (
     <Stack
@@ -67,7 +61,7 @@ const HomePage: React.FC = () => {
               component="img"
               src={DashboardBannerArt1}
               width={"100%"}
-              onClick={() => setIsPaymentFlowActive(true)}
+              onClick={() => window.open(WHATSAPP_LINK, "_blank")}
               sx={{ cursor: "pointer" }}
             />
             <Box
@@ -85,7 +79,6 @@ const HomePage: React.FC = () => {
         <PaymentFlow
           open={isPaymentFlowActive}
           onClose={() => setIsPaymentFlowActive(false)}
-          tutorDetailsProp={tutorDetails}
         />
       )}
     </Stack>

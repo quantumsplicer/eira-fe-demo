@@ -499,12 +499,6 @@ const StudentDashboard: React.FC = () => {
         <PaymentFlow
           open={isPaymentFlowActive}
           onClose={handleClosePaymentFlow}
-          tutorDetailsProp={{
-            firstName: "",
-            lastName: "",
-            panNumber: "",
-            phoneNumber: "",
-          }}
         />
       )}
 
