@@ -144,17 +144,11 @@ const CurrentLimitCard: React.FC = () => {
           </Stack>
           <Stack direction="row" spacing={1}>
             <Typography
-              fontSize={!isPhoneScreen ? 12 : "0.9rem"}
+              fontSize={!isPhoneScreen ? 9 : "0.7rem"}
               color="#898989"
             >
-              Settlement in
-            </Typography>
-            <Typography
-              fontSize={!isPhoneScreen ? 12 : "1rem"}
-              fontWeight="bold"
-              color="#898989"
-            >
-              24 hours
+              Payments settles in your bank account within <b>24 hours</b>{" "}
+              (excluding public holidays)
             </Typography>
           </Stack>
         </Stack>
@@ -172,41 +166,41 @@ const CurrentLimitCard: React.FC = () => {
             sx={!isPhoneScreen ? {} : { width: "100%", textAlign: "center" }}
           >
             {onboardingStatus
-              ? "Congratulations! Your limit has been increased to ₹50,000"
+              ? "Congratulations! You can now accept payments up to ₹50,000"
               : "Complete KYC to make a transaction of upto ₹50,000"}
           </Typography>
-          <Button
-            onClick={() => {
-              localStorage.setItem("activeFlow", "tutorKyc");
-              navigate("/tutor/complete-kyc");
-            }}
-            variant="contained"
-            sx={
-              !isPhoneScreen
-                ? {
-                    backgroundColor: "#507FFD",
-                    borderRadius: 3,
-                    fontSize: 11,
-                    fontWeight: "bold",
-                    width: 150,
-                    height: 35,
-                    textTransform: "none",
-                  }
-                : {
-                    backgroundColor: "#507FFD",
-                    borderRadius: 3,
-                    fontSize: "0.75rem",
-                    fontWeight: "bold",
-                    width: 150,
-                    height: 35,
-                    textTransform: "none",
-                  }
-            }
-          >
-            {onboardingStatus
-              ? "You've already completed your KYC"
-              : "Complete KYC"}
-          </Button>
+          {!onboardingStatus && (
+            <Button
+              onClick={() => {
+                localStorage.setItem("activeFlow", "tutorKyc");
+                navigate("/tutor/complete-kyc");
+              }}
+              variant="contained"
+              sx={
+                !isPhoneScreen
+                  ? {
+                      backgroundColor: "#507FFD",
+                      borderRadius: 3,
+                      fontSize: 11,
+                      fontWeight: "bold",
+                      width: 150,
+                      height: 35,
+                      textTransform: "none",
+                    }
+                  : {
+                      backgroundColor: "#507FFD",
+                      borderRadius: 3,
+                      fontSize: "0.75rem",
+                      fontWeight: "bold",
+                      width: 150,
+                      height: 35,
+                      textTransform: "none",
+                    }
+              }
+            >
+              Complete KYC
+            </Button>
+          )}
         </Stack>
       </Stack>
     </Box>

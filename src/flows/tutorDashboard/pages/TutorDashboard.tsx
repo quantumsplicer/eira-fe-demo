@@ -184,7 +184,6 @@ const TutorDashboard: React.FC = () => {
       </Button>
     );
   };
-
   return (
     <ThemeProvider theme={theme}>
       {isSessionExpired ? (
@@ -335,7 +334,7 @@ const TutorDashboard: React.FC = () => {
                         onClick={() => {
                           handleClickNavOption(entry);
                         }}
-                        disabled={index === 3 || index === 4 ? true : false}
+                        disabled={index === 2 || index === 3 ? true : false}
                         sx={{
                           backgroundColor:
                             entry?.subpage && subpage === entry.subpage
@@ -472,7 +471,7 @@ const TutorDashboard: React.FC = () => {
                           onClick={() => {
                             handleClickNavOption(entry);
                           }}
-                          disabled={index === 3 || index === 4 ? true : false}
+                          disabled={index === 2 || index === 3 ? true : false}
                           sx={{
                             backgroundColor:
                               entry.subpage && subpage === entry.subpage
@@ -632,17 +631,27 @@ const TutorDashboard: React.FC = () => {
           }
         />
       )}
-      {isPgOnboardingPending && (
-        <StatusDialog
-          open={isPgOnboardingPending}
-          onClose={() => {}}
-          type="failure"
-          headingMessage="Pending KYC verification!!"
-          subHeadingMessage="We'll notify you once your KYC is verified. You'll be able to accept payments after that."
-          preventDialogClose={false}
-          CustomDialogButton={ScheduleClassButton}
-        />
-      )}
+      {isPgOnboardingPending &&
+        (!isPhoneScreen ? (
+          <StatusDialog
+            open={isPgOnboardingPending}
+            onClose={() => {}}
+            type="info"
+            headingMessage="Pending KYC verification!!"
+            subHeadingMessage="We'll notify you once your KYC is verified. You'll be able to accept payments after that."
+            preventDialogClose={true}
+            CustomDialogButton={() => <></>}
+          />
+        ) : (
+          <StatusDrawer
+            open={isPgOnboardingPending}
+            type="info"
+            headingMessage=""
+            subHeadingMessage1="We'll notify you once your KYC is verified. You'll be able to accept payments after that."
+            preventDrawerClose={true}
+            CustomDrawerButton={() => <></>}
+          />
+        ))}
     </ThemeProvider>
   );
 };
