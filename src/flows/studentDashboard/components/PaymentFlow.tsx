@@ -44,6 +44,12 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
   payAgainPhoneNumber,
 }) => {
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
+
+  const { data: tutorData } = useGetUserDetailsByPhoneQuery(
+    payAgainPhoneNumber as string,
+    { skip: !payAgainPhoneNumber }
+  );
+
   const [activeDialog, setActiveDialog] = useState<DialogName>(DialogName.None);
   const [isPayeeStudent, setIsPayeeStudent] = useState<boolean>(false);
   const [stepOnBack, setStepOnBack] = useState<DialogName>(DialogName.None);
@@ -55,6 +61,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
     panNumber: tutorData?.[0]?.pan ?? "",
     phoneNumber: tutorData?.[0]?.phone ?? "",
   });
+
   const [sessionDetails, setSessionDetails] = useState<SessionDetails>({
     sessionTitle: "",
     description: "",
@@ -69,10 +76,6 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
   });
 
   const { makePayment } = usePayment();
-  
-  const { data: tutorData } = useGetUserDetailsByPhoneQuery(
-    payAgainPhoneNumber ?? ""
-  );
 
   const [getTutorDetials, { isLoading: tutorDetailsIsLoading }] =
     useLazyGetUserDetailsByPhoneQuery();
@@ -184,7 +187,6 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
   };
 
   useEffect(() => {
-    console.log("Component rerendered because open is ", open);
     if (open) {
       setActiveDialog(DialogName.PaymentDetails);
     } else {
