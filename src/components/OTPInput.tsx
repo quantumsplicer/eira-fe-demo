@@ -182,9 +182,15 @@ const OTPInput = ({
     return () => clearTimeout(timer);
   }, [activeIndex]);
 
+  useEffect(() => {
+    if(otp.length === 4) {
+      handleSubmit()
+    }
+  }, [otp.length])
+
   return (
     <Stack alignItems={"center"}>
-      <Typography fontWeight={"500"} variant="h6" mt={2}>
+      <Typography fontWeight={"500"} variant="h6" mt={notPhoneScreen ? 8 : 2}>
         Verify Phone Number
       </Typography>
       <Typography
@@ -260,7 +266,7 @@ const OTPInput = ({
       >
         Change phone number
       </Typography>
-      <Button
+      {/* <Button
         variant="contained"
         onClick={handleSubmit}
         disabled={otp.length !== 4}
@@ -275,7 +281,7 @@ const OTPInput = ({
         }}
       >
         Verify OTP
-      </Button>
+      </Button> */}
     </Stack>
   );
 };
