@@ -65,7 +65,7 @@ const TutorDashboard: React.FC = () => {
     return [
       <HomeIcon key="home" />,
       <InsertLinkOutlinedIcon key="link" />,
-      <SessionHistoryIcon key="history" />,
+      // <SessionHistoryIcon key="history" />,
       <InvoiceIcon key="invoice" />,
       <MarketingIcon key="marketing" />,
       <QuestionMarkIcon key="help" />,
@@ -381,43 +381,32 @@ const TutorDashboard: React.FC = () => {
                 </List>
                 <Divider />
                 <Stack
-                  justifyContent="center"
-                  py={4}
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  py={2}
+                  px={4}
                   width="100%"
                   position="absolute"
-                  bottom={0}
+                  bottom={10}
+                  sx={{
+                    cursor: "pointer",
+                    "&:hover": { backgroundColor: "#FFEEEE" },
+                  }}
+                  onClick={() => {
+                    handleLogout();
+                  }}
                 >
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      handleLogout();
-                    }}
-                    sx={{
-                      backgroundColor: "white",
-                      width: "100%",
-                      boxShadow: 0,
-                      borderRadius: 0,
-                      "&:hover": {
-                        backgroundColor: "white",
-                      },
-                      "&:active": {
-                        backgroundColor: "white",
-                      },
-                    }}
+                  <LogoutIcon color="error" fontSize="small" sx={{ mr: 2 }} />
+                  <Typography
+                    fontSize={14}
+                    fontWeight={600}
+                    color="error"
+                    textTransform="none"
+                    pl={1}
                   >
-                    <Stack direction="row" alignItems="center" spacing={2}>
-                      <LogoutIcon color="error" fontSize="small" />
-                      <Typography
-                        fontSize={18}
-                        fontWeight={600}
-                        color="error"
-                        textTransform="none"
-                        pl={1}
-                      >
-                        Logout
-                      </Typography>
-                    </Stack>
-                  </Button>
+                    Logout
+                  </Typography>
                 </Stack>
               </Box>
             </Drawer>
@@ -508,37 +497,33 @@ const TutorDashboard: React.FC = () => {
                   </List>
                 </Stack>
 
-                <Stack justifyContent="center" py={4}>
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      handleLogout();
-                    }}
-                    sx={{
-                      backgroundColor: "white",
-                      width: "50%",
-                      boxShadow: 0,
-                      "&:hover": {
-                        backgroundColor: "white",
-                      },
-                      "&:active": {
-                        backgroundColor: "white",
-                      },
-                    }}
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  py={2}
+                  px={4}
+                  width="100%"
+                  position="absolute"
+                  bottom={10}
+                  sx={{
+                    cursor: "pointer",
+                    "&:hover": { backgroundColor: "#FFEEEE" },
+                  }}
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                >
+                  <LogoutIcon color="error" fontSize="small" sx={{ mr: 2 }} />
+                  <Typography
+                    fontSize={18}
+                    fontWeight={600}
+                    color="error"
+                    textTransform="none"
+                    pl={1}
                   >
-                    <Stack direction="row" alignItems="center" spacing={2}>
-                      <LogoutIcon color="error" fontSize="small" />
-                      <Typography
-                        fontSize={18}
-                        fontWeight={600}
-                        color="error"
-                        textTransform="none"
-                        pl={1}
-                      >
-                        Logout
-                      </Typography>
-                    </Stack>
-                  </Button>
+                    Logout
+                  </Typography>
                 </Stack>
               </Stack>
             </Drawer>
@@ -562,7 +547,6 @@ const TutorDashboard: React.FC = () => {
                   }
             }
           >
-            <Toolbar />
             {!isPhoneScreen ? <Toolbar /> : <></>}
             {displaySubpage()}
           </Box>

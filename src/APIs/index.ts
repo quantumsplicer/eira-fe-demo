@@ -8,9 +8,12 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { NavigateFunction } from "react-router-dom";
 
-const BASE_URL = "https://api.eira.club/";
-const PROD_SITE_URL = "https://eira.club/";
-const DEV_SITE_URL = "http://localhost:3000/";
+const environment = window.location.pathname.includes("app.eira.club") ? "prod" : "dev";
+
+const BASE_URL =
+  environment === "prod"
+    ? "https://eira-production-bmuwffxdvq-el.a.run.app/"
+    : "https://dev.api.eira.club/";
 
 export interface ApiResponse {
   message?: string;

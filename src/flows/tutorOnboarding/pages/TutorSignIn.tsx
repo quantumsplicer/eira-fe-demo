@@ -11,6 +11,7 @@ import { useLazyGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import { useNavigate } from "react-router-dom";
 import { useOnboarding } from "../../../customHooks/useOnboarding";
 import GetHelp from "../../../components/GetHelp";
+import EiraBack from "../../../assets/images/svg/EiraBack.svg";
 
 const TutorSignIn: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -61,8 +62,18 @@ const TutorSignIn: React.FC = () => {
   };
 
   return (
-    <Box>
-      {notPhoneScreen && <LoginBg />}
+    <Box
+      pt={notPhoneScreen ? 5 : 0}
+      pb={notPhoneScreen ? 5 : 0}
+      sx={{
+        backgroundImage: `url(${EiraBack})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: 'fixed',
+        minHeight: "100vh",
+        width: "100vw",
+      }}
+    >
       <Box
         position={notPhoneScreen ? "absolute" : "static"}
         right={35}
