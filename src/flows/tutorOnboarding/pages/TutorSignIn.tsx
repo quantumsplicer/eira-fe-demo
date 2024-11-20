@@ -181,7 +181,7 @@ const TutorSignIn: React.FC = () => {
                 onChangePhoneNumber={() => setIsDialogOpen(false)}
               />
             )}
-            {notPhoneScreen && (
+            {/* {notPhoneScreen && (
               <Stack
                 direction="row"
                 spacing={1}
@@ -214,7 +214,7 @@ const TutorSignIn: React.FC = () => {
                   </Typography>
                 </a>
               </Stack>
-            )}
+            )} */}
           </Stack>
         </Stack>
       </Box>

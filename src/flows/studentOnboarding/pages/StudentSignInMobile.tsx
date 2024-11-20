@@ -282,7 +282,7 @@ const StudentSignInMobile = () => {
                     borderTopRightRadius: 20,
                     width: "100%",
                     boxSizing: "border-box",
-                    height: "500px",
+                    height: "400px",
                   },
                 }}
                 anchor="bottom"
