@@ -18,8 +18,9 @@ export const usePayment = () => {
   const [createSession, { isLoading: createSessionIsLoading }] = useCreateSessionMutation();
 
   var initializeSDK = async function () {
+    const environment = window.location.host.includes("app.eira.club") ? "prod" : "dev";
     cashfree = await load({
-      mode: "sandbox",
+      mode: environment === "prod" ? "production" : "sandbox",
     });
   };
   initializeSDK();
