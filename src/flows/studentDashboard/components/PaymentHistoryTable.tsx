@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -21,10 +21,10 @@ import StatusTag from "../../tutorDashboard/components/StatusTag";
 import { Virtuoso } from "react-virtuoso";
 import PaymentInfo from "../../../components/PaymentInfo";
 import CloseIcon from "@mui/icons-material/Close";
-import { useGetTransactionsListQuery } from "../../../APIs/definitions/transactionsList";
+import { useGetTransactionsListQuery, useLazyGetTransactionsListQuery } from "../../../APIs/definitions/transactionsList";
 import PaymentFlow from "./PaymentFlow";
 import { PaymentDetails, TutorDetails } from "../interfaces";
-import { Transaction } from "../../tutorDashboard/interfaces";
+import { Transaction, TransactionsResponse } from "../../tutorDashboard/interfaces";
 import { PaymentItemDrawer } from "./PaymentItemDrawer";
 
 const lightTheme = createTheme({ palette: { mode: "light" } });
@@ -100,9 +100,22 @@ const PaymentHistoryTableMobile = ({
 
 const PaymentHistoryTable: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  const { data: transactionDetails } = useGetTransactionsListQuery({
-    limit: 1000,
-  });
+  // const { data: transactionDetails } = useGetTransactionsListQuery({
+  //   limit: 1000,
+  // });
+  const [transactionDetails, setTransactionDetails] = useState<TransactionsResponse|null>(null);
+
+  const [
+    getTransactionDetails
+  ] = useLazyGetTransactionsListQuery();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let transactionData
+      await getTransactionDetails({limit: 1000}).unwrap().then(res => setTransactionDetails(res)).catch()
+    }
+    fetchData();
+  }, [])
 
   const theme = useTheme();
   const baseBackgroundColor =
