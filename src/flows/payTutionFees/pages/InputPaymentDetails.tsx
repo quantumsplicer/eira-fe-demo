@@ -114,6 +114,7 @@ const InputPaymentDetails: React.FC = () => {
 
           switch (pgOnboardingStatus) {
             case "NONE":
+            case "INITIATED":
             case "EMAIL_VERIFIED":
             case "MIN_KYC_PENDING":
               setShowMessage(true);
@@ -129,6 +130,7 @@ const InputPaymentDetails: React.FC = () => {
               break;
             case "MIN_KYC_APPROVED":
             case "ACTIVE":
+              localStorage.setItem("activePaymentTutorName", `${tutor.first_name} ${tutor.last_name}`);
               navigate("/pay/review");
               break;
             default:
