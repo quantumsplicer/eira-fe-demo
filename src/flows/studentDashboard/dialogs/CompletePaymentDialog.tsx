@@ -28,12 +28,14 @@ interface CompletePaymentDialogProps {
   onClose: () => void;
   onSubmit: () => void;
   onBack: () => void;
+  errorMessage: string|null;
 }
 const CompletePaymentDialog = ({
   open,
   onClose,
   onSubmit,
   onBack,
+  errorMessage
 }: CompletePaymentDialogProps) => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
 
@@ -243,7 +245,7 @@ const CompletePaymentDialog = ({
                   >
                     Account Holder:
                   </Typography>
-                  <Stack direction="column">
+                  <Stack direction="column" alignItems={"flex-end"}>
                     <Typography sx={{ fontSize: 15 }} fontWeight={600}>
                       {activePaymentTutorName}
                     </Typography>
@@ -287,6 +289,11 @@ const CompletePaymentDialog = ({
               )}
 
               <Box>
+                {errorMessage && (
+                  <Typography fontSize={14} color={"red"} textAlign={"center"} mb={2}>
+                    {errorMessage}
+                  </Typography>
+                )}
                 <Button
                   variant="contained"
                   onClick={onSubmit}

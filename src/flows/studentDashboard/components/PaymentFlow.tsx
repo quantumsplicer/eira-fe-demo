@@ -76,7 +76,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
     amount: 0,
   });
 
-  const { makePayment } = usePayment();
+  const { makePayment, errorMessage } = usePayment();
 
   const [getTutorDetials, { isLoading: tutorDetailsIsLoading }] =
     useLazyGetUserDetailsByPhoneQuery();
@@ -117,6 +117,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
 
           switch (pgOnboardingStatus) {
             case "NONE":
+            case "INITIATED":
             case "EMAIL_VERIFIED":
             case "MIN_KYC_PENDING":
               setShowMessage(true);
@@ -262,6 +263,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
           onSubmit={() => {
             makePayment();
           }}
+          errorMessage={errorMessage ? errorMessage : null}
           onBack={() => {
             setActiveDialog(stepOnBack);
             setStepOnBack(DialogName.PaymentDetails);

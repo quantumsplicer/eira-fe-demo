@@ -21,4 +21,4 @@ export const transactionsList = postgresApi.injectEndpoints({
   }),
 });
 
-export const { useGetTransactionsListQuery } = transactionsList;
+export const { useGetTransactionsListQuery, useLazyGetTransactionsListQuery } = transactionsList;
