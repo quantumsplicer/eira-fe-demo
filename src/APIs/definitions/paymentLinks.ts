@@ -77,10 +77,14 @@ export const paymentLinksApi = postgresApi.injectEndpoints({
         body,
       }),
       onQueryStarted: async (_, { queryFulfilled }) => {
-        const { data } = await queryFulfilled;
+        try {
+          const { data } = await queryFulfilled;
 
-        // Set order id in local storage
-        data?.id && localStorage.setItem("order_id", data?.id);
+          // Set order id in local storage
+          data?.id && localStorage.setItem("order_id", data?.id);
+        } catch (err) {
+          console.log(err);
+        }
       },
     }),
 

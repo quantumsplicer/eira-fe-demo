@@ -54,7 +54,6 @@ export const useOnboarding = () => {
     setCheckProcessIsLoading(true);
     const userDetails = await fetchUserDetails();
     const bankAccountDetails = await fetchBankAccountDetails();
-    const activeFlow = localStorage.getItem("activeFlow");
     const isKycPending = userDetails?.pg_onboarding_status.length === 0 || 
       (
         userDetails?.pg_onboarding_status && 
@@ -63,11 +62,12 @@ export const useOnboarding = () => {
       );
     const isKycSubmitted = userDetails?.pg_onboarding_status && 
       userDetails?.pg_onboarding_status.length > 0 && 
-      userDetails.pg_onboarding_status[0].status === "SUBMITTED"
+      userDetails.pg_onboarding_status[0].status === "MIN_KYC_SUBMITTED"
     const isUserAadhaarVerified = userDetails?.pg_onboarding_status && 
       userDetails?.pg_onboarding_status.length > 0 && 
-      userDetails.pg_onboarding_status[0].status !== "EMAIL_VERIFIED" && 
-      userDetails.pg_onboarding_status[0].status !== "MIN_KYC_PENDING";
+      (userDetails.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" || userDetails.pg_onboarding_status[0].status !== "ACTIVE")
+      // userDetails.pg_onboarding_status[0].status !== "EMAIL_VERIFIED" && 
+      // userDetails.pg_onboarding_status[0].status !== "MIN_KYC_PENDING";
 
     setCheckProcessIsLoading(false);
 

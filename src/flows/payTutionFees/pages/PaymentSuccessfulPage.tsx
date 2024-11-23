@@ -41,6 +41,7 @@ const PaymentSuccessfulPage = () => {
   }
 
   useEffect(() => {
+    localStorage.removeItem("activePaymentTotalAmount");
     localStorage.removeItem("activePaymentAmount");
     localStorage.removeItem("activePaymentPayeeUserId");
     localStorage.removeItem("activePaymentTutorId");

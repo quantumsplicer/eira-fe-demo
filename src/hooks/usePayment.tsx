@@ -6,6 +6,7 @@ import { useCreateSessionMutation } from "../APIs/definitions/session";
 
 export const usePayment = () => {
   const activePaymentAmount = localStorage.getItem("activePaymentAmount");
+  const activePaymentTotalAmount = localStorage.getItem("activePaymentTotalAmount");
   const activePaymentPayeeUserId = localStorage.getItem(
     "activePaymentPayeeUserId"
   );
@@ -54,7 +55,7 @@ export const usePayment = () => {
   const makePayment = () => {
     setErrorMessage(null);
     createOrder({
-      amount: Number(activePaymentAmount),
+      amount: Number(activePaymentTotalAmount),
       payer_id: userDetails ? userDetails.id : undefined,
       payee_id: activePaymentPayeeUserId ?? undefined,
     })
