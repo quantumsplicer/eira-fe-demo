@@ -216,6 +216,9 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
             localStorage.setItem("activePaymentTutorId", data?.phoneNumber);
             handleTutorExistenceCheck(data?.phoneNumber);
           }}
+          onInputNumber={(value) => {
+            handleTutorExistenceCheck(value);
+          }}
           isPayeeStudent={isPayeeStudent}
           phoneNumberProp={tutorDetails.phoneNumber}
           submitButtonIsLoading={tutorDetailsIsLoading}

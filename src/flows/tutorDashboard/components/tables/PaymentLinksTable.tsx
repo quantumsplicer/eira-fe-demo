@@ -94,6 +94,16 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
       : "rgba(250, 250, 250, 1)";
 
   const columnHelper = createMRTColumnHelper<PaymentLinkDetails>();
+  const copyToClipboard = (paymentLink: string) => {
+    navigator.clipboard
+      .writeText(paymentLink)
+      .then(() => {
+        alert("Payment Link copied");
+      })
+      .catch((err: Error) => {
+        console.error("Failed to copy payment link: ", err);
+      });
+  };
   const columns = [
     columnHelper.accessor("payer", {
       header: "Student Name",
@@ -132,6 +142,19 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
       header: "Status",
       enableHiding: false,
       Cell: ({ cell }) => <StatusTag cellValue={cell.getValue<string>()} />,
+    }),
+    columnHelper.accessor("url", {
+      header: "Payment Link",
+      enableHiding: false,
+      Cell: ({ cell }) => (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => copyToClipboard(cell.getValue<string>())}
+        >
+          Copy Link
+        </Button>
+      ),
     }),
   ];
 
