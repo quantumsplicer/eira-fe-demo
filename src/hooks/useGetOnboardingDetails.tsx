@@ -72,9 +72,14 @@ const useGetOnboardingDetails = () => {
         case "DynamicLinkFlow":
           localStorage.setItem("isTutorEiraOnboarded", "true");
           try {
-            const activeFlowQuery = localStorage.getItem("activeFlowQuery");
+            // const activeFlowQuery = localStorage.getItem("activeFlowQuery");
+            const activeFlowUrlParts = localStorage.getItem("activeFlowUrl")?.split('/')
+            let linkId;
+            if (activeFlowUrlParts) {
+              linkId = activeFlowUrlParts.at(-1) === "" ? activeFlowUrlParts.at(-2) : activeFlowUrlParts.at(-1)
+            }
             const paymentLinkInfo = await getPaymentLinkInfo(
-              activeFlowQuery?.split("=").at(-1) as string
+              linkId as string
             ).unwrap().then().catch();
 
             localStorage.setItem(
@@ -94,19 +99,22 @@ const useGetOnboardingDetails = () => {
               paymentLinkInfo?.payee
             )
 
-            let isTutorPgOnboarded = false;
             if (paymentLinkInfo?.payee) {
+              let isTutorPgOnboarded = false;
               getTutorDetailsById(paymentLinkInfo.payee)
                 .unwrap()
                 .then(res => {
-                  isTutorPgOnboarded = res.pg_onboarding_status && 
-                    res.pg_onboarding_status.length > 0 &&
+                  isTutorPgOnboarded = res?.pg_onboarding_status.length > 0 &&
                     (res.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" || res.pg_onboarding_status[0].status === "ACTIVE");
                 })
                 .catch()
+                .finally(() => 
+                  isTutorPgOnboarded ? navigate("/pay/review") : navigate("/page-not-found")
+                  // isTutorPgOnboarded ? navigate("/pay/review") : navigate("/pay/create-session")
+                )
+            } else {
+              navigate("/page-not-found")
             }
-            
-            isTutorPgOnboarded ? navigate("/pay/review") : navigate("/pay/create-session");
           } catch {
             navigate("/page-not-found");
             console.error("Error fetching payment link info");

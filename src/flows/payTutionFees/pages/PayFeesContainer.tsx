@@ -38,7 +38,7 @@ const PayFeesContainer: React.FC = () => {
     else localStorage.setItem("activeFlow", "defaultFlow");
 
     localStorage.setItem("activeFlowUrl", window.location.pathname);
-    localStorage.setItem("activeFlowQuery", window.location.search);
+    // localStorage.setItem("activeFlowQuery", window.location.search);
 
     console.log("asdfadsfsadf");
     checkCurrentStudentOnboardingState();

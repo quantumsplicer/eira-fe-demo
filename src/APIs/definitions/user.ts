@@ -62,6 +62,14 @@ export const userApi = postgresApi.injectEndpoints({
       }),
     }),
 
+    getUserByUserNameUnsafe: builder.query<UserDetails[], string>({
+      query: (username) => ({
+        url: `user/search-action`,
+        method: "GET",
+        params: { username },
+      }),
+    }),
+
     registerTutorByStudent: builder.mutation<UserDetails, Partial<UserDetails>>(
       {
         query: (body) => ({
@@ -100,4 +108,5 @@ export const {
   useLazyGetUserByUserNameQuery,
   useLazyUserSearchByIdQuery,
   useRegisterStudentByTutorMutation,
+  useGetUserByUserNameUnsafeQuery
 } = userApi;

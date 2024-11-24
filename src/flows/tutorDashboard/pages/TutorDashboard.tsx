@@ -615,7 +615,7 @@ const TutorDashboard: React.FC = () => {
           }
         />
       )}
-      {isPgOnboardingPending &&
+      {isPgOnboardingPending && !isSessionExpired &&
         (!isPhoneScreen ? (
           <StatusDialog
             open={isPgOnboardingPending}
@@ -630,7 +630,7 @@ const TutorDashboard: React.FC = () => {
           <StatusDrawer
             open={isPgOnboardingPending}
             type="info"
-            headingMessage=""
+            headingMessage="Pending KYC verification!!"
             subHeadingMessage1="We'll notify you once your KYC is verified. You'll be able to accept payments after that."
             preventDrawerClose={true}
             CustomDrawerButton={() => <></>}
