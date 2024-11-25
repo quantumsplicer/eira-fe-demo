@@ -212,6 +212,19 @@ const TutorWebsite = () => {
         </Button>
         <Button
           onClick={() => {
+            navigate("pricing");
+          }}
+          sx={{
+            color: "#232437",
+            textDecoration: "underline",
+            textTransform: "none",
+            fontSize: "0.70rem",
+          }}
+        >
+          Pricing
+        </Button>
+        <Button
+          onClick={() => {
             navigate("contact-policy");
           }}
           sx={{
