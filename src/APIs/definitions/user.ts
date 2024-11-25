@@ -70,7 +70,7 @@ export const userApi = postgresApi.injectEndpoints({
       }),
     }),
 
-    registerTutorByStudent: builder.mutation<UserDetails, Partial<UserDetails>>(
+    registerTutorByStudent: builder.mutation<UserDetails, Partial<UserDetails> & { amount: number | null }>(
       {
         query: (body) => ({
           url: `user/register/`,
