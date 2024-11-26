@@ -6,7 +6,7 @@ import LinkIcon from "@mui/icons-material/LinkOutlined";
 import Link from "@mui/material/Link";
 import IconButton from "@mui/material/IconButton";
 import ContentCopyIcon from "@mui/icons-material/ContentCopyOutlined";
-const amount = 20000;
+
 const PaymentLinkCard: React.FC = () => {
   return (
     <Box
