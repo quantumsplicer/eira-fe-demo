@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Typography, Container, Stack, Divider } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TutorWebsiteHeader from "../components/TutorWebsiteHeader";
-import { useGetUserByUserNameQuery } from "../../../APIs/definitions/user";
+import { useGetUserByUserNameUnsafeQuery } from "../../../APIs/definitions/user";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const theme = createTheme({
@@ -18,7 +18,7 @@ const RefundPolicy = () => {
   const userName = location.pathname.split("/")[1];
 
   const { data: getUserDetails, isLoading: userDetailsIsLoading } =
-    useGetUserByUserNameQuery(userName);
+    useGetUserByUserNameUnsafeQuery(userName);
   const [user] = useState(getUserDetails ? getUserDetails[0] : null);
 
   return (
