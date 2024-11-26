@@ -28,6 +28,7 @@ import Amount from "../../../../components/Amount";
 import tickMark from "../../../../assets/images/png/tick-mark.png";
 import exclamationMark from "../../../../assets/images/svg/ExclamationMark.svg";
 import moment from "moment";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 interface PaymentLinkCellMobileProps {
   paymentLinkDetails: PaymentLinkDetails;
@@ -206,6 +207,11 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
       setActiveDrawerPaymentLinkDetails(paymentLinkDetails);
     };
   };
+
+  const handleLinkCopy = (link: string) => {
+    navigator.clipboard.writeText(link);
+  }
+
   return !isPhoneScreen ? (
     <MaterialReactTable table={table} />
   ) : data && data.length > 0 ? (
@@ -378,6 +384,26 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                         {activeDrawerPaymentLinkDetails?.payer}
                       </Typography>
                     </Stack>
+                  </Stack>
+                )}
+                {activeDrawerPaymentLinkDetails?.url && (
+                  <Stack 
+                    alignSelf={"center"}
+                    direction={"row"}
+                    sx={{
+                      cursor: "pointer"
+                    }}
+                    onClick={() => handleLinkCopy(activeDrawerPaymentLinkDetails?.url)}
+                  >
+                    <Typography
+                      mr={1}
+                      sx={{
+                        textDecoration: "underline"
+                      }}
+                    >
+                      Copy payment link
+                    </Typography>
+                    <ContentCopyIcon />
                   </Stack>
                 )}
               </Stack>

@@ -85,6 +85,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           last_name: lastName,
           pan: pan,
           phone: activePaymentTutorId ? activePaymentTutorId : tutorPhoneNumber,
+          amount: Number(localStorage.getItem("activePaymentAmount"))
         })
           .unwrap()
           .then((res) => {
