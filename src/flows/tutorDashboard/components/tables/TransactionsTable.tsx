@@ -138,14 +138,6 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
         enableHiding: false,
       }
     ),
-    columnHelper.accessor("created", {
-      header: "Date of Payment Received",
-      enableHiding: false,
-    }),
-    columnHelper.accessor("settlement_timestamp", {
-      header: "Date and Time of Settlement",
-      enableHiding: false,
-    }),
     columnHelper.accessor("amount", {
       header: "Amount",
       enableHiding: false,
@@ -154,7 +146,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
       header: "Payment Mode",
       enableHiding: false,
     }),
-    columnHelper.accessor("settlement_status", {
+    columnHelper.accessor("status", {
       header: "Status",
       enableHiding: false,
       Cell: ({ cell }) => <StatusTag cellValue={cell.getValue<string>()} />,
