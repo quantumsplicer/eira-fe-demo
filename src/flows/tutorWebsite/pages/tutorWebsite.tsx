@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import { useGetUserByUserNameQuery } from "../../../APIs/definitions/user";
+import { useGetUserByUserNameUnsafeQuery } from "../../../APIs/definitions/user";
 import { useLocation, useNavigate } from "react-router-dom";
 import TutorWebsiteHeader from "../components/TutorWebsiteHeader";
 
@@ -30,12 +30,12 @@ const TutorWebsite = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
 
   const { data: getUserDetails, isLoading: userDetailsIsLoading } =
-    useGetUserByUserNameQuery(userName);
+    useGetUserByUserNameUnsafeQuery(userName);
 
   useEffect(() => {
     if (userDetailsIsLoading) return;
 
-    if (!getUserDetails) {
+    if (!getUserDetails || getUserDetails.length === 0) {
       navigate("/page-not-found");
     }
   }, [userDetailsIsLoading, getUserDetails]);
