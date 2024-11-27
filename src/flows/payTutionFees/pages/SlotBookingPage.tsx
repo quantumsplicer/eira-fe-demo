@@ -70,32 +70,32 @@ const SlotBookingPage = () => {
     setErrorMessage(null);
     const activeFlow = localStorage.getItem("activeFlow");
     localStorage.removeItem("activeFlow");
-
-    createSession({
-      subject: description,
-      teacher_id: activePaymentPayeeUserId ?? "",
-      student_id: userDetails?.id ?? "",
-      amount: activePaymentAmount ? Number(activePaymentAmount) : 0,
-      starttime: moment.tz(String(startTime), "ddd, DD MMM YYYY HH:mm:ss [GMT]", "GMT")
-        .tz("Asia/Kolkata")
-        .format("YYYY-MM-DDTHH:mm:ss"),
-      endtime: moment.tz(String(endTime), "ddd, DD MMM YYYY HH:mm:ss [GMT]", "GMT")
-        .tz("Asia/Kolkata")
-        .format("YYYY-MM-DDTHH:mm:ss"),
-      title: sessionTitle
-    })
-      .unwrap()
-      .then(res => {
-        navigate("/pay/review");
-      })
-      .catch(err => {
-        console.log(err)
-        if (err.status === 400) {
-          setErrorMessage(err.data.message);
-        } else {
-          setErrorMessage("Something went wrong. Please try again!")
-        }
-      })
+    navigate("/pay/review");
+    // createSession({
+    //   subject: description,
+    //   teacher_id: activePaymentPayeeUserId ?? "",
+    //   student_id: userDetails?.id ?? "",
+    //   amount: activePaymentAmount ? Number(activePaymentAmount) : 0,
+    //   starttime: moment.tz(String(startTime), "ddd, DD MMM YYYY HH:mm:ss [GMT]", "GMT")
+    //     .tz("Asia/Kolkata")
+    //     .format("YYYY-MM-DDTHH:mm:ss"),
+    //   endtime: moment.tz(String(endTime), "ddd, DD MMM YYYY HH:mm:ss [GMT]", "GMT")
+    //     .tz("Asia/Kolkata")
+    //     .format("YYYY-MM-DDTHH:mm:ss"),
+    //   title: sessionTitle
+    // })
+    //   .unwrap()
+    //   .then(res => {
+    //     navigate("/pay/review");
+    //   })
+    //   .catch(err => {
+    //     console.log(err)
+    //     if (err.status === 400) {
+    //       setErrorMessage(err.data.message);
+    //     } else {
+    //       setErrorMessage("Something went wrong. Please try again!")
+    //     }
+    //   })
   };
 
   useEffect(() => {

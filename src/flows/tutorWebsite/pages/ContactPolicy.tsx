@@ -43,7 +43,7 @@ const ContactPolicy = () => {
             </Typography>
             <Typography variant="body1">
               <strong>Email:</strong> Support+
-              {`${user?.phone}`}@eira.club
+              {user?.username.replace("-", "")}@eira.club
             </Typography>
           </Box>
 

@@ -24,7 +24,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
   const [lastName, setLastName] = useState<string>("");
   const [pan, setPan] = useState<string>("");
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
-  const [isPanUnverified, setIsPanUnverified] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string|null>(null);
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
 
   const tutorPhoneNumber = useSelector(
@@ -74,6 +74,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
 
   const handleSubmitClick = () => {
     if (firstName && lastName && isPanValid(pan)) {
+      setErrorMessage(null);
       localStorage.setItem("firstName", firstName);
       localStorage.setItem("lastName", lastName);
       localStorage.setItem("pan", pan);
@@ -89,20 +90,15 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         })
           .unwrap()
           .then((res) => {
-            if (res) {
-              setIsPanUnverified(false);
-              localStorage.setItem("activePaymentPayeeUserId", res.id);
-              localStorage.setItem(
-                "activePaymentTutorName",
-                res.first_name + " " + res.last_name
-              );
-              onSuccess && onSuccess();
-            } else {
-              setIsPanUnverified(true);
-            }
+            localStorage.setItem("activePaymentPayeeUserId", res.id);
+            localStorage.setItem(
+              "activePaymentTutorName",
+              res.first_name + " " + res.last_name
+            );
+            onSuccess && onSuccess();
           })
-          .catch(() => {
-            setIsPanUnverified(true);
+          .catch((error) => {
+            setErrorMessage(error?.data?.message);
           });
       } else {
         updateTutor({
@@ -112,15 +108,10 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         })
           .unwrap()
           .then((res) => {
-            if (res) {
-              setIsPanUnverified(false);
-              onSuccess && onSuccess();
-            } else {
-              setIsPanUnverified(true);
-            }
+            onSuccess && onSuccess();
           })
-          .catch(() => {
-            setIsPanUnverified(true);
+          .catch((error) => {
+            setErrorMessage(error?.data?.message);
           });
       }
     }
@@ -211,14 +202,14 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         onKeyDown={(event) => handleKeyDown(event)}
         error={
           (pan.length === 10 && !isPanValid(pan)) ||
-          (!updateTutorIsLoading && isPanUnverified)
+          (!updateTutorIsLoading && errorMessage !== null)
         }
         helperText={
           pan.length === 10 && !isPanValid(pan)
             ? "Enter valid PAN"
             : !updateTutorIsLoading &&
-              isPanUnverified &&
-              "PAN number and given name do not match. Please check again."
+              errorMessage &&
+              `${errorMessage}`
         }
         label="PAN"
         variant="outlined"
