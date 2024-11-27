@@ -32,6 +32,7 @@ import RefundPolicy from "../flows/tutorWebsite/pages/RefundPolicy";
 import ContactPolicy from "../flows/tutorWebsite/pages/ContactPolicy";
 import TutorOnboardingContainer from "../components/TutorOnboardingContainer";
 import BaseRedirect from "../components/BaseRedirect";
+import PricingPolicy from "../flows/tutorWebsite/pages/PricingPolicy";
 
 const AppRoutes = () => {
   return (
@@ -93,6 +94,10 @@ const AppRoutes = () => {
       <Route
         path="/:tutorUserName/contact-policy"
         element={<ContactPolicy />}
+      />
+      <Route
+        path="/:tutorUserName/pricing"
+        element={<PricingPolicy />}
       />
 
       <Route path="*" element={<PageNotFound />} />

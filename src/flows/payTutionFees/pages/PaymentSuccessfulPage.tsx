@@ -14,7 +14,7 @@ const PaymentSuccessfulPage = () => {
   const notPhoneScreen = useMediaQuery('(min-width:850px)');
   const { data: paymentStatus } = useGetPaymentStatusQuery(localStorage.getItem("order_id") as string);
 
-  const amount = paymentStatus?.order?.amount;
+  const amount = localStorage.getItem("activePaymentAmount") ? localStorage.getItem("activePaymentAmount") : paymentStatus?.order?.amount;
   const payeeName = paymentStatus?.payee_name;
   const payeePhone = paymentStatus?.payee_phone;
   const maskedAccountNumber = paymentStatus?.masked_account_number;
@@ -41,6 +41,7 @@ const PaymentSuccessfulPage = () => {
   }
 
   useEffect(() => {
+    localStorage.removeItem("activePaymentTotalAmount");
     localStorage.removeItem("activePaymentAmount");
     localStorage.removeItem("activePaymentPayeeUserId");
     localStorage.removeItem("activePaymentTutorId");

@@ -6,6 +6,7 @@ import { useCreateSessionMutation } from "../APIs/definitions/session";
 
 export const usePayment = () => {
   const activePaymentAmount = localStorage.getItem("activePaymentAmount");
+  const activePaymentTotalAmount = localStorage.getItem("activePaymentTotalAmount");
   const activePaymentPayeeUserId = localStorage.getItem(
     "activePaymentPayeeUserId"
   );
@@ -18,8 +19,9 @@ export const usePayment = () => {
   const [createSession, { isLoading: createSessionIsLoading }] = useCreateSessionMutation();
 
   var initializeSDK = async function () {
+    const environment = window.location.host.includes("app.eira.club") ? "prod" : "dev";
     cashfree = await load({
-      mode: "sandbox",
+      mode: environment === "prod" ? "production" : "sandbox",
     });
   };
   initializeSDK();
@@ -54,7 +56,7 @@ export const usePayment = () => {
   const makePayment = () => {
     setErrorMessage(null);
     createOrder({
-      amount: Number(activePaymentAmount),
+      amount: Number(activePaymentTotalAmount),
       payer_id: userDetails ? userDetails.id : undefined,
       payee_id: activePaymentPayeeUserId ?? undefined,
     })

@@ -66,7 +66,9 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
     if (activePaymentAmount) {
       const fees = (activePaymentAmount * baseRate) / 100;
       const gst = (18 * fees) / 100;
-      return formatAmount(parseFloat((fees + gst + activePaymentAmount).toFixed(2)));
+      const activePaymentTotalAmt = formatAmount(parseFloat((fees + gst + activePaymentAmount).toFixed(2)));
+      localStorage.setItem("activePaymentTotalAmount", parseFloat((fees + gst + activePaymentAmount).toFixed(2)).toString())
+      return activePaymentTotalAmt;
     }
     return "-";
   };

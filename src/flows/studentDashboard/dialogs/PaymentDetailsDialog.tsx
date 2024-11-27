@@ -42,6 +42,7 @@ interface PaymentDetailsDialogProps {
   phoneNumberProp: string;
   isPayeeStudent?: boolean;
   submitButtonIsLoading?: boolean;
+  onInputNumber?: (value: string) => void;
 }
 
 const PaymentDetailsDialog = ({
@@ -52,6 +53,7 @@ const PaymentDetailsDialog = ({
   phoneNumberProp,
   isPayeeStudent,
   submitButtonIsLoading,
+  onInputNumber,
 }: PaymentDetailsDialogProps) => {
   const {
     handleSubmit,
@@ -60,16 +62,23 @@ const PaymentDetailsDialog = ({
     reset,
     formState: { errors, isValid },
   } = useForm<PaymentDetails>({
-    mode: "onChange",
+    mode: "onBlur",
     defaultValues: {
       phoneNumber: tutorDetails?.phoneNumber,
     },
   });
+  const [isPayeeStudentError, setIsPayeeStudentError] =
+    useState<boolean>(false);
   const handleFormSubmit: SubmitHandler<PaymentDetails> = (data) => {
     onSubmit(data);
   };
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
 
+  useEffect(() => {
+    if (isPayeeStudent) {
+      setIsPayeeStudentError(true);
+    }
+  }, [isPayeeStudent]);
   return (
     <Dialog
       open={open}
@@ -197,21 +206,29 @@ const PaymentDetailsDialog = ({
                     <TextField
                       value={value}
                       onChange={onChange}
-                      onBlur={onBlur}
+                      onBlur={() => {
+                        onBlur();
+                        setIsPayeeStudentError(false);
+                      }}
                       label="Receiver's Phone Number"
                       fullWidth
                       type="number"
                       variant="outlined"
                       size="small"
-                      error={!!errors.phoneNumber || isPayeeStudent}
+                      error={!!errors.phoneNumber || isPayeeStudentError}
                       helperText={
                         <Typography
                           sx={{ fontSize: 10, color: "red" }}
                           component="span"
                         >
-                          {errors.phoneNumber ? errors.phoneNumber.message : ""}
+                          {/* {errors.phoneNumber ? errors.phoneNumber.message : ""}
                           {isPayeeStudent &&
-                            "This user is registered as a student"}
+                            "This user is registered as a student"} */}
+                          {errors.phoneNumber
+                            ? errors.phoneNumber.message
+                            : isPayeeStudentError
+                            ? "This user is registered as a student"
+                            : ""}
                         </Typography>
                       }
                       sx={{
@@ -249,7 +266,7 @@ const PaymentDetailsDialog = ({
                   control={control}
                   rules={{
                     required: "Required",
-                    min: { value: 1, message: "Amount must be greater than 0" }
+                    min: { value: 1, message: "Amount must be greater than 0" },
                   }}
                   render={({ field }) => (
                     <TextField

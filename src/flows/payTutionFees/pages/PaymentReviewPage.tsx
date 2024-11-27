@@ -227,16 +227,14 @@ const PaymentReviewPage = () => {
               }
 
               <Box width="100%" minWidth="320px" maxWidth="400px">
-                {errorMessage && (
-                  <Typography fontSize={14} color={"red"} textAlign={"center"}>
-                    {errorMessage}
-                  </Typography>
-                )}
-
                 <Box sx={{ mt: 3 }}>
                   <GetHelp />
                 </Box>
-
+                {errorMessage && (
+                  <Typography fontSize={14} color={"red"} textAlign={"center"} mb={2}>
+                    {errorMessage}
+                  </Typography>
+                )}
                 <Button
                   variant="contained"
                   color="primary"

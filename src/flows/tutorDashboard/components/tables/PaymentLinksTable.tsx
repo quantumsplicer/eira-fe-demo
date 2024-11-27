@@ -28,6 +28,7 @@ import Amount from "../../../../components/Amount";
 import tickMark from "../../../../assets/images/png/tick-mark.png";
 import exclamationMark from "../../../../assets/images/svg/ExclamationMark.svg";
 import moment from "moment";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 interface PaymentLinkCellMobileProps {
   paymentLinkDetails: PaymentLinkDetails;
@@ -94,6 +95,16 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
       : "rgba(250, 250, 250, 1)";
 
   const columnHelper = createMRTColumnHelper<PaymentLinkDetails>();
+  const copyToClipboard = (paymentLink: string) => {
+    navigator.clipboard
+      .writeText(paymentLink)
+      .then(() => {
+        alert("Payment Link copied");
+      })
+      .catch((err: Error) => {
+        console.error("Failed to copy payment link: ", err);
+      });
+  };
   const columns = [
     columnHelper.accessor("payer", {
       header: "Student Name",
@@ -132,6 +143,19 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
       header: "Status",
       enableHiding: false,
       Cell: ({ cell }) => <StatusTag cellValue={cell.getValue<string>()} />,
+    }),
+    columnHelper.accessor("url", {
+      header: "Payment Link",
+      enableHiding: false,
+      Cell: ({ cell }) => (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => copyToClipboard(cell.getValue<string>())}
+        >
+          Copy Link
+        </Button>
+      ),
     }),
   ];
 
@@ -206,6 +230,11 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
       setActiveDrawerPaymentLinkDetails(paymentLinkDetails);
     };
   };
+
+  const handleLinkCopy = (link: string) => {
+    navigator.clipboard.writeText(link);
+  }
+
   return !isPhoneScreen ? (
     <MaterialReactTable table={table} />
   ) : data && data.length > 0 ? (
@@ -378,6 +407,26 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                         {activeDrawerPaymentLinkDetails?.payer}
                       </Typography>
                     </Stack>
+                  </Stack>
+                )}
+                {activeDrawerPaymentLinkDetails?.url && (
+                  <Stack 
+                    alignSelf={"center"}
+                    direction={"row"}
+                    sx={{
+                      cursor: "pointer"
+                    }}
+                    onClick={() => handleLinkCopy(activeDrawerPaymentLinkDetails?.url)}
+                  >
+                    <Typography
+                      mr={1}
+                      sx={{
+                        textDecoration: "underline"
+                      }}
+                    >
+                      Copy payment link
+                    </Typography>
+                    <ContentCopyIcon />
                   </Stack>
                 )}
               </Stack>
