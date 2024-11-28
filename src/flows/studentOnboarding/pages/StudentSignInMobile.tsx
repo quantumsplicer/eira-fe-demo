@@ -64,10 +64,10 @@ const StudentSignInMobile = () => {
 
   const OnOtpVerification = async (id: string) => {
     console.log("herererere")
-    await getUserDetailsbyId(id).then((data) => {
-      data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
-      setIsOtpVerificationDone(true);
-    });
+    // await getUserDetailsbyId(id).then((data) => {
+    //   data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
+    //   setIsOtpVerificationDone(true);
+    // });
   };
 
   const ContinueButton = () => {
