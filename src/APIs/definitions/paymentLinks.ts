@@ -5,6 +5,7 @@ interface CreatePaymentLinkRequest {
   receiver_phone: string;
   payer_id: string;
   payee_id: string;
+  payment_link_id: string | null;
 }
 
 interface CreateOrderRequest {

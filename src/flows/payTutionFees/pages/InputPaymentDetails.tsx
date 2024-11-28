@@ -117,6 +117,7 @@ const InputPaymentDetails: React.FC = () => {
             case "INITIATED":
             case "EMAIL_VERIFIED":
             case "MIN_KYC_PENDING":
+            case "MIN_KYC_REJECTED":
               setShowMessage(true);
               setMessage(
                 "KYC link is sent to your tutor. Tutor will be able to accept payments after completion of KYC"
@@ -130,6 +131,7 @@ const InputPaymentDetails: React.FC = () => {
               break;
             case "MIN_KYC_APPROVED":
             case "ACTIVE":
+              localStorage.setItem("activePaymentPayeeUserId", tutor?.id);
               localStorage.setItem("activePaymentTutorName", `${tutor.first_name} ${tutor.last_name}`);
               navigate("/pay/review");
               break;
