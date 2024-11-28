@@ -27,6 +27,9 @@ const baseQueryWithAuth = fetchBaseQuery({
     if (token) {
       console.log("it is here btw", token)
       headers.set("Authorization", `Token ${token}`);
+      // Add additional headers to match Android request
+      headers.set("sec-ch-ua-mobile", "?0");  // Desktop/iPhone indicator
+      headers.set("sec-ch-ua-platform", "iPhone");  // iPhone indicator
     }
     console.log("headers", headers.get("Authorization"))
     return headers;
