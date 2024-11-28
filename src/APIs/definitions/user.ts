@@ -51,7 +51,13 @@ export const userApi = postgresApi.injectEndpoints({
     }),
 
     getUserDetailsById: builder.query<UserDetails, string>({
-      query: (id) => `user/${id}`,
+      query: (id) => ({
+        url: `user/${id}`,
+        method: "GET",
+        headers: {
+          Authorization: `Token ${localStorage.getItem("access-token")}`,
+        },
+      }),
     }),
 
     getUserByUserName: builder.query<UserDetails[], string>({
@@ -70,15 +76,16 @@ export const userApi = postgresApi.injectEndpoints({
       }),
     }),
 
-    registerTutorByStudent: builder.mutation<UserDetails, Partial<UserDetails> & { amount: number | null }>(
-      {
-        query: (body) => ({
-          url: `user/register/`,
-          method: "POST",
-          body,
-        }),
-      }
-    ),
+    registerTutorByStudent: builder.mutation<
+      UserDetails,
+      Partial<UserDetails> & { amount: number | null }
+    >({
+      query: (body) => ({
+        url: `user/register/`,
+        method: "POST",
+        body,
+      }),
+    }),
     registerStudentByTutor: builder.mutation<UserDetails, Partial<UserDetails>>(
       {
         query: (body) => ({
@@ -108,5 +115,5 @@ export const {
   useLazyGetUserByUserNameQuery,
   useLazyUserSearchByIdQuery,
   useRegisterStudentByTutorMutation,
-  useGetUserByUserNameUnsafeQuery
+  useGetUserByUserNameUnsafeQuery,
 } = userApi;
