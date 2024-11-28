@@ -55,11 +55,15 @@ export const usePayment = () => {
 
   const makePayment = () => {
     setErrorMessage(null);
-    createOrder({
+    const payload = {
       amount: Number(activePaymentTotalAmount),
       payer_id: userDetails ? userDetails.id : undefined,
       payee_id: activePaymentPayeeUserId ?? undefined,
-    })
+      ...(localStorage.getItem("activePaymentLinkId")
+        ? { payment_link_id: localStorage.getItem("activePaymentLinkId")} 
+        : {}),
+    }
+    createOrder(payload)
       .unwrap()
       .then((res) => {
         createSession({
