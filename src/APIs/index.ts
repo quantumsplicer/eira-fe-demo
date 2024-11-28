@@ -25,6 +25,7 @@ const baseQueryWithAuth = fetchBaseQuery({
     const token = localStorage.getItem("access-token");
     console.log("token", token)
     if (token) {
+      console.log("it is here btw", token)
       headers.set("Authorization", `Token ${token}`);
     }
     console.log("headers", headers.get("Authorization"))
