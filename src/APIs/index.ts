@@ -27,6 +27,7 @@ const baseQueryWithAuth = fetchBaseQuery({
     if (token) {
       headers.set("Authorization", `Token ${token}`);
     }
+    console.log("headers", headers)
     return headers;
   },
 });
