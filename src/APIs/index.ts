@@ -8,7 +8,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { NavigateFunction } from "react-router-dom";
 
-const environment = window.location.host.includes("app.eira.club") ? "prod" : "dev";
+const environment = window.location.host.includes("app.eira.club") ? "prod" : "prod";
 
 const BASE_URL =
   environment === "prod"
@@ -23,6 +23,7 @@ const baseQueryWithAuth = fetchBaseQuery({
   baseUrl: `${BASE_URL}v1/`,
   prepareHeaders: (headers, { getState }) => {
     const token = localStorage.getItem("access-token");
+    console.log("token", token)
     if (token) {
       headers.set("Authorization", `Token ${token}`);
     }
@@ -38,16 +39,17 @@ const baseQueryWithErrorHandling = async (
   const result = await baseQueryWithAuth(args, api, extraOptions);
 
   const accessToken = localStorage.getItem("access-token");
+  console.log(result)
 
   // Check if the status code is 401 or 403
-  if (
-    (result?.error?.status === 401 || result?.error?.status === 403) &&
-    accessToken
-  ) {
-    // Clear the token from local storage
-    localStorage.removeItem("access-token");
-    window.location.reload();
-  }
+  // if (
+  //   (result?.error?.status === 401 || result?.error?.status === 403) &&
+  //   accessToken
+  // ) {
+  //   // Clear the token from local storage
+  //   localStorage.removeItem("access-token");
+  //   window.location.reload();
+  // }
 
   return result;
 };
