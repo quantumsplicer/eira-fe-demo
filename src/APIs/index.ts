@@ -13,7 +13,7 @@ const environment = window.location.host.includes("app.eira.club")
   : "dev";
 
 const BASE_URL =
-  environment === "dev"
+  environment === "prod"
     ? "https://eira-production-bmuwffxdvq-el.a.run.app/"
     : "https://dev.api.eira.club/";
 
