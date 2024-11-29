@@ -53,10 +53,7 @@ export const userApi = postgresApi.injectEndpoints({
     getUserDetailsById: builder.query<UserDetails, string>({
       query: (id) => ({
         url: `user/${id}`,
-        method: "GET",
-        headers: {
-          Authorization: `Token ${localStorage.getItem("access-token")}`,
-        },
+        method: "GET"
       }),
     }),
 

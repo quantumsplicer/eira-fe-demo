@@ -10,7 +10,7 @@ import { NavigateFunction } from "react-router-dom";
 
 const environment = window.location.host.includes("app.eira.club") ? "prod" : "prod";
 
-const BASE_URL =
+export const BASE_URL =
   environment === "prod"
     ? "https://eira-production-bmuwffxdvq-el.a.run.app/"
     : "https://dev.api.eira.club/";
@@ -28,8 +28,8 @@ const baseQueryWithAuth = fetchBaseQuery({
       console.log("it is here btw", token)
       headers.set("Authorization", `Token ${token}`);
       // Add additional headers to match Android request
-      headers.set("sec-ch-ua-mobile", "?0");  // Desktop/iPhone indicator
-      headers.set("sec-ch-ua-platform", "iPhone");  // iPhone indicator
+      headers.set("Sec-ch-ua-mobile", "?0");  // Desktop/iPhone indicator
+      headers.set("Sec-ch-ua-platform", "iPhone");  // iPhone indicator
     }
     console.log("headers", headers.get("Authorization"))
     return headers;
