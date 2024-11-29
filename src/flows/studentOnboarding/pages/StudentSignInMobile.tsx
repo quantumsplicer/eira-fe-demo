@@ -68,42 +68,10 @@ const StudentSignInMobile = () => {
   };
 
   const OnOtpVerification = async (id: string) => {
-    console.log("herererere");
-
-    // await getUserDetailsbyId(id).then((data) => {
-    //   // data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
-    //   // setIsOtpVerificationDone(true);
-    // });
-
-    const accessToken = localStorage.getItem("access-token");
-
-    const config = {
-      headers: {
-        // Try multiple variations of Authorization header
-        Authorization: `Token ${accessToken}`,
-
-        // Explicitly set Content-Type
-        "Content-Type": "application/json",
-
-        // Add Origin header explicitly
-        Origin: "https://app.eira.club",
-      },
-
-      // Add these for comprehensive cross-browser compatibility
-      withCredentials: true,
-      credentials: "include",
-    };
-
-    try {
-      const response = await axios.get(`${BASE_URL}v1/user/${id}/`, config);
-      // Handle response
-    } catch (error : any) {
-      console.error("Full error details:", {
-        status: error.response?.status,
-        headers: error.response?.headers,
-        data: error.response?.data,
-      });
-    }
+    await getUserDetailsbyId(id).then((data) => {
+      data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
+      setIsOtpVerificationDone(true);
+    });
   };
 
   const ContinueButton = () => {

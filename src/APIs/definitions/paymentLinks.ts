@@ -90,7 +90,7 @@ export const paymentLinksApi = postgresApi.injectEndpoints({
     }),
 
     getPaymentStatus: builder.query<PaymentDetails, string>({
-      query: (orderId) => `payments/pg/order/${orderId}`,
+      query: (orderId) => `payments/pg/order/${orderId}/`,
     }),
 
     getPaymentInfoFromLink: builder.query<PaymentInfoDetailsResponse, string>({

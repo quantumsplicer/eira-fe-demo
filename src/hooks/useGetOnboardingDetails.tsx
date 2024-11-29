@@ -1,9 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  useGetUserDetailsQuery,
   useLazyGetUserByUserNameQuery,
+  useLazyGetUserDetailsByIdQuery,
   useLazyGetUserDetailsQuery,
-  useLazyUserSearchByIdQuery,
 } from "../APIs/definitions/user";
 import { useEffect, useState } from "react";
 import { useLazyGetPaymentInfoFromLinkQuery } from "../APIs/definitions/paymentLinks";
@@ -29,7 +28,7 @@ const useGetOnboardingDetails = () => {
 
   const [
     getTutorDetailsById
-  ] = useLazyUserSearchByIdQuery();
+  ] = useLazyGetUserDetailsByIdQuery();
 
   const [getPaymentLinkInfo] = useLazyGetPaymentInfoFromLinkQuery();
 
