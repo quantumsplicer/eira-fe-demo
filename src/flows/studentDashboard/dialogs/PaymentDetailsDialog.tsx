@@ -20,6 +20,7 @@ import { PaymentDetails, TutorDetails } from "../interfaces";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
 import { error } from "console";
 import { LoadingButton } from "@mui/lab";
+import { useGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
 
 const Transition = forwardRef(function Transition(props: SlideProps, ref) {
   return (
@@ -64,7 +65,7 @@ const PaymentDetailsDialog = ({
   } = useForm<PaymentDetails>({
     mode: "onBlur",
     defaultValues: {
-      phoneNumber: tutorDetails?.phoneNumber,
+      phoneNumber: phoneNumberProp,
     },
   });
   const [isPayeeStudentError, setIsPayeeStudentError] =
@@ -73,7 +74,10 @@ const PaymentDetailsDialog = ({
     onSubmit(data);
   };
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-
+  const { data: tutorData } = useGetUserDetailsByPhoneQuery(
+    phoneNumberProp as string,
+    { skip: !phoneNumberProp }
+  );
   useEffect(() => {
     if (isPayeeStudent) {
       setIsPayeeStudentError(true);
@@ -154,7 +158,7 @@ const PaymentDetailsDialog = ({
                   </Typography>
                 </Stack> */}
               </Stack>
-              {tutorDetails?.firstName && tutorDetails?.lastName && (
+              {tutorData?.[0].first_name && tutorData?.[0].last_name && (
                 <Stack height="100%">
                   <Typography
                     fontSize={18}
@@ -170,7 +174,7 @@ const PaymentDetailsDialog = ({
                     align="center"
                     pb={!isPhoneScreen ? 5 : 0}
                   >
-                    {tutorDetails.firstName} {tutorDetails.lastName}
+                    {tutorData?.[0].first_name} {tutorData?.[0].last_name}
                   </Typography>
                 </Stack>
               )}

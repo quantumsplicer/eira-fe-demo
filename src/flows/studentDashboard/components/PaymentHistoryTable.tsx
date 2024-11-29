@@ -21,11 +21,18 @@ import StatusTag from "../../tutorDashboard/components/StatusTag";
 import { Virtuoso } from "react-virtuoso";
 import PaymentInfo from "../../../components/PaymentInfo";
 import CloseIcon from "@mui/icons-material/Close";
-import { useGetTransactionsListQuery, useLazyGetTransactionsListQuery } from "../../../APIs/definitions/transactionsList";
+import {
+  useGetTransactionsListQuery,
+  useLazyGetTransactionsListQuery,
+} from "../../../APIs/definitions/transactionsList";
 import PaymentFlow from "./PaymentFlow";
 import { PaymentDetails, TutorDetails } from "../interfaces";
-import { Transaction, TransactionsResponse } from "../../tutorDashboard/interfaces";
+import {
+  Transaction,
+  TransactionsResponse,
+} from "../../tutorDashboard/interfaces";
 import { PaymentItemDrawer } from "./PaymentItemDrawer";
+import Amount from "../../../components/Amount";
 
 const lightTheme = createTheme({ palette: { mode: "light" } });
 
@@ -63,26 +70,38 @@ const PaymentHistoryTableMobile = ({
               height: "95%",
               alignSelf: "center",
               borderWidth: 2.5,
-              borderColor: "#2AC426",
+              borderColor:
+                transactionDetails.status === "BENE_SETTLED"
+                  ? "#2AC426"
+                  : transactionDetails.status === "FAILED" ||
+                    transactionDetails.status === "USER_DROPPED"
+                  ? "#FF0000"
+                  : "#C3C3C3",
             }}
           />
           <Stack>
-            <Typography fontSize={18}>
+            <Typography fontSize={18} textAlign="left">
               {transactionDetails.tutor_first_name +
                 " " +
                 transactionDetails.tutor_last_name}
             </Typography>
-            <Typography fontSize={14} color="#C3C3C3">
+            <Typography fontSize={14} color="#C3C3C3" textAlign="left">
               {transactionDetails.tutor_phone}
             </Typography>
           </Stack>
         </Stack>
         <Stack pr={2}>
           <Typography fontSize={19} fontWeight={500} textAlign="right">
-            ₹ {transactionDetails.amount}
+            ₹{transactionDetails.amount}
           </Typography>
           <Typography fontSize={14} color="#C3C3C3" textAlign="right">
-            {transactionDetails.status}
+            {transactionDetails.status === "BENE_SETTLED" ||
+            transactionDetails.status === "PG_SETTLED"
+              ? "Success"
+              : transactionDetails.status === "FAILED" ||
+                transactionDetails.status === "USER_DROPPED"
+              ? "Failed"
+              : "Refunded"}
           </Typography>
         </Stack>
       </Stack>
@@ -92,6 +111,7 @@ const PaymentHistoryTableMobile = ({
           open={isDrawerOpen}
           onClose={() => setIsDrawerOpen(false)}
           transaction={transactionDetails}
+          role="student"
         />
       )}
     </Button>
@@ -103,19 +123,21 @@ const PaymentHistoryTable: React.FC = () => {
   // const { data: transactionDetails } = useGetTransactionsListQuery({
   //   limit: 1000,
   // });
-  const [transactionDetails, setTransactionDetails] = useState<TransactionsResponse|null>(null);
+  const [transactionDetails, setTransactionDetails] =
+    useState<TransactionsResponse | null>(null);
 
-  const [
-    getTransactionDetails
-  ] = useLazyGetTransactionsListQuery();
+  const [getTransactionDetails] = useLazyGetTransactionsListQuery();
 
   useEffect(() => {
     const fetchData = async () => {
-      let transactionData
-      await getTransactionDetails({limit: 1000}).unwrap().then(res => setTransactionDetails(res)).catch()
-    }
+      let transactionData;
+      await getTransactionDetails({ limit: 1000 })
+        .unwrap()
+        .then((res) => setTransactionDetails(res))
+        .catch();
+    };
     fetchData();
-  }, [])
+  }, []);
 
   const theme = useTheme();
   const baseBackgroundColor =
@@ -149,16 +171,24 @@ const PaymentHistoryTable: React.FC = () => {
       {
         header: "Tutor's Name",
         enableHiding: false,
+        Cell: ({ cell }) => (
+          <Typography fontSize={14}>{cell.getValue<string>()}</Typography>
+        ),
       }
     ),
     columnHelper.accessor("tutor_phone", {
       header: "Tutor's Phone Number",
       enableHiding: false,
+      Cell: ({ cell }) => (
+        <Typography fontSize={14}>+91 {cell.getValue<string>()}</Typography>
+      ),
     }),
     columnHelper.accessor("amount", {
       header: "Amount",
       enableHiding: false,
-      Cell: ({ cell }) => <Typography>₹ {cell.getValue<number>()}</Typography>,
+      Cell: ({ cell }) => (
+        <Amount fontSize={16} amount={cell.getValue<number>()} />
+      ),
     }),
     columnHelper.accessor("settlement_status", {
       header: "Settlement Status",

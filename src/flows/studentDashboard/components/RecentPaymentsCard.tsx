@@ -81,7 +81,7 @@ const RecentPaymentRow: React.FC<RecentTransactionTutor> = (rowData) => {
         <PaymentFlow
           open={isPaymentFlowActive}
           onClose={handleClosePaymentFlow}
-          payAgainPhoneNumber={tutorDetails.phoneNumber}
+          payAgainPhoneNumber={rowData.phoneNumber}
         />
       )}
     </>

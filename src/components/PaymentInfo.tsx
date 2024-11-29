@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Stack, Typography, Box } from "@mui/material";
 import Amount from "./Amount";
 import tickMark from "../assets/images/png/tick-mark.png";
@@ -62,6 +62,12 @@ const PaymentInfo = ({
     return newValue;
   }, [paymentDetails]);
 
+  useEffect(() => {
+    console.log("From PaymentInfo");
+    console.log(transactionItem);
+    console.log(paymentDetails);
+  }, [transactionItem, paymentDetails]);
+
   return (
     <>
       <Stack direction={"row"} alignItems={"center"} alignSelf={"center"}>
@@ -121,7 +127,8 @@ const PaymentInfo = ({
             {`Settlement on `}
           </Typography>
           <Typography component={"span"} fontWeight={"bold"}>
-            {getNextWorkingDay()} {/* Change this to incorporate the settlement date sent from the transaction object */}
+            {getNextWorkingDay()}{" "}
+            {/* Change this to incorporate the settlement date sent from the transaction object */}
           </Typography>
           <Typography component={"span"} color={"#7e7e7e"} fontWeight={"bold"}>
             {` at`}
