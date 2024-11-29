@@ -35,13 +35,6 @@ interface PaymentLinkCellMobileProps {
   onClick: () => void;
 }
 
-const formattedInfo = {
-  "Transaction ID": ["Transaction ID"],
-  "Account Number": ["Account Number"],
-  "Account Holder": ["Payee Name", "Payee Phone"],
-  "Transaction date & time": ["Transaction Date", "Transaction Time"],
-  "Session date & time": ["Session Date", "Session Time"],
-};
 const PaymentLinkCellMobile = ({
   paymentLinkDetails,
   onClick,
@@ -302,7 +295,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                 mr={1}
                 fontWeight={"bold"}
               >
-                +91 {activeDrawerPaymentLinkDetails?.receiver_phone}
+                +91{activeDrawerPaymentLinkDetails?.receiver_phone}
               </Typography>
             </Stack>
             {activeDrawerPaymentLinkDetails?.status === "ACTIVE" ? (

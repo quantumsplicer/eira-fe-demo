@@ -8,7 +8,9 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { NavigateFunction } from "react-router-dom";
 
-const environment = window.location.host.includes("app.eira.club") ? "prod" : "prod";
+const environment = window.location.host.includes("app.eira.club")
+  ? "prod"
+  : "dev";
 
 export const BASE_URL =
   environment === "prod"
