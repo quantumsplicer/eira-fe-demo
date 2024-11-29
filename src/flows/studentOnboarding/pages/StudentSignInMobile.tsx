@@ -78,12 +78,21 @@ const StudentSignInMobile = () => {
     await axios
       .get(`${BASE_URL}v1/user/${id}`, {
         headers: {
-          Authorization: `Token ${localStorage.getItem("access-token")}`,
+          authorization: `Token ${localStorage.getItem("access-token")}`.trim(),
+          Authorization: `Token ${localStorage.getItem("access-token")}`.trim(),
         },
+        withCredentials: true,
       })
       .then((data) => {
         data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
         setIsOtpVerificationDone(true);
+      })
+      .catch((error) => {
+        console.error("Full error:", error.response);
+        // Log detailed error information
+        console.error("Error status:", error.response?.status);
+        console.error("Error headers:", error.response?.headers);
+        console.error("Error data:", error.response?.data);
       });
   };
 
