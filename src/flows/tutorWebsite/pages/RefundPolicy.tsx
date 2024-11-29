@@ -42,7 +42,7 @@ const RefundPolicy = () => {
             </Typography>
             <Typography variant="body1">
               <strong>Merchant Email:</strong> Support+
-              {`${user?.phone}`}@eira.club
+              {user?.username.replace("-", "")}@eira.club
             </Typography>
           </Box>
 

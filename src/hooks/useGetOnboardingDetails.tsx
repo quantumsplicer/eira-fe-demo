@@ -1,9 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  useGetUserDetailsQuery,
   useLazyGetUserByUserNameQuery,
+  useLazyGetUserDetailsByIdQuery,
   useLazyGetUserDetailsQuery,
-  useLazyUserSearchByIdQuery,
 } from "../APIs/definitions/user";
 import { useEffect, useState } from "react";
 import { useLazyGetPaymentInfoFromLinkQuery } from "../APIs/definitions/paymentLinks";
@@ -29,7 +28,7 @@ const useGetOnboardingDetails = () => {
 
   const [
     getTutorDetailsById
-  ] = useLazyUserSearchByIdQuery();
+  ] = useLazyGetUserDetailsByIdQuery();
 
   const [getPaymentLinkInfo] = useLazyGetPaymentInfoFromLinkQuery();
 
@@ -73,8 +72,9 @@ const useGetOnboardingDetails = () => {
           localStorage.setItem("isTutorEiraOnboarded", "true");
           try {
             const activeFlowQuery = localStorage.getItem("activeFlowQuery");
+            const activePaymentLinkId = activeFlowQuery?.split("=").at(-1) as string
             const paymentLinkInfo = await getPaymentLinkInfo(
-              activeFlowQuery?.split("=").at(-1) as string
+              activePaymentLinkId
             ).unwrap().then().catch();
 
             localStorage.setItem(
@@ -92,6 +92,10 @@ const useGetOnboardingDetails = () => {
             localStorage.setItem(
               "activePaymentPayeeUserId",
               paymentLinkInfo?.payee
+            )
+            activePaymentLinkId && localStorage.setItem(
+              "activePaymentLinkId",
+              activePaymentLinkId
             )
 
             if (paymentLinkInfo?.payee) {

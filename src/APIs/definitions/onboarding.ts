@@ -28,7 +28,7 @@ export const onboardingApi = postgresApi.injectEndpoints({
     }),
 
     getOnboardingStatus: builder.query<any, string>({
-      query: (userId) => `payments/pg/onboarding/${userId}`,
+      query: (userId) => `payments/pg/onboarding/${userId}/`,
     }),
   }),
 });

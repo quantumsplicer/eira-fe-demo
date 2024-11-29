@@ -20,7 +20,7 @@ const PricingPolicy = () => {
   const { data: getUserDetails, isLoading: userDetailsIsLoading } =
     useGetUserByUserNameUnsafeQuery(userName);
 
-  const [user] = useState(getUserDetails ? getUserDetails[0] : null)
+  const [user] = useState(getUserDetails ? getUserDetails[0] : null);
 
   return (
     <ThemeProvider theme={theme}>
@@ -37,46 +37,63 @@ const PricingPolicy = () => {
               Effective Date: 10 November 2024
             </Typography>
             <Typography variant="body1">
-              {getUserDetails && getUserDetails.length > 0 &&
-                `${getUserDetails[0].first_name} ${getUserDetails[0].last_name}`
-              }
+              {getUserDetails &&
+                getUserDetails.length > 0 &&
+                `${getUserDetails[0].first_name} ${getUserDetails[0].last_name}`}
             </Typography>
             <Typography variant="body1" mt={2}>
               Standalone Classes/Sessions
             </Typography>
             <ul>
-                <li>Price Range: 0 to 5,000 INR</li>
-                <li>Standalone classes being offered are priced within this range based on multiple factors but not limited to subject, duration and difficulty level.</li>
+              <li>Price Range: 0 to 5,000 INR</li>
+              <li>
+                Standalone classes being offered are priced within this range
+                based on multiple factors but not limited to subject, duration
+                and difficulty level.
+              </li>
             </ul>
 
             <Typography variant="h6" sx={{ fontWeight: "bold", mt: 3 }}>
               Courses
             </Typography>
             <ul>
-                <li>Price Range: 0 to 5,000 INR</li>
-                <li>Courses being offered are priced within the above range based on multiple factors but not limited to subject, duration and difficulty level.</li>
+              <li>Price Range: 0 to 5,000 INR</li>
+              <li>
+                Courses being offered are priced within the above range based on
+                multiple factors but not limited to subject, duration and
+                difficulty level.
+              </li>
             </ul>
 
             <Typography variant="h6" sx={{ fontWeight: "bold", mt: 3 }}>
               Payment Policy
             </Typography>
             <ul>
-                <li>All payments must be made in full before the commencement of classes or courses.</li>
-                <li>Courses being offered are priced within the above range based on multiple factors but not limited to subject, duration and difficulty level.</li>
+              <li>
+                All payments must be made in full before the commencement of
+                classes or courses.
+              </li>
+              <li>
+                Courses being offered are priced within the above range based on
+                multiple factors but not limited to subject, duration and
+                difficulty level.
+              </li>
             </ul>
 
             <Typography variant="h6" sx={{ fontWeight: "bold", mt: 3 }}>
               Disclaimers
             </Typography>
             <ul>
-                <li>Price Range: 0 to 5,000 INR</li>
-                <li>Courses being offered are priced within the above range based on multiple factors but not limited to subject, duration and difficulty level.</li>
+              <li>Price Range: 0 to 5,000 INR</li>
+              <li>
+                Courses being offered are priced within the above range based on
+                multiple factors but not limited to subject, duration and
+                difficulty level.
+              </li>
             </ul>
-
           </Box>
 
           <Divider sx={{ my: 3 }} />
-          
         </Stack>
       </Container>
     </ThemeProvider>

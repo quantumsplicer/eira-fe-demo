@@ -12,7 +12,7 @@ const environment = window.location.host.includes("app.eira.club")
   ? "prod"
   : "dev";
 
-const BASE_URL =
+export const BASE_URL =
   environment === "prod"
     ? "https://eira-production-bmuwffxdvq-el.a.run.app/"
     : "https://dev.api.eira.club/";
@@ -25,9 +25,15 @@ const baseQueryWithAuth = fetchBaseQuery({
   baseUrl: `${BASE_URL}v1/`,
   prepareHeaders: (headers, { getState }) => {
     const token = localStorage.getItem("access-token");
+    console.log("token", token)
     if (token) {
+      console.log("it is here btw", token)
       headers.set("Authorization", `Token ${token}`);
+      // Add additional headers to match Android request
+      headers.set("Sec-ch-ua-mobile", "?0");  // Desktop/iPhone indicator
+      headers.set("Sec-ch-ua-platform", "iPhone");  // iPhone indicator
     }
+    console.log("headers", headers.get("Authorization"))
     return headers;
   },
 });
@@ -40,16 +46,17 @@ const baseQueryWithErrorHandling = async (
   const result = await baseQueryWithAuth(args, api, extraOptions);
 
   const accessToken = localStorage.getItem("access-token");
+  console.log(result)
 
   // Check if the status code is 401 or 403
-  if (
-    (result?.error?.status === 401 || result?.error?.status === 403) &&
-    accessToken
-  ) {
-    // Clear the token from local storage
-    localStorage.removeItem("access-token");
-    window.location.reload();
-  }
+  // if (
+  //   (result?.error?.status === 401 || result?.error?.status === 403) &&
+  //   accessToken
+  // ) {
+  //   // Clear the token from local storage
+  //   localStorage.removeItem("access-token");
+  //   window.location.reload();
+  // }
 
   return result;
 };

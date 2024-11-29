@@ -7,7 +7,7 @@ export const userMetrics = postgresApi.injectEndpoints({
       query: () => {
         const userId = localStorage.getItem("userId");
         return {
-          url: `payments/metrics/${userId}`,
+          url: `payments/metrics/${userId}/`,
           method: "GET",
         };
       },

@@ -15,8 +15,12 @@ export interface PgInfo {
 export const pgApi = postgresApi.injectEndpoints({
   endpoints: (builder) => ({
     getPlatformFee: builder.query<PgInfo, string>({
-      query: (pgName) => `payments/pg?pg_name=${pgName}`,
-    })
+      query: (pgName) => ({
+        url: `payments/pg/`,
+        method: "GET",
+        params: { pg_name: pgName },
+      }),
+    }),
   }),
 });
 

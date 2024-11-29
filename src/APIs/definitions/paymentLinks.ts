@@ -5,6 +5,7 @@ interface CreatePaymentLinkRequest {
   receiver_phone: string;
   payer_id: string;
   payee_id: string;
+  payment_link_id: string | null;
 }
 
 interface CreateOrderRequest {
@@ -88,7 +89,7 @@ export const paymentLinksApi = postgresApi.injectEndpoints({
     }),
 
     getPaymentStatus: builder.query<PaymentDetails, string>({
-      query: (orderId) => `payments/pg/order/${orderId}`,
+      query: (orderId) => `payments/pg/order/${orderId}/`,
     }),
 
     getPaymentInfoFromLink: builder.query<PaymentInfoDetailsResponse, string>({

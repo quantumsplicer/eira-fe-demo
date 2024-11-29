@@ -14,6 +14,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useGetUserByUserNameUnsafeQuery } from "../../../APIs/definitions/user";
 import { useLocation, useNavigate } from "react-router-dom";
 import TutorWebsiteHeader from "../components/TutorWebsiteHeader";
+import { Loading } from "../../../components/Loading";
 
 const theme = createTheme({
   typography: {
@@ -41,6 +42,8 @@ const TutorWebsite = () => {
   }, [userDetailsIsLoading, getUserDetails]);
 
   return (
+    userDetailsIsLoading ?
+    <Loading /> :
     <ThemeProvider theme={theme}>
       <TutorWebsiteHeader />
 
@@ -184,6 +187,19 @@ const TutorWebsite = () => {
           textAlign: "center",
         }}
       >
+        <Button
+          onClick={() => {
+            navigate("privacy-policy");
+          }}
+          sx={{
+            color: "#232437",
+            textDecoration: "underline",
+            textTransform: "none",
+            fontSize: "0.70rem",
+          }}
+        >
+          Privacy Policy
+        </Button>
         <Button
           onClick={() => {
             navigate("terms-of-use");

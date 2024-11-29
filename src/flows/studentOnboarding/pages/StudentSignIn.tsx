@@ -97,7 +97,7 @@ const StudentSignIn = () => {
       <Stack
         direction={"row"}
         alignItems={"center"}
-        justifyContent={"center"}
+        justifyContent="center"
       >
         {(activeFlow === "staticFlow" || activeFlow === "dynamicFlow") && (
           <Box

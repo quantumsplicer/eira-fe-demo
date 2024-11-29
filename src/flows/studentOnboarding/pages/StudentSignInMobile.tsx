@@ -22,8 +22,13 @@ import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
 import { LoadingButton } from "@mui/lab";
 import { Loading } from "../../../components/Loading";
 import GetHelp from "../../../components/GetHelp";
-import { useLazyGetUserDetailsByIdQuery, useLazyGetUserDetailsQuery } from "../../../APIs/definitions/user";
+import {
+  useLazyGetUserDetailsByIdQuery,
+  useLazyGetUserDetailsQuery,
+} from "../../../APIs/definitions/user";
 import { useLazyGetOnboardingStatusQuery } from "../../../APIs/definitions/onboarding";
+import axios from "axios";
+import { BASE_URL } from "../../../APIs";
 
 const StudentSignInMobile = () => {
   const [phone, setPhone] = useState<string>("");
@@ -63,7 +68,6 @@ const StudentSignInMobile = () => {
   };
 
   const OnOtpVerification = async (id: string) => {
-    console.log("herererere")
     await getUserDetailsbyId(id).then((data) => {
       data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
       setIsOtpVerificationDone(true);

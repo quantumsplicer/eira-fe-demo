@@ -4,7 +4,7 @@ export const invitationsApi = postgresApi.injectEndpoints({
     endpoints: (builder) => ({
       checkInvitationAcceptance: builder.query<boolean, string>({
         query: (token: string) => ({
-          url: `invite/${token}/is-accepted`,
+          url: `invite/${token}/is-accepted/`,
           method: "GET",
         }),
       }),

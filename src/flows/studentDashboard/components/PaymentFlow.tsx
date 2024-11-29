@@ -120,6 +120,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
             case "INITIATED":
             case "EMAIL_VERIFIED":
             case "MIN_KYC_PENDING":
+            case "MIN_KYC_REJECTED":
               setShowMessage(true);
               setMessage(
                 "KYC link is sent to your tutor. Tutor will be able to accept payments after completion of KYC"
