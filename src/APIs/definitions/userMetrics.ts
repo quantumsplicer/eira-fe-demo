@@ -9,9 +9,6 @@ export const userMetrics = postgresApi.injectEndpoints({
         return {
           url: `payments/metrics/${userId}`,
           method: "GET",
-          headers: {
-            "ngrok-skip-browser-warning": "latest",
-          },
         };
       },
     }),

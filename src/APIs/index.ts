@@ -8,10 +8,12 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { NavigateFunction } from "react-router-dom";
 
-const environment = window.location.host.includes("app.eira.club") ? "prod" : "dev";
+const environment = window.location.host.includes("app.eira.club")
+  ? "prod"
+  : "dev";
 
 const BASE_URL =
-  environment === "prod"
+  environment === "dev"
     ? "https://eira-production-bmuwffxdvq-el.a.run.app/"
     : "https://dev.api.eira.club/";
 
