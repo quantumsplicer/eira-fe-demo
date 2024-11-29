@@ -75,25 +75,35 @@ const StudentSignInMobile = () => {
     //   // setIsOtpVerificationDone(true);
     // });
 
-    await axios
-      .get(`${BASE_URL}v1/user/${id}`, {
-        headers: {
-          authorization: `Token ${localStorage.getItem("access-token")}`.trim(),
-          Authorization: `Token ${localStorage.getItem("access-token")}`.trim(),
-        },
-        withCredentials: true,
-      })
-      .then((data) => {
-        data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
-        setIsOtpVerificationDone(true);
-      })
-      .catch((error) => {
-        console.error("Full error:", error.response);
-        // Log detailed error information
-        console.error("Error status:", error.response?.status);
-        console.error("Error headers:", error.response?.headers);
-        console.error("Error data:", error.response?.data);
+    const accessToken = localStorage.getItem("access-token");
+
+    const config = {
+      headers: {
+        // Try multiple variations of Authorization header
+        Authorization: `Token ${accessToken}`,
+
+        // Explicitly set Content-Type
+        "Content-Type": "application/json",
+
+        // Add Origin header explicitly
+        Origin: "https://app.eira.club",
+      },
+
+      // Add these for comprehensive cross-browser compatibility
+      withCredentials: true,
+      credentials: "include",
+    };
+
+    try {
+      const response = await axios.get(`${BASE_URL}v1/user/${id}/`, config);
+      // Handle response
+    } catch (error : any) {
+      console.error("Full error details:", {
+        status: error.response?.status,
+        headers: error.response?.headers,
+        data: error.response?.data,
       });
+    }
   };
 
   const ContinueButton = () => {
