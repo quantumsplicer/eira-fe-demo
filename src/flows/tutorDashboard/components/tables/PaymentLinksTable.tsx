@@ -28,7 +28,7 @@ import Amount from "../../../../components/Amount";
 import tickMark from "../../../../assets/images/png/tick-mark.png";
 import exclamationMark from "../../../../assets/images/svg/ExclamationMark.svg";
 import moment from "moment";
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 interface PaymentLinkCellMobileProps {
   paymentLinkDetails: PaymentLinkDetails;
@@ -233,7 +233,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
 
   const handleLinkCopy = (link: string) => {
     navigator.clipboard.writeText(link);
-  }
+  };
 
   return !isPhoneScreen ? (
     <MaterialReactTable table={table} />
@@ -302,7 +302,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                 mr={1}
                 fontWeight={"bold"}
               >
-                {activeDrawerPaymentLinkDetails?.receiver_phone}
+                +91 {activeDrawerPaymentLinkDetails?.receiver_phone}
               </Typography>
             </Stack>
             {activeDrawerPaymentLinkDetails?.status === "ACTIVE" ? (
@@ -333,7 +333,11 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                   component={"span"}
                   fontWeight={"bold"}
                 >
-                  {`Expires on `}
+                  {moment().isAfter(
+                    activeDrawerPaymentLinkDetails.expiry_timestamp
+                  )
+                    ? `Expired on `
+                    : `Expires on `}
                 </Typography>
                 <Typography component={"span"} fontWeight={"bold"}>
                   {moment(
@@ -410,18 +414,20 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                   </Stack>
                 )}
                 {activeDrawerPaymentLinkDetails?.url && (
-                  <Stack 
+                  <Stack
                     alignSelf={"center"}
                     direction={"row"}
                     sx={{
-                      cursor: "pointer"
+                      cursor: "pointer",
                     }}
-                    onClick={() => handleLinkCopy(activeDrawerPaymentLinkDetails?.url)}
+                    onClick={() =>
+                      handleLinkCopy(activeDrawerPaymentLinkDetails?.url)
+                    }
                   >
                     <Typography
                       mr={1}
                       sx={{
-                        textDecoration: "underline"
+                        textDecoration: "underline",
                       }}
                     >
                       Copy payment link

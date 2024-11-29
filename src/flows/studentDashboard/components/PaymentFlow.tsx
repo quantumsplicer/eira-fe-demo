@@ -222,7 +222,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
             handleTutorExistenceCheck(value);
           }}
           isPayeeStudent={isPayeeStudent}
-          phoneNumberProp={tutorDetails.phoneNumber}
+          phoneNumberProp={payAgainPhoneNumber ?? ""}
           submitButtonIsLoading={tutorDetailsIsLoading}
         />
       )}

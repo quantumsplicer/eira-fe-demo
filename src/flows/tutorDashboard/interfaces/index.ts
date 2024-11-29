@@ -5,9 +5,10 @@ export interface PaymentLinkInput {
 }
 export interface Transaction {
   id: string;
+  utr: string;
   amount: number;
   created: string;
-  settlement_timestamp: string | null;
+  settlement_time: string | null;
   settlement_status: string;
   payment_mode: string;
   status: string;

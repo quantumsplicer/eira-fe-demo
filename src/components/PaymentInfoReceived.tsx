@@ -11,7 +11,7 @@ type PaymentDetailKey = {
   [key in
     | "id"
     | "payment_timestamp"
-    | "settlement_timestamp"
+    | "settlement_time"
     | "payment_mode"]: string;
 };
 interface PaymentInfoReceivedProps {
@@ -24,7 +24,7 @@ interface PaymentInfoReceivedProps {
 const paymentDetailsKeys: Partial<PaymentDetailKey>[] = [
   { id: "Transaction ID" },
   { payment_timestamp: "Transaction date & time" },
-  { settlement_timestamp: "Settlement date & time" },
+  { settlement_time: "Settlement date & time" },
   { payment_mode: "Payment Mode" },
 ];
 const PaymentInfoReceived = ({

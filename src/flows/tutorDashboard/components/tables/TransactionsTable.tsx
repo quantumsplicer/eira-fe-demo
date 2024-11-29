@@ -25,6 +25,7 @@ import { UserDetails } from "../../../../APIs/definitions/user";
 import moment from "moment";
 import { PaymentItemDrawer } from "../../../studentDashboard/components/PaymentItemDrawer";
 import { Loading } from "../../../../components/Loading";
+import Amount from "../../../../components/Amount";
 
 interface TransactionCellMobileProps {
   transaction: Transaction;
@@ -58,7 +59,11 @@ const TransactionCellMobile = ({ transaction }: TransactionCellMobileProps) => {
                 height: "95%",
                 alignSelf: "center",
                 borderWidth: 2.5,
-                borderColor: "#2AC426",
+                borderColor:
+                  transaction?.status === "USER_DROPPED" ||
+                  transaction?.status === "FAILED"
+                    ? "#FF0000"
+                    : "#2AC426",
               }}
             />
             <Stack>
@@ -70,7 +75,7 @@ const TransactionCellMobile = ({ transaction }: TransactionCellMobileProps) => {
                 }
               </Typography>
               <Typography fontSize={14} color="#C3C3C3">
-                {transaction?.student_phone}
+                +91 {transaction?.student_phone}
               </Typography>
             </Stack>
           </Stack>
@@ -79,7 +84,14 @@ const TransactionCellMobile = ({ transaction }: TransactionCellMobileProps) => {
               ₹ {transaction?.amount}
             </Typography>
             <Typography fontSize={14} color="#C3C3C3" textAlign="right">
-              {transaction?.status}
+              {transaction?.status === "USER_DROPPED" ||
+              transaction?.status === "FAILED"
+                ? "Failed"
+                : transaction?.status === "BENE_SETTLED" ||
+                  transaction?.status === "PG_SETTLED" ||
+                  transaction?.status === "SUCCESS"
+                ? "Success"
+                : transaction?.status}
             </Typography>
           </Stack>
         </Stack>
@@ -89,11 +101,10 @@ const TransactionCellMobile = ({ transaction }: TransactionCellMobileProps) => {
         <PaymentItemDrawer
           open={isDrawerOpen}
           onClose={() => {
-            console.log("Asdfasdf");
             setIsDrawerOpen(false);
           }}
           transaction={transaction}
-          role="student"
+          role="tutor"
         />
       )}
     </>
@@ -122,7 +133,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
       header: "Created On",
       enableHiding: false,
       Cell: ({ cell }) => (
-        <Typography>
+        <Typography fontSize={16}>
           {moment(cell.getValue<string>()).format("MMMM D, YYYY h:mm a")}
         </Typography>
       ),
@@ -130,33 +141,59 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
     columnHelper.accessor("student_phone", {
       header: "Student's Phone Number",
       enableHiding: false,
+      Cell: ({ cell }) => (
+        <Typography>+91 {cell.getValue<string>()}</Typography>
+      ),
     }),
     columnHelper.accessor(
       (row) => row?.student_first_name + " " + row?.student_last_name,
       {
         header: "Student Name",
         enableHiding: false,
+        Cell: ({ cell }) => (
+          <Typography fontSize={18}>{cell.getValue<string>()}</Typography>
+        ),
       }
     ),
     columnHelper.accessor("amount", {
       header: "Amount",
       enableHiding: false,
+      Cell: ({ cell }) => (
+        <Amount amount={cell.getValue<number>()} fontSize={18} />
+      ),
     }),
     columnHelper.accessor("payment_mode", {
       header: "Payment Mode",
       enableHiding: false,
+      Cell: ({ cell }) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "#fffcd9",
+            padding: 1,
+            borderRadius: 4,
+          }}
+        >
+          <Typography fontSize={16} fontWeight={500} textTransform="uppercase">
+            {cell.getValue<string>()}
+          </Typography>
+        </Box>
+      ),
     }),
     columnHelper.accessor("status", {
       header: "Status",
       enableHiding: false,
       Cell: ({ cell }) => <StatusTag cellValue={cell.getValue<string>()} />,
     }),
-    columnHelper.accessor("settlement_timestamp", {
+    columnHelper.accessor("settlement_time", {
       header: "Settled On",
       enableHiding: false,
       Cell: ({ cell }) => (
         <Typography>
-          {moment(cell.getValue<string>()).format("MMMM D, YYYY h:mm a")}
+          {cell.getValue<string>()
+            ? moment(cell.getValue<string>()).format("MMMM D, YYYY h:mm a")
+            : "---"}
         </Typography>
       ),
     }),
