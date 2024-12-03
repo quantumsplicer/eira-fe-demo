@@ -71,11 +71,14 @@ const PaymentHistoryTableMobile = ({
               alignSelf: "center",
               borderWidth: 2.5,
               borderColor:
-                transactionDetails.status === "BENE_SETTLED"
+                transactionDetails.status === "BENE_SETTLED" ||
+                transactionDetails.status === "SUCCESS"
                   ? "#2AC426"
                   : transactionDetails.status === "FAILED" ||
                     transactionDetails.status === "USER_DROPPED"
                   ? "#FF0000"
+                  : transactionDetails.status === "PG_SETTLED"
+                  ? "#FFA500"
                   : "#C3C3C3",
             }}
           />
@@ -96,8 +99,10 @@ const PaymentHistoryTableMobile = ({
           </Typography>
           <Typography fontSize={14} color="#C3C3C3" textAlign="right">
             {transactionDetails.status === "BENE_SETTLED" ||
-            transactionDetails.status === "PG_SETTLED"
+            transactionDetails.status === "SUCCESS"
               ? "Success"
+              : transactionDetails.status === "PG_SETTLED"
+              ? "Pending"
               : transactionDetails.status === "FAILED" ||
                 transactionDetails.status === "USER_DROPPED"
               ? "Failed"
@@ -120,9 +125,11 @@ const PaymentHistoryTableMobile = ({
 
 const PaymentHistoryTable: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  // const { data: transactionDetails } = useGetTransactionsListQuery({
-  //   limit: 1000,
-  // });
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 4, //customize the default page size
+  });
+
   const [transactionDetails, setTransactionDetails] =
     useState<TransactionsResponse | null>(null);
 
@@ -190,12 +197,25 @@ const PaymentHistoryTable: React.FC = () => {
         <Amount fontSize={16} amount={cell.getValue<number>()} />
       ),
     }),
-    columnHelper.accessor("settlement_status", {
-      header: "Settlement Status",
+    columnHelper.accessor("payment_mode", {
+      header: "Payment Mode",
       enableHiding: false,
-      Cell: ({ cell }) => <StatusTag cellValue={cell.getValue<string>()} />,
+      Cell: ({ cell }) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "#fffcd9",
+            padding: 1,
+            borderRadius: 4,
+          }}
+        >
+          <Typography fontSize={16} fontWeight={500} textTransform="uppercase">
+            {cell.getValue<string>()}
+          </Typography>
+        </Box>
+      ),
     }),
-
     columnHelper.accessor("status", {
       header: "Payment Status",
       enableHiding: false,
@@ -211,10 +231,19 @@ const PaymentHistoryTable: React.FC = () => {
     enableColumnActions: false,
     enableSorting: false,
     enableRowVirtualization: true,
-    enableColumnVirtualization: true,
-    enablePagination: true,
+    // enableColumnVirtualization: true,
+    // enablePagination: true,
+    // rowCount: 5,
+    // paginateExpandedRows: false,
+    onPaginationChange: setPagination,
+    state: { pagination },
     initialState: {
       density: "spacious",
+    },
+    muiPaginationProps: {
+      rowsPerPageOptions: [4],
+      showFirstButton: false,
+      showLastButton: false,
     },
     defaultColumn: {
       size: 40, //make columns wider by default

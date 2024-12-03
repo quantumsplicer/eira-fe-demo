@@ -29,6 +29,7 @@ import tickMark from "../../../../assets/images/png/tick-mark.png";
 import exclamationMark from "../../../../assets/images/svg/ExclamationMark.svg";
 import moment from "moment";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import PaymentLinkStatusTag from "../../../../components/PaymentLinkStatusTag";
 
 interface PaymentLinkCellMobileProps {
   paymentLinkDetails: PaymentLinkDetails;
@@ -99,21 +100,6 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
       });
   };
   const columns = [
-    columnHelper.accessor("payer", {
-      header: "Student Name",
-      enableHiding: false,
-    }),
-    columnHelper.accessor("receiver_phone", {
-      header: "Student's Phone Number",
-      enableHiding: false,
-    }),
-    columnHelper.accessor("amount", {
-      header: "Amount",
-      enableHiding: false,
-      Cell: ({ cell }) => (
-        <Amount amount={cell.getValue<number>()} fontSize={15} />
-      ),
-    }),
     columnHelper.accessor("created", {
       header: "Created On",
       enableHiding: false,
@@ -123,6 +109,21 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
         </Typography>
       ),
     }),
+    columnHelper.accessor("receiver_phone", {
+      header: "Student's Phone Number",
+      enableHiding: false,
+      Cell: ({ cell }) => (
+        <Typography fontSize={15}>+91 {cell.getValue<string>()}</Typography>
+      ),
+    }),
+    columnHelper.accessor("amount", {
+      header: "Amount",
+      enableHiding: false,
+      Cell: ({ cell }) => (
+        <Amount amount={cell.getValue<number>()} fontSize={15} />
+      ),
+    }),
+
     columnHelper.accessor("expiry_timestamp", {
       header: "Expires On",
       enableHiding: false,
@@ -135,7 +136,9 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
     columnHelper.accessor("status", {
       header: "Status",
       enableHiding: false,
-      Cell: ({ cell }) => <StatusTag cellValue={cell.getValue<string>()} />,
+      Cell: ({ cell }) => (
+        <PaymentLinkStatusTag cellValue={cell.getValue<string>()} />
+      ),
     }),
     columnHelper.accessor("url", {
       header: "Payment Link",
@@ -145,6 +148,11 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
           variant="contained"
           color="primary"
           onClick={() => copyToClipboard(cell.getValue<string>())}
+          sx={{
+            textTransform: "none",
+            borderRadius: 3,
+            fontSize: 12,
+          }}
         >
           Copy Link
         </Button>
@@ -162,6 +170,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
     enableRowVirtualization: true,
     enableColumnVirtualization: true,
     enablePagination: true,
+    enableRowActions: false,
     initialState: {
       density: "spacious",
     },
