@@ -131,8 +131,8 @@ const PaymentDetailsDialog = ({
           {!isPhoneScreen ? <CloseIcon /> : <ArrowBackIcon />}
         </IconButton>
         <Stack justifyContent="space-between" height="100%" pt={4}>
-          <Stack spacing={isPhoneScreen ? 25 : 0} height="100%">
-            <Stack height="20vh" spacing={isPhoneScreen ? 4 : 0}>
+          <Stack spacing={isPhoneScreen ? 18 : 0} height="100%">
+            <Stack height="20vh" spacing={isPhoneScreen ? 3 : 0}>
               <Stack spacing={isPhoneScreen ? 4 : 0} height="100%">
                 <Typography fontSize={23} fontWeight={600} align="center">
                   Payment Details
@@ -161,10 +161,10 @@ const PaymentDetailsDialog = ({
               {tutorData?.[0].first_name && tutorData?.[0].last_name && (
                 <Stack height="100%">
                   <Typography
-                    fontSize={18}
+                    fontSize={16}
                     fontWeight={500}
                     align="center"
-                    pt={5}
+                    pt={0}
                   >
                     You are making a payment to:
                   </Typography>

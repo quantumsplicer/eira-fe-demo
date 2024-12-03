@@ -26,6 +26,7 @@ import moment from "moment";
 import { PaymentItemDrawer } from "../../../studentDashboard/components/PaymentItemDrawer";
 import { Loading } from "../../../../components/Loading";
 import Amount from "../../../../components/Amount";
+import PaymentLinkStatusTag from "../../../../components/PaymentLinkStatusTag";
 
 interface TransactionCellMobileProps {
   transaction: Transaction;
@@ -142,7 +143,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
       header: "Student's Phone Number",
       enableHiding: false,
       Cell: ({ cell }) => (
-        <Typography>+91 {cell.getValue<string>()}</Typography>
+        <Typography fontSize={15}>+91 {cell.getValue<string>()}</Typography>
       ),
     }),
     columnHelper.accessor(
