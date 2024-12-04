@@ -21,7 +21,7 @@ import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 const SharePaymentLinkCard: React.FC = () => {
   const { data: tutorDetails } = useGetUserDetailsQuery();
   const paymentLink = useMemo(() => {
-    return `https://eira.club/${tutorDetails?.username}`;
+    return `https://app.eira.club/${tutorDetails?.username}`;
   }, [tutorDetails?.username]);
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const copyToClipboard = () => {
