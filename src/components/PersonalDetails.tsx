@@ -142,7 +142,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
     <>
       <TextField
         autoFocus
-        disabled={updateTutorIsLoading}
+        disabled={updateTutorIsLoading || registerTutorIsLoading}
         required
         value={firstName}
         onChange={(e) => handleFirstNameInput(e, setFirstName)}
@@ -169,7 +169,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         }}
       />
       <TextField
-        disabled={updateTutorIsLoading}
+        disabled={updateTutorIsLoading || registerTutorIsLoading}
         required
         value={lastName}
         onChange={(e) => handleLastNameInput(e, setLastName)}
@@ -195,21 +195,23 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         }}
       />
       <TextField
-        disabled={updateTutorIsLoading}
+        disabled={updateTutorIsLoading || registerTutorIsLoading}
         required
         value={pan}
         onChange={(e) => handlePanInput(e)}
         onKeyDown={(event) => handleKeyDown(event)}
         error={
           (pan.length === 10 && !isPanValid(pan)) ||
-          (!updateTutorIsLoading && errorMessage !== null)
+          (!updateTutorIsLoading && !registerTutorIsLoading && errorMessage !== null)
         }
         helperText={
           pan.length === 10 && !isPanValid(pan)
             ? "Enter valid PAN"
             : !updateTutorIsLoading &&
-              errorMessage &&
-              `${errorMessage}`
+              !registerTutorIsLoading &&
+              errorMessage
+                ? `${errorMessage}`
+                : "Something went wrong. Please try again."
         }
         label="PAN"
         variant="outlined"
@@ -234,7 +236,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
 
 
       <LoadingButton
-        disabled={isButtonDisabled || updateTutorIsLoading}
+        disabled={isButtonDisabled || updateTutorIsLoading || registerTutorIsLoading}
         onClick={handleSubmitClick}
         variant="contained"
         color="primary"
@@ -248,7 +250,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           height: 45,
         }}
       >
-        {updateTutorIsLoading ? (
+        {updateTutorIsLoading || registerTutorIsLoading ? (
           <Box sx={{ display: "flex", alignItems: "center" }}>
             Verifying
             <CircularProgress

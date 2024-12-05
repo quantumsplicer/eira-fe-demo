@@ -5,11 +5,6 @@ import { useState } from "react";
 import { useCreateSessionMutation } from "../APIs/definitions/session";
 
 export const usePayment = () => {
-  const activePaymentAmount = localStorage.getItem("activePaymentAmount");
-  const activePaymentTotalAmount = localStorage.getItem("activePaymentTotalAmount");
-  const activePaymentPayeeUserId = localStorage.getItem(
-    "activePaymentPayeeUserId"
-  );
   const [errorMessage, setErrorMessage] = useState<string|null>(null);
 
   let cashfree: any;
@@ -54,7 +49,14 @@ export const usePayment = () => {
   }
 
   const makePayment = () => {
+
+    const activePaymentAmount = localStorage.getItem("activePaymentAmount");
+    const activePaymentTotalAmount = localStorage.getItem("activePaymentTotalAmount");
+    const activePaymentPayeeUserId = localStorage.getItem(
+      "activePaymentPayeeUserId"
+    );
     setErrorMessage(null);
+
     const payload = {
       amount: Number(activePaymentTotalAmount),
       payer_id: userDetails ? userDetails.id : undefined,
@@ -63,6 +65,7 @@ export const usePayment = () => {
         ? { payment_link_id: localStorage.getItem("activePaymentLinkId")} 
         : {}),
     }
+
     createOrder(payload)
       .unwrap()
       .then((res) => {
