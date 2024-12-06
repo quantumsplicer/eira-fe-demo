@@ -60,6 +60,7 @@ export interface PaymentLinkDetails {
   order_id: string;
   receiver_phone: string;
   status: string;
+  is_expired: boolean;
   expiry_timestamp: string | null;
   creator: string;
   payer: string | null;

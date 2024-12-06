@@ -133,11 +133,13 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
         </Typography>
       ),
     }),
-    columnHelper.accessor("status", {
+    columnHelper.accessor("is_expired", {
       header: "Status",
       enableHiding: false,
       Cell: ({ cell }) => (
-        <PaymentLinkStatusTag cellValue={cell.getValue<string>()} />
+        <PaymentLinkStatusTag
+          cellValue={cell.getValue<boolean>() ? "EXPIRED" : "ACTIVE"}
+        />
       ),
     }),
     columnHelper.accessor("url", {
