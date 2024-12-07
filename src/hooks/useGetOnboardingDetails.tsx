@@ -124,7 +124,7 @@ const useGetOnboardingDetails = () => {
           break;
       }
     } else {
-      if (localStorage.getItem("studentLogin") === "true") {
+      if (localStorage.getItem("access-token") && localStorage.getItem("studentLogin") === "true") {
         navigate("/student/signup");
       } else {
         navigate("/student/login");

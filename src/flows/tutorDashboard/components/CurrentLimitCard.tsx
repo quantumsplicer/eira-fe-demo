@@ -24,7 +24,7 @@ const CurrentLimitCard: React.FC = () => {
     maximumFractionDigits: 0,
   });
 
-  const { data: userDetails } = useGetUserDetailsQuery();
+  const { data: userDetails } = useGetUserDetailsQuery(undefined, { skip: !localStorage.getItem("access-token") });
 
   const currentLimit = useMemo(() => {
     return userDetails?.pg_onboarding_status &&

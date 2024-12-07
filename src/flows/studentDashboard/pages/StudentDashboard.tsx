@@ -70,7 +70,7 @@ const StudentDashboard: React.FC = () => {
   const [subpage, setSubpage] = useState(HOME_PAGE);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isPWAInstallPromptOpen, setIsPWAInstallPromptOpen] = useState(false);
-  const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
+  const { data: userDetails, isLoading, error } = useGetUserDetailsQuery(undefined, { skip: !localStorage.getItem("access-token") });
   const navigate = useNavigate();
 
   const displaySubpage = (subpage: string) => {

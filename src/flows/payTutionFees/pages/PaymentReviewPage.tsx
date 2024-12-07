@@ -76,6 +76,11 @@ const PaymentReviewPage = () => {
   };
 
   useEffect(() => {
+    if (!localStorage.getItem("access-token")) {
+      navigate("/student/login");
+      return;
+    }
+
     if (
       !activePaymentAmount ||
       !activePaymentTutorId ||

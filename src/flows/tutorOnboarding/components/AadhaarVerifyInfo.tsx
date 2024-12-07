@@ -26,7 +26,7 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
   >(null);
 
   const [onboardUser, { isLoading }] = useOnboardUserMutation();
-  const { data: userDetails } = useGetUserDetailsQuery();
+  const { data: userDetails } = useGetUserDetailsQuery(undefined, { skip: !localStorage.getItem("access-token") });
 
   const handleVerifyClick = () => {
     onboardUser({

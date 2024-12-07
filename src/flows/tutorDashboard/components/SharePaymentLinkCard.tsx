@@ -19,7 +19,7 @@ import Background from "../../../assets/images/svg/MobilePaymentBackground.svg";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 const SharePaymentLinkCard: React.FC = () => {
-  const { data: tutorDetails } = useGetUserDetailsQuery();
+  const { data: tutorDetails } = useGetUserDetailsQuery(undefined, { skip: !localStorage.getItem("access-token") });
   const paymentLink = useMemo(() => {
     return `https://app.eira.club/${tutorDetails?.username}`;
   }, [tutorDetails?.username]);

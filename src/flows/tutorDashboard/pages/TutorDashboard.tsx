@@ -87,7 +87,7 @@ const TutorDashboard: React.FC = () => {
   const previousUrl = location.state?.previousUrl;
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [isPWAInstallPromptOpen, setIsPWAInstallPromptOpen] = useState(false);
-  const { data: userDetails } = useGetUserDetailsQuery();
+  const { data: userDetails } = useGetUserDetailsQuery(undefined, { skip: !localStorage.getItem("access-token") });
   const [isPgOnboardingPending, setIsPgOnboardingPending] = useState<boolean>(
     !userDetails?.pg_onboarding_status?.find(
       (status) => status.pg_name === "cashfree" && status.status === "ACTIVE"
