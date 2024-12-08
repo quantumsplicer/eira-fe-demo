@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useOnboarding } from "../../../customHooks/useOnboarding";
 import GetHelp from "../../../components/GetHelp";
 import EiraBack from "../../../assets/images/svg/EiraBack.svg";
+import { initializeAmplitude, trackEvent } from "../../../utils/amplitude";
 
 const TutorSignIn: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -51,6 +52,10 @@ const TutorSignIn: React.FC = () => {
   };
 
   const handlePostOtpVerification = async () => {
+    // initialize amplitude
+    initializeAmplitude(phoneNumber, { role: "teacher" });
+    trackEvent("Logged In");
+    
     const navigateTo = localStorage.getItem("tutorOnboardingNavigation");
     if (navigateTo) {
       navigate(navigateTo);

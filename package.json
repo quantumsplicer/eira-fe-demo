@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.11.9",
     "@cashfreepayments/cashfree-js": "^1.0.5",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",

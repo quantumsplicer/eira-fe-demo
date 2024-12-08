@@ -21,6 +21,7 @@ import { useGetOtpMutation } from "../../../APIs/definitions/auth";
 import { useLazyGetUserDetailsByIdQuery } from "../../../APIs/definitions/user";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useParams } from "react-router-dom";
+import { initializeAmplitude, trackEvent } from "../../../utils/amplitude";
 
 const StudentSignIn = () => {
   const activeFlow = localStorage.getItem("activeFlow");
@@ -71,6 +72,10 @@ const StudentSignIn = () => {
   };
 
   const OnOtpVerification = async (id: string) => {
+    // initialize amplitude
+    initializeAmplitude(phoneNumber, { role: "student" });
+    trackEvent("Logged In");
+
     await getUserDetailsbyId(id).then((data) => {
       data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
       setIsOtpVerificationDone(true);
