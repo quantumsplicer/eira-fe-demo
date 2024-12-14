@@ -6,7 +6,7 @@ import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 
 const ProfileInfoCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
-  const { data: userDetails, isLoading, error } = useGetUserDetailsQuery();
+  const { data: userDetails, isLoading, error } = useGetUserDetailsQuery(undefined, { skip: !localStorage.getItem("access-token") });
 
   const isAadharVerified = () => {
     return (

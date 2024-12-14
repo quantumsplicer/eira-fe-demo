@@ -3,6 +3,7 @@ import { Stack, Typography, Box } from "@mui/material";
 import Amount from "./Amount";
 import tickMark from "../assets/images/png/tick-mark.png";
 import exclamationMark from "../assets/images/svg/ExclamationMark.svg";
+import crossMark from "../assets/images/png/cross-mark.png";
 import { useSelector } from "react-redux";
 import { RootState } from "../stores/configuration";
 import {
@@ -78,9 +79,11 @@ const PaymentInfo = ({
           mr={1}
           alignSelf={"center"}
         >
-          {type === "review" || paymentStatus?.order?.status !== "PAID"
+          {type === "review"
             ? "Paying"
-            : "Sent"}
+            : paymentStatus?.order?.status === "PAID" 
+              ? "Sent"
+              : "Failed to pay"}
         </Typography>
         <Amount amount={Number(amount)} fontSize={20} />
       </Stack>
@@ -111,7 +114,7 @@ const PaymentInfo = ({
           />
         ) : (
           <img
-            src={exclamationMark}
+            src={crossMark}
             style={{
               marginTop: "30px",
               width: 70,
@@ -140,7 +143,7 @@ const PaymentInfo = ({
       )}
 
       {type === "success" && !paymentStatusIsLoading && !transactionItem ? (
-        paymentStatus?.order?.status === "PAID" ? (
+        paymentStatus?.order?.status === "PAID" && (
           <Box mt={3} alignSelf={"center"}>
             <Typography
               color={"#7e7e7e"}
@@ -162,10 +165,6 @@ const PaymentInfo = ({
             <Typography component={"span"} fontWeight={"bold"}>
               {` 5:00pm`}
             </Typography>
-          </Box>
-        ) : (
-          <Box mt={3} alignSelf={"center"}>
-            <Typography color={"#7e7e7e"}>Payment under process</Typography>
           </Box>
         )
       ) : null}
