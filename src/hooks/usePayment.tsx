@@ -9,7 +9,7 @@ export const usePayment = () => {
 
   let cashfree: any;
 
-  const { data: userDetails } = useGetUserDetailsQuery();
+  const { data: userDetails } = useGetUserDetailsQuery(undefined, { skip: !localStorage.getItem("access-token") });
   const [createOrder] = useCreateOrderMutation();
   const [createSession, { isLoading: createSessionIsLoading }] = useCreateSessionMutation();
 

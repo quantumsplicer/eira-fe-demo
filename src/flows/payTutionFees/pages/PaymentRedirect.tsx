@@ -1,59 +1,39 @@
-// src/components/PaymentSuccessfulPage.tsx
-import React, { useEffect } from "react";
-import { Box, Stack, useMediaQuery } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { useLazyGetPaymentStatusQuery } from "../../../APIs/definitions/paymentLinks";
-import { changePaymentStatus } from "../../../stores/slices";
-import { Loading } from "../../../components/Loading";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { CircularProgress, Typography, Stack } from '@mui/material';
 
 const PaymentRedirect = () => {
   const navigate = useNavigate();
-  const notPhoneScreen = useMediaQuery('(min-width:850px)');
-  const [getPaymentStatus] = useLazyGetPaymentStatusQuery();
-  const dispatch = useDispatch();
+  const [countdown, setCountdown] = useState<number>(3);
 
   useEffect(() => {
-    const desiredStatus = 'PAID';
-    let interval: NodeJS.Timeout;
-    let timeout: NodeJS.Timeout;
-  
-    const fetchPaymentStatus = async () => {
-      console.log("status")
-      const orderId = localStorage.getItem("order_id");
-      if (orderId) {
-        await getPaymentStatus(orderId)
-          .unwrap()
-          .then(res => {
-            if (res.order.status === desiredStatus) {
-              clearInterval(interval);
-              clearTimeout(timeout);
-              navigate("/pay/status")
-            }
-          })
-          .catch(err => {
-            console.error('Error fetching payment status:', err);
-          });
-      } else {
-        navigate("/pay/status")
-      }
-    }
-  
-    interval = setInterval(fetchPaymentStatus, 1000);
-    timeout = setTimeout(() => {
-      clearInterval(interval);
-      navigate("/pay/status")
-    }, 10000);
-  
+    const timer = setInterval(() => {
+      setCountdown((prevCountdown) => prevCountdown - 1);
+    }, 1000);
+
+    const timeout = setTimeout(() => {
+      navigate('/pay/status');
+    }, 3000);
+
     return () => {
-      clearInterval(interval);
+      clearInterval(timer);
       clearTimeout(timeout);
     };
   }, []);
 
   return (
-    <Loading />
-  );
-};
+    <Stack
+      direction="column"
+      justifyContent="center"
+      alignItems="center"
+      sx={{ height: '100vh', width: "100vw" }}
+    >
+      <CircularProgress />
+      <Typography variant="h6" sx={{ mt: 2 }}>
+        Redirecting in {countdown} seconds...
+      </Typography>
+    </Stack>
+  )
+}
 
 export default PaymentRedirect;
