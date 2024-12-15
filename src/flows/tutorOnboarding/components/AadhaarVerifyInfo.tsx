@@ -13,6 +13,7 @@ import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { useNavigate } from "react-router-dom";
 import { useOnboardUserMutation } from "../../../APIs/definitions/onboarding";
 import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
+import { trackEvent } from "../../../utils/amplitude";
 
 interface AadhaarVerifyInfoProps {
   showHeading: boolean;
@@ -29,6 +30,7 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
   const { data: userDetails } = useGetUserDetailsQuery(undefined, { skip: !localStorage.getItem("access-token") });
 
   const handleVerifyClick = () => {
+    trackEvent("Clicked to open Cashfree Onboarding")
     onboardUser({
       user_id: userDetails?.id ?? "",
     })

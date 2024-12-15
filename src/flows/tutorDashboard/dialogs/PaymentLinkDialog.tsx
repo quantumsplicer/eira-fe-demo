@@ -25,6 +25,7 @@ import Link from "@mui/material/Link";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import PhoneNumberInputField from "../../../components/PhoneNumberInputField";
 import { PaymentLinkInput } from "../interfaces";
+import { trackEvent } from "../../../utils/amplitude";
 
 interface PaymentLinkDialogProps {
   open: boolean;
@@ -55,6 +56,7 @@ const PaymentLinkDialog = ({
     onClose();
   };
   const handleOnSubmit = (data: PaymentLinkInput) => {
+    trackEvent("Clicked on Send Payment Link");
     onSubmit(data);
   };
 
@@ -62,13 +64,17 @@ const PaymentLinkDialog = ({
   const [checked, setChecked] = useState<boolean>();
 
   const handleChange = () => {
+    checked ? trackEvent("Unchecked payment link confirmation checkbox") : trackEvent("Checked payment link confirmation checkbox");
     setChecked(!checked);
   };
 
   return (
     <Dialog
       open={open}
-      onClose={handleOnClose}
+      onClose={() => {
+        trackEvent("Closed Create Payment Link Dialog")
+        handleOnClose()
+      }}
       fullScreen={isPhoneScreen}
       hideBackdrop={isPhoneScreen}
       sx={
@@ -93,7 +99,10 @@ const PaymentLinkDialog = ({
       <DialogContent dividers>
         <IconButton
           aria-label="close"
-          onClick={handleOnClose}
+          onClick={() => {
+            isPhoneScreen ? trackEvent("Clicked back from Create Payment Link Dialog") : trackEvent("Closed Create Payment Link Dialog")
+            handleOnClose()
+          }}
           sx={
             !isPhoneScreen
               ? {
@@ -170,6 +179,12 @@ const PaymentLinkDialog = ({
                 <TextField
                   {...field}
                   label="Phone Number"
+                  onBlur={() => {
+                    trackEvent("Entered student phone number", {
+                      text: field.value
+                    })
+                    field.onBlur()
+                  }}
                   fullWidth
                   variant="outlined"
                   size="small"
@@ -215,6 +230,12 @@ const PaymentLinkDialog = ({
                   {...field}
                   fullWidth
                   label="Email (optional)"
+                  onBlur={() => {
+                    trackEvent("Entered student email", {
+                      text: field.value
+                    })
+                    field.onBlur();
+                  }}
                   variant="outlined"
                   size="small"
                   sx={{
@@ -251,6 +272,12 @@ const PaymentLinkDialog = ({
                   {...field}
                   fullWidth
                   label="Amount to pay"
+                  onBlur={() => {
+                    trackEvent("Entered Amount to Pay", {
+                      text: field.value
+                    })
+                    field.onBlur();
+                  }}
                   type="number"
                   variant="outlined"
                   size="small"

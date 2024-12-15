@@ -22,6 +22,7 @@ import { useGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
 import { useGetOnboardingStatusQuery } from "../../../APIs/definitions/onboarding";
 import moment from "moment";
 import GetHelp from "../../../components/GetHelp";
+import { trackEvent } from "../../../utils/amplitude";
 
 interface CompletePaymentDialogProps {
   open: boolean;
@@ -296,7 +297,10 @@ const CompletePaymentDialog = ({
                 )}
                 <Button
                   variant="contained"
-                  onClick={onSubmit}
+                  onClick={() => {
+                    trackEvent("Clicked on Proceed to Pay")
+                    onSubmit()
+                  }}
                   fullWidth
                   sx={{
                     backgroundColor: "#507FFD",

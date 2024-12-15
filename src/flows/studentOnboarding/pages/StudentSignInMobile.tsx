@@ -69,7 +69,7 @@ const StudentSignInMobile = () => {
   };
 
   const OnOtpVerification = async (id: string) => {
-    initializeAmplitude(phone, { role: "student" });
+    initializeAmplitude({ role: "student" });
     trackEvent("Logged In");
 
     await getUserDetailsbyId(id).then((data) => {

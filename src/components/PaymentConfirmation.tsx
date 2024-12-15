@@ -5,6 +5,7 @@ import {
     Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { trackEvent } from "../utils/amplitude";
 
 interface PaymentConfirmationProps {
     paymentDetails: Record<string, string>;
@@ -25,6 +26,7 @@ const PaymentConfirmation = ({ name, paymentDetails, amount }: PaymentConfirmati
             />
             <Typography
                 onClick={() => {
+                    trackEvent("Clicked Go To Dashboard");
                     navigate("/student/dashboard");
                 }}
                 fontWeight={600}

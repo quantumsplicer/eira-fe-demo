@@ -15,6 +15,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Alert from "@mui/material/Alert";
 import TickMark from "../../../assets/images/png/tick-mark.png";
 import Link from "@mui/material/Link";
+import { trackEvent } from "../../../utils/amplitude";
 
 interface PaymentConfirmationDialogProps {
   open: boolean;
@@ -217,7 +218,10 @@ const PaymentConfirmationDialog = ({
                     textDecoration: 'none',
                   },
                 }}
-                onClick={onClose}
+                onClick={() => {
+                  trackEvent("Clicked on Go To Dashboard")
+                  onClose();
+                }}
               >
                 Go To Dashboard
               </Typography>

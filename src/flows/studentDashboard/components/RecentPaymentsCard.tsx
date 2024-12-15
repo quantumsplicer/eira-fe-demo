@@ -22,6 +22,7 @@ import PaymentFlow from "./PaymentFlow";
 import { useGetTransactionsListQuery } from "../../../APIs/definitions/transactionsList";
 import { Transaction } from "../../tutorDashboard/interfaces";
 import { useGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
+import { trackEvent } from "../../../utils/amplitude";
 
 const RecentPaymentRow: React.FC<RecentTransactionTutor> = (rowData) => {
   const [isPaymentFlowActive, setIsPaymentFlowActive] = useState(false);
@@ -36,6 +37,10 @@ const RecentPaymentRow: React.FC<RecentTransactionTutor> = (rowData) => {
     rowData.phoneNumber ?? ""
   );
   const handleOnClick = () => {
+    trackEvent("Payment to", {
+      payeeName: `${tutorData?.[0]?.first_name} ${tutorData?.[0]?.first_name}`,
+      payeePhone: tutorData?.[0]?.phone
+    })
     setTutorDetails({
       firstName: tutorData?.[0]?.first_name ?? "",
       lastName: tutorData?.[0]?.last_name ?? "",

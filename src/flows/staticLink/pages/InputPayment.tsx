@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import SafeLogo from "../../../components/SafeLogo";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
 import { useLazyGetUserByUserNameQuery } from "../../../APIs/definitions/user";
+import { trackEvent } from "../../../utils/amplitude";
 
 const InputPayment = () => {
 
@@ -34,6 +35,7 @@ const InputPayment = () => {
     }
 
     const handleSubmit = async () => {
+        trackEvent("Clicked Proceed")
         const isStudentSignedIn = localStorage.getItem("studentLogin") === "true"
         let isTutorPgOnboarded = false;
         const links = window.location.pathname.split("/");
@@ -142,6 +144,11 @@ const InputPayment = () => {
                                 label="Amount to pay"
                                 variant="outlined"
                                 value={amount}
+                                onBlur={() => {
+                                    trackEvent("Entered Amount To Pay", {
+                                        text: amount
+                                    })
+                                }}
                                 onChange={handleAmountChange}
                                 onKeyDown={handleKeyDown}
                                 InputLabelProps={{

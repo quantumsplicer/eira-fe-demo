@@ -14,6 +14,7 @@ import PaymentLinksTable from "./tables/PaymentLinksTable";
 import SendPaymentLinkFlow from "./flows/SendPaymentLinkFlow";
 import { useGetPaymentLinksQuery } from "../../../APIs/definitions/paymentLinks";
 import { Loading } from "../../../components/Loading";
+import { trackEvent } from "../../../utils/amplitude";
 const lightTheme = createTheme({ palette: { mode: "light" } });
 
 interface TabPanelProps {
@@ -46,6 +47,7 @@ const TabbedDataTableContainer: React.FC = () => {
   const { data, isLoading, isSuccess, isError, error } =
     useGetPaymentLinksQuery();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    newValue === 0 ? trackEvent("Opened Transactions History table") : trackEvent("Opened Payment Links table")
     setValue(newValue);
   };
 
@@ -93,7 +95,10 @@ const TabbedDataTableContainer: React.FC = () => {
                   {isPhoneScreen ? (
                     <Button
                       variant="contained"
-                      onClick={() => setPaymentLinkFlowActive(true)}
+                      onClick={() => {
+                        trackEvent("Clicked on Create a Payment Link")
+                        setPaymentLinkFlowActive(true)
+                      }}
                       sx={{
                         backgroundColor: "#507FFD",
                         borderRadius: 5,
@@ -149,7 +154,10 @@ const TabbedDataTableContainer: React.FC = () => {
                     {!isPhoneScreen ? (
                       <Button
                         variant="contained"
-                        onClick={() => setPaymentLinkFlowActive(true)}
+                        onClick={() => {
+                          trackEvent("Clicked on Create a Payment Link")
+                          setPaymentLinkFlowActive(true)
+                        }}
                         sx={{
                           backgroundColor: "#507FFD",
                           borderRadius: 3,

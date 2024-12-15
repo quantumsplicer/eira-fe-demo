@@ -30,6 +30,7 @@ import exclamationMark from "../../../../assets/images/svg/ExclamationMark.svg";
 import moment from "moment";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PaymentLinkStatusTag from "../../../../components/PaymentLinkStatusTag";
+import { trackEvent } from "../../../../utils/amplitude";
 
 interface PaymentLinkCellMobileProps {
   paymentLinkDetails: PaymentLinkDetails;
@@ -90,6 +91,9 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
 
   const columnHelper = createMRTColumnHelper<PaymentLinkDetails>();
   const copyToClipboard = (paymentLink: string) => {
+    trackEvent("Copied Payment Link", {
+      linkId: paymentLink
+    })
     navigator.clipboard
       .writeText(paymentLink)
       .then(() => {
@@ -228,6 +232,9 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
     useState<PaymentLinkDetails | null>(null);
   const [paymentLinkFlowActive, setPaymentLinkFlowActive] = useState(false);
   const handleOnClick = (paymentLinkDetails: PaymentLinkDetails) => {
+    trackEvent("Clicked on a Payment Link", {
+      linkId: paymentLinkDetails.id
+    })
     console.log(paymentLinkDetails);
     return () => {
       setIsDrawerOpen(true);
@@ -236,6 +243,9 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
   };
 
   const handleLinkCopy = (link: string) => {
+    trackEvent("Copied Payment Link", {
+      linkId: link
+    })
     navigator.clipboard.writeText(link);
   };
 
@@ -255,7 +265,10 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
       />
       <Drawer
         open={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
+        onClose={() => {
+          trackEvent("Closed Payment Link Details Dialog")
+          setIsDrawerOpen(false)
+        }}
         sx={{
           width: "100%",
           flexShrink: 0,
@@ -270,7 +283,10 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
         anchor="bottom"
       >
         <Box sx={{ position: "absolute", top: 16, right: 16 }}>
-          <IconButton onClick={() => setIsDrawerOpen(false)}>
+          <IconButton onClick={() => {
+            trackEvent("Closed Payment Link Details Dialog")
+            setIsDrawerOpen(false)
+          }}>
             <CloseIcon />
           </IconButton>
         </Box>
@@ -477,7 +493,10 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
             </Typography>
             <Button
               variant="contained"
-              onClick={() => setPaymentLinkFlowActive(true)}
+              onClick={() => {
+                trackEvent("Clicked on Create a Payment Link")
+                setPaymentLinkFlowActive(true)
+              }}
               sx={{
                 backgroundColor: "#507FFD",
                 borderRadius: 2,

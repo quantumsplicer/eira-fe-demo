@@ -42,6 +42,7 @@ import { useInstallPWA } from "../../../hooks/useInstallPWA";
 import PWAInstallDrawer from "../../../components/PWAInstallDrawer";
 import { WHATSAPP_LINK } from "../../../components/GetHelp";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
+import { trackEvent } from "../../../utils/amplitude";
 
 const PAYMENT_HISTORY_PAGE = "payment-history-page";
 const HOME_PAGE = "home-page";
@@ -92,6 +93,7 @@ const StudentDashboard: React.FC = () => {
   };
 
   const handleDrawerOpen = () => {
+    trackEvent("Opened sidebar");
     setIsDrawerOpen(true);
   };
 
@@ -201,7 +203,10 @@ const StudentDashboard: React.FC = () => {
             variant="temporary"
             anchor="right"
             open={isDrawerOpen}
-            onClose={handleDrawerClose}
+            onClose={() => {
+              trackEvent("Closed sidebar")
+              handleDrawerClose()
+            }}
             ModalProps={{
               keepMounted: true, // Better open performance on mobile.
             }}
@@ -256,6 +261,7 @@ const StudentDashboard: React.FC = () => {
                       <ListItem key={entry.title} sx={{ width: "100%", p: 0 }}>
                         <ListItemButton
                           onClick={() => {
+                            trackEvent(`Clicked on ${entry.title} Nav`)
                             handleSubpageChange(entry.subpage);
                           }}
                           disabled={index === 3 || index === 4 ? true : false}
@@ -303,6 +309,7 @@ const StudentDashboard: React.FC = () => {
               <Button
                 variant="contained"
                 onClick={() => {
+                  trackEvent("Logged out")
                   handleLogout();
                 }}
                 sx={{
@@ -366,6 +373,7 @@ const StudentDashboard: React.FC = () => {
                   >
                     <ListItemButton
                       onClick={() => {
+                        trackEvent(`Clicked on ${entry.title} nav`)
                         entry?.link && window.open(entry.link, "_blank");
                         entry?.subpage && handleSubpageChange(entry.subpage);
                       }}
@@ -424,6 +432,7 @@ const StudentDashboard: React.FC = () => {
                 <Button
                   variant="contained"
                   onClick={() => {
+                    trackEvent("Logged out")
                     handleLogout();
                   }}
                   sx={{
@@ -488,7 +497,10 @@ const StudentDashboard: React.FC = () => {
               backgroundColor: "#507FFD",
               color: "white",
             }}
-            onClick={() => setIsPaymentFlowActive(true)}
+            onClick={() => {
+              trackEvent("Clicked on Make a Payment")
+              setIsPaymentFlowActive(true)
+            }}
           >
             Make a Payment
           </Fab>
@@ -508,7 +520,10 @@ const StudentDashboard: React.FC = () => {
           onClose={() => setIsPWAInstallPromptOpen(false)}
           CustomDrawerButton={
             <Button
-              onClick={() => promptToInstall()}
+              onClick={() => {
+                trackEvent("Clicked on Save Eira to homescreen");
+                promptToInstall()
+              }}
               variant="contained"
               sx={{
                 width: "320px",
