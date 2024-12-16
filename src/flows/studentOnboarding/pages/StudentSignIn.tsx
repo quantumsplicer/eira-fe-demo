@@ -73,7 +73,7 @@ const StudentSignIn = () => {
 
   const OnOtpVerification = async (id: string) => {
     // initialize amplitude
-    initializeAmplitude(phoneNumber, { role: "student" });
+    initializeAmplitude({ role: "student" });
     trackEvent("Logged In");
 
     await getUserDetailsbyId(id).then((data) => {

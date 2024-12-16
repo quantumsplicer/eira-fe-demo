@@ -14,6 +14,7 @@ import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import StatusDrawer from "./StatusDrawer";
 import { useAddAccountMutation } from "../APIs/definitions/bankAccounts";
 import GetHelp from "./GetHelp";
+import { trackEvent } from "../utils/amplitude";
 
 interface BankAccountDetailsProps {
   onSuccess: () => void;
@@ -112,10 +113,12 @@ const BankAccountDetails = ({ onSuccess }: BankAccountDetailsProps) => {
         !showAccountVerificationStatus ||
         (showAccountVerificationStatus && !isAccountVerified)
       ) {
+        !showAccountVerificationStatus ? trackEvent("Clicked Verify Account") : trackEvent("Clicked Verify Account Again");
         setShowAccountVerificationStatus(false);
         setIsDrawerOpen(false);
         verifyAccount();
       } else if (showAccountVerificationStatus && isAccountVerified) {
+        trackEvent("Clicked Verify Aadhaar");
         onSuccess();
       }
     }
@@ -153,7 +156,10 @@ const BankAccountDetails = ({ onSuccess }: BankAccountDetailsProps) => {
   const TryAgainButton = () => {
     return (
       <Button
-        onClick={() => setIsDrawerOpen(false)}
+        onClick={() => {
+          trackEvent("Clicked Verify Account Again")
+          setIsDrawerOpen(false)
+        }}
         variant="contained"
         sx={{
           width: "320px",
@@ -176,6 +182,12 @@ const BankAccountDetails = ({ onSuccess }: BankAccountDetailsProps) => {
         autoFocus
         required
         value={accountNumber}
+        onBlur={() => {
+          trackEvent("Entered Account Number",
+          {
+            text: accountNumber
+          })
+        }}
         disabled={
           addAccountIsLoading ||
           isAccountVerified ||
@@ -207,6 +219,12 @@ const BankAccountDetails = ({ onSuccess }: BankAccountDetailsProps) => {
       <TextField
         required
         value={verifyAccountNumber}
+        onBlur={() => {
+          trackEvent("Re-Entered Account Number",
+          {
+            text: verifyAccountNumber
+          })
+        }}
         disabled={
           addAccountIsLoading ||
           isAccountVerified ||
@@ -246,6 +264,12 @@ const BankAccountDetails = ({ onSuccess }: BankAccountDetailsProps) => {
       <TextField
         required
         value={ifsc}
+        onBlur={() => {
+          trackEvent("Entered Ifsc",
+          {
+            text: ifsc
+          })
+        }}
         disabled={
           addAccountIsLoading ||
           isAccountVerified ||
@@ -336,7 +360,7 @@ const BankAccountDetails = ({ onSuccess }: BankAccountDetailsProps) => {
       >
         {showAccountVerificationStatus ? (
           isAccountVerified ? (
-            "Next"
+            "Verify Aadhaar"
           ) : (
             "Verify Again"
           )

@@ -14,6 +14,7 @@ import {
 import { RootState } from "../stores/configuration";
 import { isPanValid } from "../utils/helperFunctions";
 import GetHelp from "./GetHelp";
+import { trackEvent } from "../utils/amplitude";
 
 interface PersonalDetailsProps {
   onSuccess?: () => void;
@@ -81,6 +82,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
       localStorage.setItem("onboardingUsername", `${firstName} ${lastName}`);
       
       if (tutorPhoneNumber || activePaymentTutorId) {
+        trackEvent("Clicked Submit to Register Tutor")
         registerTutor({
           first_name: firstName,
           last_name: lastName,
@@ -98,9 +100,10 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
             onSuccess && onSuccess();
           })
           .catch((error) => {
-            setErrorMessage(error?.data?.message);
+            error?.data?.message ? setErrorMessage(error?.data?.message) : setErrorMessage("Something went wrong. Please try again.");
           });
       } else {
+        trackEvent("Clicked Submit")
         updateTutor({
           first_name: firstName,
           last_name: lastName,
@@ -111,7 +114,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
             onSuccess && onSuccess();
           })
           .catch((error) => {
-            setErrorMessage(error?.data?.message);
+            error?.data?.message ? setErrorMessage(error?.data?.message) : setErrorMessage("Something went wrong. Please try again.");
           });
       }
     }
@@ -145,6 +148,12 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         disabled={updateTutorIsLoading || registerTutorIsLoading}
         required
         value={firstName}
+        onBlur={() => {
+          trackEvent("Entered first name",
+          {
+            text: firstName
+          })
+        }}
         onChange={(e) => handleFirstNameInput(e, setFirstName)}
         onKeyDown={(event) => handleKeyDown(event)}
         label="First Name (as per PAN)"
@@ -172,6 +181,12 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         disabled={updateTutorIsLoading || registerTutorIsLoading}
         required
         value={lastName}
+        onBlur={() => {
+          trackEvent("Entered last name",
+          {
+            text: lastName
+          })
+        }}
         onChange={(e) => handleLastNameInput(e, setLastName)}
         onKeyDown={(event) => handleKeyDown(event)}
         label="Last Name (as per PAN)"
@@ -198,6 +213,12 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         disabled={updateTutorIsLoading || registerTutorIsLoading}
         required
         value={pan}
+        onBlur={() => {
+          trackEvent("Entered pan",
+          {
+            text: pan
+          })
+        }}
         onChange={(e) => handlePanInput(e)}
         onKeyDown={(event) => handleKeyDown(event)}
         error={
@@ -209,9 +230,8 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
             ? "Enter valid PAN"
             : !updateTutorIsLoading &&
               !registerTutorIsLoading &&
-              errorMessage
-                ? `${errorMessage}`
-                : "Something went wrong. Please try again."
+              errorMessage &&
+              `${errorMessage}`
         }
         label="PAN"
         variant="outlined"

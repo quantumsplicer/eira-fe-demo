@@ -40,6 +40,7 @@ import SessionHistory from "../subpages/SessionHistory";
 import { WHATSAPP_LINK } from "../../../components/GetHelp";
 import { useInstallPWA } from "../../../hooks/useInstallPWA";
 import PWAInstallDrawer from "../../../components/PWAInstallDrawer";
+import { trackEvent } from "../../../utils/amplitude";
 
 const PAYMENT_HISTORY_PAGE = "Payment History Page";
 const SESSION_HISTORY_PAGE = "Session History Page";
@@ -102,6 +103,7 @@ const TutorDashboard: React.FC = () => {
     setMobileOpen(false);
   };
   const handleDrawerToggle = () => {
+    trackEvent("opened sidebar")
     setMobileOpen(true);
   };
   const handleSubpageChange = (subpage: string) => {
@@ -278,6 +280,7 @@ const TutorDashboard: React.FC = () => {
                       </Typography>
                       <IconButton
                         onClick={() => {
+                          trackEvent("Opened profile page")
                           handleSubpageChange(PROFILE_PAGE);
                         }}
                       >
@@ -332,6 +335,7 @@ const TutorDashboard: React.FC = () => {
                     >
                       <ListItemButton
                         onClick={() => {
+                          trackEvent(`Clicked on ${entry.title} nav`)
                           handleClickNavOption(entry);
                         }}
                         disabled={index === 2 || index === 3 ? true : false}
@@ -394,6 +398,7 @@ const TutorDashboard: React.FC = () => {
                     "&:hover": { backgroundColor: "#FFEEEE" },
                   }}
                   onClick={() => {
+                    trackEvent("Logged Out")
                     handleLogout();
                   }}
                 >
@@ -415,7 +420,10 @@ const TutorDashboard: React.FC = () => {
               variant="temporary"
               anchor="right"
               open={mobileOpen}
-              onClose={handleDrawerClose}
+              onClose={() => {
+                trackEvent("closed sidebar")
+                handleDrawerClose()
+              }}
               ModalProps={{
                 keepMounted: true, // Better open performance on mobile.
               }}
@@ -436,6 +444,7 @@ const TutorDashboard: React.FC = () => {
                     pl={2.5}
                     spacing={2}
                     onClick={() => {
+                      trackEvent("Opened profile page")
                       handleSubpageChange(PROFILE_PAGE);
                     }}
                   >
@@ -458,6 +467,7 @@ const TutorDashboard: React.FC = () => {
                       <ListItem key={entry.title} sx={{ width: "100%", p: 0 }}>
                         <ListItemButton
                           onClick={() => {
+                            trackEvent(`Clicked on ${entry.title} nav`)
                             handleClickNavOption(entry);
                           }}
                           disabled={index === 2 || index === 3 ? true : false}
@@ -511,6 +521,7 @@ const TutorDashboard: React.FC = () => {
                     "&:hover": { backgroundColor: "#FFEEEE" },
                   }}
                   onClick={() => {
+                    trackEvent("Logged out")
                     handleLogout();
                   }}
                 >
@@ -602,7 +613,10 @@ const TutorDashboard: React.FC = () => {
           onClose={() => setIsPWAInstallPromptOpen(false)}
           CustomDrawerButton={
             <Button
-              onClick={() => promptToInstall()}
+              onClick={() => {
+                trackEvent("Clicked on Save Eira to homescreen");
+                promptToInstall()
+              }}
               variant="contained"
               sx={{
                 width: "320px",

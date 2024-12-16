@@ -22,6 +22,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import TickMark from "../../../assets/images/png/tick-mark.png";
 import Link from "@mui/material/Link";
+import { trackEvent } from "../../../utils/amplitude";
 
 interface ConfirmationDialogProps {
   open: boolean;
@@ -85,7 +86,10 @@ const ConfirmationDialog = ({
                 />
               </Box>
               <Typography
-                onClick={handleOnClose}
+                onClick={() => {
+                  trackEvent("Clicked on Go to Dashboard")
+                  handleOnClose()
+                }}
                 fontSize={18}
                 color={"gray"}
                 fontWeight={600}
@@ -140,7 +144,10 @@ const ConfirmationDialog = ({
               />
             </Box>
             <Typography
-                onClick={handleOnClose}
+                onClick={() => {
+                  trackEvent("Clicked on Go to Dashboard")
+                  handleOnClose()
+                }}
                 fontSize={18}
                 color={"gray"}
                 fontWeight={600}

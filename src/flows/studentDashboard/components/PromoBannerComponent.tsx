@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import DashboardBannerArt1 from "../../../assets/images/png/student-dashboard-banner-1.png";
 import DashboardBannerArt2 from "../../../assets/images/png/student-dashboard-banner-2.png";
 import { WHATSAPP_LINK } from "../../../components/GetHelp";
+import { trackEvent } from "../../../utils/amplitude";
 
 const PromoBannerComponent: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
@@ -22,14 +23,20 @@ const PromoBannerComponent: React.FC = () => {
         component="img"
         src={DashboardBannerArt1}
         width="95%"
-        onClick={() => window.open(WHATSAPP_LINK, "_blank")}
+        onClick={() => {
+          trackEvent("Clicked on Get CC Banner")
+          window.open(WHATSAPP_LINK, "_blank")
+        }}
         sx={{ cursor: "pointer" }}
       />
       <Box
         component="img"
         src={DashboardBannerArt2}
         width="95%"
-        onClick={() => window.open(WHATSAPP_LINK, "_blank")}
+        onClick={() => {
+          trackEvent("Clicked on Need a Loan Banner")
+          window.open(WHATSAPP_LINK, "_blank")
+        }}
         sx={{ cursor: "pointer" }}
       />
     </Stack>

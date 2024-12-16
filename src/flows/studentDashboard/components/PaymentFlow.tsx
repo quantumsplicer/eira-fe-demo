@@ -23,6 +23,7 @@ import { usePayment } from "../../../hooks/usePayment";
 import { ACTIVE_PG } from "../../payTutionFees/pages/InputPaymentDetails";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
+import { trackEvent } from "../../../utils/amplitude";
 
 interface PaymentFlowProps {
   open: boolean;
@@ -182,7 +183,10 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
           minWidth: "320px",
           maxWidth: "400px",
         }}
-        onClick={onClose}
+        onClick={() => {
+          trackEvent("Clicked Go to Dashboard");
+          onClose()
+        }}
       >
         Go to Dashboard
       </Button>
@@ -263,12 +267,16 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
       {activeDialog === DialogName.CompletePayment && (
         <CompletePaymentDialog
           open={activeDialog === DialogName.CompletePayment && open}
-          onClose={handleClose}
+          onClose={() => {
+            trackEvent("Closed Payment Review Dialog");
+            handleClose()
+          }}
           onSubmit={() => {
             makePayment();
           }}
           errorMessage={errorMessage ? errorMessage : null}
           onBack={() => {
+            trackEvent("Clicked Back from Payment Review");
             setActiveDialog(stepOnBack);
             setStepOnBack(DialogName.PaymentDetails);
           }}

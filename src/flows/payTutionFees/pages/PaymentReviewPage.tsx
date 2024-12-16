@@ -28,6 +28,7 @@ import { useCreateOrderMutation } from "../../../APIs/definitions/paymentLinks";
 import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
 import moment from "moment";
 import GetHelp from "../../../components/GetHelp";
+import { trackEvent } from "../../../utils/amplitude";
 
 const PaymentReviewPage = () => {
   // const isTutorEiraOnboarded =
@@ -72,6 +73,7 @@ const PaymentReviewPage = () => {
   const { makePayment, errorMessage } = usePayment();
 
   const handleSubmit = () => {
+    trackEvent("Clicked Proceed To Pay")
     makePayment();
   };
 

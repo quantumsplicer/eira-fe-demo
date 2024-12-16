@@ -117,10 +117,10 @@ const OTPInput = ({
     }
 
     if (onVerified) {
+      localStorage.setItem("phoneNumber", phoneNumber);
       onVerified(result?.data?.id);
     }
 
-    localStorage.setItem("phoneNumber", phoneNumber);
     if (
       location.pathname.includes("student") ||
       location.pathname.includes("pay-tuition-fees")

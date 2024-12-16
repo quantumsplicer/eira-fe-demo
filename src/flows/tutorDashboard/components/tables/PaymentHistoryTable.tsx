@@ -11,6 +11,7 @@ import { darken, lighten, useTheme } from "@mui/material";
 import StatusTag from "../StatusTag";
 import { Virtuoso } from "react-virtuoso";
 import PaymentHistoryTableMobile from "./PaymentHistoryTableMobile";
+import { trackEvent } from "../../../../utils/amplitude";
 
 const lightTheme = createTheme({ palette: { mode: "light" } });
 interface Person {
@@ -133,6 +134,7 @@ const PaymentHistoryTable: React.FC = () => {
   const subHeading =
     "your payment link is created and sent to the student on their whatsapp and SMS";
   const openDialog = () => {
+    trackEvent("Clicked on Create a Payment Link")
     setActiveDialog("PaymentLinkDialog");
   };
 

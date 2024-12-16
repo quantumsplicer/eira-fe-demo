@@ -53,7 +53,7 @@ const TutorSignIn: React.FC = () => {
 
   const handlePostOtpVerification = async () => {
     // initialize amplitude
-    initializeAmplitude(phoneNumber, { role: "teacher" });
+    initializeAmplitude({ role: "teacher" });
     trackEvent("Logged In");
     
     const navigateTo = localStorage.getItem("tutorOnboardingNavigation");

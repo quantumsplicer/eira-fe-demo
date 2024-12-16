@@ -4,6 +4,7 @@ import {
     Stack,
     useMediaQuery,
 } from "@mui/material";
+import { trackEvent } from "../utils/amplitude";
 
 interface PhoneNumberInputFieldProps {
     label: string;
@@ -11,9 +12,10 @@ interface PhoneNumberInputFieldProps {
     setPhoneNumber: (phone: string) => void;
     onSubmit?: () => void;
     autoFocus: boolean;
+    onBlurEventText?: string;
 }
 
-const PhoneNumberInputField = ({ label, phone, setPhoneNumber, onSubmit, autoFocus }: PhoneNumberInputFieldProps) => {
+const PhoneNumberInputField = ({ label, phone, setPhoneNumber, onSubmit, autoFocus, onBlurEventText }: PhoneNumberInputFieldProps) => {
 
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
 
@@ -46,6 +48,11 @@ const PhoneNumberInputField = ({ label, phone, setPhoneNumber, onSubmit, autoFoc
             label={label}
             variant="outlined"
             value={phone}
+            onBlur={() => {
+                onBlurEventText && trackEvent(onBlurEventText, {
+                    text: phone
+                })
+            }}
             onChange={handlePhoneNumberChange}
             onKeyDown={handleKeyDown}
             error={phone.length === 10 && !isPhoneNumberValid()}
