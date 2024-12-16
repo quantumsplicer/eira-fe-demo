@@ -33,6 +33,7 @@ import {
 } from "../../tutorDashboard/interfaces";
 import { PaymentItemDrawer } from "./PaymentItemDrawer";
 import Amount from "../../../components/Amount";
+import { trackEvent } from "../../../utils/amplitude";
 
 const lightTheme = createTheme({ palette: { mode: "light" } });
 
@@ -366,7 +367,10 @@ const PaymentHistoryTable: React.FC = () => {
                       </Typography>
                       <Button
                         variant="contained"
-                        onClick={() => setPaymentFlowActive(true)}
+                        onClick={() => {
+                          trackEvent("Clicked on Make a Payment")
+                          setPaymentFlowActive(true)
+                        }}
                         sx={{
                           backgroundColor: "#507FFD",
                           borderRadius: 2,

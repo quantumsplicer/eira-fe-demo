@@ -21,6 +21,7 @@ import AmountBreakupCard from "../../../components/AmountBreakupCard";
 import { error } from "console";
 import { LoadingButton } from "@mui/lab";
 import { useGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
+import { trackEvent } from "../../../utils/amplitude";
 
 const Transition = forwardRef(function Transition(props: SlideProps, ref) {
   return (
@@ -71,6 +72,7 @@ const PaymentDetailsDialog = ({
   const [isPayeeStudentError, setIsPayeeStudentError] =
     useState<boolean>(false);
   const handleFormSubmit: SubmitHandler<PaymentDetails> = (data) => {
+    trackEvent("Clicked Next")
     onSubmit(data);
   };
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
@@ -86,7 +88,10 @@ const PaymentDetailsDialog = ({
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={() => {
+        trackEvent("Closed Payment Details Dialog");
+        onClose()
+      }}
       fullScreen={isPhoneScreen}
       hideBackdrop={isPhoneScreen}
       TransitionComponent={isPhoneScreen ? Transition : undefined}
@@ -111,7 +116,10 @@ const PaymentDetailsDialog = ({
       <DialogContent dividers>
         <IconButton
           aria-label="close"
-          onClick={onClose}
+          onClick={() => {
+            isPhoneScreen ? trackEvent("Clicked back from Payment Details"): trackEvent("Closed Payment Details Dialog");
+            onClose()
+          }}
           sx={
             !isPhoneScreen
               ? {
@@ -211,6 +219,9 @@ const PaymentDetailsDialog = ({
                       value={value}
                       onChange={onChange}
                       onBlur={() => {
+                        trackEvent("Entered tutor phone number", {
+                          text: value
+                        })
                         onBlur();
                         setIsPayeeStudentError(false);
                       }}
@@ -277,6 +288,12 @@ const PaymentDetailsDialog = ({
                       {...field}
                       label="Amount"
                       fullWidth
+                      onBlur={() => {
+                        trackEvent("Entered amount to pay", {
+                          text: field.value
+                        })
+                        field.onBlur()
+                      }}
                       type="number"
                       variant="outlined"
                       size="small"

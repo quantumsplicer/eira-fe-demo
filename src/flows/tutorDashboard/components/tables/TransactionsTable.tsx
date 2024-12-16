@@ -27,6 +27,7 @@ import { PaymentItemDrawer } from "../../../studentDashboard/components/PaymentI
 import { Loading } from "../../../../components/Loading";
 import Amount from "../../../../components/Amount";
 import PaymentLinkStatusTag from "../../../../components/PaymentLinkStatusTag";
+import { trackEvent } from "../../../../utils/amplitude";
 
 interface TransactionCellMobileProps {
   transaction: Transaction;
@@ -49,7 +50,12 @@ const TransactionCellMobile = ({ transaction }: TransactionCellMobileProps) => {
             backgroundColor: "#f0f0f0",
           },
         }}
-        onClick={() => setIsDrawerOpen(true)}
+        onClick={() => {
+          trackEvent("Clicked on a Transaction", {
+            txnId: transaction.id
+          })
+          setIsDrawerOpen(true)
+        }}
       >
         <Stack direction="row" justifyContent="space-between">
           <Stack direction="row" spacing={2}>
@@ -102,6 +108,7 @@ const TransactionCellMobile = ({ transaction }: TransactionCellMobileProps) => {
         <PaymentItemDrawer
           open={isDrawerOpen}
           onClose={() => {
+            trackEvent("Closed Transaction Details Drawer")
             setIsDrawerOpen(false);
           }}
           transaction={transaction}
@@ -313,7 +320,10 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({
             </Typography>
             <Button
               variant="contained"
-              onClick={() => setPaymentLinkFlowActive(true)}
+              onClick={() => {
+                trackEvent("Clicked on Create a Payment Link")
+                setPaymentLinkFlowActive(true)
+              }}
               sx={{
                 backgroundColor: "#507FFD",
                 borderRadius: 2,

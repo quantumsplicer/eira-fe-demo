@@ -85,7 +85,13 @@ const ProfileInfoCard: React.FC = () => {
             <Typography color="#7E7E7E" fontWeight={630}>
               Account Verified:
             </Typography>
-            <StatusTag cellValue={userDetails?.onboarding_status ?? ""} />
+            <StatusTag
+              cellValue={
+                userDetails?.onboarding_status === "completed"
+                  ? "SUCCESS"
+                  : "FAILED"
+              }
+            />
           </Stack>
           <Stack
             direction="row"
@@ -109,7 +115,7 @@ const ProfileInfoCard: React.FC = () => {
             <Typography color="#7E7E7E" fontWeight={630}>
               Aadhaar Verified:
             </Typography>
-            <StatusTag cellValue={isAadharVerified() ? "Yes" : "No"} />
+            <StatusTag cellValue={isAadharVerified() ? "SUCCESS" : "FAILED"} />
           </Stack>
         </Stack>
       </Stack>

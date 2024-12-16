@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import PaymentLinkDialog from "../dialogs/PaymentLinkDialog";
 import ConfirmationDialog from "../dialogs/ConfirmationDialog";
 import PaymentLinkFlow from "./flows/SendPaymentLinkFlow";
+import { trackEvent } from "../../../utils/amplitude";
 
 const CreatePaymentLinkCard: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
@@ -59,7 +60,10 @@ const CreatePaymentLinkCard: React.FC = () => {
         </Stack>
         <Button
           variant="contained"
-          onClick={() => setPaymentLinkFlowActive(true)}
+          onClick={() => {
+            trackEvent("Clicked on Create Payment Link");
+            setPaymentLinkFlowActive(true)
+          }}
           sx={
             !isPhoneScreen
               ? {

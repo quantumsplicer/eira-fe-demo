@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import EiraLogo from "../assets/images/png/eira-logo-graphic.png";
 import Close from "@mui/icons-material/Close";
+import { trackEvent } from "../utils/amplitude";
 
 interface PWAInstallDrawerProps {
   open: boolean;
@@ -39,7 +40,10 @@ export const PWAInstallDrawer = ({
     >
       {/* Close Button */}
       <IconButton
-        onClick={onClose}
+        onClick={() => {
+          trackEvent("Closed Save Eira to homescreen dialog")
+          onClose()
+        }}
         sx={{
           alignSelf: "flex-end",
           position: "absolute",

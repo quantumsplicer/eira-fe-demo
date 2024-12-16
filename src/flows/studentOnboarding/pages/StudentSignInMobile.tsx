@@ -29,6 +29,7 @@ import {
 import { useLazyGetOnboardingStatusQuery } from "../../../APIs/definitions/onboarding";
 import axios from "axios";
 import { BASE_URL } from "../../../APIs";
+import { initializeAmplitude, trackEvent } from "../../../utils/amplitude";
 
 const StudentSignInMobile = () => {
   const [phone, setPhone] = useState<string>("");
@@ -68,6 +69,9 @@ const StudentSignInMobile = () => {
   };
 
   const OnOtpVerification = async (id: string) => {
+    initializeAmplitude({ role: "student" });
+    trackEvent("Logged In");
+
     await getUserDetailsbyId(id).then((data) => {
       data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
       setIsOtpVerificationDone(true);

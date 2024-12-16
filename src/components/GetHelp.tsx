@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography, Link } from "@mui/material";
+import { trackEvent } from "../utils/amplitude";
 
 export const WHATSAPP_LINK = "https://wa.link/fipmfa";
 
@@ -23,6 +24,7 @@ const GetHelp = () => {
         <Link
           href={WHATSAPP_LINK}
           target="_blank"
+          onClick={() => trackEvent("Clicked on 'Contact Us'")}
           rel="noopener noreferrer"
           sx={{ textDecoration: "none", fontWeight: "bold" }}
         >

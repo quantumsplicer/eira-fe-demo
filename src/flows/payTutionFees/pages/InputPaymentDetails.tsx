@@ -31,6 +31,7 @@ import {
 import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
+import { trackEvent } from "../../../utils/amplitude";
 
 export const ACTIVE_PG = "cashfree";
 
@@ -81,6 +82,7 @@ const InputPaymentDetails: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    trackEvent("Clicked Proceed");
     setIsPayeeStudent(false);
     if (!inputAmount || Number(inputAmount) === 0 || !isPhoneNumberValid())
       return;
@@ -158,7 +160,10 @@ const InputPaymentDetails: React.FC = () => {
           minWidth: "320px",
           maxWidth: "400px",
         }}
-        onClick={() => navigate("/student/dashboard")}
+        onClick={() => {
+          trackEvent("Clicked Go To Dashboard")
+          navigate("/student/dashboard")
+        }}
       >
         Go to Dashboard
       </Button>
@@ -249,6 +254,14 @@ const InputPaymentDetails: React.FC = () => {
                 label="Amount to pay"
                 variant="outlined"
                 value={inputAmount}
+                onBlur={() => {
+                  trackEvent(
+                    "Entered Amount to pay",
+                    {
+                      text: inputAmount
+                    }
+                  )
+                }}
                 onChange={handleAmountChange}
                 onKeyDown={handleKeyDown}
                 InputLabelProps={{
@@ -288,6 +301,7 @@ const InputPaymentDetails: React.FC = () => {
                   label="Phone number of the tutor"
                   phone={phoneNumber}
                   setPhoneNumber={handlePhoneNumberChange}
+                  onBlurEventText="Entered tutor phone number"
                 />
                 {isPayeeStudent && (
                   <Typography color={"red"} ml={1} mt={-1} fontSize={14}>

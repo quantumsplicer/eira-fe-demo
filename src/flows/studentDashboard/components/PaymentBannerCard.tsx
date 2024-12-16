@@ -15,6 +15,7 @@ import PaymentFlow from "./PaymentFlow";
 import { useGetTransactionsListQuery } from "../../../APIs/definitions/transactionsList";
 import { Transaction } from "../../tutorDashboard/interfaces";
 import { useGetUserDetailsByPhoneQuery } from "../../../APIs/definitions/user";
+import { trackEvent } from "../../../utils/amplitude";
 
 interface AvatarWithDetailsProps {
   name: string;
@@ -44,7 +45,13 @@ const AvatarWithDetails: React.FC<AvatarWithDetailsProps> = ({
           bgcolor: "primary.main",
           fontSize: "40px",
         }}
-        onClick={handleClick}
+        onClick={() => {
+          trackEvent("Payment to", {
+            payeeName: name,
+            payeePhone: phoneNumber
+          })
+          handleClick()
+        }}
       >
         <Typography fontSize={36}>
           {name?.[0].replace(" ", "") ? name?.[0] : "U"}
@@ -75,6 +82,7 @@ const PaymentBannerCard: React.FC = () => {
   });
   const [recentPayments, setRecentPayments] = useState<TutorDetails[]>([]);
   const handleClick = () => {
+    trackEvent("Clicked on Make a New Payment")
     setIsPaymentFlowActive(true);
   };
   const handleClosePaymentFlow = () => {

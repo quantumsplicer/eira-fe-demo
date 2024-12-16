@@ -3,6 +3,7 @@ import { useGetUserDetailsQuery } from "../APIs/definitions/user";
 import { useCreateOrderMutation } from "../APIs/definitions/paymentLinks";
 import { useState } from "react";
 import { useCreateSessionMutation } from "../APIs/definitions/session";
+import { trackEvent } from "../utils/amplitude";
 
 export const usePayment = () => {
   const [errorMessage, setErrorMessage] = useState<string|null>(null);
@@ -79,6 +80,9 @@ export const usePayment = () => {
           title: "Maths session"
         })
         .catch()
+        trackEvent("Redirecting to cashfree", {
+          sessionId: res.payment_session_id
+        })
         openCashfreeCheckout(res.payment_session_id);
       })
       .catch((err) => {

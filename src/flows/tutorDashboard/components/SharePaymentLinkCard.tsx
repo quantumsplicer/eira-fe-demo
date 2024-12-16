@@ -18,6 +18,7 @@ import AndroidDevice from "../../../assets/images/svg/AndroidDevice.svg";
 import Background from "../../../assets/images/svg/MobilePaymentBackground.svg";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { useGetUserDetailsQuery } from "../../../APIs/definitions/user";
+import { trackEvent } from "../../../utils/amplitude";
 const SharePaymentLinkCard: React.FC = () => {
   const { data: tutorDetails } = useGetUserDetailsQuery(undefined, { skip: !localStorage.getItem("access-token") });
   const paymentLink = useMemo(() => {
@@ -25,6 +26,7 @@ const SharePaymentLinkCard: React.FC = () => {
   }, [tutorDetails?.username]);
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
   const copyToClipboard = () => {
+    trackEvent("Copied static payment link");
     navigator.clipboard
       .writeText(paymentLink)
       .then(() => {

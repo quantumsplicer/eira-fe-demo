@@ -9,6 +9,7 @@ import DashboardBannerArt2 from "../../../assets/images/png/student-dashboard-ba
 import PaymentFlow from "../components/PaymentFlow";
 import { TutorDetails } from "../interfaces";
 import { WHATSAPP_LINK } from "../../../components/GetHelp";
+import { trackEvent } from "../../../utils/amplitude";
 
 const HomePage: React.FC = () => {
   const isPhoneScreen = useMediaQuery("(max-width:600px)");
@@ -61,14 +62,20 @@ const HomePage: React.FC = () => {
               component="img"
               src={DashboardBannerArt1}
               width={"100%"}
-              onClick={() => window.open(WHATSAPP_LINK, "_blank")}
+              onClick={() => {
+                trackEvent("Clicked on Need a Loan Banner")
+                window.open(WHATSAPP_LINK, "_blank")
+              }}
               sx={{ cursor: "pointer" }}
             />
             <Box
               component="img"
               src={DashboardBannerArt2}
               width={"100%"}
-              onClick={() => window.open(WHATSAPP_LINK, "_blank")}
+              onClick={() => {
+                trackEvent("Clicked on Get CC Banner")
+                window.open(WHATSAPP_LINK, "_blank")
+              }}
               sx={{ cursor: "pointer" }}
             />
           </Carousel>
