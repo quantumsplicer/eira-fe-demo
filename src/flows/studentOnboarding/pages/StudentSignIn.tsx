@@ -3,10 +3,12 @@ import {
   Button,
   Dialog,
   DialogContent,
+  Link,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import React, { useEffect, useState } from "react";
 import EiraBack from "../../../assets/images/svg/EiraBack.svg";
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
@@ -168,23 +170,32 @@ const StudentSignIn = () => {
                         {errorMessage}
                       </Typography>
                     )}
-                    <Button
-                      disabled={
-                        phoneNumber.length !== 10 || !isPhoneNumberValid()
-                      }
+                    <Typography
+                      p={2}
+                      sx={{ fontSize: 11 }}
+                      lineHeight={1.3}
+                      textAlign={"center"}
+                      mt={errorMessage ? 0 : 4.6}
+                    >
+                      By signing in, I agree to all the{" "}
+                      <Link href="https://www.eira.club/privacy-policy">terms and conditions</Link> and{" "}
+                      <Link href="https://www.eira.club/privacy-policy">privacy policy</Link>
+                    </Typography>
+                    <LoadingButton
+                      loading={getOtpIsLoading}
+                      disabled={phoneNumber.length !== 10 || !isPhoneNumberValid()}
                       onClick={handleSubmit}
-                      fullWidth
                       variant="contained"
                       color="primary"
+                      fullWidth
                       sx={{
                         padding: 1.5,
                         borderRadius: 20,
                         height: 45,
-                        mt: errorMessage ? 0 : 4.6,
                       }}
                     >
                       Verify
-                    </Button>
+                    </LoadingButton>
                   </Box>
                 </>
               ) : (

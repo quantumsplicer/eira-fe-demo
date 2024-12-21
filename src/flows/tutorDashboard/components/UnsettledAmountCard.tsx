@@ -146,16 +146,18 @@ const UnsettledAmountCard: React.FC = () => {
           >
             <Stack
               direction="row"
-              spacing={2}
+              spacing={0.2}
               sx={
                 !isPhoneScreen
                   ? { justifyContent: "space-evenly" }
                   : {
-                      justifyContent: "space-between",
+                      alignItems: "center",
                       border: "0.2px solid",
                       borderColor: "#C3C3C3",
                       borderRadius: 2,
-                      p: 2,
+                      p: 1,
+                      pt: 2,
+                      pb: 2
                     }
               }
             >
@@ -165,8 +167,7 @@ const UnsettledAmountCard: React.FC = () => {
                     ? { fontSize: 13, fontWeight: "bold" }
                     : {
                         fontSize: 18,
-                        alignSelf: "center",
-                        pl: 1,
+                        p: 1,
                         fontWeight: 500,
                       }
                 }
@@ -177,7 +178,7 @@ const UnsettledAmountCard: React.FC = () => {
                 sx={
                   !isPhoneScreen
                     ? { fontSize: 11, textAlign: "right" }
-                    : { fontSize: 10, textAlign: "right", width: "40%" }
+                    : { fontSize: 10, textAlign: "center" }
                 }
               >
                 Transactions since last settlement
@@ -185,18 +186,20 @@ const UnsettledAmountCard: React.FC = () => {
             </Stack>
             <Stack
               direction="row"
-              spacing={!isPhoneScreen ? 1 : 0}
+              spacing={!isPhoneScreen ? 1 : 0.2}
               sx={
                 !isPhoneScreen
                   ? {
                       justifyContent: "space-evenly",
                     }
                   : {
-                      justifyContent: "space-between",
+                      alignItems: "center",
                       border: "0.2px solid",
                       borderColor: "#C3C3C3",
                       borderRadius: 2,
-                      p: 2,
+                      p: 1,
+                      pt: 2,
+                      pb: 2
                     }
               }
             >
@@ -207,7 +210,7 @@ const UnsettledAmountCard: React.FC = () => {
                     : {
                         fontSize: 17,
                         alignSelf: "center",
-                        pl: 0,
+                        p: 1,
                         fontWeight: 500,
                       }
                 }
@@ -220,7 +223,7 @@ const UnsettledAmountCard: React.FC = () => {
                 sx={
                   !isPhoneScreen
                     ? { fontSize: 11, textAlign: "right" }
-                    : { fontSize: 10, textAlign: "right", width: "40%" }
+                    : { fontSize: 10, textAlign: "center" }
                 }
               >
                 Average transaction amount

@@ -32,7 +32,7 @@ const TutorSignIn: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    if (isPhoneNumberValid()) {
+    if (isPhoneNumberValid() && checked) {
       setErrorMessage(null);
       getOtp({
         phone: phoneNumber,
@@ -160,7 +160,8 @@ const TutorSignIn: React.FC = () => {
                     />
                   </FormGroup>
 
-                  <Button
+                  <LoadingButton
+                    loading={getOtpIsLoading}
                     onClick={handleSubmit}
                     variant="contained"
                     color="primary"
@@ -174,7 +175,7 @@ const TutorSignIn: React.FC = () => {
                     }}
                   >
                     Verify
-                  </Button>
+                  </LoadingButton>
                 </Box>
               </>
             ) : (

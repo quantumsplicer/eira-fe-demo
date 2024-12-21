@@ -45,7 +45,7 @@ const HomePage: React.FC = () => {
           }}
         >
           <Carousel
-            sx={{ width: "100%", pt: 4, zIndex: 0 }}
+            sx={{ width: "100%", pb:4, zIndex: 1, position: "relative" }}
             autoPlay={false}
             swipe={true} // Allow swiping
             animation="slide"
@@ -58,26 +58,36 @@ const HomePage: React.FC = () => {
             index={0}
             navButtonsAlwaysVisible={false}
           >
-            <Box
-              component="img"
-              src={DashboardBannerArt1}
-              width={"100%"}
-              onClick={() => {
-                trackEvent("Clicked on Need a Loan Banner")
-                window.open(WHATSAPP_LINK, "_blank")
-              }}
-              sx={{ cursor: "pointer" }}
-            />
-            <Box
-              component="img"
-              src={DashboardBannerArt2}
-              width={"100%"}
-              onClick={() => {
-                trackEvent("Clicked on Get CC Banner")
-                window.open(WHATSAPP_LINK, "_blank")
-              }}
-              sx={{ cursor: "pointer" }}
-            />
+            <Box pb={2}>
+              <Box
+                component="img"
+                src={DashboardBannerArt1}
+                width={"100%"}
+                onClick={() => {
+                  trackEvent("Clicked on Need a Loan Banner")
+                  window.open(WHATSAPP_LINK, "_blank")
+                }}
+                sx={{
+                  cursor: "pointer",
+                  objectFit: "contain"
+                }}
+              />
+            </Box>
+            <Box pb={2}>
+              <Box
+                component="img"
+                src={DashboardBannerArt2}
+                width={"100%"}
+                onClick={() => {
+                  trackEvent("Clicked on Get CC Banner")
+                  window.open(WHATSAPP_LINK, "_blank")
+                }}
+                sx={{
+                  cursor: "pointer",
+                  objectFit: "contain"
+                }}
+              />
+            </Box>
           </Carousel>
         </Box>
       )}

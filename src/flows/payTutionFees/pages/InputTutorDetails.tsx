@@ -62,7 +62,7 @@ const InputTutorDetails: React.FC = () => {
                     const tutor = res.length && res[0];
                     const isTutorOnboarded = !!(tutor && tutor?.first_name && tutor?.last_name && tutor?.pan);
                     if (isTutorOnboarded) {
-                        navigate("/pay/create-session");
+                        navigate("/pay/review");
                     }
                 })
         }

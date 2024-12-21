@@ -115,20 +115,18 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
           </Typography>
         </Stack>
       </Stack>
-      <Box mt={5}>
-        <Typography color={"#7e7e7e"} component={"span"} fontWeight={"bold"}>
-          Settlement on
-        </Typography>
-        <Typography component={"span"} fontWeight={"bold"}>
-          {` ${settlementDate}`}
-        </Typography>
-        <Typography component={"span"} color={"#7e7e7e"} fontWeight={"bold"}>
+      <Stack justifyContent={"center"} mt={5}>
+        <Typography textAlign={"center"} color={"#7e7e7e"} component={"span"} fontWeight={"bold"}>
+          Settlement on 
+          <Typography color="#000" component={"span"} fontWeight={"bold"}>
+            {` ${settlementDate}`}
+          </Typography>
           {` at`}
+          <Typography color="#000" component={"span"} fontWeight={"bold"}>
+            {` ${settlementTime}`}
+          </Typography>
         </Typography>
-        <Typography component={"span"} fontWeight={"bold"}>
-          {` ${settlementTime}`}
-        </Typography>
-      </Box>
+      </Stack>
     </Stack>
   );
 };

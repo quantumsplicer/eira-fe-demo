@@ -314,8 +314,9 @@ const CompletePaymentDialog = ({
                   Proceed to Pay
                 </Button>
               </Box>
-
-              <GetHelp />
+              <Stack alignItems={"center"}>
+                <GetHelp />
+              </Stack>
             </Stack>
           </Stack>
         </Stack>

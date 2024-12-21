@@ -230,6 +230,16 @@ const StudentSignInMobile = () => {
               </Typography>
             </>
           )}
+          <Typography
+            p={2}
+            sx={{ fontSize: 11 }}
+            lineHeight={1.3}
+            textAlign={"center"}
+          >
+            By signing in, I agree to all the{" "}
+            <Link href="https://www.eira.club/privacy-policy">terms and conditions</Link> and{" "}
+            <Link href="https://www.eira.club/privacy-policy">privacy policy</Link>
+          </Typography>
           <LoadingButton
             loading={getOtpIsLoading}
             disabled={phone.length !== 10 || !isPhoneNumberValid(phone)}

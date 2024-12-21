@@ -81,10 +81,11 @@ const PaymentLinkDialog = ({
         !isPhoneScreen
           ? {
               "& .MuiDialog-paper": {
-                width: 470,
+                width: 490,
                 maxWidth: "50vw",
-                maxHeight: 650,
-                height: 590,
+                maxHeight: 660,
+                minHeight: 610,
+                height: "100%",
                 borderRadius: 3,
               },
               p: 2,
@@ -134,19 +135,20 @@ const PaymentLinkDialog = ({
           spacing={7}
         >
           <Stack justifyContent="center" alignItems="center" sx={{ pt: 0 }}>
-            <Typography sx={{ fontSize: 22, fontWeight: 600 }}>
+            <Typography textAlign={"center"} sx={{ fontSize: 22, fontWeight: 600 }}>
               Create a payment Link
             </Typography>
-            <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+            <Typography textAlign={"center"} sx={{ fontSize: 12, fontWeight: 600 }}>
               create Link to share with your students
             </Typography>
             <Typography
+              textAlign={"center"}
               sx={{
                 fontSize: 11,
                 fontWeight: 550,
                 color: "#989898",
                 pt: 0.5,
-                lineHeight: 0.6,
+                mt: 2
               }}
             >
               Link will be sent to them through whatsapp and text sms
@@ -156,7 +158,7 @@ const PaymentLinkDialog = ({
             spacing={4}
             sx={
               !isPhoneScreen
-                ? { pt: 1 }
+                ? { }
                 : { width: "90%", alignSelf: "center", alignItems: "center" }
             }
           >
@@ -312,7 +314,7 @@ const PaymentLinkDialog = ({
           <Box
             sx={
               !isPhoneScreen
-                ? { pt: 1 }
+                ? { pb: 2 }
                 : { width: "90%", alignSelf: "center", alignItems: "center" }
             }
           >

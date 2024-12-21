@@ -1,4 +1,5 @@
-import { Box, Button, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, CircularProgress, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import React, { useState } from "react";
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 import EiraBack from "../../../assets/images/svg/EiraBack.svg";
@@ -18,6 +19,7 @@ const InputPayment = () => {
     const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
 
     const [getTutorDetails] = useLazyGetUserByUserNameQuery();
+    const [isgetTutorDetailsLoading, setIsgetTutorDetailsLoading] = useState<boolean>(false);
 
     const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const invalidRegex = /[^0-9]/
@@ -41,6 +43,7 @@ const InputPayment = () => {
         const links = window.location.pathname.split("/");
         const tutorUsername = links[links.length -1] === "" ? links[links.length-2] :  links[links.length -1];
 
+        setIsgetTutorDetailsLoading(true)
         await getTutorDetails(tutorUsername)
             .unwrap()
             .then(res => {
@@ -50,9 +53,10 @@ const InputPayment = () => {
                     (tutor.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" || tutor.pg_onboarding_status[0].status === "ACTIVE");
             })
             .catch()
+            .finally(() => setIsgetTutorDetailsLoading(false))
 
         if (isStudentSignedIn) {
-            isTutorPgOnboarded ? navigate("/pay/review") : navigate("/pay/create-session");
+            isTutorPgOnboarded ? navigate("/pay/review") : navigate("/page-not-found");
         } else {
             navigate("/student/login");
         }
@@ -180,11 +184,15 @@ const InputPayment = () => {
                             {
                                 !notPhoneScreen &&
                                 <Box
-                                    height="300px"
-                                    width="350px"
+                                    height="310px"
+                                    width="100%"
+                                    maxWidth="360px"
+                                    minWidth="310px"
                                     bgcolor={"#F5F5F5"}
                                     pt={2}
                                     pb={2}
+                                    pl={1}
+                                    pr={1}
                                     borderRadius={5}
                                     mt={3}
                                     mb={3}
@@ -196,22 +204,33 @@ const InputPayment = () => {
                                     />
                                 </Box>
                             }
-                            <Button
+                            <LoadingButton
+                                disabled={!amount || Number(amount) === 0 || isgetTutorDetailsLoading}
+                                onClick={handleSubmit}
                                 variant="contained"
                                 color="primary"
                                 sx={{
+                                    width: "100%",
+                                    minWidth: "320px",
+                                    maxWidth: "400px",
                                     padding: 1.5,
-                                    borderRadius: 20,
                                     mt: 5,
-                                    width: '100%',
-                                    minWidth: '320px',
-                                    maxWidth: '400px',
+                                    borderRadius: 20,
+                                    height: 45,
                                 }}
-                                onClick={handleSubmit}
-                                disabled={!amount || Number(amount) === 0}
                             >
-                                Proceed to pay
-                            </Button>
+                                {isgetTutorDetailsLoading? (
+                                <Box sx={{ display: "flex", alignItems: "center" }}>
+                                    Loading
+                                    <CircularProgress
+                                        size={14}
+                                        sx={{ marginLeft: 1, color: "#6f6f6f" }}
+                                    />
+                                </Box>
+                                ) : (
+                                    "Proceed to Pay"
+                                )}
+                            </LoadingButton>
                         </Stack>
                     </Stack>
                 </Box>
