@@ -141,7 +141,7 @@ const TransactionSummary = ({
         </Box>
       )}
 
-      <Box width="100%" minWidth="320px" maxWidth="400px" mt={5}>
+      <Box width="100%" mt={5}>
         <Stack>
           {paymentDetailsKeys.map((key, index) => {
             const attribute = Object.keys(key)[0];
@@ -155,7 +155,7 @@ const TransactionSummary = ({
                 <Typography width={"50%"} color={"#7e7e7e"}>
                   {key[attribute as keyof PaymentDetailKey]}:
                 </Typography>
-                <Stack alignItems={"flex-end"}>
+                <Typography textAlign={"right"}>
                   {attribute.includes("time")
                     ? new Date(
                         transactionItem?.[
@@ -163,7 +163,7 @@ const TransactionSummary = ({
                         ] as string
                       ).toLocaleString()
                     : transactionItem?.[attribute as keyof Transaction]}
-                </Stack>
+                </Typography>
               </Stack>
             );
           })}

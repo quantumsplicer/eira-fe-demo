@@ -211,6 +211,7 @@ const TutorDashboard: React.FC = () => {
         )
       ) : (
         <Box
+          pb={2}
           sx={{
             display: "flex",
           }}
@@ -227,7 +228,7 @@ const TutorDashboard: React.FC = () => {
                 : {
                     backgroundColor: "white",
                     boxShadow: 0,
-                    height: "7.5vh",
+                    height: "60px",
                   }
             }
           >

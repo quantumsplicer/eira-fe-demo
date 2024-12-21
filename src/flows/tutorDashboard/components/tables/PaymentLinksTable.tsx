@@ -322,7 +322,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                 mr={1}
                 fontWeight={"bold"}
               >
-                +91{activeDrawerPaymentLinkDetails?.receiver_phone}
+                +91 {activeDrawerPaymentLinkDetails?.receiver_phone}
               </Typography>
             </Stack>
             {activeDrawerPaymentLinkDetails?.status === "ACTIVE" ? (
@@ -383,7 +383,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
               </Box>
             )}
 
-            <Box width="100%" minWidth="320px" maxWidth="400px" mt={5}>
+            <Box width="100%" mt={5}>
               <Stack>
                 <Stack
                   justifyContent={"space-between"}
@@ -394,7 +394,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                     Date of Creation
                   </Typography>
                   <Stack alignItems={"flex-end"}>
-                    <Typography>
+                    <Typography textAlign={"right"}>
                       {moment(activeDrawerPaymentLinkDetails?.created).format(
                         "MMMM D, YYYY h:mm a"
                       )}
@@ -410,7 +410,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                     Expires On
                   </Typography>
                   <Stack alignItems={"flex-end"}>
-                    <Typography>
+                    <Typography textAlign={"right"}>
                       {moment(
                         activeDrawerPaymentLinkDetails?.expiry_timestamp
                       ).format("MMMM D, YYYY h:mm a")}
@@ -427,7 +427,7 @@ const PaymentLinksTable: React.FC<PaymentLinksTableProps> = ({ data }) => {
                       Payer
                     </Typography>
                     <Stack alignItems={"flex-end"}>
-                      <Typography>
+                      <Typography textAlign={"right"}>
                         {activeDrawerPaymentLinkDetails?.payer}
                       </Typography>
                     </Stack>

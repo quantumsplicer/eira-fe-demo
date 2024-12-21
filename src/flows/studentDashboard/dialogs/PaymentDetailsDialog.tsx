@@ -138,10 +138,10 @@ const PaymentDetailsDialog = ({
         >
           {!isPhoneScreen ? <CloseIcon /> : <ArrowBackIcon />}
         </IconButton>
-        <Stack justifyContent="space-between" height="100%" pt={4}>
+        <Stack justifyContent="space-between" height="100%">
           <Stack spacing={isPhoneScreen ? 18 : 0} height="100%">
-            <Stack height="20vh" spacing={isPhoneScreen ? 3 : 0}>
-              <Stack spacing={isPhoneScreen ? 4 : 0} height="100%">
+            <Stack height="22vh" spacing={isPhoneScreen ? 3 : 0}>
+              <Stack spacing={isPhoneScreen ? 4 : 0} height="100%" pt={4}>
                 <Typography fontSize={23} fontWeight={600} align="center">
                   Payment Details
                 </Typography>
@@ -167,20 +167,28 @@ const PaymentDetailsDialog = ({
                 </Stack> */}
               </Stack>
               {tutorData?.[0].first_name && tutorData?.[0].last_name && (
-                <Stack height="100%">
+                <Stack
+                  direction={"row"}
+                  height="100%"
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  spacing={1}
+                  pb={!isPhoneScreen ? 5 : 0}
+                  mt={!isPhoneScreen ? 2 : 0}
+                >
                   <Typography
                     fontSize={16}
                     fontWeight={500}
                     align="center"
                     pt={0}
                   >
-                    You are making a payment to:
+                    Paying to:
                   </Typography>
                   <Typography
                     fontSize={18}
                     fontWeight={500}
                     align="center"
-                    pb={!isPhoneScreen ? 5 : 0}
+                    // pb={!isPhoneScreen ? 5 : 0}
                   >
                     {tutorData?.[0].first_name} {tutorData?.[0].last_name}
                   </Typography>
@@ -327,11 +335,18 @@ const PaymentDetailsDialog = ({
                 />
               </Stack>
             </Stack>
-            <Stack>
+            <Stack
+              pt={isPhoneScreen && tutorData?.[0].first_name && tutorData?.[0].last_name ? 5 : 0}
+            >
               {isPhoneScreen && <AmountBreakupCard amount={watch("amount")} />}
             </Stack>
           </Stack>
-          <Box width="85%" alignSelf="center">
+          <Box
+            mt={tutorData?.[0].first_name && tutorData?.[0].last_name ? 12 : 7}
+            pb={2}
+            width="85%"
+            alignSelf="center"
+          >
             <LoadingButton
               variant="contained"
               loading={submitButtonIsLoading}

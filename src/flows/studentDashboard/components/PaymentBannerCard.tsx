@@ -135,7 +135,9 @@ const PaymentBannerCard: React.FC = () => {
               p: 2,
               backgroundColor: "white",
               width: "100vw",
-              height: "98vw",
+              maxHeight: "55vh",
+              minHeight: "50vh",
+              height: "100%",
               alignSelf: "center",
             }
       }
@@ -226,7 +228,7 @@ const PaymentBannerCard: React.FC = () => {
             </Stack>
           </Stack>
           {isPhoneScreen && (
-            <Stack spacing={4} width="100%">
+            <Stack spacing={1} width="100%">
               <Typography sx={{ fontSize: 16, fontWeight: 600 }}>
                 Recent Payments
               </Typography>

@@ -99,24 +99,6 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
           </Stack>
         </Box>
       )}
-      {/* <Button
-                variant="contained"
-                disabled={isLoading}
-                sx={{
-                    width: '100%',
-                    minWidth: '320px',
-                    maxWidth: '400px',
-                    borderRadius: 20,
-                    height: 45,
-                    marginTop: aadhaarVerificationFailed ? 2 : 17
-                }}
-                onClick={handleVerifyClick}
-            >
-                {
-                    isLoading ? "Verifying" :
-                        (aadhaarVerificationFailed ? "Verify Again" : "Verify")
-                }
-            </Button> */}
       <LoadingButton
         disabled={isLoading}
         onClick={handleVerifyClick}

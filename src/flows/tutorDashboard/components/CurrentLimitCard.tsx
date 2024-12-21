@@ -146,8 +146,9 @@ const CurrentLimitCard: React.FC = () => {
             <Typography
               fontSize={!isPhoneScreen ? 9 : "0.7rem"}
               color="#898989"
+              textAlign={"center"}
             >
-              Payments settles in your bank account within <b>24 hours</b>{" "}
+              Payments settle in your bank account within <b>24 hours</b>{" "}
               (excluding public holidays)
             </Typography>
           </Stack>

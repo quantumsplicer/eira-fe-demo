@@ -7,6 +7,7 @@ import {
   Button,
   Stack,
   useMediaQuery,
+  CircularProgress,
 } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import { useNavigate } from "react-router-dom";
@@ -47,6 +48,7 @@ const InputPaymentDetails: React.FC = () => {
   const [message, setMessage] = useState<string>("");
 
   const [getTutorDetials] = useLazyGetUserDetailsByPhoneQuery();
+  const [isgetTutorDetailsLoading, setIsgetTutorDetailsLoading] = useState<boolean>(false);
 
   const { checkCurrentStudentOnboardingState } = useGetOnboardingDetails();
 
@@ -93,6 +95,7 @@ const InputPaymentDetails: React.FC = () => {
       let isTutorPgOnboarded: boolean = false;
       let isTutorKycApprovalPending: boolean = false;
       let isPayeeStudent;
+      setIsgetTutorDetailsLoading(true);
       await getTutorDetials(phoneNumber)
         .unwrap()
         .then((res) => {
@@ -140,7 +143,9 @@ const InputPaymentDetails: React.FC = () => {
             default:
               break;
           }
-        });
+        })
+        .catch()
+        .finally(() => setIsgetTutorDetailsLoading(false));
     } catch (error) {
       console.error(error);
     }
@@ -311,11 +316,15 @@ const InputPaymentDetails: React.FC = () => {
               </Stack>
               {!notPhoneScreen && (
                 <Box
-                  height="300px"
-                  width="350px"
+                  height="310px"
+                  width="100%"
+                  maxWidth="360px"
+                  minWidth="310px"
                   bgcolor={"#F5F5F5"}
                   pt={2}
                   pb={2}
+                  pl={1}
+                  pr={1}
                   borderRadius={5}
                   mt={3}
                   mb={3}
@@ -328,22 +337,32 @@ const InputPaymentDetails: React.FC = () => {
                 </Box>
               )}
               <LoadingButton
+                disabled={isButtonDisabled || isgetTutorDetailsLoading}
+                onClick={handleSubmit}
                 variant="contained"
                 color="primary"
-                // loading={}
                 sx={{
-                  padding: 1.5,
-                  borderRadius: 20,
-                  mt: 3,
-                  width: "100%",
-                  minWidth: "320px",
-                  maxWidth: "400px",
+                    width: "100%",
+                    minWidth: "320px",
+                    maxWidth: "400px",
+                    padding: 1.5,
+                    mt: 3,
+                    borderRadius: 20,
+                    height: 45,
                 }}
-                onClick={handleSubmit}
-                disabled={isButtonDisabled}
-              >
-                Proceed
-              </LoadingButton>
+            >
+                {isgetTutorDetailsLoading? (
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                    Loading
+                    <CircularProgress
+                        size={14}
+                        sx={{ marginLeft: 1, color: "#6f6f6f" }}
+                    />
+                </Box>
+                ) : (
+                    "Proceed"
+                )}
+            </LoadingButton>
             </Stack>
           </Stack>
         </Box>
