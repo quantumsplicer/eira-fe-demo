@@ -142,6 +142,9 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
     if (firstName && lastName && pan.length === 10 && isPanValid(pan)) {
       setIsButtonDisabled(false);
     }
+    else if (firstName && lastName && !showPanInput) {
+      setIsButtonDisabled(false);
+    }
   }, [firstName, lastName, pan]);
 
   useEffect(() => {
@@ -155,7 +158,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
       setPan(localPan || "");
 
       localFirstName && lastNameInputRef.current?.focus();
-      
+
       if (localFirstName) {
         setShowPanInput(true);
         panInputRef.current?.focus();
