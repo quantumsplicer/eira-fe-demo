@@ -1,13 +1,9 @@
 import LoadingButton from "@mui/lab/LoadingButton";
-import {
-  Box,
-  CircularProgress,
-  TextField,
-  useMediaQuery
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, CircularProgress, TextField, useMediaQuery } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  usePrefillOnboardingMutation,
   useRegisterTutorByStudentMutation,
   useUpdateUserDetailsMutation,
 } from "../APIs/definitions/user";
@@ -24,9 +20,16 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [pan, setPan] = useState<string>("");
+
+  const [showPanInput, setShowPanInput] = useState<boolean>(false);
+
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
-  const [errorMessage, setErrorMessage] = useState<string|null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
+
+  const firstNameInputRef = useRef<HTMLInputElement>(null);
+  const lastNameInputRef = useRef<HTMLInputElement>(null);
+  const panInputRef = useRef<HTMLInputElement>(null);
 
   const tutorPhoneNumber = useSelector(
     (state: RootState) => state.onGoingPayment.tutorPhoneNumber
@@ -38,6 +41,10 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
     useUpdateUserDetailsMutation();
   const [registerTutor, { isLoading: registerTutorIsLoading }] =
     useRegisterTutorByStudentMutation();
+  const [
+    triggerPrefillOnboarding,
+    { data: prefillData, isLoading: prefillDataIsLoading },
+  ] = usePrefillOnboardingMutation();
 
   const handleFirstNameInput = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -80,15 +87,15 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
       localStorage.setItem("lastName", lastName);
       localStorage.setItem("pan", pan);
       localStorage.setItem("onboardingUsername", `${firstName} ${lastName}`);
-      
+
       if (tutorPhoneNumber || activePaymentTutorId) {
-        trackEvent("Clicked Submit to Register Tutor")
-        registerTutor({
+        trackEvent("Clicked Submit to Register Tutor");
+        triggerPrefillOnboarding({
           first_name: firstName,
           last_name: lastName,
           pan: pan,
           phone: activePaymentTutorId ? activePaymentTutorId : tutorPhoneNumber,
-          amount: Number(localStorage.getItem("activePaymentAmount"))
+          amount: Number(localStorage.getItem("activePaymentAmount")),
         })
           .unwrap()
           .then((res) => {
@@ -100,21 +107,31 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
             onSuccess && onSuccess();
           })
           .catch((error) => {
-            error?.data?.message ? setErrorMessage(error?.data?.message) : setErrorMessage("Something went wrong. Please try again.");
+            error?.data?.message
+              ? setErrorMessage(error?.data?.message)
+              : setErrorMessage("Something went wrong. Please try again.");
           });
       } else {
-        trackEvent("Clicked Submit")
-        updateTutor({
+        trackEvent("Clicked Submit");
+        triggerPrefillOnboarding({
+          phone: localStorage.getItem("phoneNumber") || "",
           first_name: firstName,
           last_name: lastName,
           pan: pan,
         })
           .unwrap()
           .then((res) => {
-            onSuccess && onSuccess();
+            if (!res?.pan) {
+              setShowPanInput(true);
+              panInputRef.current?.focus();
+            } else {
+              onSuccess && onSuccess();
+            }
           })
           .catch((error) => {
-            error?.data?.message ? setErrorMessage(error?.data?.message) : setErrorMessage("Something went wrong. Please try again.");
+            error?.data?.message
+              ? setErrorMessage(error?.data?.message)
+              : setErrorMessage("Something went wrong. Please try again.");
           });
       }
     }
@@ -129,15 +146,20 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
 
   useEffect(() => {
     const autoFillDetails = localStorage.getItem("autoFillDetails") === "true";
-    if (
-      autoFillDetails &&
-      localStorage.getItem("firstName") &&
-      localStorage.getItem("lastName") &&
-      localStorage.getItem("pan")
-    ) {
-      setFirstName(localStorage.getItem("firstName") as string);
-      setLastName(localStorage.getItem("lastName") as string);
-      setPan(localStorage.getItem("pan") as string);
+    const localFirstName = localStorage.getItem("firstName");
+    const localLastName = localStorage.getItem("lastName");
+    const localPan = localStorage.getItem("pan");
+    if (autoFillDetails && (localFirstName || localLastName || localPan)) {
+      setFirstName(localFirstName || "");
+      setLastName(localLastName || "");
+      setPan(localPan || "");
+
+      localFirstName && lastNameInputRef.current?.focus();
+      
+      if (localFirstName) {
+        setShowPanInput(true);
+        panInputRef.current?.focus();
+      }
     }
   }, []);
 
@@ -145,14 +167,14 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
     <>
       <TextField
         autoFocus
+        inputRef={firstNameInputRef}
         disabled={updateTutorIsLoading || registerTutorIsLoading}
         required
         value={firstName}
         onBlur={() => {
-          trackEvent("Entered first name",
-          {
-            text: firstName
-          })
+          trackEvent("Entered first name", {
+            text: firstName,
+          });
         }}
         onChange={(e) => handleFirstNameInput(e, setFirstName)}
         onKeyDown={(event) => handleKeyDown(event)}
@@ -178,14 +200,14 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         }}
       />
       <TextField
+        inputRef={lastNameInputRef}
         disabled={updateTutorIsLoading || registerTutorIsLoading}
         required
         value={lastName}
         onBlur={() => {
-          trackEvent("Entered last name",
-          {
-            text: lastName
-          })
+          trackEvent("Entered last name", {
+            text: lastName,
+          });
         }}
         onChange={(e) => handleLastNameInput(e, setLastName)}
         onKeyDown={(event) => handleKeyDown(event)}
@@ -209,54 +231,61 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           },
         }}
       />
-      <TextField
-        disabled={updateTutorIsLoading || registerTutorIsLoading}
-        required
-        value={pan}
-        onBlur={() => {
-          trackEvent("Entered pan",
-          {
-            text: pan
-          })
-        }}
-        onChange={(e) => handlePanInput(e)}
-        onKeyDown={(event) => handleKeyDown(event)}
-        error={
-          (pan.length === 10 && !isPanValid(pan)) ||
-          (!updateTutorIsLoading && !registerTutorIsLoading && errorMessage !== null)
-        }
-        helperText={
-          pan.length === 10 && !isPanValid(pan)
-            ? "Enter valid PAN"
-            : !updateTutorIsLoading &&
+      {showPanInput ? (
+        <TextField
+          inputRef={panInputRef}
+          disabled={updateTutorIsLoading || registerTutorIsLoading}
+          required
+          value={pan}
+          onBlur={() => {
+            trackEvent("Entered pan", {
+              text: pan,
+            });
+          }}
+          onChange={(e) => handlePanInput(e)}
+          onKeyDown={(event) => handleKeyDown(event)}
+          error={
+            (pan.length === 10 && !isPanValid(pan)) ||
+            (!updateTutorIsLoading &&
               !registerTutorIsLoading &&
-              errorMessage &&
-              `${errorMessage}`
-        }
-        label="PAN"
-        variant="outlined"
-        InputLabelProps={{
-          shrink: false,
-          style: { top: -40, left: -13, fontSize: 12 },
-        }}
-        sx={{
-          width: "100%",
-          minWidth: "320px",
-          maxWidth: "400px",
-          mb: 2,
-          "& .MuiInputBase-root": {
-            height: 45,
-          },
-          "& .MuiOutlinedInput-input": {
-            padding: "12px 14px",
-            fontSize: 14,
-          },
-        }}
-      />
-
+              errorMessage !== null)
+          }
+          helperText={
+            pan.length === 10 && !isPanValid(pan)
+              ? "Enter valid PAN"
+              : !updateTutorIsLoading &&
+                !registerTutorIsLoading &&
+                errorMessage &&
+                `${errorMessage}`
+          }
+          label="PAN"
+          variant="outlined"
+          InputLabelProps={{
+            shrink: false,
+            style: { top: -40, left: -13, fontSize: 12 },
+          }}
+          sx={{
+            width: "100%",
+            minWidth: "320px",
+            maxWidth: "400px",
+            mb: 2,
+            "& .MuiInputBase-root": {
+              height: 45,
+            },
+            "& .MuiOutlinedInput-input": {
+              padding: "12px 14px",
+              fontSize: 14,
+            },
+          }}
+        />
+      ) : (
+        <Box sx={{ height: 60 }}></Box>
+      )}
 
       <LoadingButton
-        disabled={isButtonDisabled || updateTutorIsLoading || registerTutorIsLoading}
+        disabled={
+          isButtonDisabled || updateTutorIsLoading || registerTutorIsLoading
+        }
         onClick={handleSubmitClick}
         variant="contained"
         color="primary"

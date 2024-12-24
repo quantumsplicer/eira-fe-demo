@@ -15,7 +15,7 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider theme={createTheme(theme)}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -23,7 +23,7 @@ root.render(
       </LocalizationProvider>
       </ThemeProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 serviceWorkerRegistration.register();

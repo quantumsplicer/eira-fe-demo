@@ -21,6 +21,26 @@ export interface UserDetails {
   pg_onboarding_status: pgOnboardingDetails[];
 }
 
+export interface PrefillParams {
+  phone: string;
+  first_name: string;
+  last_name: string;
+  pan: string;
+  role: "tutor" | "student";
+  register_user: boolean;
+  amount: number
+}
+
+export interface PrefillOnboardingResponse {
+  id: string;
+  phone: string;
+  first_name: string;
+  last_name: string;
+  pan: string;
+  role: "tutor" | "student";
+  onboarding_status: string;
+}
+
 export const userApi = postgresApi.injectEndpoints({
   endpoints: (builder) => ({
     getUserDetails: builder.query<UserDetails, void>({
@@ -90,6 +110,14 @@ export const userApi = postgresApi.injectEndpoints({
         }),
       }
     ),
+
+    prefillOnboarding: builder.mutation<PrefillOnboardingResponse, Partial<PrefillParams>>({
+      query: (body) => ({
+        url: `user/onboarding/`,
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -106,4 +134,5 @@ export const {
   useLazyGetUserByUserNameQuery,
   useRegisterStudentByTutorMutation,
   useGetUserByUserNameUnsafeQuery,
+  usePrefillOnboardingMutation,
 } = userApi;

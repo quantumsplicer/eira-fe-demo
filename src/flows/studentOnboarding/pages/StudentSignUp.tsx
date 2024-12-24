@@ -7,6 +7,7 @@ import NoteBox from "../../../components/NoteBox";
 import PersonalDetails from "../../../components/PersonalDetails";
 import { useNavigate } from "react-router-dom";
 import useGetOnboardingDetails from "../../../hooks/useGetOnboardingDetails";
+import { Loading } from "../../../components/Loading";
 
 const StudentSignUp = () => {
   const navigate = useNavigate();
@@ -20,14 +21,17 @@ const StudentSignUp = () => {
     "Please make sure you are transferring to a registered tutor or have their account details to onboard them.",
   ];
 
-  const { navigateToCurrentOnboardingStep } = useGetOnboardingDetails();
+  const { navigateToCurrentOnboardingStep, checkProcessIsLoading } =
+    useGetOnboardingDetails();
 
   useEffect(() => {
     const flow = localStorage.getItem("activeFlow");
     setActiveFlow(flow);
   }, []);
 
-  return (
+  return checkProcessIsLoading ? (
+    <Loading />
+  ) : (
     <Box
       pt={5}
       pb={5}
@@ -35,7 +39,7 @@ const StudentSignUp = () => {
         backgroundImage: notPhoneScreen ? `url(${EiraBack})` : "",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: "fixed",
         minHeight: "100vh",
         width: "100vw",
       }}

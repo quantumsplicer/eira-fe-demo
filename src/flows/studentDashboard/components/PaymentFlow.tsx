@@ -18,6 +18,7 @@ import { TutorDetails, SessionDetails, PaymentDetails } from "../interfaces";
 import {
   useGetUserDetailsByPhoneQuery,
   useLazyGetUserDetailsByPhoneQuery,
+  usePrefillOnboardingMutation,
 } from "../../../APIs/definitions/user";
 import { usePayment } from "../../../hooks/usePayment";
 import { ACTIVE_PG } from "../../payTutionFees/pages/InputPaymentDetails";
@@ -74,13 +75,16 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
 
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>({
     phoneNumber: "",
-    amount: 0,
+    amount: "",
   });
 
   const { makePayment, errorMessage } = usePayment();
 
   const [getTutorDetials, { isLoading: tutorDetailsIsLoading }] =
     useLazyGetUserDetailsByPhoneQuery();
+
+  const [triggerPrefillOnboarding, { isLoading: prefillDataIsLoading }] =
+    usePrefillOnboardingMutation();
 
   const handleClose = () => {
     setActiveDialog(DialogName.None);
@@ -93,7 +97,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
       let isPayeeStudent;
       await getTutorDetials(tutorphoneNumber)
         .unwrap()
-        .then((res) => {
+        .then(async (res) => {
           const tutor = res[0];
           if (tutor?.role === "student") {
             setIsPayeeStudent(true);
@@ -103,11 +107,37 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
 
           tutorExists = !!(tutor?.first_name && tutor?.last_name && tutor?.pan);
 
+          let returnFunction = false;
+
           if (!tutorExists) {
-            setActiveDialog(DialogName.TutorDetails);
-            setStepOnBack(DialogName.PaymentDetails);
-            return;
+            await triggerPrefillOnboarding({
+              phone: tutorphoneNumber,
+              register_user: true,
+              amount: Number(paymentDetails?.amount),
+            })
+              .unwrap()
+              .then((result) => {
+                if (result) {
+                  localStorage.setItem("autoFillDetails", "true");
+
+                  const firstName = result?.first_name;
+                  const lastName = result?.last_name;
+                  const pan = result?.pan;
+
+                  localStorage.setItem("firstName", firstName ?? "");
+                  localStorage.setItem("lastName", lastName ?? "");
+                  localStorage.setItem("pan", pan ?? "");
+
+                  if (!pan || !firstName || !lastName) {
+                    setActiveDialog(DialogName.TutorDetails);
+                    setStepOnBack(DialogName.PaymentDetails);
+                    returnFunction = true;
+                  }
+                }
+              });
           }
+
+          if (returnFunction) return;
 
           const pgOnboardingStatus =
             tutor?.pg_onboarding_status.length > 0
@@ -185,7 +215,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
         }}
         onClick={() => {
           trackEvent("Clicked Go to Dashboard");
-          onClose()
+          onClose();
         }}
       >
         Go to Dashboard
@@ -227,7 +257,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
           }}
           isPayeeStudent={isPayeeStudent}
           phoneNumberProp={payAgainPhoneNumber ?? ""}
-          submitButtonIsLoading={tutorDetailsIsLoading}
+          submitButtonIsLoading={tutorDetailsIsLoading || prefillDataIsLoading}
         />
       )}
       {activeDialog === DialogName.TutorDetails && (
@@ -269,7 +299,7 @@ const PaymentFlow: React.FC<PaymentFlowProps> = ({
           open={activeDialog === DialogName.CompletePayment && open}
           onClose={() => {
             trackEvent("Closed Payment Review Dialog");
-            handleClose()
+            handleClose();
           }}
           onSubmit={() => {
             makePayment();

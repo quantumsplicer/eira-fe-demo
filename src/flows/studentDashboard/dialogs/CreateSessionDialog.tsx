@@ -135,7 +135,7 @@ const CreateSessionDialog = ({
                 </Stack>
                 <Box>
                   <AmountBreakupCard
-                    amount={paymentDetails.amount}
+                    amount={Number(paymentDetails.amount)}
                   ></AmountBreakupCard>
                 </Box>
               </Stack>

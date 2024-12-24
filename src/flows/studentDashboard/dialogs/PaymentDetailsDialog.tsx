@@ -66,6 +66,7 @@ const PaymentDetailsDialog = ({
   } = useForm<PaymentDetails>({
     mode: "onBlur",
     defaultValues: {
+      amount: "",
       phoneNumber: phoneNumberProp,
     },
   });
@@ -338,7 +339,7 @@ const PaymentDetailsDialog = ({
             <Stack
               pt={isPhoneScreen && tutorData?.[0].first_name && tutorData?.[0].last_name ? 5 : 0}
             >
-              {isPhoneScreen && <AmountBreakupCard amount={watch("amount")} />}
+              {isPhoneScreen && <AmountBreakupCard amount={Number(watch("amount"))} />}
             </Stack>
           </Stack>
           <Box

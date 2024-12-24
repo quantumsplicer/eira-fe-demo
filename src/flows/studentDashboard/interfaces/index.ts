@@ -2,7 +2,7 @@ import { Dayjs } from "dayjs";
 
 export interface PaymentDetails {
   phoneNumber: string;
-  amount: number;
+  amount: string;
 }
 
 export interface TutorDetails {
