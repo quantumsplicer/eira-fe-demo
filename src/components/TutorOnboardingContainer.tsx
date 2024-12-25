@@ -23,19 +23,19 @@ const TutorOnboardingContainer = () => {
       const { navigateTo, onboardingStep } = await determineOnboardingStep();
       const accessToken = localStorage.getItem("access-token");
       if (accessToken) {
-        localStorage.setItem("tutorOnboardingStep", onboardingStep.toString());
-        localStorage.setItem("tutorOnboardingNavigation", navigateTo);
+        localStorage.setItem("tutorOnboardingStep", onboardingStep?.toString() ?? "");
+        localStorage.setItem("tutorOnboardingNavigation", navigateTo as string);
         switch (window.location.pathname) {
           case "/tutor/login":
-            navigate(navigateTo);
+            navigate(navigateTo as string);
             break;
           case "/tutor/personal-details":
-            if (onboardingStep === 0) navigate(navigateTo);
+            if (onboardingStep === 0) navigate(navigateTo as string);
             break;
           case "/tutor/complete-kyc":
             break;
           case "/tutor/dashboard":
-            if (onboardingStep !== 0) navigate(navigateTo);
+            if (onboardingStep !== 0) navigate(navigateTo as string);
             break;
           default:
             break;

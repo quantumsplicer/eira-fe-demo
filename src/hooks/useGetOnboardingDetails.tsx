@@ -144,7 +144,7 @@ const useGetOnboardingDetails = () => {
             lastName && localStorage.setItem("lastName", lastName);
             pan && localStorage.setItem("pan", pan);
 
-            // firstName && lastName && pan && navigateToCurrentOnboardingStep(); // if prefill gives all only navigate then otherwise this goes into an endless loop
+            firstName && lastName && pan && navigateToCurrentOnboardingStep(); // if prefill gives all only navigate then otherwise this goes into an endless loop
           }
         });
         navigate("/student/signup");

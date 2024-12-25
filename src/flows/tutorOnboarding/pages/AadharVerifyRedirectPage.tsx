@@ -30,13 +30,13 @@ const AadharVerifyRedirectPage = () => {
   
   const handleOnboarding = async () => {
       const { navigateTo, onboardingStep } = await determineOnboardingStep();
-      localStorage.setItem("tutorOnboardingStep", onboardingStep.toString());
+      localStorage.setItem("tutorOnboardingStep", onboardingStep?.toString() ?? "");
       if (navigateTo === "/tutor/dashboard") {
           localStorage.setItem("showDialog", "true");
           navigate('/tutor/dashboard', { state: { previousUrl: location.pathname } });
           return;
       }
-      navigate(navigateTo);
+      navigate(navigateTo as string);
   };
 
   const LoginButton = () => {

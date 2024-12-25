@@ -41,10 +41,8 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
     useUpdateUserDetailsMutation();
   const [registerTutor, { isLoading: registerTutorIsLoading }] =
     useRegisterTutorByStudentMutation();
-  const [
-    triggerPrefillOnboarding,
-    { data: prefillData, isLoading: prefillDataIsLoading },
-  ] = usePrefillOnboardingMutation();
+  const [triggerPrefillOnboarding, { isLoading: prefillDataIsLoading }] =
+    usePrefillOnboardingMutation();
 
   const handleFirstNameInput = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -77,6 +75,50 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" && !isButtonDisabled) {
       handleSubmitClick();
+    }
+  };
+
+  const SubmitBasedOnFlow = () => {
+    if (tutorPhoneNumber || activePaymentTutorId) {
+      trackEvent("Clicked Submit to Register Tutor");
+      triggerPrefillOnboarding({
+        first_name: firstName,
+        last_name: lastName,
+        pan: pan,
+        phone: activePaymentTutorId ? activePaymentTutorId : tutorPhoneNumber,
+        amount: Number(localStorage.getItem("activePaymentAmount")),
+      })
+        .unwrap()
+        .then((res) => {
+          localStorage.setItem("activePaymentPayeeUserId", res.id);
+          localStorage.setItem(
+            "activePaymentTutorName",
+            res.first_name + " " + res.last_name
+          );
+          onSuccess && onSuccess();
+        })
+        .catch((error) => {
+          error?.data?.message
+            ? setErrorMessage(error?.data?.message)
+            : setErrorMessage("Something went wrong. Please try again.");
+        });
+    } else {
+      trackEvent("Clicked Submit");
+      triggerPrefillOnboarding({
+        phone: localStorage.getItem("phoneNumber") ?? "",
+        first_name: firstName,
+        last_name: lastName,
+        pan: pan,
+      })
+        .unwrap()
+        .then((res) => {
+          onSuccess && onSuccess();
+        })
+        .catch((error) => {
+          error?.data?.message
+            ? setErrorMessage(error?.data?.message)
+            : setErrorMessage("Something went wrong. Please try again.");
+        });
     }
   };
 
@@ -114,10 +156,57 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
       } else {
         trackEvent("Clicked Submit");
         triggerPrefillOnboarding({
-          phone: localStorage.getItem("phoneNumber") || "",
+          phone: localStorage.getItem("phoneNumber") ?? "",
           first_name: firstName,
           last_name: lastName,
           pan: pan,
+        })
+          .unwrap()
+          .then((res) => {
+            onSuccess && onSuccess();
+          })
+          .catch((error) => {
+            error?.data?.message
+              ? setErrorMessage(error?.data?.message)
+              : setErrorMessage("Something went wrong. Please try again.");
+          });
+      }
+    } else if (firstName && lastName && !showPanInput) {
+      if (tutorPhoneNumber || activePaymentTutorId) {
+        trackEvent("Clicked Proceed with just the Name", {
+          firstName: firstName,
+          lastName: lastName,
+        });
+        triggerPrefillOnboarding({
+          first_name: firstName,
+          last_name: lastName,
+          pan: pan,
+          phone: activePaymentTutorId ? activePaymentTutorId : tutorPhoneNumber,
+          amount: Number(localStorage.getItem("activePaymentAmount")),
+        })
+          .unwrap()
+          .then((res) => {
+            localStorage.setItem("activePaymentPayeeUserId", res.id);
+            localStorage.setItem(
+              "activePaymentTutorName",
+              res.first_name + " " + res.last_name
+            );
+            onSuccess && onSuccess();
+          })
+          .catch((error) => {
+            error?.data?.message
+              ? setErrorMessage(error?.data?.message)
+              : setErrorMessage("Something went wrong. Please try again.");
+          });
+      } else {
+        trackEvent("Clicked Proceed with just the Name", {
+          firstName: firstName,
+          lastName: lastName,
+        });
+        triggerPrefillOnboarding({
+          phone: localStorage.getItem("phoneNumber") ?? "",
+          first_name: firstName,
+          last_name: lastName,
         })
           .unwrap()
           .then((res) => {
@@ -141,8 +230,7 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
     setIsButtonDisabled(true);
     if (firstName && lastName && pan.length === 10 && isPanValid(pan)) {
       setIsButtonDisabled(false);
-    }
-    else if (firstName && lastName && !showPanInput) {
+    } else if (firstName && lastName && !showPanInput) {
       setIsButtonDisabled(false);
     }
   }, [firstName, lastName, pan]);
@@ -287,7 +375,10 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
 
       <LoadingButton
         disabled={
-          isButtonDisabled || updateTutorIsLoading || registerTutorIsLoading
+          isButtonDisabled ||
+          updateTutorIsLoading ||
+          registerTutorIsLoading ||
+          prefillDataIsLoading
         }
         onClick={handleSubmitClick}
         variant="contained"
@@ -302,7 +393,9 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
           height: 45,
         }}
       >
-        {updateTutorIsLoading || registerTutorIsLoading ? (
+        {updateTutorIsLoading ||
+        registerTutorIsLoading ||
+        prefillDataIsLoading ? (
           <Box sx={{ display: "flex", alignItems: "center" }}>
             Verifying
             <CircularProgress

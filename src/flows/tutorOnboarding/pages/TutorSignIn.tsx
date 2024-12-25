@@ -61,8 +61,8 @@ const TutorSignIn: React.FC = () => {
       navigate(navigateTo);
     } else {
       const { navigateTo, onboardingStep } = await determineOnboardingStep();
-      localStorage.setItem("tutorOnboardingStep", onboardingStep.toString());
-      navigate(navigateTo);
+      localStorage.setItem("tutorOnboardingStep", onboardingStep?.toString() ?? "");
+      navigate(navigateTo as string);
     }
   };
 
