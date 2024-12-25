@@ -180,7 +180,6 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         triggerPrefillOnboarding({
           first_name: firstName,
           last_name: lastName,
-          pan: pan,
           phone: activePaymentTutorId ? activePaymentTutorId : tutorPhoneNumber,
           amount: Number(localStorage.getItem("activePaymentAmount")),
         })
