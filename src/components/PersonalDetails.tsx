@@ -185,12 +185,17 @@ const PersonalDetails = ({ onSuccess }: PersonalDetailsProps) => {
         })
           .unwrap()
           .then((res) => {
-            localStorage.setItem("activePaymentPayeeUserId", res.id);
-            localStorage.setItem(
-              "activePaymentTutorName",
-              res.first_name + " " + res.last_name
-            );
-            onSuccess && onSuccess();
+            if (!res?.pan) {
+              setShowPanInput(true);
+              panInputRef.current?.focus();
+            } else {
+              localStorage.setItem("activePaymentPayeeUserId", res.id);
+              localStorage.setItem(
+                "activePaymentTutorName",
+                res.first_name + " " + res.last_name
+              );
+              onSuccess && onSuccess();
+            }
           })
           .catch((error) => {
             error?.data?.message
