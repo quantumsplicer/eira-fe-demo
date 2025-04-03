@@ -19,7 +19,7 @@ interface SuccessDialogProps {
     headingMessage: string;
     subHeadingMessage: string;
     preventDialogClose: boolean;
-    CustomDialogButton: React.FC;
+    CustomDialogButton?: React.FC;
 }
 
 const StatusDialog = ({ open, onClose, type, headingMessage, subHeadingMessage, preventDialogClose, CustomDialogButton }: SuccessDialogProps) => {
@@ -72,6 +72,8 @@ const StatusDialog = ({ open, onClose, type, headingMessage, subHeadingMessage, 
                     <Typography
                         fontSize={22}
                         fontWeight="bold"
+                        textAlign={"center"}
+                        color={type === "success" ? "green" : "#000"}
                     >
                         {headingMessage}
                     </Typography>
@@ -98,7 +100,9 @@ const StatusDialog = ({ open, onClose, type, headingMessage, subHeadingMessage, 
                     <Box>
                         {getStatusIcon(type)}
                     </Box>
-                    <CustomDialogButton />
+                    {CustomDialogButton &&
+                        <CustomDialogButton />
+                    }
                 </Stack>
             </DialogContent>
         </Dialog>

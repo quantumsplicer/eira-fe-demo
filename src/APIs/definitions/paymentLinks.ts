@@ -1,11 +1,14 @@
 import { ApiResponse, postgresApi } from "..";
 import { PaymentLinkDetails } from "../../flows/tutorDashboard/interfaces";
 interface CreatePaymentLinkRequest {
+  base_amount: number;
   amount: number;
   receiver_phone: string;
   payer_id: string;
   payee_id: string;
+  payment_method: string;
   payment_link_id: string | null;
+  settlement_type: "STANDARD" | "ON_DEMAND" | "INSTANT";
 }
 
 interface CreateOrderRequest {

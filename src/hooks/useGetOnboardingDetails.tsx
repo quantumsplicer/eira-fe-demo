@@ -99,10 +99,11 @@ const useGetOnboardingDetails = () => {
                 .unwrap()
                 .then((res) => {
                   isTutorPgOnboarded =
-                    res?.pg_onboarding_status.length > 0 &&
-                    (res.pg_onboarding_status[0].status ===
-                      "MIN_KYC_APPROVED" ||
-                      res.pg_onboarding_status[0].status === "ACTIVE");
+                    res?.pg_onboarding_status.length > 0 
+                    // &&
+                    // (res.pg_onboarding_status[0].status ===
+                    //   "MIN_KYC_APPROVED" ||
+                    //   res.pg_onboarding_status[0].status === "ACTIVE");
                 })
                 .catch()
                 .finally(
@@ -165,13 +166,13 @@ const useGetOnboardingDetails = () => {
   const checkCurrentStudentOnboardingState = async () => {
     setCheckProcessIsLoading(true);
     try {
-      const user = await getUserDetails().unwrap();
-
       const token = localStorage.getItem("access-token");
 
       // Check if the user is already logged in or not
-      if (!token && !window.location.href.includes("student/login"))
+      if (!token && !window.location.href.includes("student/login")) {
         navigate("/student/login");
+        return;
+      }
 
       // Check if the user is a student or not
       const isStudent = localStorage.getItem("studentLogin") === "true";
@@ -182,6 +183,7 @@ const useGetOnboardingDetails = () => {
       }
 
       // Check if the student is fully onboarded
+      const user = await getUserDetails().unwrap();
       navigationLogic(user as UserDetails);
       setCheckProcessIsLoading(false);
     } catch {

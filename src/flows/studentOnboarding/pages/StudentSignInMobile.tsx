@@ -68,7 +68,7 @@ const StudentSignInMobile = () => {
     navigateToCurrentOnboardingStep();
   };
 
-  const OnOtpVerification = async (id: string) => {
+  const OnOtpVerification = async (id: string) : Promise<string> => {
     initializeAmplitude({ role: "student" });
     trackEvent("Logged In");
 
@@ -76,6 +76,7 @@ const StudentSignInMobile = () => {
       data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
       setIsOtpVerificationDone(true);
     });
+    return "";
   };
 
   const ContinueButton = () => {

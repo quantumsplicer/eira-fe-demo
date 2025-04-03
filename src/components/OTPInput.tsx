@@ -20,9 +20,9 @@ const OPT_LENGTH = 4;
 interface OTPInputProps {
   open?: boolean;
   onClose?: () => void;
-  navigateTo?: string;
+  navigateTo?: string | null;
   phoneNumber: string;
-  onVerified?: (result: any) => void;
+  onVerified?: (result: any) => Promise<string>;
   isDrawer: boolean;
   role: "teacher" | "student";
   onChangePhoneNumber?: () => void;
@@ -31,7 +31,7 @@ interface OTPInputProps {
 const OTPInput = ({
   open,
   onClose,
-  navigateTo,
+  // navigateTo,
   phoneNumber,
   onVerified,
   isDrawer,
@@ -111,14 +111,9 @@ const OTPInput = ({
     }).catch((err) => {
       console.log(err);
     });
-    if (!result?.data?.token) {
+    if (!result?.data?.access) {
       setIsOtpInvalid(true);
       return;
-    }
-
-    if (onVerified) {
-      localStorage.setItem("phoneNumber", phoneNumber);
-      onVerified(result?.data?.id);
     }
 
     if (
@@ -131,7 +126,18 @@ const OTPInput = ({
       localStorage.setItem("tutorLogin", "true");
       localStorage.removeItem("studentLogin");
     }
-    navigateTo && navigate(navigateTo);
+
+    
+    if (onVerified) {
+      // let navigateTo
+      localStorage.setItem("phoneNumber", phoneNumber);
+      const navigateTo = await onVerified(result?.data?.id);
+      if (navigateTo) {
+        console.log("redirecting to", navigateTo)
+        navigate(navigateTo);
+      }
+    }
+    // navigateTo && navigate(navigateTo);
   };
 
   const resendOtp = () => {

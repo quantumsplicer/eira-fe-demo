@@ -12,8 +12,10 @@ export interface ValidateOtpBody {
 }
 
 export interface ValidateOtpResponse extends ApiResponse {
-  token: string;
-  id?: string;
+  message: string;
+  access: string;
+  refresh: string;
+  id: string;
 }
 
 export const authApi = postgresApi.injectEndpoints({
@@ -42,7 +44,7 @@ export const authApi = postgresApi.injectEndpoints({
             : localStorage.setItem("tutorLogin", "true");
 
           // Save the token
-          localStorage.setItem("access-token", data?.token);
+          localStorage.setItem("access-token", data?.access);
         } catch (err) {
           console.log(err)
         }

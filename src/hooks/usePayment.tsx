@@ -60,8 +60,11 @@ export const usePayment = () => {
 
     const payload = {
       amount: Number(activePaymentTotalAmount),
+      base_amount: Number(activePaymentAmount),
       payer_id: userDetails ? userDetails.id : undefined,
       payee_id: activePaymentPayeeUserId ?? undefined,
+      payment_method: "cc",
+      settlement_type: "STANDARD" as "STANDARD" | "ON_DEMAND" | "INSTANT",
       ...(localStorage.getItem("activePaymentLinkId")
         ? { payment_link_id: localStorage.getItem("activePaymentLinkId")} 
         : {}),

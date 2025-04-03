@@ -48,9 +48,10 @@ const InputPayment = () => {
             .unwrap()
             .then(res => {
                 const tutor = res[0];
-                isTutorPgOnboarded = tutor?.pg_onboarding_status &&
-                    tutor.pg_onboarding_status?.length > 0 && 
-                    (tutor.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" || tutor.pg_onboarding_status[0].status === "ACTIVE");
+                isTutorPgOnboarded = tutor?.pg_onboarding_status .length > 0
+                // &&
+                //     tutor.pg_onboarding_status?.length > 0 && 
+                //     (tutor.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" || tutor.pg_onboarding_status[0].status === "ACTIVE");
             })
             .catch()
             .finally(() => setIsgetTutorDetailsLoading(false))

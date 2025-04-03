@@ -51,7 +51,7 @@ const TutorSignIn: React.FC = () => {
     }
   };
 
-  const handlePostOtpVerification = async () => {
+  const handlePostOtpVerification = async () : Promise<string> => {
     // initialize amplitude
     initializeAmplitude({ role: "teacher" });
     trackEvent("Logged In");
@@ -64,6 +64,7 @@ const TutorSignIn: React.FC = () => {
       localStorage.setItem("tutorOnboardingStep", onboardingStep?.toString() ?? "");
       navigate(navigateTo as string);
     }
+    return "";
   };
 
   return (
