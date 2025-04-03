@@ -73,18 +73,41 @@ const StudentSignIn = () => {
     }
   };
 
-  const OnOtpVerification = async (id: string) => {
+  const OnOtpVerification = async (id: string) : Promise<string> => {
     // initialize amplitude
     initializeAmplitude({ role: "student" });
     trackEvent("Logged In");
 
-    await getUserDetailsbyId(id).then((data) => {
-      data?.data?.pan ? setIsExistingUser(true) : setIsExistingUser(false);
+    try {
+      const data = await getUserDetailsbyId(id);
+      console.log("hereeeeeee data", data);
       setIsOtpVerificationDone(true);
-    });
+  
+      if (data?.data?.pan) {
+        const activeFlow = localStorage.getItem("activeFlow");
+        console.log("activeFlow", activeFlow);
+        if (!activeFlow || activeFlow === "defaultFlow") {
+          return "/page-not-found";
+        } else if (activeFlow === "StaticLinkFlow") {
+          const staticLinkUrl = localStorage.getItem("activeFlowUrl");
+          return staticLinkUrl ?? "/page-not-found";
+        } else if (activeFlow === "DynamicLinkFlow") {
+          const dynamicLinkId = localStorage.getItem("activeFlowQuery");
+          return dynamicLinkId ? `/payment-link/${dynamicLinkId}` : "/page-not-found"
+        }
+      }
+      
+      // Default path if above conditions aren't met
+      return "/student/signup";
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+      // Default fallback return in case of error
+      return "/student/signup";
+    }
   };
 
   useEffect(() => {
+    console.log("StudentSignIn")
     checkCurrentStudentOnboardingState();
   }, []);
 
@@ -201,7 +224,6 @@ const StudentSignIn = () => {
               ) : (
                 <OTPInput
                   role="student"
-                  navigateTo="/student/signup"
                   phoneNumber={phoneNumber}
                   onVerified={OnOtpVerification}
                   isDrawer={false}
@@ -209,56 +231,7 @@ const StudentSignIn = () => {
                 />
               )}
 
-              {isOtpVerificationDone && (
-                <Dialog
-                  open={isOtpVerificationDone}
-                  onClose={() => {}}
-                  sx={{
-                    "& .MuiDialog-paper": {
-                      width: 500,
-                      maxWidth: "50vw",
-                      height: 400,
-                    },
-                    p: 1,
-                  }}
-                >
-                  <DialogContent dividers>
-                    <Stack
-                      justifyContent="center"
-                      alignItems="center"
-                      spacing={2}
-                      sx={{ height: "100%", pb: 10, pt: 10 }}
-                    >
-                      <Typography fontSize={22} fontWeight="bold">
-                        {isExistingUser ? "Welcome back!" : "Login Successful"}
-                      </Typography>
-                      <Typography textAlign={"center"}>
-                        {isExistingUser
-                          ? "You are already registered as a teacher on Eira. Please login using the teacher login page."
-                          : "You have successfully logged in as a student. Welcome to Eira!"}
-                      </Typography>
-                      <CheckCircleOutlineIcon
-                        sx={{ mt: 5, fontSize: 90, color: "green" }}
-                      />
-                      <Button
-                        variant="contained"
-                        onClick={() => {}}
-                        fullWidth
-                        sx={{
-                          width: "100%",
-                          minWidth: "320px",
-                          maxWidth: "400px",
-                          marginTop: 30,
-                          height: 45,
-                          borderRadius: 20,
-                        }}
-                      >
-                        Continue
-                      </Button>
-                    </Stack>
-                  </DialogContent>
-                </Dialog>
-              )}
+              {/* {ix */}
             </Stack>
           </Stack>
         </Box>

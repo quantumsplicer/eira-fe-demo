@@ -56,7 +56,7 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
   const getGst = (): string => {
     if (activePaymentAmount) {
       const fees = (activePaymentAmount * baseRate) / 100;
-      const gst = parseFloat(((18 * fees) / 100).toFixed(2));
+      const gst = parseFloat(((19.41 * fees) / 100).toFixed(2));
       return formatAmount(gst);
     }
     return "-";
@@ -65,7 +65,7 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
   const getTotalAmount = (): string => {
     if (activePaymentAmount) {
       const fees = (activePaymentAmount * baseRate) / 100;
-      const gst = (18 * fees) / 100;
+      const gst = (19.41 * fees) / 100;
       const activePaymentTotalAmt = formatAmount(parseFloat((fees + gst + activePaymentAmount).toFixed(2)));
       localStorage.setItem("activePaymentTotalAmount", parseFloat((fees + gst + activePaymentAmount).toFixed(2)).toString())
       return activePaymentTotalAmt;
@@ -91,7 +91,7 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
           <Typography>{getPlatformFees()}</Typography>
         </Stack>
         <Stack direction={"row"} justifyContent={"space-between"} mb={1}>
-          <Typography color={"#7e7e7e"}>GST (18% of platform fees):</Typography>
+          <Typography color={"#7e7e7e"}>Government and other charges:</Typography>
           <Typography>{getGst()}</Typography>
         </Stack>
         <Divider

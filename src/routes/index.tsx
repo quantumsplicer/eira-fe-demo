@@ -38,16 +38,16 @@ import PrivacyPolicy from "../flows/tutorWebsite/pages/PrivacyPolicy";
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/pay/personal-details" element={<InputPersonalDetails />} />
+      {/* <Route path="/pay/personal-details" element={<InputPersonalDetails />} /> */}
       <Route path="/pay/payment-details" element={<InputPaymentDetails />} />
-      <Route path="/pay/tutor-details" element={<InputTutorDetails />} />
-      <Route path="/pay/create-session" element={<SlotBookingPage />} />
+      {/* <Route path="/pay/tutor-details" element={<InputTutorDetails />} /> */}
+      {/* <Route path="/pay/create-session" element={<SlotBookingPage />} /> */}
       <Route path="/pay/review" element={<PaymentReviewPage />} />
       <Route path="/pay/payment-gateway-payment-flow" element={<PGLoading />} />
       <Route path="/pay/redirect" element={<PaymentRedirect />} />
       <Route path="/pay/status" element={<PaymentSuccessfulPage />} />
       
-      <Route path="/student/dashboard" element={<StudentDashboard />} />
+      {/* <Route path="/student/dashboard" element={<StudentDashboard />} /> */}
 
       <Route path="tutor/aadhar-verification" element={<AadharVerification />} />
       <Route path="tutor/onboarding/aadhar-redirect" element={<AadharVerifyRedirectPage />} />
@@ -55,17 +55,17 @@ const AppRoutes = () => {
       {/**
        * Pay Tuition Fees route
        */}
-      <Route path="pay-tuition-fees/" element={<PayFeesContainer />}>
+      {/* <Route path="pay-tuition-fees/" element={<PayFeesContainer />}>
         <Route path="" element={<StudentSignIn />} />
         <Route path="login" element={<StudentSignIn />} />
         <Route path="pay/verify" element={<InputPhone />} />
-      </Route>
+      </Route> */}
 
       {/**
        * Dynamic Payment link route
        */}
       <Route path="payment-link/" element={<PayFeesContainer />}>
-        <Route index path="" element={<StudentSignIn />} />
+        {/* <Route index path="" element={<StudentSignIn />} /> */}
       </Route>
 
       {/**
@@ -81,7 +81,7 @@ const AppRoutes = () => {
         <Route path="login" element={<TutorSignIn />} />
         <Route path="personal-details" element={<TutorSignUp />} />
         <Route path="complete-kyc" element={<KycLogin />} />
-        <Route path="dashboard" element={<TutorDashboard />} />
+        {/* <Route path="dashboard" element={<TutorDashboard />} /> */}
       </Route>
 
       <Route path="" element={<BaseRedirect />} />

@@ -13,6 +13,7 @@ import { useOnboarding } from "../../../customHooks/useOnboarding";
 
 const AadharVerifyRedirectPage = () => {
   const [isSessionExpired, setIsSessionExpired] = useState<boolean>(false);
+  const [aadhaarKycCompleted, setAadhaarKycCompleted] = useState<boolean>(false);
   const { determineOnboardingStep } = useOnboarding();
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
   const navigate = useNavigate();
@@ -32,8 +33,9 @@ const AadharVerifyRedirectPage = () => {
       const { navigateTo, onboardingStep } = await determineOnboardingStep();
       localStorage.setItem("tutorOnboardingStep", onboardingStep?.toString() ?? "");
       if (navigateTo === "/tutor/dashboard") {
-          localStorage.setItem("showDialog", "true");
-          navigate('/tutor/dashboard', { state: { previousUrl: location.pathname } });
+        setAadhaarKycCompleted(true);
+          // localStorage.setItem("showDialog", "true");
+          // navigate('/tutor/dashboard', { state: { previousUrl: location.pathname } });
           return;
       }
       navigate(navigateTo as string);
@@ -67,7 +69,7 @@ const AadharVerifyRedirectPage = () => {
       alignItems="center"
       sx={{ height: "100vh", width: "100vw" }}
     >
-      {!isSessionExpired && (
+      {!isSessionExpired && !aadhaarKycCompleted && (
         <>
           <CircularProgress />
           <Typography variant="h6" sx={{ mt: 2 }}>
@@ -97,6 +99,28 @@ const AadharVerifyRedirectPage = () => {
           />
         )
       ) : null}
+      {!isSessionExpired && aadhaarKycCompleted && (
+        notPhoneScreen ? (
+          <StatusDialog
+            open={true}
+            onClose={() => {}}
+            type="success"
+            headingMessage="Congratulations for completing your Aadhaar KYC!"
+            subHeadingMessage="You can start accepting payments on Eira now"
+            preventDialogClose={true}
+            // CustomDialogButton={LoginButton}
+          />
+        ) : (
+          <StatusDrawer
+            open={true}
+            type="success"
+            headingMessage="Congratulations for completing your Aadhaar KYC!"
+            subHeadingMessage1="You can start accepting payments on Eira now"
+            preventDrawerClose={true}
+            // CustomDrawerButton={LoginButton}
+          />
+        )
+      )}
     </Stack>
   );
 };

@@ -16,7 +16,7 @@ interface StatusDrawerProps {
     subHeadingMessage1: string;
     subHeadingMessage2?: string;
     preventDrawerClose: boolean;
-    CustomDrawerButton: React.FC;
+    CustomDrawerButton?: React.FC;
 }
 
 const StatusDrawer = ({
@@ -95,6 +95,8 @@ const StatusDrawer = ({
                     <Typography
                         variant="h5"
                         mb={3}
+                        textAlign={"center"}
+                        color={type === "success" ? "green" : "#000"}
                     >
                         {headingMessage}
                     </Typography>
@@ -114,7 +116,9 @@ const StatusDrawer = ({
                         </Typography>
                     }
                     {getStatusIcon(type)}
-                    <CustomDrawerButton />
+                    {CustomDrawerButton &&
+                        <CustomDrawerButton />
+                    }
                 </Stack>
             </Drawer>
         </>
