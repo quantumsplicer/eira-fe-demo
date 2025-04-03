@@ -24,7 +24,7 @@ const PaymentConfirmation = ({ name, paymentDetails, amount }: PaymentConfirmati
                 paymentDetails={paymentDetails}
                 type="success"
             />
-            <Typography
+            {/* <Typography
                 onClick={() => {
                     trackEvent("Clicked Go To Dashboard");
                     navigate("/student/dashboard");
@@ -38,7 +38,7 @@ const PaymentConfirmation = ({ name, paymentDetails, amount }: PaymentConfirmati
                 }}
             >
                 Go to Dashboard
-            </Typography>
+            </Typography> */}
         </Stack>
     )
 }
