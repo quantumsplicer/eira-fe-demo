@@ -22,7 +22,7 @@ export interface ApiResponse {
   status?: number;
 }
 const baseQueryWithAuth = fetchBaseQuery({
-  baseUrl: `${BASE_URL}v1/`,
+  baseUrl: `${BASE_URL}api/v1/`,
   prepareHeaders: (headers, { getState }) => {
     const token = localStorage.getItem("access-token");
     console.log("token", token)

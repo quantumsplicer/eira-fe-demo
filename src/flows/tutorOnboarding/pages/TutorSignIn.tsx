@@ -44,9 +44,12 @@ const TutorSignIn: React.FC = () => {
           setIsDialogOpen(true);
         })
         .catch((err) => {
-          err.data.message === "The user role and input role does not match."
-            ? setErrorMessage("This user is already registered as a student")
-            : setErrorMessage("Something went wrong. Please try again!");
+          err?.data?.message
+            ? setErrorMessage(err.data.message)
+            : setErrorMessage("Something went wrong. Please try again")
+          // err.data.message === "The user role and input role does not match."
+          //   ? setErrorMessage("This user is already registered as a student")
+          //   : setErrorMessage("Something went wrong. Please try again!");
         });
     }
   };
