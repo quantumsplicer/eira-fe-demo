@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { useGetPaymentStatusQuery } from "../../../APIs/definitions/paymentLinks";
 import { changePaymentStatus } from "../../../stores/slices";
 import moment from "moment";
+import { trackEvent } from "../../../utils/amplitude";
 
 const PaymentSuccessfulPage = () => {
   const notPhoneScreen = useMediaQuery('(min-width:850px)');
@@ -41,6 +42,7 @@ const PaymentSuccessfulPage = () => {
   }
 
   useEffect(() => {
+    trackEvent("redirecting back to web app");
     localStorage.removeItem("activePaymentLinkId");
     localStorage.removeItem("activePaymentTotalAmount");
     localStorage.removeItem("activePaymentAmount");
@@ -51,6 +53,30 @@ const PaymentSuccessfulPage = () => {
     localStorage.removeItem("activePaymentSessionTime");
     localStorage.removeItem("isTutorEiraOnboarded");
   }, [])
+
+  useEffect(() => {
+    if (paymentStatus) {
+      const status = paymentStatus.order.status;
+      switch (status) {
+        case "SUCCESS":
+        case "PG_SETTLED":
+        case "BENE_SETTLED":
+          trackEvent("Successfully completed payment", {
+            status: status
+          });
+          break;
+        case "FAILED":
+        case "USER_DROPPED":
+        case "REFUNDED":
+          trackEvent("Error completing payment", {
+            status: status
+          });
+          break;
+        default:
+          return;
+      }
+    }
+  }, [paymentStatus])
 
   return (
     <Box

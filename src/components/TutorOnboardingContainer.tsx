@@ -30,7 +30,7 @@ const TutorOnboardingContainer = () => {
             navigate(navigateTo as string);
             break;
           case "/tutor/personal-details":
-            if (onboardingStep === 0) navigate(navigateTo as string);
+            if (onboardingStep !== 3) navigate(navigateTo as string);
             break;
           case "/tutor/complete-kyc":
             break;
