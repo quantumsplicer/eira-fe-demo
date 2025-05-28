@@ -18,6 +18,12 @@ export interface ValidateOtpResponse extends ApiResponse {
   id: string;
 }
 
+export interface ValidateKycLinkResponse {
+  access: string;
+  phone: string;
+  token_type: string;
+}
+
 export const authApi = postgresApi.injectEndpoints({
   endpoints: (builder) => ({
     getOtp: builder.mutation<ApiResponse, GetOtpBody>({
@@ -50,7 +56,11 @@ export const authApi = postgresApi.injectEndpoints({
         }
       },
     }),
+
+    validateKycLink: builder.query<ValidateKycLinkResponse, string>({
+      query: (id) => `auth/validate-link/${id}/`,
+    })
   }),
 });
 
-export const { useGetOtpMutation, useValidateOtpMutation } = authApi;
+export const { useGetOtpMutation, useValidateOtpMutation, useLazyValidateKycLinkQuery } = authApi;

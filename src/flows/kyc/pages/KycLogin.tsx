@@ -17,6 +17,7 @@ const KycLogin = () => {
     const navigate = useNavigate();
 
     const handleProceedClick = () => {
+        trackEvent("Clicked Proceed button on complete kyc page")
         const token = localStorage.getItem("access-token");
         if (!token) {
             navigate("/tutor/login");

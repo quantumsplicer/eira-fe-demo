@@ -44,8 +44,10 @@ const TutorSignUp: React.FC = () => {
     }
 
     const checkOnboardingStep = async () => {
-      if (tutorOnboardingStep && tutorOnboardingStep === "3") {
-        setSignUpStep(Number(tutorOnboardingStep));
+      if (tutorOnboardingStep) {
+        tutorOnboardingStep === "3"
+          ? setSignUpStep(Number(tutorOnboardingStep))
+          : navigate("page-not-found");
       } else {
         const { navigateTo, onboardingStep } = await determineOnboardingStep();
         onboardingStep === 3 ? setSignUpStep(onboardingStep as number) : navigate(navigateTo as string);

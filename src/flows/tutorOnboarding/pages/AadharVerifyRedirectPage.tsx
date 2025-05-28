@@ -27,6 +27,7 @@ const AadharVerifyRedirectPage = () => {
       return;
     }
     trackEvent("redirecting back to the web app after aadhaar verification");
+    localStorage.removeItem("aadhaarKycLink");
     localStorage.removeItem("activeFlow");
     handleOnboarding();
   }, []);

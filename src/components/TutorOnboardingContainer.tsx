@@ -2,10 +2,16 @@ import { useEffect } from "react";
 import { useOnboarding } from "../customHooks/useOnboarding";
 import { Loading } from "./Loading";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useLazyValidateKycLinkQuery } from "../APIs/definitions/auth";
 
 const TutorOnboardingContainer = () => {
   const { determineOnboardingStep, checkProcessIsLoading } = useOnboarding();
   const navigate = useNavigate();
+
+  const [
+    getValidateKycToken,
+    { data: studentData, isLoading: studentDataIsLoading },
+  ] = useLazyValidateKycLinkQuery();
 
   useEffect(() => {
     // if (window.location.pathname.includes("/tutor/complete-kyc")) {
@@ -18,6 +24,20 @@ const TutorOnboardingContainer = () => {
         localStorage.clear();
         localStorage.setItem("tutorLogin", "true");
         navigate("/tutor/login");
+      }
+
+      if (window.location.pathname.includes("/tutor/complete-kyc")) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        localStorage.setItem("aadhaarKycLink", window.location.href);
+        if (code) {
+          try {
+            const res = await getValidateKycToken(code as string).unwrap();
+            localStorage.setItem("access-token", res.access);
+          } catch (err) {
+            console.log(err);
+          }
+        }
       }
 
       const { navigateTo, onboardingStep } = await determineOnboardingStep();
