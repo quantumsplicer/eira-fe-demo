@@ -56,7 +56,6 @@ const baseQueryWithErrorHandling = async (
   ) {
     // Clear the token from local storage
     localStorage.removeItem("access-token");
-    localStorage.removeItem("aadhaarKycLink");
     window.location.href = aadhaarKycLink;
   }
 

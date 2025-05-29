@@ -32,8 +32,7 @@ const TutorOnboardingContainer = () => {
         localStorage.setItem("aadhaarKycLink", window.location.href);
         if (code) {
           try {
-            const res = await getValidateKycToken(code as string).unwrap();
-            localStorage.setItem("access-token", res.access);
+            await getValidateKycToken(code as string).unwrap();
           } catch (err) {
             console.log(err);
           }

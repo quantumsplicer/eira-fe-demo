@@ -59,6 +59,14 @@ export const authApi = postgresApi.injectEndpoints({
 
     validateKycLink: builder.query<ValidateKycLinkResponse, string>({
       query: (id) => `auth/validate-link/${id}/`,
+      onQueryStarted: async (body, { queryFulfilled }) => {
+        try {
+          const { data } = await queryFulfilled;
+          localStorage.setItem("access-token", data?.access);
+        } catch (err) {
+          console.log(err)
+        }
+      },
     })
   }),
 });

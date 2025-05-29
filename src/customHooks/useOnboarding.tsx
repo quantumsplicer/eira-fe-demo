@@ -69,7 +69,9 @@ export const useOnboarding = () => {
     const bankAccountDetails = await fetchBankAccountDetails();
 
     if (!userDetails?.pan) {
-      trackEvent("redirecting to page not found because pan does not exist");
+      trackEvent("redirecting to page not found because pan does not exist", {
+        userDetails: userDetails
+      });
       return {
         navigateTo: "/page-not-found",
         onboardingStep: 1,
@@ -78,7 +80,9 @@ export const useOnboarding = () => {
     }
 
     if (!bankAccountDetails || bankAccountDetails.length === 0) {
-      trackEvent("redirecting to page not found because bank account does not exist");
+      trackEvent("redirecting to page not found because bank account does not exist", {
+        bankAccountDetails: bankAccountDetails
+      });
       return {
         navigateTo: "/page-not-found",
         onboardingStep: 2,
