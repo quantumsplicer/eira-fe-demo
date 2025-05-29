@@ -2,10 +2,16 @@ import { useEffect } from "react";
 import { useOnboarding } from "../customHooks/useOnboarding";
 import { Loading } from "./Loading";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useLazyValidateKycLinkQuery } from "../APIs/definitions/auth";
 
 const TutorOnboardingContainer = () => {
   const { determineOnboardingStep, checkProcessIsLoading } = useOnboarding();
   const navigate = useNavigate();
+
+  const [
+    getValidateKycToken,
+    { data: studentData, isLoading: studentDataIsLoading },
+  ] = useLazyValidateKycLinkQuery();
 
   useEffect(() => {
     // if (window.location.pathname.includes("/tutor/complete-kyc")) {
@@ -20,6 +26,19 @@ const TutorOnboardingContainer = () => {
         navigate("/tutor/login");
       }
 
+      if (window.location.pathname.includes("/tutor/complete-kyc")) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        localStorage.setItem("aadhaarKycLink", window.location.href);
+        if (code) {
+          try {
+            await getValidateKycToken(code as string).unwrap();
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
+
       const { navigateTo, onboardingStep } = await determineOnboardingStep();
       const accessToken = localStorage.getItem("access-token");
       if (accessToken) {
@@ -30,7 +49,7 @@ const TutorOnboardingContainer = () => {
             navigate(navigateTo as string);
             break;
           case "/tutor/personal-details":
-            if (onboardingStep === 0) navigate(navigateTo as string);
+            if (onboardingStep !== 3) navigate(navigateTo as string);
             break;
           case "/tutor/complete-kyc":
             break;

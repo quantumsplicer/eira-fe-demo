@@ -13,6 +13,7 @@ import SafeLogo from "../../../components/SafeLogo";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { useOnboarding } from "../../../customHooks/useOnboarding";
 
 const TutorSignUp: React.FC = () => {
   const activeFlow = localStorage.getItem("activeFlow");
@@ -23,6 +24,8 @@ const TutorSignUp: React.FC = () => {
   const navigate = useNavigate();
 
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
+
+  const { determineOnboardingStep } = useOnboarding();
 
   const step1Notes = [
     "Input First Name and Last Name as on PAN given.",
@@ -40,9 +43,17 @@ const TutorSignUp: React.FC = () => {
       return;
     }
 
-    if (tutorOnboardingStep && tutorOnboardingStep !== "0") {
-      setSignUpStep(Number(tutorOnboardingStep));
+    const checkOnboardingStep = async () => {
+      if (tutorOnboardingStep) {
+        tutorOnboardingStep === "3"
+          ? setSignUpStep(Number(tutorOnboardingStep))
+          : navigate("page-not-found");
+      } else {
+        const { navigateTo, onboardingStep } = await determineOnboardingStep();
+        onboardingStep === 3 ? setSignUpStep(onboardingStep as number) : navigate(navigateTo as string);
+      }
     }
+    checkOnboardingStep();
   }, [])
 
   const LoginButton = () => {

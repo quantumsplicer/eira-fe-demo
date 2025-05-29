@@ -86,10 +86,14 @@ export const usePayment = () => {
         trackEvent("Redirecting to cashfree", {
           sessionId: res.payment_session_id
         })
+        trackEvent("redirecting to payment gateway");
         openCashfreeCheckout(res.payment_session_id);
       })
       .catch((err) => {
         console.log(err);
+        trackEvent("Failed to create order", {
+          error: err?.data?.message
+        })
         if (err.status === 400) {
           setErrorMessage(err.data.message.split(": ").pop());
         } else {

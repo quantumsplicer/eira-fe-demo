@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import StatusDialog from "../../../dialogs/StatusDialog";
 import StatusDrawer from "../../../components/StatusDrawer";
 import { useOnboarding } from "../../../customHooks/useOnboarding";
+import { trackEvent } from "../../../utils/amplitude";
 
 const AadharVerifyRedirectPage = () => {
   const [isSessionExpired, setIsSessionExpired] = useState<boolean>(false);
@@ -25,6 +26,8 @@ const AadharVerifyRedirectPage = () => {
       setIsSessionExpired(true);
       return;
     }
+    trackEvent("redirecting back to the web app after aadhaar verification");
+    localStorage.removeItem("aadhaarKycLink");
     localStorage.removeItem("activeFlow");
     handleOnboarding();
   }, []);

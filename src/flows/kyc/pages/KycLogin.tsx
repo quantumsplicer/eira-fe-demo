@@ -8,14 +8,16 @@ import { useNavigate } from "react-router-dom";
 import Amount from "../../../components/Amount";
 import CustomProgressIndicator from "../../../components/CustomProgressIndicator";
 import { useOnboarding } from "../../../customHooks/useOnboarding";
+import { trackEvent } from "../../../utils/amplitude";
 
 const KycLogin = () => {
 
     const notPhoneScreen = useMediaQuery('(min-width:850px)');
-    const [nextStep, setNextStep] = useState<number>(2);
+    const [nextStep, setNextStep] = useState<number>(3);
     const navigate = useNavigate();
 
     const handleProceedClick = () => {
+        trackEvent("Clicked Proceed button on complete kyc page")
         const token = localStorage.getItem("access-token");
         if (!token) {
             navigate("/tutor/login");
@@ -29,6 +31,7 @@ const KycLogin = () => {
         if (token) {
             const onboardingStep = localStorage.getItem("tutorOnboardingStep");
             if (onboardingStep) {
+                trackEvent(`Calcualated onboarding step: ${onboardingStep}`);
                 setNextStep(Number.parseInt(onboardingStep));
             }
         }

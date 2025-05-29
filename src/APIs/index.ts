@@ -46,17 +46,18 @@ const baseQueryWithErrorHandling = async (
   const result = await baseQueryWithAuth(args, api, extraOptions);
 
   const accessToken = localStorage.getItem("access-token");
+  const aadhaarKycLink = localStorage.getItem("aadhaarKycLink");
   console.log(result)
 
   // Check if the status code is 401 or 403
-  // if (
-  //   (result?.error?.status === 401 || result?.error?.status === 403) &&
-  //   accessToken
-  // ) {
-  //   // Clear the token from local storage
-  //   localStorage.removeItem("access-token");
-  //   window.location.reload();
-  // }
+  if (
+    (result?.error?.status === 401 || result?.error?.status === 403) &&
+    accessToken && aadhaarKycLink
+  ) {
+    // Clear the token from local storage
+    localStorage.removeItem("access-token");
+    window.location.href = aadhaarKycLink;
+  }
 
   return result;
 };

@@ -6,18 +6,15 @@ import {
 import { useLazyGetOnboardingStatusQuery } from "../APIs/definitions/onboarding";
 import {
   useLazyGetUserDetailsQuery,
-  usePrefillOnboardingMutation,
   UserDetails,
 } from "../APIs/definitions/user";
+import { trackEvent } from "../utils/amplitude";
 
 export const useOnboarding = () => {
   const [getUserDetails] = useLazyGetUserDetailsQuery();
   const [getBankAccountDetails] = useLazyGetAccountsQuery();
-  const [getOnboardingStatus] = useLazyGetOnboardingStatusQuery();
   const [checkProcessIsLoading, setCheckProcessIsLoading] =
     useState<boolean>(true);
-  const [triggerPrefillOnboarding, { isLoading: prefillDataIsLoading }] =
-    usePrefillOnboardingMutation();
 
   const fetchUserDetails = async (): Promise<UserDetails | null> => {
     let userDetails: UserDetails | null = null;
@@ -66,83 +63,35 @@ export const useOnboarding = () => {
         (userDetails.pg_onboarding_status[0].status === "INITIATED" ||
           userDetails.pg_onboarding_status[0].status === "EMAIL_VERIFIED" ||
           userDetails.pg_onboarding_status[0].status === "MIN_KYC_PENDING"));
-    const isKycSubmitted =
-      userDetails?.pg_onboarding_status &&
-      userDetails?.pg_onboarding_status.length > 0 &&
-      userDetails.pg_onboarding_status[0].status === "MIN_KYC_SUBMITTED";
-    const isUserAadhaarVerified =
-      userDetails?.pg_onboarding_status &&
-      userDetails?.pg_onboarding_status.length > 0 &&
-      (userDetails.pg_onboarding_status[0].status === "MIN_KYC_APPROVED" ||
-        userDetails.pg_onboarding_status[0].status !== "ACTIVE");
-    // userDetails.pg_onboarding_status[0].status !== "EMAIL_VERIFIED" &&
-    // userDetails.pg_onboarding_status[0].status !== "MIN_KYC_PENDING";
-
-    if (!userDetails?.first_name) {
-      let returnContext = {};
-
-      await triggerPrefillOnboarding({
-        phone: localStorage.getItem("phoneNumber") ?? "",
-      })
-        .then(async (result) => {
-          if (result) {
-            localStorage.setItem("autoFillDetails", "true");
-
-            const firstName = result.data?.first_name;
-            const lastName = result.data?.last_name;
-            const pan = result.data?.pan;
-
-            firstName && localStorage.setItem("firstName", firstName);
-            lastName && localStorage.setItem("lastName", lastName);
-            pan && localStorage.setItem("pan", pan);
-
-            if (firstName && lastName && pan) {
-              returnContext = {
-                navigateTo: "/tutor/personal-details",
-                onboardingStep: 2,
-                checkProcessIsLoading,
-              };
-            } // if prefill gives all only navigate then otherwise this goes into an endless loop
-          }
-        })
-        .catch((error) => {
-          returnContext = {
-            navigateTo: "/tutor/personal-details",
-            onboardingStep: 1,
-            checkProcessIsLoading,
-          };
-        });
-      console.log("coming here", returnContext);
-      if (Object.keys(returnContext).length > 0) {
-        console.log("hey");
-        return returnContext;
-      }
-    }
 
     setCheckProcessIsLoading(false);
 
     const bankAccountDetails = await fetchBankAccountDetails();
 
     if (!userDetails?.pan) {
+      trackEvent("redirecting to page not found because pan does not exist", {
+        userDetails: userDetails
+      });
       return {
-        navigateTo: "/tutor/personal-details",
+        navigateTo: "/page-not-found",
         onboardingStep: 1,
         checkProcessIsLoading,
       };
     }
 
-    if (
-      !bankAccountDetails ||
-      (bankAccountDetails && bankAccountDetails.length === 0)
-    ) {
+    if (!bankAccountDetails || bankAccountDetails.length === 0) {
+      trackEvent("redirecting to page not found because bank account does not exist", {
+        bankAccountDetails: bankAccountDetails
+      });
       return {
-        navigateTo: "/tutor/personal-details",
+        navigateTo: "/page-not-found",
         onboardingStep: 2,
         checkProcessIsLoading,
       };
     }
 
     if (isKycPending) {
+      trackEvent("redirecting to aadhaar verification page");
       return {
         navigateTo: "/tutor/personal-details",
         onboardingStep: 3,
@@ -150,22 +99,7 @@ export const useOnboarding = () => {
       };
     }
 
-    if (isKycSubmitted) {
-      return {
-        navigateTo: "/tutor/dashboard",
-        onboardingStep: 0,
-        checkProcessIsLoading,
-      };
-    }
-
-    if (isUserAadhaarVerified) {
-      return {
-        navigateTo: "/tutor/personal-details",
-        onboardingStep: 0,
-        checkProcessIsLoading,
-      };
-    }
-
+    trackEvent("KYC process completed already");
     return {
       navigateTo: "/tutor/dashboard",
       onboardingStep: 0,

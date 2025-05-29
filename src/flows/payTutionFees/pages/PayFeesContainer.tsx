@@ -41,6 +41,7 @@ const PayFeesContainer: React.FC = () => {
     localStorage.setItem("activeFlowQuery", window.location.search);
 
     console.log("asdfadsfsadf");
+    localStorage.removeItem("aadhaarKycLink");
     checkCurrentStudentOnboardingState();
   }, []);
 
