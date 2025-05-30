@@ -3,6 +3,7 @@ import { postgresApi } from "..";
 export interface pgOnboardingDetails {
   pg_name: string;
   status: string;
+  kyc_status: string;
 }
 
 export interface UserDetails {
