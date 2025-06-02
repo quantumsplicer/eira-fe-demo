@@ -14,8 +14,8 @@ export const environment = window.location.host.includes("app.eira.club")
 
 export const BASE_URL =
   environment === "prod"
-    ? "https://eira-production-bmuwffxdvq-el.a.run.app/"
-    : "https://eira-development-bmuwffxdvq-el.a.run.app/";
+    ? "https://eira-production-c7brmvh7da-el.a.run.app/"
+    : "https://eira-development-c7brmvh7da-el.a.run.app/";
 
 export interface ApiResponse {
   message?: string;
