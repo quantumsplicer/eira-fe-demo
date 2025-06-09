@@ -179,15 +179,21 @@ const useGetOnboardingDetails = () => {
 
       if (!isStudent) {
         setCheckProcessIsLoading(false);
+        navigate("/student/login");
         return;
       }
 
       // Check if the student is fully onboarded
       const user = await getUserDetails().unwrap();
-      navigationLogic(user as UserDetails);
       setCheckProcessIsLoading(false);
+      if (user) {
+        navigationLogic(user as UserDetails);
+      } else {
+        navigate("/student/login");
+      }
     } catch {
       setCheckProcessIsLoading(false);
+      navigate("/student/login");
       console.error("Error fetching user details");
     }
   };
