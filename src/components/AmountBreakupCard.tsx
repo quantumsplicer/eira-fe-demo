@@ -17,12 +17,8 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
     Number(amount) ?? Number(localStorage.getItem("activePaymentAmount"));
   const activePaymentTutorId = localStorage.getItem("activePaymentTutorId");
 
-  const { data, isLoading } = useGetPlatformFeeQuery("cashfree");
-
-  const baseRate = useMemo(
-    () => (data?.base_rate ? parseFloat(data.base_rate) : 1),
-    [data?.base_rate]
-  );
+  const baseRate = Number(localStorage.getItem("baseRate")) ?? 1;
+  const platformTxnRate = Number(localStorage.getItem("platformTxnRate")) ?? 19.41;
 
   const formatAmount = (amount: number | undefined): string => {
     if (amount) {
@@ -56,7 +52,7 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
   const getGst = (): string => {
     if (activePaymentAmount) {
       const fees = (activePaymentAmount * baseRate) / 100;
-      const gst = parseFloat(((19.41 * fees) / 100).toFixed(2));
+      const gst = parseFloat(((platformTxnRate * fees) / 100).toFixed(2));
       return formatAmount(gst);
     }
     return "-";
@@ -65,7 +61,7 @@ const AmountBreakupCard = ({ amount }: AmountBreakupCardProps) => {
   const getTotalAmount = (): string => {
     if (activePaymentAmount) {
       const fees = (activePaymentAmount * baseRate) / 100;
-      const gst = (19.41 * fees) / 100;
+      const gst = (platformTxnRate * fees) / 100;
       const activePaymentTotalAmt = formatAmount(parseFloat((fees + gst + activePaymentAmount).toFixed(2)));
       localStorage.setItem("activePaymentTotalAmount", parseFloat((fees + gst + activePaymentAmount).toFixed(2)).toString())
       return activePaymentTotalAmt;

@@ -30,6 +30,10 @@ export const usePayment = () => {
     cashfree.checkout(checkoutOptions);
   };
 
+  const openZaakpayCheckout = async (paymentUrl: string) => {
+    window.location.href = paymentUrl;
+  }
+
   const getNextHour = (incrementHour:number) => {
     const currentTime = new Date();
 
@@ -56,6 +60,8 @@ export const usePayment = () => {
     const activePaymentPayeeUserId = localStorage.getItem(
       "activePaymentPayeeUserId"
     );
+    const pgName = localStorage.getItem("pgName");
+    const isMarketplaceTxn = localStorage.getItem("isMarketplaceTxn") === "true";
     setErrorMessage(null);
 
     const payload = {
@@ -68,6 +74,8 @@ export const usePayment = () => {
       ...(localStorage.getItem("activePaymentLinkId")
         ? { payment_link_id: localStorage.getItem("activePaymentLinkId")} 
         : {}),
+      pg_name: pgName as "zaakpay" | "cashfree",
+      is_marketplace_txn: isMarketplaceTxn,
     }
 
     createOrder(payload)
@@ -83,11 +91,12 @@ export const usePayment = () => {
           title: "Maths session"
         })
         .catch()
-        trackEvent("Redirecting to cashfree", {
-          sessionId: res.payment_session_id
-        })
-        trackEvent("redirecting to payment gateway");
-        openCashfreeCheckout(res.payment_session_id);
+        trackEvent("redirecting to payment gateway", {
+          pg: pgName
+        });
+        pgName === "cashfree"
+          ? openCashfreeCheckout(res.payment_session_id)
+          : openZaakpayCheckout(res.payment_url);
       })
       .catch((err) => {
         console.log(err);

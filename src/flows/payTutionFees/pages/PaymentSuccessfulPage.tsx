@@ -1,6 +1,6 @@
 // src/components/PaymentSuccessfulPage.tsx
 import React, { useEffect } from "react";
-import { Box, Stack, useMediaQuery } from "@mui/material";
+import { Box, CircularProgress, Stack, useMediaQuery } from "@mui/material";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
 import EiraBack from '../../../assets/images/svg/EiraBack.svg'
 import PaymentConfirmation from "../../../components/PaymentConfirmation";
@@ -58,16 +58,12 @@ const PaymentSuccessfulPage = () => {
     if (paymentStatus) {
       const status = paymentStatus.order.status;
       switch (status) {
-        case "SUCCESS":
-        case "PG_SETTLED":
-        case "BENE_SETTLED":
+        case "PAID":
           trackEvent("Successfully completed payment", {
             status: status
           });
           break;
-        case "FAILED":
-        case "USER_DROPPED":
-        case "REFUNDED":
+        case "ACTIVE":
           trackEvent("Error completing payment", {
             status: status
           });
@@ -77,6 +73,19 @@ const PaymentSuccessfulPage = () => {
       }
     }
   }, [paymentStatus])
+
+  if (!paymentStatus) {
+    return (
+      <Stack
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        sx={{ height: '100vh', width: "100vw" }}
+      >
+        <CircularProgress />
+      </Stack>
+    )
+  }
 
   return (
     <Box
