@@ -9,15 +9,23 @@ interface CreatePaymentLinkRequest {
   payment_method: string;
   payment_link_id: string | null;
   settlement_type: "STANDARD" | "ON_DEMAND" | "INSTANT";
+  pg_name: "cashfree" | "zaakpay";
+  is_marketplace_txn: boolean;
 }
 
 interface CreateOrderRequest {
   id: string;
+  base_amount: number;
   amount: number;
   status: string;
   payment_session_id: string;
+  payment_url: string;
+  expiry_timestamp: string;
   payer: string;
   payee: string;
+  settlement_type: "STANDARD" | "ON_DEMAND" | "INSTANT";
+  pg_name: "cashfree" | "zaakpay";
+  is_marketplace_txn: boolean;
 }
 
 interface PaymentInfoDetailsResponse {

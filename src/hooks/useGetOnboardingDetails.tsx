@@ -8,6 +8,7 @@ import {
 } from "../APIs/definitions/user";
 import { useEffect, useState } from "react";
 import { useLazyGetPaymentInfoFromLinkQuery } from "../APIs/definitions/paymentLinks";
+import { useLazyGetPlatformFeeQuery } from "../APIs/definitions/pg";
 
 const useGetOnboardingDetails = () => {
   const navigate = useNavigate();
@@ -29,6 +30,19 @@ const useGetOnboardingDetails = () => {
 
   const [getPaymentLinkInfo] = useLazyGetPaymentInfoFromLinkQuery();
 
+  const [getPgDetails] = useLazyGetPlatformFeeQuery();
+
+  const getPgRates = async (payeeId: string) => {
+    await getPgDetails(payeeId)
+      .unwrap()
+      .then((data) => {
+        localStorage.setItem("pgName", data?.standard.pg_name);
+        localStorage.setItem("baseRate", data?.standard.base_rate.toString());
+        localStorage.setItem("platformTxnRate", data.standard.platform_tax_rate.toString());
+        localStorage.setItem("isMarketplaceTxn", data.standard.is_marketplace_txn.toString());
+      })
+  }
+
   const navigationLogic = async (user: UserDetails) => {
     const activePaymentFlow = localStorage.getItem("activeFlow");
 
@@ -47,7 +61,7 @@ const useGetOnboardingDetails = () => {
                 : urlStrings[urlStrings.length - 2];
             await getTutorDetails(tutorUsername)
               .unwrap()
-              .then((res) => {
+              .then(async (res) => {
                 const tutor = res[0];
                 localStorage.setItem("activePaymentTutorId", tutor?.phone);
                 localStorage.setItem(
@@ -55,6 +69,7 @@ const useGetOnboardingDetails = () => {
                   `${tutor?.first_name} ${tutor?.last_name}`
                 );
                 localStorage.setItem("activePaymentPayeeUserId", tutor?.id);
+                await getPgRates(tutor?.id);
                 navigate(`/static-link/${tutorUsername}`);
               })
               .catch((err) => console.log(err));
@@ -97,13 +112,9 @@ const useGetOnboardingDetails = () => {
               let isTutorPgOnboarded = false;
               getTutorDetailsById(paymentLinkInfo.payee)
                 .unwrap()
-                .then((res) => {
-                  isTutorPgOnboarded =
-                    res?.pg_onboarding_status.length > 0 
-                    // &&
-                    // (res.pg_onboarding_status[0].status ===
-                    //   "MIN_KYC_APPROVED" ||
-                    //   res.pg_onboarding_status[0].status === "ACTIVE");
+                .then(async (res) => {
+                  isTutorPgOnboarded = res?.pg_onboarding_status.length > 0 
+                  await getPgRates(paymentLinkInfo.payee);
                 })
                 .catch()
                 .finally(
