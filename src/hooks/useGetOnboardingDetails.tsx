@@ -32,7 +32,7 @@ const useGetOnboardingDetails = () => {
 
   const [getPgDetails] = useLazyGetPlatformFeeQuery();
 
-  const getPgRates = async (payeeId: string) => {
+  const getPgRates = async (payeeId: string, amount?: number) => {
     await getPgDetails(payeeId)
       .unwrap()
       .then((data) => {
@@ -40,6 +40,13 @@ const useGetOnboardingDetails = () => {
         localStorage.setItem("baseRate", data?.standard.base_rate.toString());
         localStorage.setItem("platformTxnRate", data.standard.platform_tax_rate.toString());
         localStorage.setItem("isMarketplaceTxn", data.standard.is_marketplace_txn.toString());
+
+        if (amount) {
+          const fees = (amount * data?.standard?.base_rate) / 100;
+          const gst = (data?.standard?.platform_tax_rate * fees) / 100;
+          const activePaymentTotalAmt = parseFloat((fees + gst + amount).toFixed(2));
+          localStorage.setItem("activePaymentTotalAmount", activePaymentTotalAmt.toString())
+        }
       })
   }
 
@@ -114,7 +121,7 @@ const useGetOnboardingDetails = () => {
                 .unwrap()
                 .then(async (res) => {
                   isTutorPgOnboarded = res?.pg_onboarding_status.length > 0 
-                  await getPgRates(paymentLinkInfo.payee);
+                  await getPgRates(paymentLinkInfo.payee, paymentLinkInfo?.amount);
                 })
                 .catch()
                 .finally(
