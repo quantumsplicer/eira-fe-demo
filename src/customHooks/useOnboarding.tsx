@@ -62,7 +62,10 @@ export const useOnboarding = () => {
         userDetails?.pg_onboarding_status.length > 0 &&
         (userDetails.pg_onboarding_status[0].kyc_status === "INITIATED" ||
           userDetails.pg_onboarding_status[0].kyc_status === "EMAIL_VERIFIED" ||
-          userDetails.pg_onboarding_status[0].kyc_status === "MIN_KYC_PENDING"));
+          userDetails.pg_onboarding_status[0].kyc_status === "MIN_KYC_PENDING" ||
+          userDetails.pg_onboarding_status[0].kyc_status === "MIN_KYC_REJECTED"));
+
+    localStorage.setItem("kycStatus", userDetails?.pg_onboarding_status[0]?.kyc_status as string);
 
     setCheckProcessIsLoading(false);
 
