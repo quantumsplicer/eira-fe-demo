@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   CircularProgress,
   Stack,
   TextField,
@@ -12,7 +11,7 @@ import React, { useState } from "react";
 import PaymentBreakupInfo from "../../../components/PaymentBreakupInfo";
 import EiraBack from "../../../assets/images/svg/EiraBack.svg";
 import EiraLogo from "../../../assets/images/png/eira-logo.png";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SafeLogo from "../../../components/SafeLogo";
 import AmountBreakupCard from "../../../components/AmountBreakupCard";
 import { useLazyGetUserByUserNameQuery } from "../../../APIs/definitions/user";
@@ -28,11 +27,18 @@ const InputPayment = () => {
   const [getTutorDetails] = useLazyGetUserByUserNameQuery();
   const [isgetTutorDetailsLoading, setIsgetTutorDetailsLoading] =
     useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const invalidRegex = /[^0-9]/;
     const inputValue = event.target.value;
     if (inputValue === "" || !invalidRegex.test(inputValue)) {
+      if (Number(inputValue) > 50000) {
+        setErrorMessage("Amount cannot exceed 50000");
+        return;
+      } else {
+        setErrorMessage("");
+      }
       setAmount(inputValue);
       localStorage.setItem("activePaymentAmount", inputValue);
     }
@@ -182,11 +188,11 @@ const InputPayment = () => {
                   ),
                 }}
               />
-              {Number(amount) < 1000 && (
+              {/* {Number(amount) < 1000 && (
                 <Typography fontSize={12} sx={{ mr: 1, color: "red", mt: 4 }}>
                   *Minimum amount is ₹1000
                 </Typography>
-              )}
+              )} */}
               {!notPhoneScreen && (
                 <Box
                   height="310px"
@@ -209,6 +215,18 @@ const InputPayment = () => {
                   />
                 </Box>
               )}
+              <Typography color="#4C5762" fontSize={14}>
+                Min. ₹1000
+              </Typography>
+              {errorMessage && (
+                <Typography
+                  fontSize={16}
+                  color={"red"}
+                  mt={notPhoneScreen ? 5 : 0}
+                >
+                  {errorMessage}
+                </Typography>
+              )}
               <LoadingButton
                 disabled={
                   !amount ||
@@ -224,7 +242,13 @@ const InputPayment = () => {
                   minWidth: "320px",
                   maxWidth: "400px",
                   padding: 1.5,
-                  mt: 5,
+                  mt: notPhoneScreen
+                    ? errorMessage
+                      ? 2
+                      : 10
+                    : errorMessage
+                    ? 2
+                    : 5,
                   borderRadius: 20,
                   height: 45,
                 }}
