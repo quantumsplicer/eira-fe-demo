@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography, Link } from "@mui/material";
 import { trackEvent } from "../utils/amplitude";
 
-export const WHATSAPP_LINK = "https://wa.link/fipmfa";
+export const WHATSAPP_LINK = "https://wa.link/9apdv5";
 
 const GetHelp = () => {
   return (
