@@ -76,6 +76,7 @@ export const usePayment = () => {
         : {}),
       pg_name: pgName as "zaakpay" | "cashfree",
       is_marketplace_txn: isMarketplaceTxn,
+      platform: "web" as "web" | "app"
     }
 
     createOrder(payload)
