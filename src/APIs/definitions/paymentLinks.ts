@@ -11,6 +11,7 @@ interface CreatePaymentLinkRequest {
   settlement_type: "STANDARD" | "ON_DEMAND" | "INSTANT";
   pg_name: "cashfree" | "zaakpay";
   is_marketplace_txn: boolean;
+  platform: "web" | "app";
 }
 
 interface CreateOrderRequest {
