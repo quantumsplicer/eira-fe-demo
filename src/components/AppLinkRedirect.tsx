@@ -2,72 +2,57 @@
 import React, { useEffect } from "react";
 import { useLocation, useMatch } from "react-router-dom";
 
-const ANDROID_PACKAGE = "club.eira.app"; // replace with your real Android package name
+const ANDROID_PACKAGE = "com.anonymous.eiraapp"; // your actual package ID
+const SCHEME = "eira"; // deeplink scheme
 const WEB_FALLBACK_BASE =
   (import.meta as any)?.env?.VITE_WEB_FALLBACK_BASE || window.location.origin;
 
-const isIOS = () =>
-  /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-  (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1);
-const isAndroid = () => /Android/i.test(navigator.userAgent);
+// Store URLs
+const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=com.anonymous.eiraapp&hl=en_IN&pli=1";
+const APP_STORE_URL = "https://apps.apple.com/in/app/YOUR-IOS-APP-ID"; // replace with real
+
+function isIOS() {
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1)
+  );
+}
+
+function isAndroid() {
+  return /Android/i.test(navigator.userAgent);
+}
 
 export default function AppLinkRedirect() {
   const location = useLocation();
   const match = useMatch("/app/*");
+  const deepPath = match?.params?.["*"] || "";
 
-  const deepPath = (match?.params?.["*"] || "").replace(/^\/+/, "");
-  const search = location.search || "";
-  const hash = location.hash || "";
-
-  // scheme url: eira://<something>?...#...
-  const schemeUrl = `eira://${deepPath}${search}${hash}`;
-
-  // web fallback mirrors path after /app/
-  const fallbackUrl = `${WEB_FALLBACK_BASE}/${deepPath}${search}${hash}`;
+  const deeplink = `${SCHEME}://${deepPath}`;
+  const webFallback = `${WEB_FALLBACK_BASE}/${deepPath}`;
 
   useEffect(() => {
-    let timeoutId: number | undefined;
-
-    const cancelFallbackIfHidden = () => {
-      if (document.hidden && timeoutId) {
-        window.clearTimeout(timeoutId);
-      }
-    };
-    document.addEventListener("visibilitychange", cancelFallbackIfHidden);
-
-    if (isAndroid()) {
-      // Better UX on Android with intent:
-      const intentUrl = `intent://${deepPath}${search}${hash}#Intent;scheme=eira;package=${ANDROID_PACKAGE};S.browser_fallback_url=${encodeURIComponent(
-        fallbackUrl
-      )};end;`;
+    if (isIOS()) {
+      // Try app deeplink, fallback to App Store if not installed
+      window.location.href = deeplink;
+      setTimeout(() => {
+        window.location.href = APP_STORE_URL || webFallback;
+      }, 1500);
+    } else if (isAndroid()) {
+      // Use intent:// on Android
+      const intentUrl = `intent://${deepPath}#Intent;scheme=${SCHEME};package=${ANDROID_PACKAGE};S.browser_fallback_url=${encodeURIComponent(
+        PLAY_STORE_URL
+      )};end`;
       window.location.href = intentUrl;
-    } else if (isIOS()) {
-      // Try scheme, then fallback after delay
-      window.location.href = schemeUrl;
-      timeoutId = window.setTimeout(() => {
-        window.location.href = fallbackUrl;
-      }, 1200);
     } else {
-      // desktop: just fallback
-      window.location.replace(fallbackUrl);
+      // Desktop → web fallback
+      window.location.href = webFallback;
     }
-
-    return () => {
-      document.removeEventListener("visibilitychange", cancelFallbackIfHidden);
-      if (timeoutId) window.clearTimeout(timeoutId);
-    };
-  }, [deepPath, search, hash, schemeUrl, fallbackUrl]);
+  }, [deeplink, deepPath, webFallback]);
 
   return (
-    <div style={{ padding: 16 }}>
-      <p>
-        Opening Eira… If the app doesn’t open,{" "}
-        <a href={fallbackUrl}>continue on the web</a>.
-      </p>
-      <noscript>
-        JavaScript is required for redirection. Open{" "}
-        <a href={fallbackUrl}>this link</a>.
-      </noscript>
+    <div className="flex h-screen items-center justify-center">
+      <p className="text-gray-600">Redirecting you to the app...</p>
     </div>
   );
 }
