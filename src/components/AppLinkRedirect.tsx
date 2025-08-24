@@ -1,15 +1,14 @@
 // src/components/AppLinkRedirect.tsx
 import React, { useEffect } from "react";
-import { useLocation, useMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 
-const ANDROID_PACKAGE = "com.anonymous.eiraapp"; // your actual package ID
-const SCHEME = "eira"; // deeplink scheme
+const SCHEME = "eira";
+const ANDROID_PACKAGE = "com.anonymous.eiraapp";
 const WEB_FALLBACK_BASE =
   (import.meta as any)?.env?.VITE_WEB_FALLBACK_BASE || window.location.origin;
 
-// Store URLs
 const PLAY_STORE_URL =
-  "https://play.google.com/store/apps/details?id=com.anonymous.eiraapp&hl=en_IN&pli=1";
+  "https://play.google.com/store/apps/details?id=com.anonymous.eiraapp";
 const APP_STORE_URL = "https://apps.apple.com/in/app/YOUR-IOS-APP-ID"; // replace with real
 
 function isIOS() {
@@ -24,7 +23,6 @@ function isAndroid() {
 }
 
 export default function AppLinkRedirect() {
-  const location = useLocation();
   const match = useMatch("/app/*");
   const deepPath = match?.params?.["*"] || "";
 
@@ -32,22 +30,22 @@ export default function AppLinkRedirect() {
   const webFallback = `${WEB_FALLBACK_BASE}/${deepPath}`;
 
   useEffect(() => {
-    if (isIOS()) {
-      // Try app deeplink, fallback to App Store if not installed
-      window.location.href = deeplink;
-      setTimeout(() => {
+    // Try opening the app
+    const start = Date.now();
+    window.location.href = deeplink;
+
+    // If app not installed → after 1.5s, redirect
+    const timer = setTimeout(() => {
+      if (isIOS()) {
         window.location.href = APP_STORE_URL || webFallback;
-      }, 1500);
-    } else if (isAndroid()) {
-      // Use intent:// on Android
-      const intentUrl = `intent://${deepPath}#Intent;scheme=${SCHEME};package=${ANDROID_PACKAGE};S.browser_fallback_url=${encodeURIComponent(
-        PLAY_STORE_URL
-      )};end`;
-      window.location.href = intentUrl;
-    } else {
-      // Desktop → web fallback
-      window.location.href = webFallback;
-    }
+      } else if (isAndroid()) {
+        window.location.href = PLAY_STORE_URL || webFallback;
+      } else {
+        window.location.href = webFallback;
+      }
+    }, 2500);
+
+    return () => clearTimeout(timer);
   }, [deeplink, deepPath, webFallback]);
 
   return (
