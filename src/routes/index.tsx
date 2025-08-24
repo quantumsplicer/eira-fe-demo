@@ -34,6 +34,7 @@ import TutorOnboardingContainer from "../components/TutorOnboardingContainer";
 import BaseRedirect from "../components/BaseRedirect";
 import PricingPolicy from "../flows/tutorWebsite/pages/PricingPolicy";
 import PrivacyPolicy from "../flows/tutorWebsite/pages/PrivacyPolicy";
+import AppLinkRedirect from "../components/AppLinkRedirect";
 
 const AppRoutes = () => {
   return (
@@ -104,6 +105,8 @@ const AppRoutes = () => {
         path="/:tutorUserName/privacy-policy"
         element={<PrivacyPolicy />}
       />
+
+      <Route path="app/*" element={<AppLinkRedirect />} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
