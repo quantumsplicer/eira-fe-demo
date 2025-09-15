@@ -94,7 +94,7 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
               Contact Us Now for resolution
             </Typography>
             <Typography fontSize={12} color="#6F6F6F">
-              +91-98731 89338 OR +91-95104 63209
+              +91-80695 78088
             </Typography>
           </Stack>
         </Box>
