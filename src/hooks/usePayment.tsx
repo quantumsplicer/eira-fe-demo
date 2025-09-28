@@ -76,7 +76,11 @@ export const usePayment = () => {
         : {}),
       pg_name: pgName as "zaakpay" | "cashfree",
       is_marketplace_txn: isMarketplaceTxn,
-      platform: "web" as "web" | "app"
+      platform: "web" as "web" | "app",
+      payer_declarations: {
+        educational_payment: true,
+        not_paying_to_family: true
+      }
     }
 
     createOrder(payload)

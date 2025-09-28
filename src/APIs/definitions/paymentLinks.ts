@@ -12,6 +12,10 @@ interface CreatePaymentLinkRequest {
   pg_name: "cashfree" | "zaakpay";
   is_marketplace_txn: boolean;
   platform: "web" | "app";
+  payer_declarations: {
+    educational_payment: boolean;
+    not_paying_to_family: boolean;
+  }
 }
 
 interface CreateOrderRequest {

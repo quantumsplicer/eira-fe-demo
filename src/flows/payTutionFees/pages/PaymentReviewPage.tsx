@@ -8,6 +8,7 @@ import {
   Alert,
   useMediaQuery,
   Drawer,
+  Checkbox,
 } from "@mui/material";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
@@ -35,6 +36,7 @@ const PaymentReviewPage = () => {
   //   localStorage.getItem("isTutorEiraOnboarded") === "true";
   const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const notPhoneScreen = useMediaQuery("(min-width:850px)");
   const activePaymentAmount = localStorage.getItem("activePaymentAmount");
@@ -242,9 +244,17 @@ const PaymentReviewPage = () => {
                     {errorMessage}
                   </Typography>
                 )}
+                <Stack sx={{flexDirection: "row", alignItems: "flex-start", mb: 2}}>
+                  <Checkbox checked={isChecked} onClick={() => setIsChecked(!isChecked)} />
+                  <Typography fontSize={14}>
+                    By making this payment, I declare that this payment is for
+                    educational services already availed by me.
+                  </Typography>
+                </Stack>
                 <Button
                   variant="contained"
                   color="primary"
+                  disabled={!isChecked}
                   sx={{
                     padding: 1.5,
                     borderRadius: 20,
