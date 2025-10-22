@@ -32,10 +32,9 @@ const RefundPolicy = () => {
 
         <Stack spacing={2}>
           <Box>
-          <Typography variant="body1">
+            <Typography variant="body1">
               <strong>Merchant Name:</strong>{" "}
-              {(user?.first_name as string) +
-                (user?.last_name as string)}
+              {(user?.first_name as string) + (user?.last_name as string)}
             </Typography>
             <Typography variant="body1">
               <strong>Merchant Address:</strong> -
@@ -50,9 +49,11 @@ const RefundPolicy = () => {
 
           <Typography variant="body2">
             If the Customer (student) wishes to request a refund, they must
-            contact Eira.club within 24 hours of making the payment. Refund
-            requests made after this period will not be entertained, as payments
-            are promptly settled into the Merchant’s account.
+            contact Eira.club within 24 hours of making the payment. Eira.club
+            will not refund the platform fees charged for the transaction, only
+            the base amount is refunded. Refund requests made after this period
+            will not be entertained, as payments are promptly settled into the
+            Merchant’s account.
           </Typography>
 
           <Typography variant="body2" sx={{ mt: 2 }}>
@@ -60,7 +61,6 @@ const RefundPolicy = () => {
             Eira.club, no refunds will be processed. Customers are encouraged to
             confirm all transaction details before completing payment.
           </Typography>
-
         </Stack>
       </Container>
     </ThemeProvider>

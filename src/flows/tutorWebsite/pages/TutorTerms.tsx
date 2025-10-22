@@ -35,8 +35,7 @@ const TutorTermsOfUse = () => {
           <Box>
             <Typography variant="body1">
               <strong>Merchant Name:</strong>{" "}
-              {(user?.first_name as string) +
-                (user?.last_name as string)}
+              {(user?.first_name as string) + (user?.last_name as string)}
             </Typography>
             <Typography variant="body1">
               <strong>Merchant Address:</strong> VAR
@@ -45,7 +44,8 @@ const TutorTermsOfUse = () => {
               <strong>Merchant Phone Number:</strong> {user?.phone}
             </Typography>
             <Typography variant="body1">
-              <strong>Merchant Email:</strong> Support+{user?.username.replace("-", "")}@eira.club
+              <strong>Merchant Email:</strong> Support+
+              {user?.username.replace("-", "")}@eira.club
             </Typography>
           </Box>
 
@@ -133,12 +133,14 @@ const TutorTermsOfUse = () => {
           </Typography>
           <Typography variant="body2">
             If the Customer (student) wishes to request a refund, they must
-            contact Eira.club within 24 hours of making the payment. Refund
-            requests made after this period will not be entertained, as payments
-            are promptly settled into the Merchant’s account. Once the payment
-            is settled into the Merchant’s account through Eira.club, no refunds
-            will be processed. Customers are encouraged to confirm all
-            transaction details before completing payment.
+            contact Eira.club within 24 hours of making the payment. Eira.club
+            will not refund the platform fees charged for the transaction, only
+            the base amount is refunded. Refund requests made after this period
+            will not be entertained, as payments are promptly settled into the
+            Merchant’s account. Once the payment is settled into the Merchant’s
+            account through Eira.club, no refunds will be processed. Customers
+            are encouraged to confirm all transaction details before completing
+            payment.
           </Typography>
 
           <Typography variant="h6" sx={{ fontWeight: "bold", mt: 3 }}>
