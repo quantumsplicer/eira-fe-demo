@@ -19,10 +19,10 @@ const RefundPolicy = () => {
 
   const { data: getUserDetails, isLoading: userDetailsIsLoading } =
     useGetUserByUserNameUnsafeQuery(userName);
-  const [user] = useState(getUserDetails ? getUserDetails[0] : null);
+  const user = useState(getUserDetails ? getUserDetails[0] : null);
 
   console.log("getDetails", getUserDetails)
-  console.log("user", user)
+  console.log("user", user[0])
 
   return (
     <ThemeProvider theme={theme}>
@@ -37,14 +37,14 @@ const RefundPolicy = () => {
           <Box>
             <Typography variant="body1">
               <strong>Merchant Name:</strong>{" "}
-              {(user?.first_name as string) + (user?.last_name as string)}
+              {(user[0]?.first_name as string) + (user[0]?.last_name as string)}
             </Typography>
             <Typography variant="body1">
               <strong>Merchant Address:</strong> -
             </Typography>
             <Typography variant="body1">
               <strong>Merchant Email:</strong> Support+
-              {user?.username.replace("-", "")}@eira.club
+              {user[0]?.username.replace("-", "")}@eira.club
             </Typography>
           </Box>
 
