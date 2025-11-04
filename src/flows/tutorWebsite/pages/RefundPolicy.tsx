@@ -43,8 +43,7 @@ const RefundPolicy = () => {
               <strong>Merchant Address:</strong> -
             </Typography>
             <Typography variant="body1">
-              <strong>Merchant Email:</strong> Support+
-              {getUserDetails?.[0]?.username.replace("-", "")}@eira.club
+              <strong>Merchant Email:</strong> Support@eira.club
             </Typography>
           </Box>
 
