@@ -22,7 +22,7 @@ const RefundPolicy = () => {
   const user = useState(getUserDetails ? getUserDetails[0] : null);
 
   console.log("getDetails", getUserDetails)
-  console.log("user", user[0])
+  console.log("user", user[0], getUserDetails?.[0])
 
   return (
     <ThemeProvider theme={theme}>
