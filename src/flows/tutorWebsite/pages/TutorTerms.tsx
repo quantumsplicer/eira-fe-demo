@@ -175,7 +175,7 @@ const TutorTermsOfUse = () => {
           <Typography variant="body2">
             For concerns or communications regarding these Terms, please contact
             the Merchant directly using the information provided on their
-            listing or profile. Eira can be contacted at 9873189338.
+            listing or profile. Eira can be contacted at 08069578088.
           </Typography>
         </Stack>
       </Container>
