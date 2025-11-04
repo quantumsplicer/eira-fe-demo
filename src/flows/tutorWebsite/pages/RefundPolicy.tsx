@@ -37,14 +37,14 @@ const RefundPolicy = () => {
           <Box>
             <Typography variant="body1">
               <strong>Merchant Name:</strong>{" "}
-              {(user[0]?.first_name as string) + (user[0]?.last_name as string)}
+              {(getUserDetails?.[0]?.first_name as string) + (getUserDetails?.[0]?.last_name as string)}
             </Typography>
             <Typography variant="body1">
               <strong>Merchant Address:</strong> -
             </Typography>
             <Typography variant="body1">
               <strong>Merchant Email:</strong> Support+
-              {user[0]?.username.replace("-", "")}@eira.club
+              {getUserDetails?.[0]?.username.replace("-", "")}@eira.club
             </Typography>
           </Box>
 
