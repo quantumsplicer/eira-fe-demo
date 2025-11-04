@@ -30,7 +30,7 @@ const RefundPolicy = () => {
 
       <Container maxWidth="md" sx={{ mt: 5, mb: 5 }}>
         <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3 }}>
-          Refund Policy
+          Refund
         </Typography>
 
         <Stack spacing={2}>
