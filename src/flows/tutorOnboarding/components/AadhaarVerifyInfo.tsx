@@ -65,7 +65,7 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
         </span>
       </Typography>
       <Typography fontSize={12} color="#6F6F6F">
-        Call +91-8069578088 for any assistance 
+        Call +91-8069578280 for any assistance 
       </Typography>
 
       <img
@@ -94,7 +94,7 @@ const AadhaarVerifyInfo = ({ showHeading }: AadhaarVerifyInfoProps) => {
               Contact Us Now for resolution
             </Typography>
             <Typography fontSize={12} color="#6F6F6F">
-              +91-80695 78088
+              +91-80695 78280
             </Typography>
           </Stack>
         </Box>
